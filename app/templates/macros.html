@@ -1,0 +1,104 @@
+{% macro render_pagination(pagination, endpoint) %}
+    <nav>
+        <ul class="pagination">
+            <li>
+                {% if pagination.has_prev %}
+                    <a href="{{ url_for(endpoint, page_num=pagination.prev_num) }}" aria-label="Previous">
+                {% else %}
+                    <a href="#" aria-label="Previous">
+                {% endif %}
+                <span aria-hidden="true">上一页</span>
+                </a>
+            </li>
+            {% for page in pagination.iter_pages() %}
+                {% if page %}
+                    {% if page == pagination.page %}
+                    <li class="active">
+                    {% else %}
+                    <li>
+                    {% endif %}
+                        <a href="{{ url_for(endpoint, page_num=page) }}">{{ page }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            <li>
+                {% if pagination.has_next %}
+                    <a href="{{ url_for(endpoint, page_num=pagination.next_num) }}" aria-label="Next">
+                {% else %}
+                    <a href="#" aria-label="Next">
+                {% endif %}
+                <span aria-hidden="true">下一页</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+{% endmacro %}
+
+
+{% macro render_nav(title) %}
+{#    <div class="table-list1-wrap">#}
+{#        <div class="nav-tabs-wrap">#}
+{#            <ul class="nav nav-tabs">#}
+{#                <li role="presentation" {% if title=='online' %}class="active"{% endif %}>#}
+{#                    <a href="{{ url_for('job.online') }}">#}
+{#                        在招职位#}
+{#                    </a>#}
+{#                </li>#}
+{#                <li role="presentation" {% if title=='pending' %}class="active"{% endif %}>#}
+{#                    <a href="{{ url_for('job.pending') }}">#}
+{#                        待发布职位#}
+{#                    </a>#}
+{#                </li>#}
+{#            </ul>#}
+{#            <div class="nav-tabs-right">#}
+{#                <a class="btn btn-primary btn-add-job"  href="{{ url_for('job.add') }}" >+添加职位</a>#}
+{#                <label class="checkbox-inline" for="全选">#}
+{#                    <input type="checkbox" name="checkbox1"  value="1">全选#}
+{#                </label>#}
+{#                <input type="button" value="下线" class="btn btn-xs btn-default">#}
+{#            </div>#}
+{#            <div class="clear"></div>#}
+{#        </div>#}
+{#    </div>#}
+    <nav class="navbar navbar-default">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{{ url_for('index') }}">Flask Project</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li{% if title == 'home' %} class="active"{% endif %}><a href="{{ url_for('index') }}">Home</a></li>
+                    <li{% if title == 'about' %} class="active"{% endif %}><a href="{{ url_for('about') }}">About</a></li>
+                    <li{% if title == 'contact' %} class="active"{% endif %}><a href="{{ url_for('contact') }}">Contact</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">Blog List <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            {% if title == 'blog_list' %}<li class="dropdown-header">Blog List</li>{% else %}<li><a href="{{ url_for('blog_list') }}">Blog List</a></li>{% endif %}
+                            {% if title == 'blog_new' %}<li class="dropdown-header">Blog New</li>{% else %}<li><a href="{{ url_for('blog_new') }}">Blog New</a></li>{% endif %}
+                            {% if title == 'blog_hot' %}<li class="dropdown-header">Blog Hot</li>{% else %}<li><a href="{{ url_for('blog_hot') }}">Blog Hot</a></li>{% endif %}
+                            <li><a href="#">Something else here</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li class="dropdown-header">Nav header</li>
+                            <li><a href="#">Separated link</a></li>
+                            <li><a href="#">One more separated link</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="{{ url_for('reg') }}">Register</a></li>
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                    <li class="active"><a href="{{ url_for('logout') }}">Logout</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </nav>
+{% endmacro %}
+

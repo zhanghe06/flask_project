@@ -10,4 +10,6 @@
 
 
 from app import app
-app.run(debug=True)
+
+app.debug = True  # 调试模式，生产环境必须去掉
+app.run(host='0.0.0.0')
