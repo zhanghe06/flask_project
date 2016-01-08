@@ -19,7 +19,7 @@
     <!-- Fixed navbar -->
     {% from "macros.html" import render_nav %}
     {{ render_nav(title) }}
-
+    <div class="navbar"></div>
     <div class="container">
         {% with messages = get_flashed_messages() %}
         {% if messages %}

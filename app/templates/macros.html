@@ -1,5 +1,5 @@
 {% macro render_pagination(pagination, endpoint) %}
-    <nav>
+    <nav class="text-center">
         <ul class="pagination">
             <li>
                 {% if pagination.has_prev %}
@@ -36,40 +36,10 @@
 
 
 {% macro render_nav(title) %}
-{#    <div class="table-list1-wrap">#}
-{#        <div class="nav-tabs-wrap">#}
-{#            <ul class="nav nav-tabs">#}
-{#                <li role="presentation" {% if title=='online' %}class="active"{% endif %}>#}
-{#                    <a href="{{ url_for('job.online') }}">#}
-{#                        在招职位#}
-{#                    </a>#}
-{#                </li>#}
-{#                <li role="presentation" {% if title=='pending' %}class="active"{% endif %}>#}
-{#                    <a href="{{ url_for('job.pending') }}">#}
-{#                        待发布职位#}
-{#                    </a>#}
-{#                </li>#}
-{#            </ul>#}
-{#            <div class="nav-tabs-right">#}
-{#                <a class="btn btn-primary btn-add-job"  href="{{ url_for('job.add') }}" >+添加职位</a>#}
-{#                <label class="checkbox-inline" for="全选">#}
-{#                    <input type="checkbox" name="checkbox1"  value="1">全选#}
-{#                </label>#}
-{#                <input type="button" value="下线" class="btn btn-xs btn-default">#}
-{#            </div>#}
-{#            <div class="clear"></div>#}
-{#        </div>#}
-{#    </div>#}
-    <nav class="navbar navbar-default">
+{#    <nav class="navbar navbar-default">#}
+    <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-                        aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
                 <a class="navbar-brand" href="{{ url_for('index') }}">Flask Project</a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
@@ -92,6 +62,12 @@
                         </ul>
                     </li>
                 </ul>
+                <form class="navbar-form navbar-left" role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search">
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="{{ url_for('reg') }}">Register</a></li>
                     <li><a href="{{ url_for('login') }}">Login</a></li>
