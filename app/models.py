@@ -1,21 +1,32 @@
-#!/usr/bin/env python
-# encoding: utf-8
-
-"""
-@author: zhanghe
-@software: PyCharm
-@file: models.py
-@time: 16-1-7 下午1:35
-"""
+# coding: utf-8
+from sqlalchemy import Column, Date, Integer, Numeric, Table
+from sqlalchemy.sql.sqltypes import NullType
+from sqlalchemy.ext.declarative import declarative_base
 
 
-from app import db
+Base = declarative_base()
+metadata = Base.metadata
 
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    nickname = db.Column(db.String(64), index=True, unique=True)
-    email = db.Column(db.String(120), index=True, unique=True)
+class Author(Base):
+    __tablename__ = 'author'
 
-    def __repr__(self):
-        return '<User %r>' % self.nickname
+    id = Column(Integer, primary_key=True)
+    name = Column(Numeric, nullable=False)
+    email = Column(Numeric, nullable=False)
+
+
+class Blog(Base):
+    __tablename__ = 'blog'
+
+    id = Column(Integer, primary_key=True)
+    author = Column(Numeric, nullable=False)
+    title = Column(Numeric, nullable=False)
+    pub_date = Column(Date, nullable=False)
+
+
+t_sqlite_sequence = Table(
+    'sqlite_sequence', metadata,
+    Column('name', NullType),
+    Column('seq', NullType)
+)

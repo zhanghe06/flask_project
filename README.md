@@ -70,6 +70,7 @@ $ pip install Flask-Login
 $ pip install Flask-Mail
 $ pip install Flask-SQLAlchemy
 $ pip install Flask-WTF
+$ pip install sqlacodegen
 $ pip freeze > requirements.txt
 ```
 
@@ -127,10 +128,101 @@ Out[2]: '\x03\xabjR\xbbg\x82\x0b{\x96f\xca\xa8\xbdM\xb0x\xdbK%\xf2\x07\r\x8c'
 
 ### 创建数据库
 
-可以通过管道把 schema.sql 作为 sqlite3 命令的输入来创建这个模式，命令为如下:
+模拟数据
 ```
-$ sqlite3 /tmp/flaskr.db < schema.sql
+INSERT INTO author(name, email) VALUES('Mark', 'mark@gmail.com');
+INSERT INTO author(name, email) VALUES('Jacob', 'jacob@gmail.com');
+INSERT INTO author(name, email) VALUES('Larry', 'larry@gmail.com');
+INSERT INTO author(name, email) VALUES('Tom', 'tom@gmail.com');
+INSERT INTO author(name, email) VALUES('Lily', 'lily@gmail.com');
 ```
+```
+INSERT INTO blog(author, title, pub_date) VALUES('Mark', 'The old man and the sea', '2016-01-11 11:01:05');
+INSERT INTO blog(author, title, pub_date) VALUES('Jacob', 'The fault in our stars', '2016-01-11 20:23:27');
+INSERT INTO blog(author, title, pub_date) VALUES('Larry', 'The Great Gatsby', '2016-01-11 23:15:18');
+INSERT INTO blog(author, title, pub_date) VALUES('Tom', 'Sense and Sensibility', '2016-01-12 12:25:34');
+INSERT INTO blog(author, title, pub_date) VALUES('Tom', 'Pride and Prejudice', '2016-01-12 13:17:25');
+INSERT INTO blog(author, title, pub_date) VALUES('Lily', 'Game of Thrones', '2016-01-12 14:53:01');
+INSERT INTO blog(author, title, pub_date) VALUES('Mark', 'Charlie and the Chocolate Factory', '2016-01-12 15:13:17');
+INSERT INTO blog(author, title, pub_date) VALUES('Larry', 'Harry Potter and the Sorcerer''s Stone', '2016-01-12 19:32:15');
+INSERT INTO blog(author, title, pub_date) VALUES('Larry', 'The house on mango street', '2016-01-12 01:43:42');
+INSERT INTO blog(author, title, pub_date) VALUES('Jacob', 'And then there were none', '2016-01-13 16:17:32');
+```
+
+注意：插入内容中如果存在半角单引号（'），需要替换为2个单引号（''）
+前提是插入内容在两个单引号之间，存入数据库会自动转义为1个单引号
+
+
+生成建表语句（备份）
+```
+$ sqlite3 flask.db ".dump" > schema.sql
+```
+
+
+创建数据库（恢复）:
+```
+$ sqlite3 flask.db < schema.sql
+```
+
+etc 目录下已经创建好脚本（初始化数据，备份数据）
+```
+$ chmod a+x init_db.sh
+$ chmod a+x dump_db.sh
+$ ./init_db.sh
+```
+
+
+### SQLAlchemy
+
+python 的一种 ORM 框架
+
+ORM：Object-Relational Mapping
+
+把关系数据库的表结构映射到对象上
+
+
+### sqlacodegen
+
+安装
+```
+$ pip install sqlacodegen
+```
+
+生成 model
+```
+$ sqlacodegen sqlite:///flask.db --outfile app/models.py
+```
+
+参考例子：
+```
+$ sqlacodegen postgresql:///some_local_db
+$ sqlacodegen mysql+oursql://user:password@localhost/db_name
+$ sqlacodegen sqlite:///database.db
+$ sqlacodegen mysql://root:root@127.0.0.1:3306/db_name > models.py
+$ sqlacodegen mysql://root:root@127.0.0.1:3306/db_name --outfile models.py
+```
+
+
+[http://docs.sqlalchemy.org/en/latest/core/engines.html](http://docs.sqlalchemy.org/en/latest/core/engines.html)
+
+
+### 存入数据库中文乱码
+
+SQLALCHEMY_DATABASE_URI = 'mysql://[用户]:[密码]@[IP]/[库名]?charset=utf8'
+
+注意是 utf8 ，不是 utf-8
+> show variables like 'character%';
+mysql 里的 charset 是 utf8
+
+
+## 部署方案( Nginx + Gunicorn + Supervisor )
+
+Gunicorn 官网：[http://gunicorn.org/](http://gunicorn.org/)
+
+
+
+## 部署方案( Nginx + Uwsgi + Supervisor )
+
 
 
 ## 参考资料：
