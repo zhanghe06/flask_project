@@ -180,6 +180,51 @@ ORM：Object-Relational Mapping
 
 把关系数据库的表结构映射到对象上
 
+使用 Flask-SQLAlchemy 进行数据库管理
+```
+Database engine     URL
+---------------     ---
+MySQL               mysql://username:password@hostname/database
+Postgres            postgresql://username:password@hostname/database
+SQLite (Unix)       sqlite:////absolute/path/to/database
+SQLite (Windows)    sqlite:///c:/absolute/path/to/database
+```
+
+最常用的 SQLAlchemy 列类型如下：
+```
+Type name       Python Type         Python type Description
+---------       -------             -----------------------
+Integer         int                 Integerint Regular integer, typically 32 bits
+SmallInteger    int                 Short-range integer, typically 16 bits
+BigInteger      int or long         Unlimited precision integer
+Float           float               Floating-point number
+Numeric         decimal.Decimal     Fixed-point number
+String          str                 Variable-length string
+Text            str                 Variable-length string, optimized for large or unbound length
+Unicode         unicode             Variable-length Unicode string
+UnicodeText     unicode             Variable-length Unicode string, optimized for large or unbound length
+Boolean         bool                Boolean value
+Date            datetime.date       Date value
+Time            datetime.time       Time value
+DateTime        datetime.datetime   Date and time value
+Interval        datetime.timedelta  Time interval
+Enum            str                 List of string values
+PickleType      Any Python object   Automatic Pickle serialization
+LargeBinary     str                 Binary blob
+```
+模型可以（没有强制要求）定义 __repr()__ 方法，返回一个具有可读性的字符串表示模型，可在调试和测试时使用。
+
+最常见的 SQLAlchemy 选项：
+```
+Option name     Description
+-----------     -----------
+primary_key     If set to True , the column is the table’s primary key.
+unique          If set to True , do not allow duplicate values for this column.
+index           If set to True , create an index for this column, so that queries are more efficient.
+nullable        If set to True , allow empty values for this column. If set to False , the column will not allow null values.
+default         Define a default value for the column.
+```
+
 
 ### sqlacodegen
 
@@ -202,6 +247,20 @@ $ sqlacodegen mysql://root:root@127.0.0.1:3306/db_name > models.py
 $ sqlacodegen mysql://root:root@127.0.0.1:3306/db_name --outfile models.py
 ```
 
+修改 models 文件：
+
+    from sqlalchemy.ext.declarative import declarative_base
+    
+    
+    Base = declarative_base()
+
+替换为：
+
+    from flask.ext.sqlalchemy import SQLAlchemy
+    from app import app
+    db = SQLAlchemy(app)
+    Base = db.Model
+
 
 [http://docs.sqlalchemy.org/en/latest/core/engines.html](http://docs.sqlalchemy.org/en/latest/core/engines.html)
 
@@ -213,6 +272,34 @@ SQLALCHEMY_DATABASE_URI = 'mysql://[用户]:[密码]@[IP]/[库名]?charset=utf8'
 注意是 utf8 ，不是 utf-8
 > show variables like 'character%';
 mysql 里的 charset 是 utf8
+
+
+### 关于分页
+
+错误写法：
+```
+rows = db_session.query(Author).filter(eval(condition)).paginate(page, per_page, False)
+```
+
+报错如下：
+AttributeError: 'Query' object has no attribute 'paginate'
+```
+
+失败原因：
+```
+"Query" refers to the SQLAlchemy Query object. 
+"BaseQuery" refers to the Flask-SQLALchemy BaseQuery object, which is a subclass of Query. 
+This subclass includes helpers such as first_or_404() and paginate().
+However, this means that a Query object does NOT have the paginate() function.
+How you actually build the object you are calling your "Query" object depends on whether you are dealing with a Query or BaseQuery object.
+```
+
+参考：[http://stackoverflow.com/questions/18468887/flask-sqlalchemy-pagination-error](http://stackoverflow.com/questions/18468887/flask-sqlalchemy-pagination-error)
+
+正确写法：
+```
+rows = Author.query.filter(eval(condition)).paginate(page, per_page, False)
+```
 
 
 ## 部署方案( Nginx + Gunicorn + Supervisor )

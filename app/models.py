@@ -1,10 +1,15 @@
 # coding: utf-8
 from sqlalchemy import Column, Date, Integer, String, Table
 from sqlalchemy.sql.sqltypes import NullType
-from sqlalchemy.ext.declarative import declarative_base
+# from sqlalchemy.ext.declarative import declarative_base
 
 
-Base = declarative_base()
+# Base = declarative_base()
+
+from flask.ext.sqlalchemy import SQLAlchemy
+from app import app
+db = SQLAlchemy(app)
+Base = db.Model
 metadata = Base.metadata
 
 

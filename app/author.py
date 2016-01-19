@@ -17,7 +17,7 @@ def get_row(author_id):
     """
     获取作者信息
     :param author_id:
-    :return:
+    :return: None/object
     """
     row = db_session.query(Author).filter(Author.id == author_id).first()
     print row
@@ -30,7 +30,7 @@ def add(author_data):
     """
     添加作者信息
     :param author_data:
-    :return:
+    :return: None/Value of author.id
     """
     author = Author(**author_data)
     db_session.add(author)
@@ -44,7 +44,7 @@ def edit(author_id, author_info):
     修改作者信息
     :param author_id:
     :param author_info:
-    :return:
+    :return: Number of affected rows (Example: 0/1)
     """
     author = db_session.query(Author).filter(Author.id == author_id)
     result = author.update(author_info)
@@ -57,13 +57,33 @@ def delete(author_id):
     """
     删除作者信息
     :param author_id:
-    :return:
+    :return: Number of affected rows (Example: 0/1)
     """
     author = db_session.query(Author).filter(Author.id == author_id)
     result = author.delete()
     db_session.commit()
     print result
     return result
+
+
+def get_rows(page=1, per_page=10, condition=None):
+    """
+    获取作者列表（分页）
+    Usage:
+        items: 信息列表
+        has_next: 如果本页之后还有超过一个分页，则返回True
+        has_prev: 如果本页之前还有超过一个分页，则返回True
+        next_num: 返回下一页的页码
+        prev_num: 返回上一页的页码
+        iter_pages(): 页码列表
+        iter_pages(left_edge=2, left_current=2, right_current=5, right_edge=2) 页码列表默认参数
+    :param page:
+    :param per_page:
+    :param condition:
+    :return:
+    """
+    rows = Author.query.filter(eval(condition)).paginate(page, per_page, False)
+    return rows
 
 
 def test():
@@ -85,5 +105,16 @@ def test():
     delete(6)
 
 
+def test_get_rows():
+    """
+    测试列表获取
+    :return:
+    """
+    rows = get_rows(condition='Author.id > 2')
+    for item in rows.items:
+        print item.id, item.name, item.email
+
+
 if __name__ == '__main__':
-    test()
+    # test()
+    test_get_rows()
