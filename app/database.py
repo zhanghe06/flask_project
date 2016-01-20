@@ -14,6 +14,9 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 from config import SQLALCHEMY_DATABASE_URI
 
+from flask.ext.sqlalchemy import SQLAlchemy
+from app import app
+db = SQLAlchemy(app)
 
 # 初始化数据库连接
 engine = create_engine(SQLALCHEMY_DATABASE_URI, convert_unicode=True)
