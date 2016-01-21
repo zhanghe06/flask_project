@@ -39,22 +39,34 @@ def reg():
     return render_template('reg.html', title='reg')
 
 
-@app.route('/blog/list')
-def blog_list():
+@app.route('/blog/list/')
+@app.route('/blog/list/<int:page>/')
+def blog_list(page=1):
     # return "Hello, World!\nBlog List!"
-    return render_template('blog/list.html', title='blog_list')
+    from blog import get_rows
+    per_page = 8
+    pagination = get_rows(page, per_page)
+    return render_template('blog/list.html', title='blog_list', pagination=pagination)
 
 
-@app.route('/blog/new')
-def blog_new():
+@app.route('/blog/new/')
+@app.route('/blog/new/<int:page>/')
+def blog_new(page=1):
     # return "Hello, World!\nBlog New!"
-    return render_template('blog/new.html', title='blog_new')
+    from blog import get_rows
+    per_page = 8
+    pagination = get_rows(page, per_page)
+    return render_template('blog/new.html', title='blog_new', pagination=pagination)
 
 
-@app.route('/blog/hot')
-def blog_hot():
+@app.route('/blog/hot/')
+@app.route('/blog/hot/<int:page>/')
+def blog_hot(page=1):
     # return "Hello, World!\nBlog Hot!"
-    return render_template('blog/hot.html', title='blog_hot')
+    from blog import get_rows
+    per_page = 8
+    pagination = get_rows(page, per_page)
+    return render_template('blog/hot.html', title='blog_hot', pagination=pagination)
 
 
 @app.route('/login', methods=['GET', 'POST'])

@@ -12,6 +12,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
+import sys
+sys.path.append('..')
 from config import SQLALCHEMY_DATABASE_URI
 
 from flask.ext.sqlalchemy import SQLAlchemy

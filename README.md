@@ -301,6 +301,9 @@ How you actually build the object you are calling your "Query" object depends on
 rows = Author.query.filter(eval(condition)).paginate(page, per_page, False)
 ```
 
+模板中遍历 item，单页 item 序号用 loop.index 表示
+
+
 ### 自定义表单验证
 
 参考官方文档：[http://wtforms.readthedocs.org/en/latest/validators.html#custom-validators](http://wtforms.readthedocs.org/en/latest/validators.html#custom-validators)
