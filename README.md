@@ -282,6 +282,7 @@ rows = db_session.query(Author).filter(eval(condition)).paginate(page, per_page,
 ```
 
 报错如下：
+```
 AttributeError: 'Query' object has no attribute 'paginate'
 ```
 
