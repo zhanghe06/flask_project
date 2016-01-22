@@ -11,7 +11,7 @@
 
 from app import app
 from flask import render_template, request, url_for, session, flash, redirect
-from .forms import LoginForm
+from .forms import LoginForm, BlogForm
 
 
 @app.route('/')
@@ -67,6 +67,30 @@ def blog_hot(page=1):
     per_page = 8
     pagination = get_rows(page, per_page)
     return render_template('blog/hot.html', title='blog_hot', pagination=pagination)
+
+
+@app.route('/blog/edit/<int:blog_id>/', methods=['GET', 'POST'])
+def blog_edit(blog_id):
+    # return "Hello, World!\nBlog Edit!"
+    form = BlogForm(request.form)
+    if request.method == 'GET':
+        from blog import get_row
+        blog_info = get_row(blog_id)
+        if blog_info:
+            form.author.data = blog_info.author
+            form.title.data = blog_info.title
+            form.pub_date.data = blog_info.pub_date
+        else:
+            return redirect(url_for('index'))
+    if request.method == 'POST':
+        from blog import edit
+        blog_info = {
+            'author': form.author.data,
+            'title': form.title.data,
+            'pub_date': form.pub_date.data,
+        }
+        edit(blog_id, blog_info)
+    return render_template('blog/edit.html', title='blog_edit', blog_id=blog_id, form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
