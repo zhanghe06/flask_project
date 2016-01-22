@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
 
-cd ../
+base_path=`dirname $0`/../
+cd ${base_path}
 # 初始化数据库
 sqlite3 flask.db < schema.sql
 # 添加测试数据
-sqlite3 flask.db < etc/create_test_data.sql
+sqlite3 flask.db < etc/data_test.sql
 # 生成 model
-sqlacodegen sqlite:///flask.db --outfile app/models.py
+./etc/model_create.sh
