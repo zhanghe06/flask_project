@@ -305,7 +305,49 @@ rows = Author.query.filter(eval(condition)).paginate(page, per_page, False)
 模板中遍历 item，单页 item 序号用 loop.index 表示
 
 
-### 自定义表单验证
+### 表单
+
+WTForms 标准 HTML 表单域
+```
+表单域类型               描述
+---------               ----
+StringField             文本框
+TextAreaField           多行文本框
+PasswordField           密码输入框
+HiddenField             隐藏文本框
+DateField               接收给定格式datetime.date型的文本框
+DateTimeField           接收给定格式datetime.datetime型的文本框
+IntegerField            接收整型的文本框
+DecimalField            接收decimal.Decimal型的文本框
+FloadField              接收浮点型的文本框
+BooleanField            带有True和False的复选框
+RadioField              一组单选框
+SelectField             下拉选择框
+SelectMultipleField     下拉多选框
+FieldField              文件上传框
+SubmitField             表单提交按钮
+FormField               将一个表单作为表单域嵌入到容器表单中
+FieldList               给定类型的表单域列表
+```
+
+WTForms 验证
+```
+验证程序         描述
+-------         ----
+Email           验证邮箱地址
+EqualTo         比较两个域的值；在要求输入两次密码进行确认的时候非常有用
+IPAddress       验证IPv4网络地址
+Length          验证输入字符串的长度
+NumberRange     验证输入的值在数值范围内
+Optional        允许输入为空；忽略额外的验证
+Required        验证表单域包含数据
+Regexp          验证输入的正则表达式
+URL             验证一个URL
+AnyOf           验证输入是一组可能值中的一个
+NoneOf          验证输入不是一组可能值中的一个
+```
+
+自定义表单验证
 
 参考官方文档：[http://wtforms.readthedocs.org/en/latest/validators.html#custom-validators](http://wtforms.readthedocs.org/en/latest/validators.html#custom-validators)
 
