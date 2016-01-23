@@ -11,14 +11,14 @@
 
 from flask.ext.wtf import Form
 from wtforms import StringField, PasswordField, BooleanField, DateField
-from wtforms.validators import DataRequired, Length, NumberRange, EqualTo
+from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email
 
 
 class RegForm(Form):
     """
     注册表单
     """
-    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('Account(Email)', validators=[DataRequired(), Email()])
     password = PasswordField('New Password', validators=[
         DataRequired(),
         Length(min=6, max=40),
@@ -35,7 +35,7 @@ class LoginForm(Form):
     """
     登陆表单
     """
-    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('Account(Email)', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember Me', default=False)
 

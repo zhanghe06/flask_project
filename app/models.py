@@ -1,10 +1,9 @@
 # coding: utf-8
-from sqlalchemy import Column, Date, Integer, String, Table
+from sqlalchemy import Column, Date, DateTime, Integer, String, Table, text
 from sqlalchemy.sql.sqltypes import NullType
-# from sqlalchemy.ext.declarative import declarative_base
 from database import db
 
-# Base = declarative_base()
+
 Base = db.Model
 metadata = Base.metadata
 
@@ -31,3 +30,32 @@ t_sqlite_sequence = Table(
     Column('name', NullType),
     Column('seq', NullType)
 )
+
+
+class User(Base):
+    __tablename__ = 'user'
+
+    id = Column(Integer, primary_key=True)
+    email = Column(String(20), nullable=False)
+    password = Column(String(20), nullable=False)
+    nickname = Column(String(20))
+    birthday = Column(Date, server_default=text("'0000-00-00'"))
+    create_time = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+    update_time = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+    last_ip = Column(String(15))
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        try:
+            return unicode(self.id)  # python 2
+        except NameError:
+            return str(self.id)  # python 3
+

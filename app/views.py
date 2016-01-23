@@ -9,9 +9,26 @@
 """
 
 
-from app import app
-from flask import render_template, request, url_for, session, flash, redirect
+from app import app, login_manager
+from flask import render_template, request, url_for, session, flash, redirect, g
 from .forms import RegForm, LoginForm, BlogForm
+from .models import User
+from flask.ext.login import login_user, logout_user, current_user, login_required
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    """
+    如果 user_id 无效，它应该返回 None （ 而不是抛出异常 ）。
+    :param user_id:
+    :return:
+    """
+    return User.query.get(int(user_id))
+
+
+@app.before_request
+def before_request():
+    g.user = current_user
 
 
 @app.route('/')
@@ -64,8 +81,10 @@ def blog_hot(page=1):
 
 
 @app.route('/blog/edit/<int:blog_id>/', methods=['GET', 'POST'])
+@login_required
 def blog_edit(blog_id):
     # return "Hello, World!\nBlog Edit!"
+    user = g.user
     form = BlogForm(request.form)
     if request.method == 'GET':
         from blog import get_row
@@ -90,6 +109,7 @@ def blog_edit(blog_id):
             if result == 0:
                 flash(u'Edit Failed', 'warning')
         flash(form.errors, 'warning')  # 调试打开
+    flash(u'Hello, %s' % user, 'info')  # 测试打开
     return render_template('blog/edit.html', title='blog_edit', blog_id=blog_id, form=form)
 
 
@@ -99,7 +119,7 @@ def reg():
     form = RegForm()
     if request.method == 'POST':
         if form.validate_on_submit():
-            flash(u'%s, Thanks for registering' % form.username.data, 'success')
+            flash(u'%s, Thanks for registering' % form.email.data, 'success')
             return redirect(url_for('login'))
         # 闪现消息 success info warning danger
         flash(form.errors, 'warning')  # 调试打开
@@ -108,20 +128,38 @@ def reg():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    print g.user.is_authenticated
+    if g.user is not None and g.user.is_authenticated:
+        return redirect(url_for('index'))
     form = LoginForm()
     if request.method == 'POST':
         if form.validate_on_submit():
-            # if request.form['username'] == 'admin':
-            # if form.username.data == 'admin':
-            session['logged_in'] = True
-            flash(u'%s, You were logged in' % form.username.data, 'success')
-            return redirect(url_for('index'))
+            from user import get_row
+            condition = {
+                'email': form.email.data,
+                'password': form.password.data
+            }
+            user_info = get_row(**condition)
+            if user_info is None:
+                flash(u'%s, You were logged failed' % form.email.data, 'warning')
+                return render_template('login.html', title='login', form=form)
+            # session['logged_in'] = True
+            # 用户通过验证后，用 login_user 函数来登入他们
+            login_user(user_info)
+            flash(u'%s, You were logged in' % form.email.data, 'success')
+            return redirect(request.args.get('next') or url_for('index'))
         flash(form.errors, 'warning')  # 调试打开
     return render_template('login.html', title='login', form=form)
 
 
+# @app.route('/logout')
+# def logout():
+#     session.pop('logged_in', None)
+#     flash(u'You were logged out')
+#     return redirect(url_for('index'))
+
 @app.route('/logout')
 def logout():
-    session.pop('logged_in', None)
+    logout_user()
     flash(u'You were logged out')
     return redirect(url_for('index'))

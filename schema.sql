@@ -1,14 +1,26 @@
-drop table if exists author;
-create table author (
-  id integer primary key autoincrement,
-  name varchar(20) not null,
-  email varchar(20) not null
+DROP TABLE IF EXISTS user;
+CREATE TABLE user (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  email       VARCHAR(20) NOT NULL,
+  password    VARCHAR(20) NOT NULL,
+  nickname    VARCHAR(20),
+  birthday    DATE                DEFAULT '0000-00-00',
+  create_time DATETIME            DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME            DEFAULT CURRENT_TIMESTAMP,
+  last_ip     VARCHAR(15)
 );
 
-drop table if exists blog;
-create table blog (
-  id integer primary key autoincrement,
-  author varchar(20) not null,
-  title varchar(40) not null,
-  pub_date date not null
+DROP TABLE IF EXISTS author;
+CREATE TABLE author (
+  id    INTEGER PRIMARY KEY AUTOINCREMENT,
+  name  VARCHAR(20) NOT NULL,
+  email VARCHAR(20) NOT NULL
+);
+
+DROP TABLE IF EXISTS blog;
+CREATE TABLE blog (
+  id       INTEGER PRIMARY KEY AUTOINCREMENT,
+  author   VARCHAR(20) NOT NULL,
+  title    VARCHAR(40) NOT NULL,
+  pub_date DATE        NOT NULL
 );

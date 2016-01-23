@@ -2,33 +2,33 @@
 # encoding: utf-8
 
 """
-@author: zhanghe
+@user: zhanghe
 @software: PyCharm
-@file: author.py
-@time: 16-1-17 上午12:05
+@file: user.py
+@time: 16-1-23 下午11:42
 """
 
 
 from database import db_session
-from models import Author
+from models import User
 
 
-def get_row_by_id(author_id):
+def get_row_by_id(user_id):
     """
-    通过 id 获取作者信息
-    :param author_id:
+    通过 id 获取用户信息
+    :param user_id:
     :return: None/object
     """
-    row = db_session.query(Author).filter(Author.id == author_id).first()
+    row = db_session.query(User).filter(User.id == user_id).first()
     return row
 
 
 def get_row(*args, **kwargs):
     """
-    获取作者信息
+    获取用户信息
     Usage:
         # 方式一
-        get_row(Author.id > 1)
+        get_row(User.id > 1)
         # 方式二
         test_condition = {
             'name': "Larry"
@@ -39,54 +39,54 @@ def get_row(*args, **kwargs):
     :return: None/object
     """
     if args:
-        row = db_session.query(Author).filter(*args).first()
+        row = db_session.query(User).filter(*args).first()
         return row
     if kwargs:
-        row = db_session.query(Author).filter_by(**kwargs).first()
+        row = db_session.query(User).filter_by(**kwargs).first()
         return row
     return None
 
 
-def add(author_data):
+def add(user_data):
     """
-    添加作者信息
-    :param author_data:
-    :return: None/Value of author.id
+    添加用户信息
+    :param user_data:
+    :return: None/Value of user.id
     """
-    author = Author(**author_data)
-    db_session.add(author)
+    user = User(**user_data)
+    db_session.add(user)
     db_session.commit()
-    return author.id
+    return user.id
 
 
-def edit(author_id, author_info):
+def edit(user_id, user_info):
     """
-    修改作者信息
-    :param author_id:
-    :param author_info:
+    修改用户信息
+    :param user_id:
+    :param user_info:
     :return: Number of affected rows (Example: 0/1)
     """
-    author = db_session.query(Author).filter(Author.id == author_id)
-    result = author.update(author_info)
+    user = db_session.query(User).filter(User.id == user_id)
+    result = user.update(user_info)
     db_session.commit()
     return result
 
 
-def delete(author_id):
+def delete(user_id):
     """
-    删除作者信息
-    :param author_id:
+    删除用户信息
+    :param user_id:
     :return: Number of affected rows (Example: 0/1)
     """
-    author = db_session.query(Author).filter(Author.id == author_id)
-    result = author.delete()
+    user = db_session.query(User).filter(User.id == user_id)
+    result = user.delete()
     db_session.commit()
     return result
 
 
 def get_rows(page=1, per_page=10, *args, **kwargs):
     """
-    获取作者列表（分页）
+    获取用户列表（分页）
     Usage:
         items: 信息列表
         has_next: 如果本页之后还有超过一个分页，则返回True
@@ -102,10 +102,10 @@ def get_rows(page=1, per_page=10, *args, **kwargs):
     :return: None/object
     """
     if args:
-        rows = Author.query.filter(*args).paginate(page, per_page, False)
+        rows = User.query.filter(*args).paginate(page, per_page, False)
         return rows
     if kwargs:
-        rows = Author.query.filter_by(**kwargs).paginate(page, per_page, False)
+        rows = User.query.filter_by(**kwargs).paginate(page, per_page, False)
         return rows
     return None
 
@@ -120,19 +120,20 @@ def test():
     row = get_row_by_id(5)
     print row
     if row:
-        print row.id, row.name, row.email
+        print row.id, row.email, row.nickname
     # 测试添加
-    author_info = {
-        'name': 'Bob',
-        'email': 'bob@gmail.com'
+    user_info = {
+        'email': 'bob@gmail.com',
+        'password': '123456',
+        'nickname': 'Bob',
     }
-    result = add(author_info)
+    result = add(user_info)
     print result
     # 测试修改
-    result = edit(6, {'name': 'Emma'})
+    result = edit(2, {'nickname': 'Emma'})
     print result
     # 测试删除
-    result = delete(6)
+    result = delete(2)
     print result
 
 
@@ -143,17 +144,17 @@ def test_get_row():
     """
     print '测试单条信息'
     test_condition = {
-        'name': "Larry"
+        'nickname': "Larry"
     }
     row = get_row(**test_condition)
     print row
     if row:
-        print row.id, row.name, row.email
+        print row.id, row.email, row.nickname
 
-    row = get_row(Author.id > 1)
+    row = get_row(User.id > 1)
     print row
     if row:
-        print row.id, row.name, row.email
+        print row.id, row.email, row.nickname
 
 
 def test_get_rows():
@@ -162,13 +163,13 @@ def test_get_rows():
     :return:
     """
     print '测试列表信息'
-    rows = get_rows(1, 10, Author.id > 2, Author.id < 5)
+    rows = get_rows(1, 10, User.id > 2, User.id < 5)
     for item in rows.items:
-        print item.id, item.name, item.email
+        print item.id, item.email, item.nickname
 
-    rows = get_rows(1, 10, **{'name': "Larry"})
+    rows = get_rows(1, 10, **{'nickname': "Larry"})
     for item in rows.items:
-        print item.id, item.name, item.email
+        print item.id, item.email, item.nickname
 
 
 if __name__ == '__main__':

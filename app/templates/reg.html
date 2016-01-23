@@ -6,11 +6,11 @@
     {# 表单 #}
     <form class="form-horizontal" method="post" action="{{ url_for('reg') }}">
         {{ form.csrf_token }}
-        <div class="form-group{% if form.username.errors %} has-error{% endif %}">
-            {{ form.username.label(class="col-sm-2 control-label") }}
+        <div class="form-group{% if form.email.errors %} has-error{% endif %}">
+            {{ form.email.label(class="col-sm-2 control-label") }}
             <div class="col-sm-10">
-                {{ form.username(class="form-control", placeholder="Username") }}
-                {% for error in form.username.errors %}
+                {{ form.email(class="form-control", placeholder="Account(email)") }}
+                {% for error in form.email.errors %}
                     <span class="help-block">{{ error }}</span>
                 {% endfor %}
             </div>

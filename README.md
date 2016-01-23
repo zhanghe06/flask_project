@@ -359,6 +359,51 @@ NoneOf          验证输入不是一组可能值中的一个
 参考：[http://flask.pocoo.org/docs/0.10/patterns/flashing/#flashing-with-categories](http://flask.pocoo.org/docs/0.10/patterns/flashing/#flashing-with-categories)
 
 
+### 关于时间
+
+python 中：
+timestamp=datetime.datetime.utcnow()
+
+sql 模式下：
+CURRENT_TIMESTAMP
+
+均为 UTC 时间（非系统本地时间）
+
+把时间设置为 UTC 时区，所有的存储在数据库里的时间将是 UTC 格式，用户可能在世界各地写微博，因此我们需要使用统一的时间单位。
+
+另外，sqlite 并不支持像 mysql 有这种 DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 触发器的简单语法。
+其实更新时间完全可以在程序中控制。
+
+若缺省值是 CURRENT_TIME、CURRENT_DATE 或 CURRENT_TIMESTAMP，则当前 UTC 日期和/或时间被插入字段。
+
+CURRENT_TIME 的格式为 “HH:MM:SS”
+
+CURRENT_DATE 为 “YYYY-MM-DD”
+
+而 CURRENT_TIMESTAMP 是 “YYYY-MM-DD HH:MM:SS”
+
+
+### 用户登陆
+
+Flask-Login 扩展需要在我们 model 的 User 类里实现一些方法。：
+
+    def is_authenticated(self):
+            return True
+    
+    def is_active(self):
+        return True
+    
+    def is_anonymous(self):
+        return False
+    
+    def get_id(self):
+        try:
+            return unicode(self.id)  # python 2
+        except NameError:
+            return str(self.id)  # python 3
+
+
+
 ## 部署方案( Nginx + Gunicorn + Supervisor )
 
 Gunicorn 官网：[http://gunicorn.org/](http://gunicorn.org/)

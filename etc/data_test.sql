@@ -1,9 +1,12 @@
+-- user 测试数据
+INSERT INTO `user`(email, password, nickname) VALUES('test@gmail.com', '123456', 'Test');
+
 -- author 测试数据
-INSERT INTO author(name, email) VALUES('Mark', 'mark@gmail.com');
-INSERT INTO author(name, email) VALUES('Jacob', 'jacob@gmail.com');
-INSERT INTO author(name, email) VALUES('Larry', 'larry@gmail.com');
-INSERT INTO author(name, email) VALUES('Tom', 'tom@gmail.com');
-INSERT INTO author(name, email) VALUES('Lily', 'lily@gmail.com');
+INSERT INTO author(`name`, email) VALUES('Mark', 'mark@gmail.com');
+INSERT INTO author(`name`, email) VALUES('Jacob', 'jacob@gmail.com');
+INSERT INTO author(`name`, email) VALUES('Larry', 'larry@gmail.com');
+INSERT INTO author(`name`, email) VALUES('Tom', 'tom@gmail.com');
+INSERT INTO author(`name`, email) VALUES('Lily', 'lily@gmail.com');
 
 -- blog 测试数据
 INSERT INTO blog(author, title, pub_date) VALUES('Mark', 'The old man and the sea', '2016-01-11 11:01:05');
