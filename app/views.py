@@ -77,17 +77,19 @@ def blog_edit(blog_id):
         else:
             return redirect(url_for('index'))
     if request.method == 'POST':
-        from blog import edit
-        blog_info = {
-            'author': form.author.data,
-            'title': form.title.data,
-            'pub_date': form.pub_date.data,
-        }
-        result = edit(blog_id, blog_info)
-        if result == 1:
-            flash(u'Edit Success', 'success')
-        if result == 0:
-            flash(u'Edit Failed', 'warning')
+        if form.validate_on_submit():
+            from blog import edit
+            blog_info = {
+                'author': form.author.data,
+                'title': form.title.data,
+                'pub_date': form.pub_date.data,
+            }
+            result = edit(blog_id, blog_info)
+            if result == 1:
+                flash(u'Edit Success', 'success')
+            if result == 0:
+                flash(u'Edit Failed', 'warning')
+        flash(form.errors, 'warning')  # 调试打开
     return render_template('blog/edit.html', title='blog_edit', blog_id=blog_id, form=form)
 
 
