@@ -352,6 +352,13 @@ NoneOf          验证输入不是一组可能值中的一个
 参考官方文档：[http://wtforms.readthedocs.org/en/latest/validators.html#custom-validators](http://wtforms.readthedocs.org/en/latest/validators.html#custom-validators)
 
 
+### Message Flashing
+
+闪现消息 定义4种类型 success info warning danger
+
+参考：[http://flask.pocoo.org/docs/0.10/patterns/flashing/#flashing-with-categories](http://flask.pocoo.org/docs/0.10/patterns/flashing/#flashing-with-categories)
+
+
 ## 部署方案( Nginx + Gunicorn + Supervisor )
 
 Gunicorn 官网：[http://gunicorn.org/](http://gunicorn.org/)
