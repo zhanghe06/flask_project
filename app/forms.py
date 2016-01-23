@@ -11,30 +11,47 @@
 
 from flask.ext.wtf import Form
 from wtforms import StringField, PasswordField, BooleanField, DateField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Length, NumberRange, EqualTo
+
+
+class RegForm(Form):
+    """
+    注册表单
+    """
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('New Password', validators=[
+        DataRequired(),
+        Length(min=6, max=40),
+        EqualTo('confirm', message='Passwords must match')
+    ])
+    confirm = PasswordField('Repeat Password', validators=[
+        DataRequired(),
+        Length(min=6, max=40)
+    ])
+    accept_agreement = BooleanField('I accept the agreement', validators=[DataRequired()], default=False)
 
 
 class LoginForm(Form):
     """
     登陆表单
     """
-    username = StringField('username', validators=[DataRequired()])
-    password = PasswordField('password', validators=[DataRequired()])
-    remember = BooleanField('remember', default=False)
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember = BooleanField('Remember Me', default=False)
 
 
 class BlogForm(Form):
     """
     Blog 表单
     """
-    author = StringField('author', validators=[DataRequired()])
-    title = StringField('title', validators=[DataRequired()])
-    pub_date = DateField('pub_date', validators=[DataRequired()])
+    author = StringField('Author', validators=[DataRequired()])
+    title = StringField('Title', validators=[DataRequired(), Length(max=40)])
+    pub_date = DateField('Pub Date', validators=[DataRequired()])
 
 
 class AuthorForm(Form):
     """
     作者表单
     """
-    name = StringField('name', validators=[DataRequired()])
-    email = StringField('email', validators=[DataRequired()])
+    name = StringField('Name', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired()])

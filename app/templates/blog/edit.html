@@ -4,8 +4,9 @@
 {% block content %}
     <h2 class="sub-header">Blog Edit</h2>
     <form class="form-horizontal" method="post" action="{{ url_for('blog_edit', blog_id=blog_id) }}">
+        {{ form.csrf_token }}
         <div class="form-group">
-            <label for="author" class="col-sm-2 control-label">Author</label>
+            {{ form.author.label(class="col-sm-2 control-label") }}
             <div class="col-sm-10">
                 {{ form.author(class="form-control", placeholder="Author") }}
                 {% for error in form.author.errors %}
@@ -14,7 +15,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label for="title" class="col-sm-2 control-label">Title</label>
+            {{ form.title.label(class="col-sm-2 control-label") }}
             <div class="col-sm-10">
                 {{ form.title(class="form-control", placeholder="Title") }}
                 {% for error in form.title.errors %}
@@ -23,9 +24,9 @@
             </div>
         </div>
         <div class="form-group">
-            <label for="pub_date" class="col-sm-2 control-label">Pub Date</label>
+            {{ form.pub_date.label(class="col-sm-2 control-label") }}
             <div class="col-sm-10">
-                {{ form.pub_date(class="form-control", placeholder="Pub Date") }}
+                {{ form.pub_date(class="form-control", placeholder="Pub Date", type='date') }}
                 {% for error in form.pub_date.errors %}
                     <span class="help-block">{{ error }}</span>
                 {% endfor %}

@@ -11,7 +11,7 @@
 
 from app import app
 from flask import render_template, request, url_for, session, flash, redirect
-from .forms import LoginForm, BlogForm
+from .forms import RegForm, LoginForm, BlogForm
 
 
 @app.route('/')
@@ -31,12 +31,6 @@ def about():
 def contact():
     # return "Hello, World!\nContact!"
     return render_template('contact.html', title='contact')
-
-
-@app.route('/reg')
-def reg():
-    # return "Hello, World!\nReg!"
-    return render_template('reg.html', title='reg')
 
 
 @app.route('/blog/list/')
@@ -89,8 +83,25 @@ def blog_edit(blog_id):
             'title': form.title.data,
             'pub_date': form.pub_date.data,
         }
-        edit(blog_id, blog_info)
+        result = edit(blog_id, blog_info)
+        if result == 1:
+            flash(u'Edit Success', 'success')
+        if result == 0:
+            flash(u'Edit Failed', 'warning')
     return render_template('blog/edit.html', title='blog_edit', blog_id=blog_id, form=form)
+
+
+@app.route('/reg', methods=['GET', 'POST'])
+def reg():
+    # return "Hello, World!\nReg!"
+    form = RegForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            flash(u'%s, Thanks for registering' % form.username.data, 'success')
+            return redirect(url_for('login'))
+        # 闪现消息 success info warning danger
+        flash(form.errors, 'warning')  # 调试打开
+    return render_template('reg.html', title='reg', form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -99,15 +110,16 @@ def login():
     if request.method == 'POST':
         if form.validate_on_submit():
             # if request.form['username'] == 'admin':
-            if form.username.data == 'admin':
-                session['logged_in'] = True
-                flash('You were logged in')
-                return redirect(url_for('index'))
+            # if form.username.data == 'admin':
+            session['logged_in'] = True
+            flash(u'%s, You were logged in' % form.username.data, 'success')
+            return redirect(url_for('index'))
+        flash(form.errors, 'warning')  # 调试打开
     return render_template('login.html', title='login', form=form)
 
 
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
-    flash('You were logged out')
+    flash(u'You were logged out')
     return redirect(url_for('index'))
