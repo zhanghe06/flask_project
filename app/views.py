@@ -54,9 +54,9 @@ def contact():
 @app.route('/blog/list/<int:page>/')
 def blog_list(page=1):
     # return "Hello, World!\nBlog List!"
-    from blog import get_rows
+    from blog import get_blog_rows
     per_page = 8
-    pagination = get_rows(page, per_page)
+    pagination = get_blog_rows(page, per_page)
     return render_template('blog/list.html', title='blog_list', pagination=pagination)
 
 
@@ -64,9 +64,9 @@ def blog_list(page=1):
 @app.route('/blog/new/<int:page>/')
 def blog_new(page=1):
     # return "Hello, World!\nBlog New!"
-    from blog import get_rows
+    from blog import get_blog_rows
     per_page = 8
-    pagination = get_rows(page, per_page)
+    pagination = get_blog_rows(page, per_page)
     return render_template('blog/new.html', title='blog_new', pagination=pagination)
 
 
@@ -74,9 +74,9 @@ def blog_new(page=1):
 @app.route('/blog/hot/<int:page>/')
 def blog_hot(page=1):
     # return "Hello, World!\nBlog Hot!"
-    from blog import get_rows
+    from blog import get_blog_rows
     per_page = 8
-    pagination = get_rows(page, per_page)
+    pagination = get_blog_rows(page, per_page)
     return render_template('blog/hot.html', title='blog_hot', pagination=pagination)
 
 
@@ -85,10 +85,14 @@ def blog_hot(page=1):
 def blog_edit(blog_id):
     # return "Hello, World!\nBlog Edit!"
     user = g.user
+    # 权限判断 todo
+    if user.id == 0:
+        flash(u'Permission error', 'danger')
+        return redirect(url_for('blog_list'))
     form = BlogForm(request.form)
     if request.method == 'GET':
-        from blog import get_row
-        blog_info = get_row(blog_id)
+        from blog import get_blog_row_by_id
+        blog_info = get_blog_row_by_id(blog_id)
         if blog_info:
             form.author.data = blog_info.author
             form.title.data = blog_info.title
@@ -97,19 +101,19 @@ def blog_edit(blog_id):
             return redirect(url_for('index'))
     if request.method == 'POST':
         if form.validate_on_submit():
-            from blog import edit
+            from blog import edit_blog
             blog_info = {
                 'author': form.author.data,
                 'title': form.title.data,
                 'pub_date': form.pub_date.data,
             }
-            result = edit(blog_id, blog_info)
+            result = edit_blog(blog_id, blog_info)
             if result == 1:
                 flash(u'Edit Success', 'success')
             if result == 0:
                 flash(u'Edit Failed', 'warning')
         flash(form.errors, 'warning')  # 调试打开
-    flash(u'Hello, %s' % user, 'info')  # 测试打开
+    flash(u'Hello, %s' % current_user.email, 'info')  # 测试打开
     return render_template('blog/edit.html', title='blog_edit', blog_id=blog_id, form=form)
 
 
@@ -128,18 +132,17 @@ def reg():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    print g.user.is_authenticated
     if g.user is not None and g.user.is_authenticated:
         return redirect(url_for('index'))
     form = LoginForm()
     if request.method == 'POST':
         if form.validate_on_submit():
-            from user import get_row
+            from user import get_user_row
             condition = {
                 'email': form.email.data,
                 'password': form.password.data
             }
-            user_info = get_row(**condition)
+            user_info = get_user_row(**condition)
             if user_info is None:
                 flash(u'%s, You were logged failed' % form.email.data, 'warning')
                 return render_template('login.html', title='login', form=form)

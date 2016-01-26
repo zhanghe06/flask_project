@@ -9,64 +9,58 @@
 """
 
 
-from database import db_session
 from models import Blog
+from tools import get_row, get_rows, get_row_by_id, add, edit, delete
 
 
-def get_row(blog_id):
+def get_blog_row_by_id(blog_id):
     """
-    获取博客信息
+    通过 id 获取博客信息
     :param blog_id:
     :return: None/object
     """
-    row = db_session.query(Blog).filter(Blog.id == blog_id).first()
-    print row
-    if row:
-        print row.id, row.author, row.title, row.pub_date
-    return row
+    return get_row_by_id(Blog, blog_id)
 
 
-def add(blog_data):
+def get_blog_row(*args, **kwargs):
+    """
+    获取博客信息
+    :param args:
+    :param kwargs:
+    :return: None/object
+    """
+    return get_row(Blog, *args, **kwargs)
+
+
+def add_blog(blog_data):
     """
     添加博客信息
     :param blog_data:
     :return: None/Value of blog.id
     """
-    blog = Blog(**blog_data)
-    db_session.add(blog)
-    db_session.commit()
-    print blog.id
-    return blog.id
+    return add(Blog, blog_data)
 
 
-def edit(blog_id, blog_info):
+def edit_blog(blog_id, blog_data):
     """
     修改博客信息
     :param blog_id:
-    :param blog_info:
+    :param blog_data:
     :return: Number of affected rows (Example: 0/1)
     """
-    blog = db_session.query(Blog).filter(Blog.id == blog_id)
-    result = blog.update(blog_info)
-    db_session.commit()
-    print result
-    return result
+    return edit(Blog, blog_id, blog_data)
 
 
-def delete(blog_id):
+def delete_blog(blog_id):
     """
     删除博客信息
     :param blog_id:
     :return: Number of affected rows (Example: 0/1)
     """
-    blog = db_session.query(Blog).filter(Blog.id == blog_id)
-    result = blog.delete()
-    db_session.commit()
-    print result
-    return result
+    return delete(Blog, blog_id)
 
 
-def get_rows(page=1, per_page=10, condition=None):
+def get_blog_rows(page=1, per_page=10, *args, **kwargs):
     """
     获取博客列表（分页）
     Usage:
@@ -79,47 +73,16 @@ def get_rows(page=1, per_page=10, condition=None):
         iter_pages(left_edge=2, left_current=2, right_current=5, right_edge=2) 页码列表默认参数
     :param page:
     :param per_page:
-    :param condition:
+    :param args:
+    :param kwargs:
     :return:
     """
-    if condition is None:
-        rows = Blog.query.filter().paginate(page, per_page, False)
-    else:
-        rows = Blog.query.filter(eval(condition)).paginate(page, per_page, False)
+    rows = get_rows(Blog, page, per_page, *args, **kwargs)
     return rows
 
 
-def test():
-    """
-    测试
-    :return:
-    """
-    # 测试获取
-    get_row(5)
-    # 测试添加
-    blog_info = {
-        'author': 'Bob',
-        'title': 'Before Sunset',
-        'pub_date': '2016-01-16 10:18:52'
-    }
-    add(blog_info)
-    # 测试修改
-    edit(11, {'pub_date': '2016-01-16 10:18:52'})
-    # 测试删除
-    delete(11)
-
-
-def test_get_rows():
-    """
-    测试列表获取
-    :return:
-    """
-    rows = get_rows(condition='Blog.id > 2')
-    rows = get_rows()
-    for item in rows.items:
-        print item.id, item.author, item.title, item.pub_date
-
-
 if __name__ == '__main__':
-    # test()
-    test_get_rows()
+    blog_rows = get_blog_rows(1, 10)
+    if blog_rows:
+        for item in blog_rows.items:
+            print item.id, item.author, item.title, item.pub_date

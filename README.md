@@ -402,6 +402,9 @@ Flask-Login 扩展需要在我们 model 的 User 类里实现一些方法。：
         except NameError:
             return str(self.id)  # python 3
 
+g.user 视图和模板都可以用
+
+current_user 仅仅支持视图
 
 
 ## 部署方案( Nginx + Gunicorn + Supervisor )

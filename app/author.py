@@ -9,84 +9,60 @@
 """
 
 
-from database import db_session
 from models import Author
+from tools import get_row, get_rows, get_row_by_id, add, edit, delete
 
 
-def get_row_by_id(author_id):
+def get_author_row_by_id(author_id):
     """
-    通过 id 获取作者信息
+    通过 id 获取博客信息
     :param author_id:
     :return: None/object
     """
-    row = db_session.query(Author).filter(Author.id == author_id).first()
-    return row
+    return get_row_by_id(Author, author_id)
 
 
-def get_row(*args, **kwargs):
+def get_author_row(*args, **kwargs):
     """
-    获取作者信息
-    Usage:
-        # 方式一
-        get_row(Author.id > 1)
-        # 方式二
-        test_condition = {
-            'name': "Larry"
-        }
-        get_row(**test_condition)
+    获取博客信息
     :param args:
     :param kwargs:
     :return: None/object
     """
-    if args:
-        row = db_session.query(Author).filter(*args).first()
-        return row
-    if kwargs:
-        row = db_session.query(Author).filter_by(**kwargs).first()
-        return row
-    return None
+    return get_row(Author, *args, **kwargs)
 
 
-def add(author_data):
+def add_author(author_data):
     """
-    添加作者信息
+    添加博客信息
     :param author_data:
     :return: None/Value of author.id
     """
-    author = Author(**author_data)
-    db_session.add(author)
-    db_session.commit()
-    return author.id
+    return add(Author, author_data)
 
 
-def edit(author_id, author_info):
+def edit_author(author_id, author_data):
     """
-    修改作者信息
+    修改博客信息
     :param author_id:
-    :param author_info:
+    :param author_data:
     :return: Number of affected rows (Example: 0/1)
     """
-    author = db_session.query(Author).filter(Author.id == author_id)
-    result = author.update(author_info)
-    db_session.commit()
-    return result
+    return edit(Author, author_id, author_data)
 
 
-def delete(author_id):
+def delete_author(author_id):
     """
-    删除作者信息
+    删除博客信息
     :param author_id:
     :return: Number of affected rows (Example: 0/1)
     """
-    author = db_session.query(Author).filter(Author.id == author_id)
-    result = author.delete()
-    db_session.commit()
-    return result
+    return delete(Author, author_id)
 
 
-def get_rows(page=1, per_page=10, *args, **kwargs):
+def get_author_rows(page=1, per_page=10, *args, **kwargs):
     """
-    获取作者列表（分页）
+    获取博客列表（分页）
     Usage:
         items: 信息列表
         has_next: 如果本页之后还有超过一个分页，则返回True
@@ -99,79 +75,7 @@ def get_rows(page=1, per_page=10, *args, **kwargs):
     :param per_page:
     :param args:
     :param kwargs:
-    :return: None/object
-    """
-    if args:
-        rows = Author.query.filter(*args).paginate(page, per_page, False)
-        return rows
-    if kwargs:
-        rows = Author.query.filter_by(**kwargs).paginate(page, per_page, False)
-        return rows
-    return None
-
-
-def test():
-    """
-    测试
     :return:
     """
-    print '测试增删改查'
-    # 测试获取
-    row = get_row_by_id(5)
-    print row
-    if row:
-        print row.id, row.name, row.email
-    # 测试添加
-    author_info = {
-        'name': 'Bob',
-        'email': 'bob@gmail.com'
-    }
-    result = add(author_info)
-    print result
-    # 测试修改
-    result = edit(6, {'name': 'Emma'})
-    print result
-    # 测试删除
-    result = delete(6)
-    print result
-
-
-def test_get_row():
-    """
-    测试信息获取
-    :return:
-    """
-    print '测试单条信息'
-    test_condition = {
-        'name': "Larry"
-    }
-    row = get_row(**test_condition)
-    print row
-    if row:
-        print row.id, row.name, row.email
-
-    row = get_row(Author.id > 1)
-    print row
-    if row:
-        print row.id, row.name, row.email
-
-
-def test_get_rows():
-    """
-    测试列表获取
-    :return:
-    """
-    print '测试列表信息'
-    rows = get_rows(1, 10, Author.id > 2, Author.id < 5)
-    for item in rows.items:
-        print item.id, item.name, item.email
-
-    rows = get_rows(1, 10, **{'name': "Larry"})
-    for item in rows.items:
-        print item.id, item.name, item.email
-
-
-if __name__ == '__main__':
-    # test()
-    test_get_row()
-    test_get_rows()
+    rows = get_rows(Author, page, per_page, *args, **kwargs)
+    return rows
