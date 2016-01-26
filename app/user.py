@@ -9,7 +9,7 @@
 """
 
 
-from models import User
+from login import LoginUser
 from tools import get_row, get_rows, get_row_by_id, add, edit, delete
 
 
@@ -19,7 +19,7 @@ def get_user_row_by_id(user_id):
     :param user_id:
     :return: None/object
     """
-    return get_row_by_id(User, user_id)
+    return get_row_by_id(LoginUser, user_id)
 
 
 def get_user_row(*args, **kwargs):
@@ -29,7 +29,7 @@ def get_user_row(*args, **kwargs):
     :param kwargs:
     :return: None/object
     """
-    return get_row(User, *args, **kwargs)
+    return get_row(LoginUser, *args, **kwargs)
 
 
 def add_user(user_data):
@@ -38,7 +38,7 @@ def add_user(user_data):
     :param user_data:
     :return: None/Value of user.id
     """
-    return add(User, user_data)
+    return add(LoginUser, user_data)
 
 
 def edit_user(user_id, user_data):
@@ -48,7 +48,7 @@ def edit_user(user_id, user_data):
     :param user_data:
     :return: Number of affected rows (Example: 0/1)
     """
-    return edit(User, user_id, user_data)
+    return edit(LoginUser, user_id, user_data)
 
 
 def delete_user(user_id):
@@ -57,7 +57,7 @@ def delete_user(user_id):
     :param user_id:
     :return: Number of affected rows (Example: 0/1)
     """
-    return delete(User, user_id)
+    return delete(LoginUser, user_id)
 
 
 def get_user_rows(page=1, per_page=10, *args, **kwargs):
@@ -77,5 +77,5 @@ def get_user_rows(page=1, per_page=10, *args, **kwargs):
     :param kwargs:
     :return:
     """
-    rows = get_rows(User, page, per_page, *args, **kwargs)
+    rows = get_rows(LoginUser, page, per_page, *args, **kwargs)
     return rows
