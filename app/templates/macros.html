@@ -44,12 +44,12 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li{% if title == 'home' %} class="active"{% endif %}><a href="{{ url_for('index') }}">Home</a></li>
-                    <li{% if title == 'about' %} class="active"{% endif %}><a href="{{ url_for('about') }}">About</a></li>
-                    <li{% if title == 'contact' %} class="active"{% endif %}><a href="{{ url_for('contact') }}">Contact</a></li>
+                    <li{% if title == 'home' %} class="active"{% endif %}><a href="{{ url_for('index') }}"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                    <li{% if title == 'about' %} class="active"{% endif %}><a href="{{ url_for('about') }}"><span class="glyphicon glyphicon-list"></span> About</a></li>
+                    <li{% if title == 'contact' %} class="active"{% endif %}><a href="{{ url_for('contact') }}"><span class="glyphicon glyphicon-envelope"></span> Contact</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="false">Blog List <span class="caret"></span></a>
+                           aria-expanded="false"><span class="glyphicon glyphicon-book"></span> Blog List <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             {% if title == 'blog_list' %}<li class="dropdown-header">Blog List</li>{% else %}<li><a href="{{ url_for('blog_list') }}">Blog List</a></li>{% endif %}
                             {% if title == 'blog_new' %}<li class="dropdown-header">Blog New</li>{% else %}<li><a href="{{ url_for('blog_new') }}">Blog New</a></li>{% endif %}
@@ -69,9 +69,20 @@
                     <button type="submit" class="btn btn-default">Submit</button>
                 </form>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{{ url_for('reg') }}">Register</a></li>
-                    <li><a href="{{ url_for('login') }}">Login</a></li>
-                    <li class="active"><a href="{{ url_for('logout') }}">Logout</a></li>
+                    {% if g.user != None and g.user.is_authenticated %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false"><span class="glyphicon glyphicon-user"></span> {{ g.user.nickname }}<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-cog"></span> Setting</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li{% if title == 'reg' %} class="active"{% endif %}><a href="{{ url_for('reg') }}"><span class="glyphicon glyphicon-list-alt"></span> Register</a></li>
+                    <li{% if title == 'login' %} class="active"{% endif %}><a href="{{ url_for('login') }}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                    {% endif %}
                 </ul>
             </div><!--/.nav-collapse -->
         </div>

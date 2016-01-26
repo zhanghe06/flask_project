@@ -10,9 +10,9 @@
 
 
 from app import app, login_manager
-from flask import render_template, request, url_for, session, flash, redirect, g
+from flask import render_template, request, url_for, session, flash, redirect, g, jsonify
 from .forms import RegForm, LoginForm, BlogForm
-from .models import User
+from login import LoginUser
 from flask.ext.login import login_user, logout_user, current_user, login_required
 
 
@@ -23,7 +23,7 @@ def load_user(user_id):
     :param user_id:
     :return:
     """
-    return User.query.get(int(user_id))
+    return LoginUser.query.get(int(user_id))
 
 
 @app.before_request
@@ -115,6 +115,23 @@ def blog_edit(blog_id):
         flash(form.errors, 'warning')  # 调试打开
     flash(u'Hello, %s' % current_user.email, 'info')  # 测试打开
     return render_template('blog/edit.html', title='blog_edit', blog_id=blog_id, form=form)
+
+
+@app.route('/blog/del/', methods=['GET', 'POST'])
+@login_required
+def blog_delete():
+    if request.method == 'GET':
+        user = g.user
+        # 权限判断 todo
+        if user.id == 0:
+            return jsonify(result=False)
+        blog_id = request.args.get('blog_id', 0, type=int)
+        from blog import delete_blog
+        result = delete_blog(blog_id)
+        if result == 1:
+            return jsonify(result=True)
+        else:
+            return jsonify(result=False)
 
 
 @app.route('/reg', methods=['GET', 'POST'])

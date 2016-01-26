@@ -407,6 +407,12 @@ g.user 视图和模板都可以用
 current_user 仅仅支持视图
 
 
+### 用 jQuery 实现 Ajax
+
+[http://www.pythondoc.com/flask/patterns/jquery.html](http://www.pythondoc.com/flask/patterns/jquery.html)
+
+
+
 ## 部署方案( Nginx + Gunicorn + Supervisor )
 
 Gunicorn 官网：[http://gunicorn.org/](http://gunicorn.org/)

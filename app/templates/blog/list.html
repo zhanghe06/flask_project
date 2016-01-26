@@ -18,7 +18,7 @@
             </thead>
             <tbody>
             {% for item in pagination.items %}
-            <tr>
+            <tr id="blog_{{ item.id }}">
                 <td>{{ loop.index }}</td>
                 <td>{{ item.id }}</td>
                 <td>{{ item.author }}</td>
@@ -26,9 +26,9 @@
                 <td>{{ item.pub_date }}</td>
                 <td>
                     {# <div class="pull-right"> #}
-                        <a href="#"><span class="glyphicon glyphicon-pencil"></span></a>
-                        <a href="#"><span class="glyphicon glyphicon-flag"></span></a>
-                        <a href="#"><span class="glyphicon glyphicon-trash"></span></a>
+                        <a href="{{ url_for('blog_edit', blog_id=item.id) }}"><span class="glyphicon glyphicon-pencil"></span></a>
+{#                        <a href="{{ url_for('blog_delete', blog_id=item.id) }}"><span class="glyphicon glyphicon-trash"></span></a>#}
+                        <a href="javascript:void(0);" onclick="blog_delete({{ item.id }});"><span class="glyphicon glyphicon-trash"></span></a>
                     {# </div> #}
                 </td>
             </tr>
@@ -39,4 +39,24 @@
         {% from "macros.html" import render_pagination %}
         {{ render_pagination(pagination, 'blog_list') }}
     </div>
+
+    <script type="text/javascript">
+        function blog_delete(blog_id){
+            if(confirm("Are you sure?"))
+            {
+                console.log(blog_id);
+                $.getJSON('{{ url_for('blog_delete') }}',
+                {
+                    blog_id: blog_id
+                }, function (data) {
+                    var result = data.result;  // true/false
+                    console.log(result==true);
+                    if(result==true){
+                        window.location.reload();
+                    }
+                });
+                return false;
+            }
+        }
+    </script>
 {% endblock %}

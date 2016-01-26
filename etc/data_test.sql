@@ -1,4 +1,6 @@
 -- user 测试数据
+INSERT INTO `user`(email, password, nickname) VALUES('admin@gmail.com', '123456', 'Admin');
+INSERT INTO `user`(email, password, nickname) VALUES('guest@gmail.com', '123456', 'Guest');
 INSERT INTO `user`(email, password, nickname) VALUES('test@gmail.com', '123456', 'Test');
 
 -- author 测试数据
