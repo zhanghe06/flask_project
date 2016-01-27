@@ -1,12 +1,12 @@
 DROP TABLE IF EXISTS user;
 CREATE TABLE user (
-  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  id          INTEGER PRIMARY KEY  AUTOINCREMENT,
   email       VARCHAR(20) NOT NULL,
   password    VARCHAR(20) NOT NULL,
-  nickname    VARCHAR(20),
-  birthday    DATE                DEFAULT '0000-00-00',
-  create_time DATETIME            DEFAULT CURRENT_TIMESTAMP,
-  update_time DATETIME            DEFAULT CURRENT_TIMESTAMP,
+  nickname    VARCHAR(20) NOT NULL,
+  birthday    DATE                 DEFAULT '0000-00-00',
+  create_time DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
   last_ip     VARCHAR(15)
 );
 
@@ -19,8 +19,10 @@ CREATE TABLE author (
 
 DROP TABLE IF EXISTS blog;
 CREATE TABLE blog (
-  id       INTEGER PRIMARY KEY AUTOINCREMENT,
-  author   VARCHAR(20) NOT NULL,
-  title    VARCHAR(40) NOT NULL,
-  pub_date DATE        NOT NULL
+  id        INTEGER PRIMARY KEY  AUTOINCREMENT,
+  author    VARCHAR(20) NOT NULL,
+  title     VARCHAR(40) NOT NULL,
+  pub_date  DATE        NOT NULL DEFAULT '0000-00-00',
+  add_time  DATETIME             DEFAULT CURRENT_TIMESTAMP,
+  edit_time DATETIME             DEFAULT CURRENT_TIMESTAMP
 );

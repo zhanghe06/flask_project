@@ -2,6 +2,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <div class="container">
     <h1>Register</h1>
     {# 表单 #}
     <form class="form-horizontal" method="post" action="{{ url_for('reg') }}">
@@ -51,4 +52,5 @@
             </div>
         </div>
     </form>
+    </div>
 {% endblock %}

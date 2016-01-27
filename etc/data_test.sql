@@ -1,7 +1,7 @@
 -- user 测试数据
-INSERT INTO `user`(email, password, nickname) VALUES('admin@gmail.com', '123456', 'Admin');
-INSERT INTO `user`(email, password, nickname) VALUES('guest@gmail.com', '123456', 'Guest');
-INSERT INTO `user`(email, password, nickname) VALUES('test@gmail.com', '123456', 'Test');
+INSERT INTO `user`(email, password, nickname, create_time, update_time) VALUES('admin@gmail.com', '123456', 'Admin', '2016-01-11 11:01:05', '2016-01-11 11:01:05');
+INSERT INTO `user`(email, password, nickname, create_time, update_time) VALUES('guest@gmail.com', '123456', 'Guest', '2016-01-12 12:25:34', '2016-01-12 12:25:34');
+INSERT INTO `user`(email, password, nickname, create_time, update_time) VALUES('test@gmail.com', '123456', 'Test', '2016-01-12 01:43:42', '2016-01-12 01:43:42');
 
 -- author 测试数据
 INSERT INTO author(`name`, email) VALUES('Mark', 'mark@gmail.com');

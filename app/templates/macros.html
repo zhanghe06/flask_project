@@ -54,11 +54,6 @@
                             {% if title == 'blog_list' %}<li class="dropdown-header">Blog List</li>{% else %}<li><a href="{{ url_for('blog_list') }}">Blog List</a></li>{% endif %}
                             {% if title == 'blog_new' %}<li class="dropdown-header">Blog New</li>{% else %}<li><a href="{{ url_for('blog_new') }}">Blog New</a></li>{% endif %}
                             {% if title == 'blog_hot' %}<li class="dropdown-header">Blog Hot</li>{% else %}<li><a href="{{ url_for('blog_hot') }}">Blog Hot</a></li>{% endif %}
-                            <li><a href="#">Something else here</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li class="dropdown-header">Nav header</li>
-                            <li><a href="#">Separated link</a></li>
-                            <li><a href="#">One more separated link</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -74,7 +69,8 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false"><span class="glyphicon glyphicon-user"></span> {{ g.user.nickname }}<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-cog"></span> Setting</a></li>
+                            <li><a href="{{ url_for('blog_add') }}"><span class="glyphicon glyphicon-edit"></span> Add Blog</a></li>
+                            <li><a href="{{ url_for('setting') }}"><span class="glyphicon glyphicon-cog"></span> Setting</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
                         </ul>

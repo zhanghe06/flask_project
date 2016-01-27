@@ -2,6 +2,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <div class="container">
     <h1>Sign In</h1>
     <form class="form-horizontal" method="post" action="{{ url_for('login') }}">
         {{ form.csrf_token }}
@@ -38,4 +39,5 @@
             </div>
         </div>
     </form>
+    </div>
 {% endblock %}

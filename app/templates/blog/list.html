@@ -2,6 +2,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <div class="container">
     <h2 class="sub-header">Blog List!</h2>
     <div class="table-responsive">
         {# <table class="table table-striped"> #}
@@ -39,7 +40,7 @@
         {% from "macros.html" import render_pagination %}
         {{ render_pagination(pagination, 'blog_list') }}
     </div>
-
+    </div>
     <script type="text/javascript">
         function blog_delete(blog_id){
             if(confirm("Are you sure?"))

@@ -31,8 +31,8 @@
     {% endfor %}
     {% endif %}
     {% endwith %}
-        {% block content %}{% endblock %}
     </div>
+    {% block content %}{% endblock %}
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="{{ url_for('static', filename='js/jquery-1.11.3.min.js') }}"></script>

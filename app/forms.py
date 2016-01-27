@@ -10,7 +10,7 @@
 
 
 from flask.ext.wtf import Form
-from wtforms import StringField, PasswordField, BooleanField, DateField
+from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email
 
 
@@ -40,9 +40,18 @@ class LoginForm(Form):
     remember = BooleanField('Remember Me', default=False)
 
 
-class BlogForm(Form):
+class BlogAddForm(Form):
     """
-    Blog 表单
+    Blog 添加表单
+    """
+    author = StringField('Author', validators=[DataRequired()])
+    title = StringField('Title', validators=[DataRequired(), Length(max=40)])
+    pub_date = DateField('Pub Date', validators=[DataRequired()])
+
+
+class BlogEditForm(Form):
+    """
+    Blog 编辑表单
     """
     author = StringField('Author', validators=[DataRequired()])
     title = StringField('Title', validators=[DataRequired(), Length(max=40)])
@@ -55,3 +64,31 @@ class AuthorForm(Form):
     """
     name = StringField('Name', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired()])
+
+
+class UserForm(Form):
+    """
+    用户表单
+    """
+    email = StringField('Email', validators=[DataRequired()])
+    password = StringField('Password')
+    nickname = StringField('Nick Name', validators=[DataRequired(), Length(min=2, max=20)])
+    birthday = DateField('Birthday')
+    create_time = DateTimeField('Create Time')
+    update_time = DateTimeField('Update Time')
+    last_ip = StringField('Last Ip')
+
+
+class EditPassword(Form):
+    """
+    修改用户密码
+    """
+    password = PasswordField('New Password', validators=[
+        DataRequired(),
+        Length(min=6, max=40),
+        EqualTo('confirm', message='Passwords must match')
+    ])
+    confirm = PasswordField('Repeat Password', validators=[
+        DataRequired(),
+        Length(min=6, max=40)
+    ])

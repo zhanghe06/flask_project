@@ -22,7 +22,9 @@ class Blog(Base):
     id = Column(Integer, primary_key=True)
     author = Column(String(20), nullable=False)
     title = Column(String(40), nullable=False)
-    pub_date = Column(Date, nullable=False)
+    pub_date = Column(Date, nullable=False, server_default=text("'0000-00-00'"))
+    add_time = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+    edit_time = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
 
 
 t_sqlite_sequence = Table(
@@ -38,10 +40,8 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     email = Column(String(20), nullable=False)
     password = Column(String(20), nullable=False)
-    nickname = Column(String(20))
+    nickname = Column(String(20), nullable=False)
     birthday = Column(Date, server_default=text("'0000-00-00'"))
-    create_time = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
-    update_time = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+    create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
+    update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     last_ip = Column(String(15))
-
-

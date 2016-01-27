@@ -3,8 +3,8 @@
 
 {% block content %}
     <div class="container">
-    <h2 class="sub-header">Blog Edit</h2>
-    <form class="form-horizontal" method="post" action="{{ url_for('blog_edit', blog_id=blog_id) }}">
+    <h2 class="sub-header">Blog Add</h2>
+    <form class="form-horizontal" method="post" action="{{ url_for('blog_add', blog_id=blog_id) }}">
         {{ form.csrf_token }}
         <div class="form-group{% if form.author.errors %} has-error{% endif %}">
             {{ form.author.label(class="col-sm-2 control-label") }}
@@ -35,7 +35,7 @@
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-default">Edit</button>
+                <button type="submit" class="btn btn-default">Save</button>
                 <button type="reset" class="btn btn-default">Reset</button>
                 <button class="btn btn-default" onclick="javascript:history.back(-1);">Back</button>
             </div>
