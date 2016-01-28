@@ -4,7 +4,7 @@
 {% block content %}
     <div class="container">
     <h2 class="sub-header">Blog Edit</h2>
-    <form class="form-horizontal" method="post" action="{{ url_for('blog_edit', blog_id=blog_id) }}">
+    <form class="form-horizontal" method="post" action="">
         {{ form.csrf_token }}
         <div class="form-group{% if form.author.errors %} has-error{% endif %}">
             {{ form.author.label(class="col-sm-2 control-label") }}

@@ -112,6 +112,7 @@ def blog_edit(blog_id):
             result = edit_blog(blog_id, blog_info)
             if result == 1:
                 flash(u'Edit Success', 'success')
+                return redirect(request.args.get('next') or url_for('blog_list'))
             if result == 0:
                 flash(u'Edit Failed', 'warning')
         flash(form.errors, 'warning')  # 调试打开
@@ -240,16 +241,13 @@ def setting():
             # todo 判断邮箱是否重复
             from user import edit_user
             from datetime import datetime
-            birthday = form.birthday.data
             user_info = {
                 'email': form.email.data,
                 'nickname': form.nickname.data,
                 'birthday': form.birthday.data,
-                # 'birthday': datetime.utcnow(),
                 'update_time': datetime.utcnow(),
                 'last_ip': request.remote_addr,
             }
-            print '------------', form.birthday.data, current_user.id
             result = edit_user(current_user.id, user_info)
             if result == 1:
                 flash(u'Edit Success', 'success')
