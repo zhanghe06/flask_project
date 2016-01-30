@@ -65,10 +65,10 @@ class Cart(object):
         # 判断物品是否存在
         if redis_client.exists(key):
             redis_client.hincrby(key, 'num', num)
-            return True
         else:
             # 如果不存在，添加物品至购物车
-            return False
+            redis_client.hmset(key, {'pid': pid, 'num': num})
+        return True
 
     def decrease(self, pid, num=1):
         """

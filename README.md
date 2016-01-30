@@ -1,5 +1,15 @@
 ## Flask 项目模拟
 
+### 项目演示步骤
+```
+$ cd flask_project
+$ virtualenv flask.env
+$ source flask.env/bin/activate
+$ pip install -r requirements.txt
+$ chmod a+x ./etc/db_init.sh
+$ ./etc/db_init.sh
+$ ./run.py
+```
 
 页面结构：
 
@@ -166,9 +176,9 @@ $ sqlite3 flask.db < schema.sql
 
 etc 目录下已经创建好脚本（初始化数据，备份数据）
 ```
-$ chmod a+x init_db.sh
-$ chmod a+x dump_db.sh
-$ ./init_db.sh
+$ chmod a+x db_init.sh
+$ chmod a+x db_dump.sh
+$ ./db_init.sh
 ```
 
 
