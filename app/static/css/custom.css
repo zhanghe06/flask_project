@@ -1,0 +1,13 @@
+body {
+    padding-top: 50px;
+    padding-bottom: 41px;
+    background-color: #f9f9f9
+}
+
+.carousel-inner .item {
+    height: 546px;
+}
+
+.carousel-inner .item img{
+    width: 100%;
+}

@@ -412,6 +412,10 @@ current_user 仅仅支持视图
 [http://www.pythondoc.com/flask/patterns/jquery.html](http://www.pythondoc.com/flask/patterns/jquery.html)
 
 
+### Bootstrap 轮播（Carousel）插件
+
+[http://www.runoob.com/bootstrap/bootstrap-carousel-plugin.html](http://www.runoob.com/bootstrap/bootstrap-carousel-plugin.html)
+
 
 ## 部署方案( Nginx + Gunicorn + Supervisor )
 

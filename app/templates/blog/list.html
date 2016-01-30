@@ -19,7 +19,7 @@
             </thead>
             <tbody>
             {% for item in pagination.items %}
-            <tr id="blog_{{ item.id }}">
+            <tr class="text-muted" id="blog_{{ item.id }}">
                 <td>{{ loop.index }}</td>
                 <td>{{ item.id }}</td>
                 <td>{{ item.author }}</td>
