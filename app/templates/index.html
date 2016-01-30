@@ -14,7 +14,7 @@
     <div class="carousel-inner">
         {% for i in range(1,7) %}
         <div class="item{% if i==1 %} active{% endif %}">
-            <img src="/static/img/{{ i }}.jpg" data-src="" alt="{{ loop.index }} slide">
+            <img class="lazy" src="{{ url_for('static', filename='img/lazy-pic.png') }}" data-src="/static/img/{{ i }}.jpg" alt="{{ loop.index }} slide">
             <div class="container">
                 <div class="carousel-caption">
                     <h1>{{ loop.index }} slide</h1>
