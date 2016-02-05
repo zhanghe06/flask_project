@@ -27,9 +27,9 @@
                 <td>{{ item.pub_date }}</td>
                 <td>
                     {# <div class="pull-right"> #}
-                        <a href="{{ url_for('blog_edit', blog_id=item.id, next=request.path) }}"><span class="glyphicon glyphicon-pencil"></span></a>
+                        <a href="{{ url_for('blog_edit', blog_id=item.id, next=request.path) }}" rel="tooltip" title="编辑"><span class="glyphicon glyphicon-pencil"></span></a>
 {#                        <a href="{{ url_for('blog_delete', blog_id=item.id) }}"><span class="glyphicon glyphicon-trash"></span></a>#}
-                        <a href="javascript:void(0);" onclick="blog_delete({{ item.id }});"><span class="glyphicon glyphicon-trash"></span></a>
+                        <a href="javascript:void(0);" onclick="blog_delete({{ item.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
                     {# </div> #}
                 </td>
             </tr>

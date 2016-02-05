@@ -64,10 +64,12 @@ def blog_list(page=1):
 @app.route('/blog/new/<int:page>/')
 def blog_new(page=1):
     # return "Hello, World!\nBlog New!"
-    from blog import get_blog_rows
+    from blog import get_blog_rows, get_blog_counter
     per_page = 8
     pagination = get_blog_rows(page, per_page)
-    return render_template('blog/new.html', title='blog_new', pagination=pagination)
+    id_list = [item.id for item in pagination.items]
+    blog_counter_list = get_blog_counter(id_list)
+    return render_template('blog/new.html', title='blog_new', pagination=pagination, blog_counter_list=blog_counter_list)
 
 
 @app.route('/blog/hot/')
@@ -167,6 +169,26 @@ def blog_delete():
             return jsonify(result=True)
         else:
             return jsonify(result=False)
+
+
+@app.route('/blog/counter/', methods=['GET', 'POST'])
+def blog_counter():
+    """
+    http://localhost:5000/blog/counter/?blog_id=2&stat_type=favor_cnt&num=2
+    :return:
+    """
+    if request.method == 'GET':
+        user = g.user
+        # 权限判断 todo
+        # if user.id == 0:
+        #     return jsonify(result=False)
+        blog_id = request.args.get('blog_id', 0, type=int)
+        stat_type = request.args.get('stat_type', '', type=str)
+        # num = request.args.get('num', 0, type=int)
+        num = 1
+        from blog import set_blog_counter
+        result = set_blog_counter(blog_id, stat_type, num)
+        return jsonify(result)
 
 
 @app.route('/reg', methods=['GET', 'POST'])

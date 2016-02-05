@@ -11,6 +11,7 @@
 
 from models import Blog
 from tools import get_row, get_rows, get_row_by_id, add, edit, delete
+from lib.counter import Counter
 
 
 def get_blog_row_by_id(blog_id):
@@ -81,8 +82,33 @@ def get_blog_rows(page=1, per_page=10, *args, **kwargs):
     return rows
 
 
+def get_blog_counter(blog_id_list):
+    """
+    获取blog计数器
+    :param blog_id_list:
+    :return:
+    """
+    blog_cnt_obj = Counter('blog')
+    return blog_cnt_obj.counter_blog_list(blog_id_list)
+
+
+def set_blog_counter(blog_id, stat_type, num):
+    """
+    设置blog计数器
+    :param blog_id:
+    :param stat_type:
+    :param num:
+    :return:
+    """
+    blog_cnt_obj = Counter('blog')
+    return blog_cnt_obj.set_blog_counter(blog_id, stat_type, num)
+
+
 if __name__ == '__main__':
     blog_rows = get_blog_rows(1, 10)
     if blog_rows:
         for item in blog_rows.items:
             print item.id, item.author, item.title, item.pub_date
+
+    import json
+    print json.dumps(get_blog_counter(['1', '2', '3']), indent=4, ensure_ascii=False)

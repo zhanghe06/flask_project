@@ -27,9 +27,18 @@
                 <td>{{ item.pub_date }}</td>
                 <td>
                     {# <div class="pull-right"> #}
-                    <a href="#"><span class="glyphicon glyphicon-heart-empty"></span>收藏</a>
-                    <a href="#"><span class="glyphicon glyphicon-thumbs-up"></span>支持</a>
-                    <a href="#"><span class="glyphicon glyphicon-flag"></span>举报</a>
+                    <a href="javascript:void(0);" onclick="counter_blog({{ item.id }}, 'collect_cnt');" rel="tooltip" title="收藏">
+                        <span class="glyphicon glyphicon-heart-empty"></span>
+                        <span id="counter_collect_blog_{{ item.id }}">{{ blog_counter_list[loop.index0]['collect_cnt'] }}</span>
+                    </a>
+                    <a href="javascript:void(0);" onclick="counter_blog({{ item.id }}, 'favor_cnt');" rel="tooltip" title="支持">
+                        <span class="glyphicon glyphicon-thumbs-up"></span>
+                        <span id="counter_favor_blog_{{ item.id }}">{{ blog_counter_list[loop.index0]['favor_cnt'] }}</span>
+                    </a>
+                    <a href="javascript:void(0);" onclick="counter_blog({{ item.id }}, 'flag_cnt');" rel="tooltip" title="举报">
+                        <span class="glyphicon glyphicon-flag"></span>
+                        <span id="counter_flag_blog_{{ item.id }}">{{ blog_counter_list[loop.index0]['flag_cnt'] }}</span>
+                    </a>
                     {# <a href="#"><span class="glyphicon glyphicon-thumbs-down"></span>反对</a> #}
                     {# </div> #}
                 </td>
@@ -42,4 +51,19 @@
         {{ render_pagination(pagination, 'blog_new') }}
     </div>
     </div>
+    <script type="text/javascript">
+        function counter_blog(blog_id, stat_type){
+            $.getJSON('{{ url_for('blog_counter') }}',
+            {
+                blog_id: blog_id,
+                stat_type: stat_type
+            }, function (data) {
+                console.log(data);
+                {# {"collect_cnt": "3", "favor_cnt": "0", "flag_cnt": "0", "view_cnt": "0"} #}
+                $('#counter_collect_blog_'+blog_id).text(data['collect_cnt']);
+                $('#counter_favor_blog_'+blog_id).text(data['favor_cnt']);
+                $('#counter_flag_blog_'+blog_id).text(data['flag_cnt']);
+            });
+        }
+    </script>
 {% endblock %}

@@ -22,7 +22,7 @@ class Counter(object):
     计数器
     """
     # 定义支持的实体类型
-    entity_name_list = ['user', 'topic', 'subject', 'product']
+    entity_name_list = ['user', 'blog', 'topic', 'subject', 'product']
 
     # 定义支持的统计类型
     stat_type_list = [
@@ -31,7 +31,8 @@ class Counter(object):
         'follow_cnt',  # 关注数
         'fans_cnt',  # 粉丝数
         'view_cnt',  # 点击数
-        'collect_cnt'  # 收藏数
+        'collect_cnt',  # 收藏数
+        'flag_cnt'  # 举报数
     ]
 
     # 定义用户计数器结构
@@ -46,6 +47,14 @@ class Counter(object):
     topic_counter_dict = {
         'favor_cnt': '0',  # 支持数
         'decry_cnt': '0',  # 反对数
+        'view_cnt': '0',  # 点击数
+        'collect_cnt': '0'  # 收藏数
+    }
+
+    # 定义博客计数器结构
+    blog_counter_dict = {
+        'favor_cnt': '0',  # 支持数
+        'flag_cnt': '0',  # 举报数
         'view_cnt': '0',  # 点击数
         'collect_cnt': '0'  # 收藏数
     }
@@ -105,6 +114,20 @@ class Counter(object):
             redis_client.delete(key)
         return True
 
+    def counter_blog_item(self, blog_id):
+        """
+        获取物品
+        :param blog_id:
+        :return:
+        """
+        key = "%s:%s:%s" % (self.prefix, self.entity_name, blog_id)
+        # 判断物品是否存在
+        blog_dict = deepcopy(self.blog_counter_dict)
+        if redis_client.exists(key):
+            redis_result = redis_client.hgetall(key)
+            blog_dict.update(redis_result)
+        return blog_dict
+
     def counter_user_list_all(self):
         """
         显示全部用户计数器
@@ -136,8 +159,53 @@ class Counter(object):
                 cnt_list.append(user_dict)
         return cnt_list
 
+    def counter_topic_list(self, topic_list):
+        """
+        显示话题计数器
+        按原 uid_list 列表顺序返回结果
+        :param topic_list:
+        :return:
+        """
+        cnt_list = []
+        for topic in topic_list:
+            key = "%s:%s:%s" % (self.prefix, self.entity_name, topic)
+            user_dict = deepcopy(self.topic_counter_dict)
+            if redis_client.exists(key):
+                redis_result = redis_client.hgetall(key)
+                user_dict.update(redis_result)
+            cnt_list.append(user_dict)
+        return cnt_list
 
-def test():
+    def counter_blog_list(self, blog_list):
+        """
+        显示话题计数器
+        按原 blog_list 列表顺序返回结果
+        :param blog_list:
+        :return:
+        """
+        cnt_list = []
+        for blog in blog_list:
+            key = "%s:%s:%s" % (self.prefix, self.entity_name, blog)
+            blog_dict = deepcopy(self.blog_counter_dict)
+            if redis_client.exists(key):
+                redis_result = redis_client.hgetall(key)
+                blog_dict.update(redis_result)
+            cnt_list.append(blog_dict)
+        return cnt_list
+
+    def set_blog_counter(self, blog_id, stat_type, num=1):
+        """
+        设置 blog 计数器
+        :param blog_id:
+        :param stat_type:
+        :param num:
+        :return:
+        """
+        self.increase(blog_id, stat_type, num)
+        return self.counter_blog_item(blog_id)
+
+
+def test_user():
     import json
     user_cnt_obj = Counter('user')
     user_cnt_obj.del_item(12)
@@ -150,5 +218,15 @@ def test():
     print json.dumps(user_cnt_obj.counter_user_list_all(), indent=4, ensure_ascii=False)
 
 
+def test_topic():
+    import json
+    topic_cnt_obj = Counter('topic')
+    print json.dumps(topic_cnt_obj.counter_topic_list(['1', '2', '3']), indent=4, ensure_ascii=False)
+    topic_cnt_obj.increase(4, 'fans_cnt', 4)
+    print topic_cnt_obj.counter_blog_item(4)
+    print topic_cnt_obj.set_blog_counter(4, 'flag_cnt')
+
+
 if __name__ == '__main__':
-    test()
+    # test_user()
+    test_topic()
