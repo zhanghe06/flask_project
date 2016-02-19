@@ -22,7 +22,7 @@ class Blog(Base):
     id = Column(Integer, primary_key=True)
     author = Column(String(20), nullable=False)
     title = Column(String(40), nullable=False)
-    pub_date = Column(Date, nullable=False, server_default=text("'0000-00-00'"))
+    pub_date = Column(Date)
     add_time = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
     edit_time = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
 
@@ -41,7 +41,7 @@ class User(Base):
     email = Column(String(20), nullable=False)
     password = Column(String(20), nullable=False)
     nickname = Column(String(20), nullable=False)
-    birthday = Column(Date, server_default=text("'0000-00-00'"))
+    birthday = Column(Date)
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     last_ip = Column(String(15))
