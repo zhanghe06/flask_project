@@ -2,80 +2,168 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="container">
+    <div class="container" data-spy="scroll" data-target="#sidebar">
     <h2 class="sub-header">Setting</h2>
-    <form class="form-horizontal" method="post" action="{{ url_for('setting') }}">
-        {{ form.csrf_token }}
-        <div class="form-group{% if form.email.errors %} has-error{% endif %}">
-            {{ form.email.label(class="col-sm-2 control-label") }}
-            <div class="col-sm-10">
-                {{ form.email(class="form-control", placeholder="Email") }}
-                {% for error in form.email.errors %}
-                    <span class="help-block">{{ error }}</span>
-                {% endfor %}
+
+    <div class="row">
+        <div class="col-lg-8 col-md-12">
+            <section id="user_profile">
+                <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong class="panel-title">User profile</strong>
+                </div>
+                <div class="panel-body">
+                    <form class="form-horizontal" method="post" action="{{ url_for('setting') }}">
+                    {{ form.csrf_token }}
+                    <div class="form-group{% if form.email.errors %} has-error{% endif %}">
+                        {{ form.email.label(class="col-sm-2 control-label") }}
+                        <div class="col-sm-10">
+                            {{ form.email(class="form-control", placeholder="Email") }}
+                            {% for error in form.email.errors %}
+                                <span class="help-block">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group{% if form.password.errors %} has-error{% endif %}">
+                        {{ form.password.label(class="col-sm-2 control-label") }}
+                        <div class="col-sm-10">
+                            {{ form.password(class="form-control", placeholder="Password", disabled="disabled") }}
+                            {% for error in form.password.errors %}
+                                <span class="help-block">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group{% if form.nickname.errors %} has-error{% endif %}">
+                        {{ form.nickname.label(class="col-sm-2 control-label") }}
+                        <div class="col-sm-10">
+                            {{ form.nickname(class="form-control", placeholder="nickname") }}
+                            {% for error in form.nickname.errors %}
+                                <span class="help-block">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group{% if form.birthday.errors %} has-error{% endif %}">
+                        {{ form.birthday.label(class="col-sm-2 control-label") }}
+                        <div class="col-sm-10">
+                            {{ form.birthday(class="form-control", placeholder="birthday", type='date') }}
+                            {% for error in form.birthday.errors %}
+                                <span class="help-block">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group{% if form.create_time.errors %} has-error{% endif %}">
+                        {{ form.create_time.label(class="col-sm-2 control-label") }}
+                        <div class="col-sm-10">
+                            {{ form.create_time(class="form-control", placeholder="create_time", disabled="disabled") }}
+                            {% for error in form.create_time.errors %}
+                                <span class="help-block">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group{% if form.update_time.errors %} has-error{% endif %}">
+                        {{ form.update_time.label(class="col-sm-2 control-label") }}
+                        <div class="col-sm-10">
+                            {{ form.update_time(class="form-control", placeholder="update_time", disabled="disabled") }}
+                            {% for error in form.update_time.errors %}
+                                <span class="help-block">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group{% if form.last_ip.errors %} has-error{% endif %}">
+                        {{ form.last_ip.label(class="col-sm-2 control-label") }}
+                        <div class="col-sm-10">
+                            {{ form.last_ip(class="form-control", placeholder="last_ip", disabled="disabled") }}
+                            {% for error in form.last_ip.errors %}
+                                <span class="help-block">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-default">Edit</button>
+                            <button type="reset" class="btn btn-default">Reset</button>
+                            <button class="btn btn-default" onclick="javascript:history.back(-1);">Back</button>
+                        </div>
+                    </div>
+                </form>
+                </div>
+            </div>
+            </section>
+            <section id="user_permissions">
+                <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong class="panel-title">User permissions</strong>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Permission Item</th>
+                            <th>Community Edition</th>
+                            <th><b>Enterprise Edition</b></th>
+                        </tr>
+                    </thead>
+                    <tbody class="header first">
+                        <tr>
+                            <td><a href="#">Create and remove admins based on an LDAP group</a></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">Groups consisting of multiple people with a shared namespace for projects</a></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">Close JIRA issues with GitLab commits</a></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                        </tr>
+                    </tbody>
+                  </table>
+            </div>
+            </section>
+            <section id="additional_options">
+                <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong class="panel-title">Additional server management options</strong>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Permission Item</th>
+                            <th>Community Edition</th>
+                            <th><b>Enterprise Edition</b></th>
+                        </tr>
+                    </thead>
+                    <tbody class="header first">
+                        <tr>
+                            <td><a href="#">Create and remove admins based on an LDAP group</a></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">Groups consisting of multiple people with a shared namespace for projects</a></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">Close JIRA issues with GitLab commits</a></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                        </tr>
+                    </tbody>
+                  </table>
+            </div>
+            </section>
+        </div>
+
+        <div class="col-lg-4 col-md-12" id="sidebar">
+            <div class="list-group" data-spy="affix">
+                <a href="#user_profile" class="list-group-item">User profile</a>
+                <a href="#user_permissions" class="list-group-item">User permissions</a>
+                <a href="#additional_options" class="list-group-item">Additional server management options</a>
             </div>
         </div>
-        <div class="form-group{% if form.password.errors %} has-error{% endif %}">
-            {{ form.password.label(class="col-sm-2 control-label") }}
-            <div class="col-sm-10">
-                {{ form.password(class="form-control", placeholder="Password", disabled="disabled") }}
-                {% for error in form.password.errors %}
-                    <span class="help-block">{{ error }}</span>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="form-group{% if form.nickname.errors %} has-error{% endif %}">
-            {{ form.nickname.label(class="col-sm-2 control-label") }}
-            <div class="col-sm-10">
-                {{ form.nickname(class="form-control", placeholder="nickname") }}
-                {% for error in form.nickname.errors %}
-                    <span class="help-block">{{ error }}</span>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="form-group{% if form.birthday.errors %} has-error{% endif %}">
-            {{ form.birthday.label(class="col-sm-2 control-label") }}
-            <div class="col-sm-10">
-                {{ form.birthday(class="form-control", placeholder="birthday") }}
-                {% for error in form.birthday.errors %}
-                    <span class="help-block">{{ error }}</span>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="form-group{% if form.create_time.errors %} has-error{% endif %}">
-            {{ form.create_time.label(class="col-sm-2 control-label") }}
-            <div class="col-sm-10">
-                {{ form.create_time(class="form-control", placeholder="create_time", disabled="disabled") }}
-                {% for error in form.create_time.errors %}
-                    <span class="help-block">{{ error }}</span>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="form-group{% if form.update_time.errors %} has-error{% endif %}">
-            {{ form.update_time.label(class="col-sm-2 control-label") }}
-            <div class="col-sm-10">
-                {{ form.update_time(class="form-control", placeholder="update_time", disabled="disabled") }}
-                {% for error in form.update_time.errors %}
-                    <span class="help-block">{{ error }}</span>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="form-group{% if form.last_ip.errors %} has-error{% endif %}">
-            {{ form.last_ip.label(class="col-sm-2 control-label") }}
-            <div class="col-sm-10">
-                {{ form.last_ip(class="form-control", placeholder="last_ip", disabled="disabled") }}
-                {% for error in form.last_ip.errors %}
-                    <span class="help-block">{{ error }}</span>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-default">Edit</button>
-                <button type="reset" class="btn btn-default">Reset</button>
-                <button class="btn btn-default" onclick="javascript:history.back(-1);">Back</button>
-            </div>
-        </div>
-    </form>
+    </div>
     </div>
 {% endblock %}

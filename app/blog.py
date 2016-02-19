@@ -12,6 +12,7 @@
 from models import Blog
 from tools import get_row, get_rows, get_row_by_id, add, edit, delete
 from lib.counter import Counter
+from lib.container import Container
 
 
 def get_blog_row_by_id(blog_id):
@@ -103,6 +104,17 @@ def set_blog_counter(blog_id, stat_type, num):
     blog_cnt_obj = Counter('blog')
     return blog_cnt_obj.set_blog_counter(blog_id, stat_type, num)
 
+
+def add_blog_stat_item(stat_type, blog_id, uid):
+    """
+    添加blog统计明细
+    :param stat_type:
+    :param blog_id:
+    :param uid:
+    :return:
+    """
+    blog_container_obj = Container('blog')
+    return blog_container_obj.add_item(stat_type, blog_id, uid)
 
 if __name__ == '__main__':
     blog_rows = get_blog_rows(1, 10)

@@ -186,8 +186,9 @@ def blog_counter():
         stat_type = request.args.get('stat_type', '', type=str)
         # num = request.args.get('num', 0, type=int)
         num = 1
-        from blog import set_blog_counter
-        result = set_blog_counter(blog_id, stat_type, num)
+        from blog import set_blog_counter, add_blog_stat_item
+        add_blog_stat_item(stat_type, blog_id, user.id)  # 更新容器
+        result = set_blog_counter(blog_id, stat_type, num)  # 更新计数器
         return jsonify(result)
 
 
@@ -278,3 +279,8 @@ def setting():
         flash(form.errors, 'warning')  # 调试打开
     flash(u'Hello, %s' % current_user.email, 'info')  # 测试打开
     return render_template('setting.html', title='setting', form=form)
+
+
+@app.route('/search/', methods=['GET', 'POST'])
+def search():
+    return 'search result!'
