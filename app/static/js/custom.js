@@ -22,3 +22,18 @@ lazyContainer('#myCarousel');
 
 /* 生成工具提示 */
 $('[rel="tooltip"]').tooltip();
+
+/* 滚动页面侧边悬浮动态导航宽度控制 */
+$(function(){
+	$(window).resize(function(){
+        $('#affix_nav_ul').width($('#affix_nav_ul').parent().width());
+        //console.log($('.container').width());
+        // 如果屏幕宽度小于940px 隐藏侧边导航
+        if ($('.container').width() <= 940){
+            $('#affix_nav_ul').hide();
+        }else {
+            $('#affix_nav_ul').show();
+        }
+	});
+    $(window).resize();
+});
