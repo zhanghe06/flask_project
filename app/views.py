@@ -64,12 +64,19 @@ def blog_list(page=1):
 @app.route('/blog/new/<int:page>/')
 def blog_new(page=1):
     # return "Hello, World!\nBlog New!"
-    from blog import get_blog_rows, get_blog_counter
+    from blog import get_blog_rows, get_blog_list_counter, get_blog_list_container_status
     per_page = 8
     pagination = get_blog_rows(page, per_page)
     id_list = [item.id for item in pagination.items]
-    blog_counter_list = get_blog_counter(id_list)
-    return render_template('blog/new.html', title='blog_new', pagination=pagination, blog_counter_list=blog_counter_list)
+    blog_counter_list = get_blog_list_counter(id_list)
+    blog_container_status_list = get_blog_list_container_status(id_list, g.user.id)
+    return render_template(
+        'blog/new.html',
+        title='blog_new',
+        pagination=pagination,
+        blog_counter_list=blog_counter_list,
+        blog_container_status_list=blog_container_status_list
+    )
 
 
 @app.route('/blog/hot/')
@@ -171,10 +178,10 @@ def blog_delete():
             return jsonify(result=False)
 
 
-@app.route('/blog/counter/', methods=['GET', 'POST'])
-def blog_counter():
+@app.route('/blog/stat/', methods=['GET', 'POST'])
+def blog_stat():
     """
-    http://localhost:5000/blog/counter/?blog_id=2&stat_type=favor_cnt&num=2
+    http://localhost:5000/blog/stat/?blog_id=2&stat_type=favor&num=2
     :return:
     """
     if request.method == 'GET':
@@ -185,10 +192,8 @@ def blog_counter():
         blog_id = request.args.get('blog_id', 0, type=int)
         stat_type = request.args.get('stat_type', '', type=str)
         # num = request.args.get('num', 0, type=int)
-        num = 1
-        from blog import set_blog_counter, add_blog_stat_item
-        add_blog_stat_item(stat_type, blog_id, user.id)  # 更新容器
-        result = set_blog_counter(blog_id, stat_type, num)  # 更新计数器
+        from tools.stat import set_blog_stat
+        result = set_blog_stat(stat_type, user.id, blog_id)
         return jsonify(result)
 
 

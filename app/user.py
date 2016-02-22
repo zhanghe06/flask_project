@@ -10,7 +10,8 @@
 
 
 from login import LoginUser
-from tools import get_row, get_rows, get_row_by_id, add, edit, delete
+from tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
+from lib.container import Container
 
 
 def get_user_row_by_id(user_id):
@@ -79,3 +80,16 @@ def get_user_rows(page=1, per_page=10, *args, **kwargs):
     """
     rows = get_rows(LoginUser, page, per_page, *args, **kwargs)
     return rows
+
+
+def add_user_stat_item(stat_type, uid, blog_id):
+    """
+    添加user统计明细
+    :param stat_type:
+    :param blog_id:
+    :param uid:
+    :return:
+    """
+    blog_container_obj = Container('user')
+    return blog_container_obj.add_item(stat_type, uid, blog_id)
+

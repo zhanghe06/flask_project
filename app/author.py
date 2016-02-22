@@ -10,7 +10,7 @@
 
 
 from models import Author
-from tools import get_row, get_rows, get_row_by_id, add, edit, delete
+from tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
 
 
 def get_author_row_by_id(author_id):

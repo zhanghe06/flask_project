@@ -26,37 +26,37 @@ class Counter(object):
 
     # 定义支持的统计类型
     stat_type_list = [
-        'favor_cnt',  # 支持数
-        'decry_cnt',  # 反对数
-        'follow_cnt',  # 关注数
-        'fans_cnt',  # 粉丝数
-        'view_cnt',  # 点击数
-        'collect_cnt',  # 收藏数
-        'flag_cnt'  # 举报数
+        'favor',  # 支持
+        'decry',  # 反对
+        'follow',  # 关注
+        'fans',  # 粉丝
+        'view',  # 点击
+        'collect',  # 收藏
+        'flag'  # 举报
     ]
 
     # 定义用户计数器结构
     user_counter_dict = {
-        'favor_cnt': '0',  # 支持数
-        'decry_cnt': '0',  # 反对数
-        'follow_cnt': '0',  # 关注数
-        'fans_cnt': '0'  # 粉丝数
+        'favor': '0',  # 支持数
+        'decry': '0',  # 反对数
+        'follow': '0',  # 关注数
+        'fans': '0'  # 粉丝数
     }
 
     # 定义话题计数器结构
     topic_counter_dict = {
-        'favor_cnt': '0',  # 支持数
-        'decry_cnt': '0',  # 反对数
-        'view_cnt': '0',  # 点击数
-        'collect_cnt': '0'  # 收藏数
+        'favor': '0',  # 支持数
+        'decry': '0',  # 反对数
+        'view': '0',  # 点击数
+        'collect': '0'  # 收藏数
     }
 
     # 定义博客计数器结构
     blog_counter_dict = {
-        'favor_cnt': '0',  # 支持数
-        'flag_cnt': '0',  # 举报数
-        'view_cnt': '0',  # 点击数
-        'collect_cnt': '0'  # 收藏数
+        'favor': '0',  # 支持数
+        'flag': '0',  # 举报数
+        'view': '0',  # 点击数
+        'collect': '0'  # 收藏数
     }
 
     def __init__(self, entity_name, prefix='counter'):
@@ -116,7 +116,7 @@ class Counter(object):
 
     def counter_blog_item(self, blog_id):
         """
-        获取物品
+        显示 blog 计数器
         :param blog_id:
         :return:
         """
@@ -178,7 +178,7 @@ class Counter(object):
 
     def counter_blog_list(self, blog_list):
         """
-        显示话题计数器
+        显示 blog 计数器
         按原 blog_list 列表顺序返回结果
         :param blog_list:
         :return:
@@ -210,10 +210,10 @@ def test_user():
     user_cnt_obj = Counter('user')
     user_cnt_obj.del_item(12)
     user_cnt_obj.del_item(13)
-    user_cnt_obj.increase(12, 'favor_cnt')
-    user_cnt_obj.increase(13, 'fans_cnt', 5)
-    user_cnt_obj.increase(14, 'fans_cnt', 4)
-    user_cnt_obj.increase(14, 'follow_cnt', 3)
+    user_cnt_obj.increase(12, 'favor')
+    user_cnt_obj.increase(13, 'fans', 5)
+    user_cnt_obj.increase(14, 'fans', 4)
+    user_cnt_obj.increase(14, 'follow', 3)
     print json.dumps(user_cnt_obj.counter_user_list(['12', '13']), indent=4, ensure_ascii=False)
     print json.dumps(user_cnt_obj.counter_user_list_all(), indent=4, ensure_ascii=False)
 
@@ -222,9 +222,9 @@ def test_topic():
     import json
     topic_cnt_obj = Counter('topic')
     print json.dumps(topic_cnt_obj.counter_topic_list(['1', '2', '3']), indent=4, ensure_ascii=False)
-    topic_cnt_obj.increase(4, 'fans_cnt', 4)
+    topic_cnt_obj.increase(4, 'fans', 4)
     print topic_cnt_obj.counter_blog_item(4)
-    print topic_cnt_obj.set_blog_counter(4, 'flag_cnt')
+    print topic_cnt_obj.set_blog_counter(4, 'flag')
 
 
 if __name__ == '__main__':

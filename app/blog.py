@@ -10,7 +10,7 @@
 
 
 from models import Blog
-from tools import get_row, get_rows, get_row_by_id, add, edit, delete
+from tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
 from lib.counter import Counter
 from lib.container import Container
 
@@ -83,14 +83,14 @@ def get_blog_rows(page=1, per_page=10, *args, **kwargs):
     return rows
 
 
-def get_blog_counter(blog_id_list):
+def get_blog_counter(blog_id):
     """
     获取blog计数器
-    :param blog_id_list:
+    :param blog_id:
     :return:
     """
     blog_cnt_obj = Counter('blog')
-    return blog_cnt_obj.counter_blog_list(blog_id_list)
+    return blog_cnt_obj.counter_blog_item(blog_id)
 
 
 def set_blog_counter(blog_id, stat_type, num):
@@ -103,6 +103,38 @@ def set_blog_counter(blog_id, stat_type, num):
     """
     blog_cnt_obj = Counter('blog')
     return blog_cnt_obj.set_blog_counter(blog_id, stat_type, num)
+
+
+def get_blog_list_counter(blog_id_list):
+    """
+    获取blog计数器
+    :param blog_id_list:
+    :return:
+    """
+    blog_cnt_obj = Counter('blog')
+    return blog_cnt_obj.counter_blog_list(blog_id_list)
+
+
+def get_blog_container_status(blog_id, uid):
+    """
+    获取blog容器状态
+    :param blog_id:
+    :param uid:
+    :return:
+    """
+    blog_container_obj = Container('blog')
+    return blog_container_obj.get_item_container_status(blog_id, uid)
+
+
+def get_blog_list_container_status(blog_id_list, uid):
+    """
+    获取blog容器状态
+    :param blog_id_list:
+    :param uid:
+    :return:
+    """
+    blog_container_obj = Container('blog')
+    return blog_container_obj.get_item_list_container_status(blog_id_list, uid)
 
 
 def add_blog_stat_item(stat_type, blog_id, uid):

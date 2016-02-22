@@ -27,17 +27,17 @@
                 <td>{{ item.pub_date }}</td>
                 <td>
                     {# <div class="pull-right"> #}
-                    <a href="javascript:void(0);" onclick="counter_blog({{ item.id }}, 'collect_cnt');" rel="tooltip" title="收藏">
+                    <a class="{% if not blog_container_status_list[loop.index0]['collect'] %}text-muted{% endif %}" href="javascript:void(0);" onclick="counter_blog({{ item.id }}, 'collect');" rel="tooltip" title="收藏">
                         <span class="glyphicon glyphicon-heart-empty"></span>
-                        <span id="counter_collect_blog_{{ item.id }}">{{ blog_counter_list[loop.index0]['collect_cnt'] }}</span>
+                        <span id="counter_collect_blog_{{ item.id }}">{{ blog_counter_list[loop.index0]['collect'] }}</span>
                     </a>
-                    <a href="javascript:void(0);" onclick="counter_blog({{ item.id }}, 'favor_cnt');" rel="tooltip" title="支持">
+                    <a class="{% if not blog_container_status_list[loop.index0]['favor'] %}text-muted{% endif %}" href="javascript:void(0);" onclick="counter_blog({{ item.id }}, 'favor');" rel="tooltip" title="支持">
                         <span class="glyphicon glyphicon-thumbs-up"></span>
-                        <span id="counter_favor_blog_{{ item.id }}">{{ blog_counter_list[loop.index0]['favor_cnt'] }}</span>
+                        <span id="counter_favor_blog_{{ item.id }}">{{ blog_counter_list[loop.index0]['favor'] }}</span>
                     </a>
-                    <a href="javascript:void(0);" onclick="counter_blog({{ item.id }}, 'flag_cnt');" rel="tooltip" title="举报">
+                    <a class="{% if not blog_container_status_list[loop.index0]['flag'] %}text-muted{% endif %}" href="javascript:void(0);" onclick="counter_blog({{ item.id }}, 'flag');" rel="tooltip" title="举报">
                         <span class="glyphicon glyphicon-flag"></span>
-                        <span id="counter_flag_blog_{{ item.id }}">{{ blog_counter_list[loop.index0]['flag_cnt'] }}</span>
+                        <span id="counter_flag_blog_{{ item.id }}">{{ blog_counter_list[loop.index0]['flag'] }}</span>
                     </a>
                     {# <a href="#"><span class="glyphicon glyphicon-thumbs-down"></span>反对</a> #}
                     {# </div> #}
@@ -53,16 +53,28 @@
     </div>
     <script type="text/javascript">
         function counter_blog(blog_id, stat_type){
-            $.getJSON('{{ url_for('blog_counter') }}',
+            $.getJSON('{{ url_for('blog_stat') }}',
             {
                 blog_id: blog_id,
                 stat_type: stat_type
             }, function (data) {
                 console.log(data);
-                {# {"collect_cnt": "3", "favor_cnt": "0", "flag_cnt": "0", "view_cnt": "0"} #}
-                $('#counter_collect_blog_'+blog_id).text(data['collect_cnt']);
-                $('#counter_favor_blog_'+blog_id).text(data['favor_cnt']);
-                $('#counter_flag_blog_'+blog_id).text(data['flag_cnt']);
+                {# {"count": {"collect": "0", "favor": "1", "flag": "0", "view": "0"}, "status": {"collect": false, "favor": true, "flag": false}} #}
+                var counter_collect_blog = $('#counter_collect_blog_'+blog_id);
+                var counter_favor_blog = $('#counter_favor_blog_'+blog_id);
+                var counter_flag_blog = $('#counter_flag_blog_'+blog_id);
+                counter_collect_blog.text(data['count']['collect']);
+                counter_favor_blog.text(data['count']['favor']);
+                counter_flag_blog.text(data['count']['flag']);
+                if(data['status']['collect'] == true){
+                    counter_collect_blog.parents('a').removeClass('text-muted');
+                }
+                if(data['status']['favor'] == true){
+                    counter_favor_blog.parents('a').removeClass('text-muted');
+                }
+                if(data['status']['flag'] == true){
+                    counter_flag_blog.parents('a').removeClass('text-muted');
+                }
             });
         }
     </script>

@@ -9,7 +9,7 @@
 """
 
 
-from database import db_session
+from ..database import db_session
 
 
 def get_row_by_id(model_name, pk_id):
