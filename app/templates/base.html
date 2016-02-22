@@ -29,7 +29,10 @@
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
     {% for category, message in messages %}
-        <div class="alert alert-{{ category }}" role="alert">{{ message }}</div>
+        <div class="alert alert-{{ category }}" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {{ message }}
+        </div>
     {% endfor %}
     {% endif %}
     {% endwith %}
@@ -46,6 +49,6 @@
     <script src="{{ url_for('static', filename='js/jquery-1.11.3.min.js') }}"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/custom.js', v='1.4.10') }}"></script>
+    <script src="{{ url_for('static', filename='js/custom.js', v='1.4.14') }}"></script>
 </body>
 </html>
