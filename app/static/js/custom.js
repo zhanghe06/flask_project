@@ -39,3 +39,13 @@ $(function(){
     });
     $(window).resize();
 });
+
+
+/* 按钮加载状态 */
+$(function() {
+    $(".btn").click(function(){
+        $(this).button('loading').delay(1000).queue(function() {
+            //$(this).button('reset');
+        });
+    });
+});
