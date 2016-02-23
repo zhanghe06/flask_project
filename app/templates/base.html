@@ -17,7 +17,8 @@
     <!-- Bootstrap -->
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
     <!-- Custom -->
-    <link href="{{ url_for('static', filename='css/custom.css', v='1.4.10') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/custom.css', v='1.4.11') }}" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
 </head>
 <body data-spy="scroll" data-target="#affix_nav">
     <!-- Fixed navbar -->
@@ -51,6 +52,7 @@
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/custom.js', v='1.4.22') }}"></script>
+    <script src="{{ url_for('static', filename='js/custom.js', v='1.4.23') }}"></script>
+    {% block extra_js %}{% endblock %}
 </body>
 </html>
