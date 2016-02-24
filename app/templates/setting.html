@@ -17,6 +17,25 @@
                 <canvas id="chart_line_canvas"></canvas>
                 </div>
             </section>
+            <section id="chart_bar_graphs">
+                <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong class="panel-title">Chart Bar Graphs
+                    <span class="glyphicon glyphicon-picture pull-right"></span>
+                    </strong>
+                </div>
+                <table class="table table-bordered text-center">
+                    <tr>
+                        <td class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                            <canvas id="chart_bar_canvas_01"></canvas>
+                        </td>
+                        <td class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                            <canvas id="chart_bar_canvas_02"></canvas>
+                        </td>
+                    </tr>
+                </table>
+                </div>
+            </section>
             <section id="user_profile">
                 <div class="panel panel-default">
                 <div class="panel-heading">
@@ -323,6 +342,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href="#chart_bar_graphs" class="list-group-item">
+                        <span class="glyphicon glyphicon-chevron-right"></span> Chart Bar Graphs
+                    </a>
+                </li>
+                <li>
                     <a href="#user_profile" class="list-group-item">
                         <span class="glyphicon glyphicon-chevron-right"></span> User profile
                     </a>
@@ -365,7 +389,7 @@
 
 {% block extra_js %}
 <script>
-    /* 创建图表，实例化一个Chart对象 */
+    /* 创建Line图表 */
     var lineChartData = {
         labels : ["January","February","March","April","May","June","July"],
         datasets : [
@@ -389,6 +413,36 @@
     $(function() {
         var ctx = $("#chart_line_canvas").get(0).getContext("2d");
         new Chart(ctx).Line(lineChartData, {responsive: true});
+    });
+
+    /* 创建Bar图表 */
+    var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+	var barChartData = {
+		labels : ["January","February","March","April","May","June","July"],
+		datasets : [
+			{
+				fillColor : "rgba(220,220,220,0.5)",
+				strokeColor : "rgba(220,220,220,0.8)",
+				highlightFill: "rgba(220,220,220,0.75)",
+				highlightStroke: "rgba(220,220,220,1)",
+				data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+			},
+			{
+				fillColor : "rgba(151,187,205,0.5)",
+				strokeColor : "rgba(151,187,205,0.8)",
+				highlightFill : "rgba(151,187,205,0.75)",
+				highlightStroke : "rgba(151,187,205,1)",
+				data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+			}
+		]
+	};
+    $(function() {
+        var ctx = $("#chart_bar_canvas_01").get(0).getContext("2d");
+        new Chart(ctx).Bar(barChartData, {responsive: true});
+    });
+    $(function() {
+        var ctx = $("#chart_bar_canvas_02").get(0).getContext("2d");
+        new Chart(ctx).Bar(barChartData, {responsive: true});
     });
 </script>
 {% endblock %}
