@@ -14,15 +14,17 @@
     <div class="carousel-inner">
         {% for i in range(1,7) %}
         <div class="item{% if i==1 %} active{% endif %}">
-            <img class="lazy" src="{{ url_for('static', filename='img/lazy-pic.png') }}" data-src="/static/img/{{ i }}.jpg" alt="{{ loop.index }} slide">
+            <img class="lazy center-block img-responsive" src="{{ url_for('static', filename='img/load-line.gif') }}" data-src="/static/img/{{ i }}.jpg" alt="{{ loop.index }} slide">
             <div class="container">
                 <div class="carousel-caption">
                     <h1>{{ loop.index }} slide</h1>
-                    <p><span class="glyphicon glyphicon-map-marker"></span> Address: Level 10, No.700, East Yanan Road, Huangpu District, Shanghai, P. R. China</p>
-                    <p><span class="glyphicon glyphicon-envelope"></span> Email: info@company.com</p>
-                    <p><span class="glyphicon glyphicon-phone-alt"></span> Phone: 021-8888-6666</p>
-                    <p><span class="glyphicon glyphicon-phone"></span> Mobile: 138-1873-2593</p>
-                    <p><a class="btn btn-lg btn-primary" href="#" role="button">Enter Info</a></p>
+                    <div class="visible-lg">
+                        <p><span class="glyphicon glyphicon-map-marker"></span> Address: Level 10, No.700, East Yanan Road, Huangpu District, Shanghai, P. R. China</p>
+                        <p><span class="glyphicon glyphicon-envelope"></span> Email: info@company.com</p>
+                        <p><span class="glyphicon glyphicon-phone-alt"></span> Phone: 021-8888-6666</p>
+                        <p><span class="glyphicon glyphicon-phone"></span> Mobile: 138-1873-2593</p>
+                        <p><a class="btn btn-lg btn-primary" href="#" role="button">Enter Info</a></p>
+                    </div>
                 </div>
             </div>
         </div>

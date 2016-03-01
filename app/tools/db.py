@@ -120,7 +120,7 @@ def test_user():
     测试 User
     :return:
     """
-    from models import User
+    from ..models import User
     print '\n测试增删改查'
     # 测试获取
     row = get_row_by_id(User, 1)

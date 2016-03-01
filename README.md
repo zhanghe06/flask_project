@@ -80,6 +80,7 @@ $ pip install Flask-Login
 $ pip install Flask-Mail
 $ pip install Flask-SQLAlchemy
 $ pip install Flask-WTF
+$ pip install Flask-OAuthlib
 $ pip install sqlacodegen
 $ pip freeze > requirements.txt
 ```
