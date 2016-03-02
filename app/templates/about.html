@@ -76,3 +76,15 @@
         </div>
     </div>
 {% endblock %}
+
+{% block extra_js %}
+<script>
+// 模态窗口垂直居中
+$("#img_modal").on('shown.bs.modal', function(){
+      var $this = $(this);
+      var $modal_dialog = $this.find('.modal-dialog');
+      var m_top = ( $(window).height() - $modal_dialog.height() )/2;
+      $modal_dialog.css({'margin': m_top + 'px auto'});
+    });
+</script>
+{% endblock %}
