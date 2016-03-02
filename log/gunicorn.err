@@ -1,0 +1,76 @@
+[2016-03-02 15:56:13 +0000] [15190] [INFO] Starting gunicorn 19.4.5
+[2016-03-02 15:56:13 +0000] [15190] [INFO] Listening at: http://0.0.0.0:8000 (15190)
+[2016-03-02 15:56:13 +0000] [15190] [INFO] Using worker: sync
+[2016-03-02 15:56:13 +0000] [15195] [INFO] Booting worker with pid: 15195
+[2016-03-02 15:56:13 +0000] [15198] [INFO] Booting worker with pid: 15198
+[2016-03-02 15:56:13 +0000] [15201] [INFO] Booting worker with pid: 15201
+[2016-03-02 15:56:13 +0000] [15202] [INFO] Booting worker with pid: 15202
+/home/zhanghe/code/flask_project/.env/local/lib/python2.7/site-packages/flask_sqlalchemy/__init__.py:800: UserWarning: SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.
+  warnings.warn('SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.')
+/home/zhanghe/code/flask_project/.env/local/lib/python2.7/site-packages/flask_sqlalchemy/__init__.py:800: UserWarning: SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.
+  warnings.warn('SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.')
+/home/zhanghe/code/flask_project/.env/local/lib/python2.7/site-packages/flask_sqlalchemy/__init__.py:800: UserWarning: SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.
+  warnings.warn('SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.')
+/home/zhanghe/code/flask_project/.env/local/lib/python2.7/site-packages/flask_sqlalchemy/__init__.py:800: UserWarning: SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.
+  warnings.warn('SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.')
+[2016-03-02 16:00:10 +0000] [15317] [INFO] Starting gunicorn 19.4.5
+[2016-03-02 16:00:10 +0000] [15317] [ERROR] Connection in use: ('0.0.0.0', 8000)
+[2016-03-02 16:00:10 +0000] [15317] [ERROR] Retrying in 1 second.
+[2016-03-02 16:00:11 +0000] [15317] [ERROR] Connection in use: ('0.0.0.0', 8000)
+[2016-03-02 16:00:11 +0000] [15317] [ERROR] Retrying in 1 second.
+[2016-03-02 16:00:12 +0000] [15317] [ERROR] Connection in use: ('0.0.0.0', 8000)
+[2016-03-02 16:00:12 +0000] [15317] [ERROR] Retrying in 1 second.
+[2016-03-02 16:00:13 +0000] [15317] [ERROR] Connection in use: ('0.0.0.0', 8000)
+[2016-03-02 16:00:13 +0000] [15317] [ERROR] Retrying in 1 second.
+[2016-03-02 16:00:14 +0000] [15317] [INFO] Listening at: http://0.0.0.0:8000 (15317)
+[2016-03-02 16:00:14 +0000] [15317] [INFO] Using worker: sync
+[2016-03-02 16:00:14 +0000] [15322] [INFO] Booting worker with pid: 15322
+[2016-03-02 16:00:14 +0000] [15325] [INFO] Booting worker with pid: 15325
+[2016-03-02 16:00:14 +0000] [15326] [INFO] Booting worker with pid: 15326
+[2016-03-02 16:00:14 +0000] [15329] [INFO] Booting worker with pid: 15329
+/home/zhanghe/code/flask_project/.env/local/lib/python2.7/site-packages/flask_sqlalchemy/__init__.py:800: UserWarning: SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.
+  warnings.warn('SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.')
+/home/zhanghe/code/flask_project/.env/local/lib/python2.7/site-packages/flask_sqlalchemy/__init__.py:800: UserWarning: SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.
+  warnings.warn('SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.')
+/home/zhanghe/code/flask_project/.env/local/lib/python2.7/site-packages/flask_sqlalchemy/__init__.py:800: UserWarning: SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.
+  warnings.warn('SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.')
+/home/zhanghe/code/flask_project/.env/local/lib/python2.7/site-packages/flask_sqlalchemy/__init__.py:800: UserWarning: SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.
+  warnings.warn('SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.')
+[2016-03-02 16:09:42 +0000] [15317] [INFO] Handling signal: term
+[2016-03-02 16:09:42 +0000] [15322] [INFO] Worker exiting (pid: 15322)
+[2016-03-02 16:09:42 +0000] [15329] [INFO] Worker exiting (pid: 15329)
+[2016-03-03 00:21:43 +0000] [24679] [INFO] Starting gunicorn 19.4.5
+[2016-03-03 00:21:43 +0000] [24679] [INFO] Listening at: http://0.0.0.0:8000 (24679)
+[2016-03-03 00:21:43 +0000] [24679] [INFO] Using worker: sync
+[2016-03-03 00:21:43 +0000] [24684] [INFO] Booting worker with pid: 24684
+[2016-03-03 00:21:43 +0000] [24685] [INFO] Booting worker with pid: 24685
+[2016-03-03 00:21:43 +0000] [24686] [INFO] Booting worker with pid: 24686
+[2016-03-03 00:21:43 +0000] [24687] [INFO] Booting worker with pid: 24687
+/home/zhanghe/code/flask_project/.env/local/lib/python2.7/site-packages/flask_sqlalchemy/__init__.py:800: UserWarning: SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.
+  warnings.warn('SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.')
+/home/zhanghe/code/flask_project/.env/local/lib/python2.7/site-packages/flask_sqlalchemy/__init__.py:800: UserWarning: SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.
+  warnings.warn('SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.')
+/home/zhanghe/code/flask_project/.env/local/lib/python2.7/site-packages/flask_sqlalchemy/__init__.py:800: UserWarning: SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.
+  warnings.warn('SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.')
+/home/zhanghe/code/flask_project/.env/local/lib/python2.7/site-packages/flask_sqlalchemy/__init__.py:800: UserWarning: SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.
+  warnings.warn('SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.')
+[2016-03-03 01:02:15 +0000] [24679] [INFO] Handling signal: term
+[2016-03-03 01:02:15 +0000] [24684] [INFO] Worker exiting (pid: 24684)
+[2016-03-03 01:02:15 +0000] [24685] [INFO] Worker exiting (pid: 24685)
+[2016-03-03 01:02:15 +0000] [24686] [INFO] Worker exiting (pid: 24686)
+[2016-03-03 01:02:15 +0000] [24687] [INFO] Worker exiting (pid: 24687)
+[2016-03-03 01:04:12 +0000] [26080] [INFO] Starting gunicorn 19.4.5
+[2016-03-03 01:04:12 +0000] [26080] [INFO] Listening at: http://0.0.0.0:8000 (26080)
+[2016-03-03 01:04:12 +0000] [26080] [INFO] Using worker: sync
+[2016-03-03 01:04:12 +0000] [26085] [INFO] Booting worker with pid: 26085
+[2016-03-03 01:04:12 +0000] [26086] [INFO] Booting worker with pid: 26086
+[2016-03-03 01:04:12 +0000] [26087] [INFO] Booting worker with pid: 26087
+[2016-03-03 01:04:12 +0000] [26088] [INFO] Booting worker with pid: 26088
+/home/zhanghe/code/flask_project/.env/local/lib/python2.7/site-packages/flask_sqlalchemy/__init__.py:800: UserWarning: SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.
+  warnings.warn('SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.')
+/home/zhanghe/code/flask_project/.env/local/lib/python2.7/site-packages/flask_sqlalchemy/__init__.py:800: UserWarning: SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.
+  warnings.warn('SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.')
+/home/zhanghe/code/flask_project/.env/local/lib/python2.7/site-packages/flask_sqlalchemy/__init__.py:800: UserWarning: SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.
+  warnings.warn('SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.')
+/home/zhanghe/code/flask_project/.env/local/lib/python2.7/site-packages/flask_sqlalchemy/__init__.py:800: UserWarning: SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.
+  warnings.warn('SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.')

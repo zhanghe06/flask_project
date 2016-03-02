@@ -1,5 +1,10 @@
 ## Flask 项目模拟
 
+
+依赖 redis
+
+部署模式下，同时依赖 nginx
+
 ### 项目演示步骤
 ```
 $ cd flask_project
@@ -8,7 +13,17 @@ $ source flask.env/bin/activate
 $ pip install -r requirements.txt
 $ chmod a+x ./etc/db_init.sh
 $ ./etc/db_init.sh
+```
+
+普通模式启动服务
+```
 $ ./run.py
+```
+
+部署模式启动服务
+```
+$ supervisord -c etc/supervisord.conf
+$ supervisorctl -c etc/supervisord.conf restart all
 ```
 
 页面结构：
@@ -82,6 +97,8 @@ $ pip install Flask-SQLAlchemy
 $ pip install Flask-WTF
 $ pip install Flask-OAuthlib
 $ pip install sqlacodegen
+$ pip install gunicorn
+$ pip install supervisor
 $ pip freeze > requirements.txt
 ```
 
@@ -430,12 +447,108 @@ current_user 仅仅支持视图
 
 ## 部署方案( Nginx + Gunicorn + Supervisor )
 
+生产环境下，flask 自带的 服务器，无法满足性能要求。我们这里采用 gunicorn 做 wsgi 容器，用来部署 python。
+
 Gunicorn 官网：[http://gunicorn.org/](http://gunicorn.org/)
 
+参考：[virtualenv 环境下 Flask + Nginx + Gunicorn+ Supervisor 搭建 Python Web](http://www.ituring.com.cn/article/201045?utm_source=tuicool)
 
+安装
+```
+$ pip install gunicorn
+```
+用 gunicorn 启动 flask
+```
+$ gunicorn -w4 -b0.0.0.0:8000 app:app
+[2016-03-02 15:22:44 +0000] [14362] [INFO] Starting gunicorn 19.4.5
+[2016-03-02 15:22:44 +0000] [14362] [INFO] Listening at: http://0.0.0.0:8000 (14362)
+[2016-03-02 15:22:44 +0000] [14362] [INFO] Using worker: sync
+[2016-03-02 15:22:44 +0000] [14367] [INFO] Booting worker with pid: 14367
+[2016-03-02 15:22:44 +0000] [14370] [INFO] Booting worker with pid: 14370
+[2016-03-02 15:22:45 +0000] [14373] [INFO] Booting worker with pid: 14373
+[2016-03-02 15:22:45 +0000] [14374] [INFO] Booting worker with pid: 14374
+```
+此时，我们需要用 8000 的端口进行访问，原先的5000并没有启用。
 
-## 部署方案( Nginx + Uwsgi + Supervisor )
+安装 supervisor
+```
+$ pip install supervisor
+$ echo_supervisord_conf > etc/supervisord.conf
+```
 
+新增如下配置
+```
+[program:app]
+command="gunicorn -w 4 -b 0.0.0.0:8000 app:app"
+startsecs=0
+stopwaitsecs=0
+autostart=false
+autorestart=false
+stdout_logfile=log/gunicorn.log
+stderr_logfile=log/gunicorn.err
+```
+
+启动 supervisord 服务
+```
+$ supervisord -c etc/supervisord.conf
+```
+
+常用命令
+```
+supervisord -c etc/supervisord.conf
+supervisorctl -c etc/supervisord.conf status                  查看supervisor的状态
+supervisorctl -c etc/supervisord.conf reload                  重新载入 配置文件
+supervisorctl -c etc/supervisord.conf start [all]|[appname]   启动指定/所有 supervisor 管理的程序进程
+supervisorctl -c etc/supervisord.conf stop [all]|[appname]    关闭指定/所有 supervisor 管理的程序进程
+supervisorctl -c etc/supervisord.conf restart [all]|[appname] 重启指定/所有 supervisor 管理的程序进程
+```
+
+supervisor 还有一个 web 的管理界面，可以激活。更改下配置：
+```
+[inet_http_server]         ; inet (TCP) server disabled by default
+port=127.0.0.1:9001        ; (ip_address:port specifier, *:port for all iface)
+username=admin             ; (default is no username (open server))
+password=123456            ; (default is no password (open server))
+```
+```
+[supervisorctl]
+serverurl=unix:///tmp/supervisor.sock ; use a unix:// URL  for a unix socket
+serverurl=http://127.0.0.1:9001       ; use an http:// url to specify an inet socket
+username=admin                        ; should be same as http_username if set
+password=123456                       ; should be same as http_password if set
+;prompt=mysupervisor                  ; cmd line prompt (default "supervisor")
+;history_file=~/.sc_history           ; use readline history if available
+```
+用户名 和 密码 必须一致，也可以同时注释掉。
+
+重新加载配置 并 重启服务
+```
+$ supervisorctl -c etc/supervisord.conf reload
+$ supervisorctl -c etc/supervisord.conf restart all
+```
+
+浏览器访问 [http://127.0.0.1:9001](http://127.0.0.1:9001) 可以得到 supervisor 的 web 管理界面，
+访问 [http://127.0.0.1:8000](http://127.0.0.1:8000) 可以看见 gunicorn 启动的返回的页面。
+
+nginx 服务
+```
+sudo service nginx start
+sudo service nginx stop
+sudo service nginx restart
+```
+
+```
+进入项目目录
+$ sudo ln -s `pwd`/etc/nginx.conf /etc/nginx/conf.d/flask_app_nginx.conf
+$ sudo nginx -s reload  # 平滑重启
+$ sudo subl /etc/hosts
+# 127.0.0.1    www.flask-app.com
+```
+
+查看 ip 地址
+```
+$ ifconfig eth0 | grep 'inet ' | awk '{print $2}'
+```
 
 
 ## 参考资料：
