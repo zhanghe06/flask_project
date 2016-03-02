@@ -69,7 +69,9 @@ def blog_new(page=1):
     pagination = get_blog_rows(page, per_page)
     id_list = [item.id for item in pagination.items]
     blog_counter_list = get_blog_list_counter(id_list)
-    blog_container_status_list = get_blog_list_container_status(id_list, g.user.id)
+    # 状态设置
+    login_user_id = g.user.get_id()
+    blog_container_status_list = get_blog_list_container_status(id_list, login_user_id)
     return render_template(
         'blog/new.html',
         title='blog_new',
@@ -93,11 +95,6 @@ def blog_hot(page=1):
 @login_required
 def blog_edit(blog_id):
     # return "Hello, World!\nBlog Edit!"
-    user = g.user
-    # 权限判断 todo
-    if user.id == 0:
-        flash(u'Permission error', 'danger')
-        return redirect(url_for('blog_list'))
     form = BlogEditForm(request.form)
     if request.method == 'GET':
         from blog import get_blog_row_by_id
@@ -133,11 +130,6 @@ def blog_edit(blog_id):
 @login_required
 def blog_add():
     # return "Hello, World!\nBlog Add!"
-    user = g.user
-    # 权限判断 todo
-    if user.id == 0:
-        flash(u'Permission error', 'danger')
-        return redirect(url_for('blog_list'))
     form = BlogAddForm(request.form)
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -162,12 +154,11 @@ def blog_add():
 
 
 @app.route('/blog/del/', methods=['GET', 'POST'])
-@login_required
 def blog_delete():
     if request.method == 'GET':
-        user = g.user
-        # 权限判断 todo
-        if user.id == 0:
+        login_user_id = g.user.get_id()
+        # 权限判断，只能删除自己的 blog todo
+        if login_user_id is None:
             return jsonify(result=False)
         blog_id = request.args.get('blog_id', 0, type=int)
         from blog import delete_blog
@@ -185,15 +176,14 @@ def blog_stat():
     :return:
     """
     if request.method == 'GET':
-        user = g.user
-        # 权限判断 todo
-        # if user.id == 0:
-        #     return jsonify(result=False)
+        login_user_id = g.user.get_id()
+        if login_user_id is None:
+            return jsonify(result=False)
         blog_id = request.args.get('blog_id', 0, type=int)
         stat_type = request.args.get('stat_type', '', type=str)
         # num = request.args.get('num', 0, type=int)
         from tools.stat import set_blog_stat
-        result = set_blog_stat(stat_type, user.id, blog_id)
+        result = set_blog_stat(stat_type, login_user_id, blog_id)
         return jsonify(result)
 
 

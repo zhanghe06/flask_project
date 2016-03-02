@@ -65,7 +65,7 @@
                 </ul>
                 <form class="navbar-form navbar-left" role="search" action="{{ url_for('search') }}">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search for...">
+                        <input type="text" class="form-control" placeholder="Search for..." speech x-webkit-speech onwebkitspeechchange="$(this).cloest('form').submit()">
                         <span class="input-group-btn">
                             <button class="btn btn-default" type="submit">Search</button>
                         </span>
