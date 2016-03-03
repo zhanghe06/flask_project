@@ -542,12 +542,29 @@ sudo service nginx restart
 $ sudo ln -s `pwd`/etc/nginx.conf /etc/nginx/conf.d/flask_app_nginx.conf
 $ sudo nginx -s reload  # 平滑重启
 $ sudo subl /etc/hosts
-# 127.0.0.1    www.flask-app.com
+# 127.0.0.1    www.flask_app.com
 ```
 
 查看 ip 地址
 ```
 $ ifconfig eth0 | grep 'inet ' | awk '{print $2}'
+```
+
+nginx 静态资源目录配置
+```
+$ sudo mkdir -p /data/static
+$ sudo chown nginx. /data -R
+$ sudo chmod 777 -R /data/static/
+$ sudo ln -s /data/static /home/zhanghe/code/flask_project/app/static
+```
+
+新增 nginx 配置信息
+```
+location ~ ^/static/ {
+    root /data/;
+    #过期30天，静态文件不怎么更新，过期可以设大一点，如果频繁更新，则可以设置得小一点。
+    expires 30d;
+}
 ```
 
 
