@@ -234,7 +234,7 @@ def login():
 @app.route('/logout')
 def logout():
     logout_user()
-    flash(u'You were logged out')
+    flash(u'You were logged out', 'info')
     return redirect(url_for('index'))
 
 

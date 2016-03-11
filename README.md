@@ -554,8 +554,19 @@ nginx 静态资源目录配置
 ```
 $ sudo mkdir -p /data/static
 $ sudo chown nginx. /data -R
-$ sudo chmod 777 -R /data/static/
 $ sudo ln -s /data/static /home/zhanghe/code/flask_project/app/static
+```
+
+为了保证网站安全，需要正确权限配置（目录755，静态文件644权限）
+```
+$ cd /data/
+$ find ./ -type d -print | xargs chmod 755
+$ find ./ -type f -print | xargs chmod 644
+```
+
+不建议以下为方便而设置的777权限
+```
+$ sudo chmod 777 -R /data/static/
 ```
 
 新增 nginx 配置信息
