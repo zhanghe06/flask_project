@@ -557,7 +557,7 @@ $ sudo chown nginx. /data -R
 $ sudo ln -s /data/static /home/zhanghe/code/flask_project/app/static
 ```
 
-为了保证网站安全，需要正确权限配置（目录755，静态文件644权限）
+为了保证网站安全（避免上传漏洞），需要正确权限配置（目录755，静态文件644权限）
 ```
 $ cd /data/
 $ find ./ -type d -print | xargs chmod 755
@@ -576,6 +576,18 @@ location ~ ^/static/ {
     #过期30天，静态文件不怎么更新，过期可以设大一点，如果频繁更新，则可以设置得小一点。
     expires 30d;
 }
+```
+
+todo：
+
+- Nginx https 部署
+
+
+## 调试
+
+在 Python 应用程序中设置断点
+```
+import pdb; pdb.set_trace()
 ```
 
 

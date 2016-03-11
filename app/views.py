@@ -279,3 +279,28 @@ def setting():
 @app.route('/search/', methods=['GET', 'POST'])
 def search():
     return 'search result!'
+
+
+@app.route("/email/")
+def send_email():
+    try:
+        from emails import send_email
+        msg = 'This is a test email!'
+        send_email(
+            subject=u'邮件主题',
+            sender=(u'系统邮箱', 'zhang_he06@163.com'),
+            recipients=[(u'尊敬的用户', 'zhang_he06@163.com')],
+            html_body=render_template('email.html', message=msg)
+        )
+        return jsonify({'success': u'邮件发送成功'})
+    except Exception, e:
+        return jsonify({'error': e.message})
+
+
+@app.route("/test")
+def test():
+    try:
+        raise Exception('error test')
+    except Exception as e:
+        import logging
+        logging.error(e)
