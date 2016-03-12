@@ -578,6 +578,19 @@ location ~ ^/static/ {
 }
 ```
 
+
+## 统计代码行数(包含注释)
+
+查看项目python代码行数
+```
+$ find ./app -type f -name "*.py" | xargs wc -l
+```
+
+查看项目模板文件行数
+```
+$ find ./app -type f -name "*.html" | xargs wc -l
+```
+
 todo：
 
 - Nginx https 部署
