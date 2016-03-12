@@ -9,8 +9,9 @@
 """
 
 
-from app import mail
-from flask.ext.mail import Message
+from app import app
+from flask.ext.mail import Mail, Message
+mail = Mail(app)
 
 
 def send_email(subject, sender, recipients, text_body=None, html_body=None):
