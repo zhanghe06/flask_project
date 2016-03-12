@@ -10,10 +10,11 @@
 
 
 from app import app, login_manager
-from flask import render_template, request, url_for, session, flash, redirect, g, jsonify
+from flask import render_template, request, url_for, send_from_directory, session, flash, redirect, g, jsonify
 from .forms import RegForm, LoginForm, BlogAddForm, BlogEditForm, UserForm
 from login import LoginUser
 from flask.ext.login import login_user, logout_user, current_user, login_required
+import os
 
 
 @login_manager.user_loader
@@ -29,6 +30,12 @@ def load_user(user_id):
 @app.before_request
 def before_request():
     g.user = current_user
+
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'img/favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 
 @app.route('/')
