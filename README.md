@@ -604,6 +604,101 @@ import pdb; pdb.set_trace()
 ```
 
 
+## 远程调试
+```
+$ pip install remote-pdb
+```
+
+远程调试配置代码（添加web服务启动之前）：
+```
+import signal
+import os
+
+
+def handle_pdb(sig, frame):
+    from remote_pdb import RemotePdb
+    print sig, frame
+    RemotePdb('0.0.0.0', 48110).set_trace()  # 如将ip地址设置为127.0.0.1，只能本机调试
+
+signal.signal(signal.SIGUSR1, handle_pdb)
+print('pid:%s' % os.getpid())
+```
+
+调试过程：
+
+一、服务启动
+```
+$ ./run.py 
+pid:7892
+ * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+10 <frame object at 0x7fb9010259d8>
+CRITICAL:root:RemotePdb session open at 127.0.0.1:48110, waiting for connection ...
+RemotePdb session open at 0.0.0.0:48110, waiting for connection ...
+CRITICAL:root:RemotePdb accepted connection from ('127.0.0.1', 41497).
+RemotePdb accepted connection from ('127.0.0.1', 41497).
+```
+终端输出的进程id 为 7892
+
+二、给进程7892 发送终止信号
+```
+$ kill -10 7892
+```
+
+三、远程登陆
+```
+$ telnet 127.0.0.1 48110
+Trying 127.0.0.1...
+Connected to 127.0.0.1.
+Escape character is '^]'.
+--Return--
+> /home/zhanghe/code/flask_project/run.py(21)handle_pdb()->None
+-> RemotePdb('127.0.0.1', 48110).set_trace()
+(Pdb) 
+```
+
+四、退出调试(2步)：
+Ctrl + ], q
+```
+(Pdb) ^]
+
+telnet> q
+Connection closed.
+```
+此时，程序继续运行（web继续提供服务）
+
+pdb 可以执行命令：
+直接回车是重复前一条命令！
+p(print) 查看一个变量值
+n(next) 下一步
+s(step) 单步,可进入函数
+c(continue)继续前进
+l(list)看源代码
+
+查看系统支持的信号列表
+```
+$ kill -l
+ 1) SIGHUP	 2) SIGINT	 3) SIGQUIT	 4) SIGILL	 5) SIGTRAP
+ 6) SIGABRT	 7) SIGBUS	 8) SIGFPE	 9) SIGKILL	10) SIGUSR1
+11) SIGSEGV	12) SIGUSR2	13) SIGPIPE	14) SIGALRM	15) SIGTERM
+16) SIGSTKFLT	17) SIGCHLD	18) SIGCONT	19) SIGSTOP	20) SIGTSTP
+21) SIGTTIN	22) SIGTTOU	23) SIGURG	24) SIGXCPU	25) SIGXFSZ
+26) SIGVTALRM	27) SIGPROF	28) SIGWINCH	29) SIGIO	30) SIGPWR
+31) SIGSYS	34) SIGRTMIN	35) SIGRTMIN+1	36) SIGRTMIN+2	37) SIGRTMIN+3
+38) SIGRTMIN+4	39) SIGRTMIN+5	40) SIGRTMIN+6	41) SIGRTMIN+7	42) SIGRTMIN+8
+43) SIGRTMIN+9	44) SIGRTMIN+10	45) SIGRTMIN+11	46) SIGRTMIN+12	47) SIGRTMIN+13
+48) SIGRTMIN+14	49) SIGRTMIN+15	50) SIGRTMAX-14	51) SIGRTMAX-13	52) SIGRTMAX-12
+53) SIGRTMAX-11	54) SIGRTMAX-10	55) SIGRTMAX-9	56) SIGRTMAX-8	57) SIGRTMAX-7
+58) SIGRTMAX-6	59) SIGRTMAX-5	60) SIGRTMAX-4	61) SIGRTMAX-3	62) SIGRTMAX-2
+63) SIGRTMAX-1	64) SIGRTMAX
+```
+
+以上程序使用的 SIGUSR1 是终止进程信号，为用户定义信号1
+
+
+参考文档
+[https://pypi.python.org/pypi/remote-pdb](https://pypi.python.org/pypi/remote-pdb)
+
+
 ## 参考资料：
 
 [Flask 代码模式](http://docs.jinkan.org/docs/flask/patterns/index.html)
