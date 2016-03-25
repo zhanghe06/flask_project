@@ -11,8 +11,8 @@
 
 from app import app, login_manager
 from flask import render_template, request, url_for, send_from_directory, session, flash, redirect, g, jsonify
-from .forms import RegForm, LoginForm, BlogAddForm, BlogEditForm, UserForm
-from login import LoginUser
+from app.forms import RegForm, LoginForm, BlogAddForm, BlogEditForm, UserForm
+from app.login import LoginUser
 from flask.ext.login import login_user, logout_user, current_user, login_required
 import os
 

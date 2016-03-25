@@ -9,9 +9,9 @@
 """
 
 
-from login import LoginUser
-from tools.db import get_row, get_rows, get_row_by_id, add, edit_by_id, delete_by_id
-from lib.container import Container
+from app.login import LoginUser
+from app.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
+from app.lib.container import Container
 
 
 def get_user_row_by_id(user_id):
@@ -49,7 +49,7 @@ def edit_user(user_id, user_data):
     :param user_data:
     :return: Number of affected rows (Example: 0/1)
     """
-    return edit_by_id(LoginUser, user_id, user_data)
+    return edit(LoginUser, user_id, user_data)
 
 
 def delete_user(user_id):
@@ -58,7 +58,7 @@ def delete_user(user_id):
     :param user_id:
     :return: Number of affected rows (Example: 0/1)
     """
-    return delete_by_id(LoginUser, user_id)
+    return delete(LoginUser, user_id)
 
 
 def get_user_rows(page=1, per_page=10, *args, **kwargs):

@@ -9,7 +9,7 @@
 """
 
 
-from ..database import db_session
+from app.database import db_session
 
 
 def get_row_by_id(model_name, pk_id):
@@ -25,7 +25,7 @@ def get_row_by_id(model_name, pk_id):
 
 def get_row(model_name, *args, **kwargs):
     """
-    获取用户信息
+    获取信息
     Usage:
         # 方式一
         get_row(User, User.id > 1)
@@ -50,7 +50,7 @@ def get_row(model_name, *args, **kwargs):
 
 def add(model_name, data):
     """
-    添加用户信息
+    添加信息
     :param model_name:
     :param data:
     :return: None/Value of model_obj.id
@@ -61,9 +61,9 @@ def add(model_name, data):
     return model_obj.id
 
 
-def edit_by_id(model_name, pk_id, data):
+def edit(model_name, pk_id, data):
     """
-    修改用户信息
+    修改信息
     :param model_name:
     :param pk_id:
     :param data:
@@ -75,9 +75,9 @@ def edit_by_id(model_name, pk_id, data):
     return result
 
 
-def delete_by_id(model_name, pk_id):
+def delete(model_name, pk_id):
     """
-    删除用户信息
+    删除信息
     :param model_name:
     :param pk_id:
     :return: Number of affected rows (Example: 0/1)
@@ -90,7 +90,7 @@ def delete_by_id(model_name, pk_id):
 
 def get_rows(model_name, page=1, per_page=10, *args, **kwargs):
     """
-    获取用户列表（分页）
+    获取信息列表（分页）
     Usage:
         items: 信息列表
         has_next: 如果本页之后还有超过一个分页，则返回True
@@ -120,7 +120,7 @@ def test_user():
     测试 User
     :return:
     """
-    from ..models import User
+    from app.models import User
     print '\n测试增删改查'
     # 测试获取
     row = get_row_by_id(User, 1)
@@ -136,10 +136,10 @@ def test_user():
     result = add(User, user_info)
     print result
     # 测试修改
-    result = edit_by_id(User, 2, {'nickname': 'Emma'})
+    result = edit(User, 2, {'nickname': 'Emma'})
     print result
     # 测试删除
-    result = delete_by_id(User, 2)
+    result = delete(User, 2)
     print result
 
     print '\n测试单条信息'
