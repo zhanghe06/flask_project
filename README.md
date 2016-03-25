@@ -306,7 +306,7 @@ mysql 里的 charset 是 utf8
 
 错误写法：
 ```
-rows = db_session.query(Author).filter(eval(condition)).paginate(page, per_page, False)
+rows = db_session.query(Author).filter_by(**kwargs).paginate(page, per_page, False)
 ```
 
 报错如下：
@@ -327,7 +327,7 @@ How you actually build the object you are calling your "Query" object depends on
 
 正确写法：
 ```
-rows = Author.query.filter(eval(condition)).paginate(page, per_page, False)
+rows = Author.query.filter_by(**kwargs).paginate(page, per_page, False)
 ```
 
 模板中遍历 item，单页 item 序号用 loop.index 表示
@@ -591,10 +591,6 @@ $ find ./app -type f -name "*.py" | xargs wc -l
 $ find ./app -type f -name "*.html" | xargs wc -l
 ```
 
-todo：
-
-- Nginx https 部署
-
 
 ## 调试
 
@@ -702,6 +698,34 @@ $ kill -l
 ## 参考资料：
 
 [Flask 代码模式](http://docs.jinkan.org/docs/flask/patterns/index.html)
+
+
+## 安全设置
+
+- 路由参数 校验参数类型，格式
+
+例如：
+```
+@app.route('/blog/edit/<int:blog_id>/', methods=['GET', 'POST'])
+```
+防止 XSS 漏洞
+
+- 链接中的重定向参数(next)不能为外链
+
+防止 URL 重定向/跳转漏洞
+
+
+
+## Todo：
+
+- Nginx https 部署
+
+- 第三方登陆
+
+- 第三方支付
+
+- 找回密码安全设置
+参考：[密码找回功能可能存在的问题](http://drops.wooyun.org/web/3295)
 
 
 ## GitHub 操作

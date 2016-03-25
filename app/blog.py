@@ -10,7 +10,7 @@
 
 
 from models import Blog
-from tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
+from tools.db import get_row, get_rows, get_row_by_id, add, edit_by_id, delete_by_id
 from lib.counter import Counter
 from lib.container import Container
 
@@ -50,7 +50,7 @@ def edit_blog(blog_id, blog_data):
     :param blog_data:
     :return: Number of affected rows (Example: 0/1)
     """
-    return edit(Blog, blog_id, blog_data)
+    return edit_by_id(Blog, blog_id, blog_data)
 
 
 def delete_blog(blog_id):
@@ -59,7 +59,7 @@ def delete_blog(blog_id):
     :param blog_id:
     :return: Number of affected rows (Example: 0/1)
     """
-    return delete(Blog, blog_id)
+    return delete_by_id(Blog, blog_id)
 
 
 def get_blog_rows(page=1, per_page=10, *args, **kwargs):

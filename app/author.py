@@ -10,7 +10,7 @@
 
 
 from models import Author
-from tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
+from tools.db import get_row, get_rows, get_row_by_id, add, edit_by_id, delete_by_id
 
 
 def get_author_row_by_id(author_id):
@@ -48,7 +48,7 @@ def edit_author(author_id, author_data):
     :param author_data:
     :return: Number of affected rows (Example: 0/1)
     """
-    return edit(Author, author_id, author_data)
+    return edit_by_id(Author, author_id, author_data)
 
 
 def delete_author(author_id):
@@ -57,7 +57,7 @@ def delete_author(author_id):
     :param author_id:
     :return: Number of affected rows (Example: 0/1)
     """
-    return delete(Author, author_id)
+    return delete_by_id(Author, author_id)
 
 
 def get_author_rows(page=1, per_page=10, *args, **kwargs):

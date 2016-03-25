@@ -19,7 +19,7 @@ def get_row_by_id(model_name, pk_id):
     :param pk_id:
     :return: None/object
     """
-    row = db_session.query(model_name).filter(model_name.id == pk_id).first()
+    row = db_session.query(model_name).get(pk_id)
     return row
 
 
@@ -61,7 +61,7 @@ def add(model_name, data):
     return model_obj.id
 
 
-def edit(model_name, pk_id, data):
+def edit_by_id(model_name, pk_id, data):
     """
     修改用户信息
     :param model_name:
@@ -75,7 +75,7 @@ def edit(model_name, pk_id, data):
     return result
 
 
-def delete(model_name, pk_id):
+def delete_by_id(model_name, pk_id):
     """
     删除用户信息
     :param model_name:
@@ -136,10 +136,10 @@ def test_user():
     result = add(User, user_info)
     print result
     # 测试修改
-    result = edit(User, 2, {'nickname': 'Emma'})
+    result = edit_by_id(User, 2, {'nickname': 'Emma'})
     print result
     # 测试删除
-    result = delete(User, 2)
+    result = delete_by_id(User, 2)
     print result
 
     print '\n测试单条信息'
