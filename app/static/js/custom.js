@@ -42,8 +42,9 @@ $(function(){
 
 
 /* 按钮加载状态 */
+// html button 标签其中 autocomplete="off" 属性是针对FF浏览器在页面加载之后，禁用状态不会自动解除用的。
 $(function() {
-    $(".btn").click(function(){
+    $(".btn-load").click(function(){
         $(this).button('loading').delay(1000).queue(function() {
             //$(this).button('reset');
         });
