@@ -9,7 +9,7 @@
 """
 
 
-from app import app, login_manager
+from app import app, login_manager, github
 from flask import render_template, request, url_for, send_from_directory, session, flash, redirect, g, jsonify
 from app.forms import RegForm, LoginForm, BlogAddForm, BlogEditForm, UserForm
 from app.login import LoginUser
@@ -194,7 +194,7 @@ def blog_stat():
         return jsonify(result)
 
 
-@app.route('/reg', methods=['GET', 'POST'])
+@app.route('/reg/', methods=['GET', 'POST'])
 def reg():
     # return "Hello, World!\nReg!"
     form = RegForm()
@@ -207,7 +207,7 @@ def reg():
     return render_template('reg.html', title='reg', form=form)
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login/', methods=['GET', 'POST'])
 def login():
     if g.user is not None and g.user.is_authenticated:
         return redirect(url_for('index'))
@@ -238,9 +238,10 @@ def login():
 #     flash(u'You were logged out')
 #     return redirect(url_for('index'))
 
-@app.route('/logout')
+@app.route('/logout/')
 def logout():
     logout_user()
+    session.pop('github_token', None)
     flash(u'You were logged out', 'info')
     return redirect(url_for('index'))
 
@@ -311,3 +312,27 @@ def test():
     except Exception as e:
         import logging
         logging.error(e)
+
+
+# 第三方登陆（GitHub）
+@app.route('/login/github/')
+def login_github():
+    return github.authorize(callback=url_for('authorized_github', _external=True))
+
+
+@app.route('/login/authorized/github/')
+def authorized_github():
+    resp = github.authorized_response()
+    if resp is None:
+        return 'Access denied: reason=%s error=%s' % (
+            request.args['error'],
+            request.args['error_description']
+        )
+    session['github_token'] = (resp['access_token'], '')
+    me = github.get('user')
+    return jsonify(me.data)
+
+
+@github.tokengetter
+def get_github_oauth_token():
+    return session.get('github_token')

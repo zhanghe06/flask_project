@@ -11,6 +11,7 @@
 
 from flask import Flask
 from flask.ext.login import LoginManager
+from flask_oauthlib.client import OAuth
 
 
 app = Flask(__name__)
@@ -20,6 +21,20 @@ login_manager.init_app(app)  # setup_app 方法已淘汰
 login_manager.login_view = 'login'
 # login_manager.login_message = 'Please log in to access this page.'  # 设置登陆提示消息
 login_manager.login_message_category = 'info'  # 设置消息分类
+
+# 第三方登陆
+oauth = OAuth(app)
+github = oauth.remote_app(
+    'github',
+    consumer_key='0ccd9367a1f81288b127',
+    consumer_secret='711b6afcc938d760e9e57215dfbdcb115150ddc6',
+    request_token_params={'scope': 'user:email'},
+    base_url='https://api.github.com/',
+    request_token_url=None,
+    access_token_method='POST',
+    access_token_url='https://github.com/login/oauth/access_token',
+    authorize_url='https://github.com/login/oauth/authorize'
+)
 
 
 if not app.debug:
