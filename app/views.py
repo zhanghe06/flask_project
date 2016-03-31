@@ -9,12 +9,13 @@
 """
 
 
-from app import app, login_manager, github
-from flask import render_template, request, url_for, send_from_directory, session, flash, redirect, g, jsonify
+from app import app, login_manager, github, qq, weibo
+from flask import render_template, request, url_for, send_from_directory, session, flash, redirect, g, jsonify, Markup
 from app.forms import RegForm, LoginForm, BlogAddForm, BlogEditForm, UserForm
 from app.login import LoginUser
 from flask.ext.login import login_user, logout_user, current_user, login_required
 import os
+import json
 
 
 @login_manager.user_loader
@@ -241,6 +242,8 @@ def login():
 @app.route('/logout/')
 def logout():
     logout_user()
+    session.pop('qq_token', None)
+    session.pop('weibo_token', None)
     session.pop('github_token', None)
     flash(u'You were logged out', 'info')
     return redirect(url_for('index'))
@@ -312,6 +315,123 @@ def test():
     except Exception as e:
         import logging
         logging.error(e)
+
+
+# # 第三方登陆（QQ）
+def json_to_dict(x):
+    """
+    OAuthResponse class can't not parse the JSON data with content-type
+    text/html, so we need reload the JSON data manually
+    :param x:
+    :return:
+    """
+    if x.find('callback') > -1:
+        pos_lb = x.find('{')
+        pos_rb = x.find('}')
+        x = x[pos_lb:pos_rb + 1]
+    try:
+        return json.loads(x, encoding='utf-8')
+    except:
+        return x
+
+
+def update_qq_api_request_data(data={}):
+    """
+    Update some required parameters for OAuth2.0 API calls
+    :param data:
+    :return:
+    """
+    defaults = {
+        'openid': session.get('qq_openid'),
+        'access_token': session.get('qq_token')[0],
+        'oauth_consumer_key': app.config['consumer_key'],
+    }
+    defaults.update(data)
+    return defaults
+
+
+@app.route('/user_info')
+def get_user_info():
+    if 'qq_token' in session:
+        data = update_qq_api_request_data()
+        resp = qq.get('/user/get_user_info', data=data)
+        return jsonify(status=resp.status, data=resp.data)
+    return redirect(url_for('login_qq'))
+
+
+@app.route('/login/qq/')
+def login_qq():
+    return qq.authorize(callback=url_for('authorized_qq', _external=True))
+
+
+@app.route('/login/authorized/qq/')
+def authorized_qq():
+    resp = qq.authorized_response()
+    if resp is None:
+        return 'Access denied: reason=%s error=%s' % (
+            request.args['error_reason'],
+            request.args['error_description']
+        )
+    session['qq_token'] = (resp['access_token'], '')
+
+    # Get openid via access_token, openid and access_token are needed for API calls
+    resp = qq.get('/oauth2.0/me', {'access_token': session['qq_token'][0]})
+    resp = json_to_dict(resp.data)
+    if isinstance(resp, dict):
+        session['qq_openid'] = resp.get('openid')
+
+    return redirect(url_for('get_user_info'))
+
+
+@qq.tokengetter
+def get_qq_oauth_token():
+    return session.get('qq_token')
+
+
+# 第三方登陆（WeiBo）
+# @app.route('/')
+# def index():
+#     if 'oauth_token' in session:
+#         access_token = session['oauth_token'][0]
+#         resp = weibo.get('statuses/home_timeline.json')
+#         return jsonify(resp.data)
+#     return redirect(url_for('login'))
+
+
+@app.route('/login/weibo/')
+def login_weibo():
+    return weibo.authorize(callback=url_for('authorized_weibo',
+        next=request.args.get('next') or request.referrer or None,
+        _external=True))
+
+
+@app.route('/login/authorized/weibo/')
+def authorized_weibo():
+    resp = weibo.authorized_response()
+    if resp is None:
+        return 'Access denied: reason=%s error=%s' % (
+            request.args['error_reason'],
+            request.args['error_description']
+        )
+    session['oauth_token'] = (resp['access_token'], '')
+    return redirect(url_for('index'))
+
+
+@weibo.tokengetter
+def get_weibo_oauth_token():
+    return session.get('oauth_token')
+
+
+def change_weibo_header(uri, headers, body):
+    """Since weibo is a rubbish server, it does not follow the standard,
+    we need to change the authorization header for it."""
+    auth = headers.get('Authorization')
+    if auth:
+        auth = auth.replace('Bearer', 'OAuth2')
+        headers['Authorization'] = auth
+    return uri, headers, body
+
+weibo.pre_request = change_weibo_header
 
 
 # 第三方登陆（GitHub）

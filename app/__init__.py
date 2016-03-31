@@ -22,19 +22,29 @@ login_manager.login_view = 'login'
 # login_manager.login_message = 'Please log in to access this page.'  # 设置登陆提示消息
 login_manager.login_message_category = 'info'  # 设置消息分类
 
-# 第三方登陆
+# 第三方开放授权登陆
 oauth = OAuth(app)
+
+# GitHub
 github = oauth.remote_app(
     'github',
-    consumer_key='0ccd9367a1f81288b127',
-    consumer_secret='711b6afcc938d760e9e57215dfbdcb115150ddc6',
-    request_token_params={'scope': 'user:email'},
-    base_url='https://api.github.com/',
-    request_token_url=None,
-    access_token_method='POST',
-    access_token_url='https://github.com/login/oauth/access_token',
-    authorize_url='https://github.com/login/oauth/authorize'
+    **app.config['GITHUB_OAUTH']
 )
+
+# QQ
+qq = oauth.remote_app(
+    'qq',
+    **app.config['QQ_OAUTH']
+)
+
+# WeiBo
+weibo = oauth.remote_app(
+    'weibo',
+    **app.config['WEIBO_OAUTH']
+)
+
+# Google
+# 要银子，妹的
 
 
 if not app.debug:

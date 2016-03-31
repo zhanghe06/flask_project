@@ -9,7 +9,7 @@
 """
 
 
-from app.database import db_session
+from app.database import db
 
 
 def get_row_by_id(model_name, pk_id):
@@ -19,7 +19,7 @@ def get_row_by_id(model_name, pk_id):
     :param pk_id:
     :return: None/object
     """
-    row = db_session.query(model_name).get(pk_id)
+    row = db.session.query(model_name).get(pk_id)
     return row
 
 
@@ -40,10 +40,10 @@ def get_row(model_name, *args, **kwargs):
     :return: None/object
     """
     if args:
-        row = db_session.query(model_name).filter(*args).first()
+        row = db.session.query(model_name).filter(*args).first()
         return row
     if kwargs:
-        row = db_session.query(model_name).filter_by(**kwargs).first()
+        row = db.session.query(model_name).filter_by(**kwargs).first()
         return row
     return None
 
@@ -56,8 +56,8 @@ def add(model_name, data):
     :return: None/Value of model_obj.id
     """
     model_obj = model_name(**data)
-    db_session.add(model_obj)
-    db_session.commit()
+    db.session.add(model_obj)
+    db.session.commit()
     return model_obj.id
 
 
@@ -69,9 +69,9 @@ def edit(model_name, pk_id, data):
     :param data:
     :return: Number of affected rows (Example: 0/1)
     """
-    model_obj = db_session.query(model_name).filter(model_name.id == pk_id)
+    model_obj = db.session.query(model_name).filter(model_name.id == pk_id)
     result = model_obj.update(data)
-    db_session.commit()
+    db.session.commit()
     return result
 
 
@@ -82,9 +82,9 @@ def delete(model_name, pk_id):
     :param pk_id:
     :return: Number of affected rows (Example: 0/1)
     """
-    model_obj = db_session.query(model_name).filter(model_name.id == pk_id)
+    model_obj = db.session.query(model_name).filter(model_name.id == pk_id)
     result = model_obj.delete()
-    db_session.commit()
+    db.session.commit()
     return result
 
 

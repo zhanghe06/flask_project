@@ -10,6 +10,15 @@ CREATE TABLE user (
   last_ip     VARCHAR(15)
 );
 
+DROP TABLE IF EXISTS user_oauth;
+CREATE TABLE user_oauth (
+  id          INTEGER PRIMARY KEY  AUTOINCREMENT,
+  user_id     INTEGER,
+  open_plat   VARCHAR(20),
+  open_id     VARCHAR(20),
+  access_token    VARCHAR(20) NOT NULL
+);
+
 DROP TABLE IF EXISTS author;
 CREATE TABLE author (
   id    INTEGER PRIMARY KEY AUTOINCREMENT,
