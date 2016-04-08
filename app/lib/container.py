@@ -19,7 +19,7 @@ redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 class Container(object):
     """
-    容器（数据结构：集合）
+    容器（数据结构：有序集合）
     """
     # 定义支持的实体类型
     entity_name_list = ['user', 'blog', 'topic', 'subject', 'product']
