@@ -48,6 +48,31 @@ def get_row(model_name, *args, **kwargs):
     return None
 
 
+def count(model_name, *args, **kwargs):
+    """
+    计数
+    Usage:
+        # 方式一
+        count(User, User.id > 1)
+        # 方式二
+        test_condition = {
+            'name': "Larry"
+        }
+        count(User, **test_condition)
+    :param model_name:
+    :param args:
+    :param kwargs:
+    :return: 0/Number（int）
+    """
+    if args:
+        result_count = db.session.query(model_name).filter(*args).count()
+        return result_count
+    if kwargs:
+        result_count = db.session.query(model_name).filter_by(**kwargs).count()
+        return result_count
+    return 0
+
+
 def add(model_name, data):
     """
     添加信息
@@ -133,6 +158,10 @@ def test_user():
         'password': '123456',
         'nickname': 'Bob',
     }
+    # 测试计数
+    result_count = count(User, User.id > 1)
+    print result_count
+
     result = add(User, user_info)
     print result
     # 测试修改
