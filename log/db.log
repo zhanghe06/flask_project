@@ -1,0 +1,2 @@
+2016-04-10 01:23:34,564 - db - File: log_test.py - line: 33 - test_db() - INFO - This is a db info!
+2016-04-10 01:23:34,565 - db - File: log_test.py - line: 34 - test_db() - ERROR - This is a db error!

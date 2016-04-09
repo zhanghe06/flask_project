@@ -1,0 +1,2 @@
+2016-04-10 01:23:34,564 - app - File: log_test.py - line: 24 - test_app() - INFO - This is a app info!
+2016-04-10 01:23:34,564 - app - File: log_test.py - line: 25 - test_app() - ERROR - This is a app error!

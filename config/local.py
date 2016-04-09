@@ -10,9 +10,11 @@
 
 
 import os
-basedir = os.path.abspath(os.path.dirname(__file__))
 
-SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, '../flask.db')
+
+BASE_DIR = os.path.abspath(os.path.dirname(__file__)+'/../')
+
+SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASE_DIR, 'flask.db')
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 CSRF_ENABLED = True
@@ -64,6 +66,52 @@ WEIBO_OAUTH = {
     'content_type': 'application/json',
 }
 
+
+# 日志参数配置
+LOG_CONFIG = {
+    'version': 1,
+    'formatters': {
+        'simple': {
+            'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        },
+        'detail': {
+            'format': '%(asctime)s - %(name)s - File: %(filename)s - line: %(lineno)d - %(funcName)s() - %(levelname)s - %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+            'level': 'INFO'
+        },
+        'file_app': {
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'formatter': 'detail',
+            'level': 'DEBUG',
+            'when': 'D',
+            'filename': BASE_DIR + '/log/app.log'
+        },
+        'file_db': {
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'formatter': 'detail',
+            'level': 'DEBUG',
+            'when': 'D',
+            'filename': BASE_DIR + '/log/db.log'
+        }
+    },
+    'loggers': {
+        'app': {
+            'handlers': ['console', 'file_app'],
+            'level': 'DEBUG'
+        },
+        'db': {
+            'handlers': ['file_db'],
+            'level': 'DEBUG'
+        }
+    }
+}
+
+
 if __name__ == '__main__':
     import os
     import binascii
@@ -71,3 +119,4 @@ if __name__ == '__main__':
     sk = os.urandom(24)
     print sk
     print binascii.b2a_hex(sk)
+    print BASE_DIR
