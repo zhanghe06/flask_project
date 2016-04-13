@@ -542,7 +542,7 @@ sudo service nginx restart
 $ sudo ln -s `pwd`/etc/nginx.conf /etc/nginx/conf.d/flask_app_nginx.conf
 $ sudo nginx -s reload  # 平滑重启
 $ sudo subl /etc/hosts
-# 127.0.0.1    www.flask_app.com
+# 127.0.0.1    www.flask-app.com
 ```
 
 查看 ip 地址
@@ -577,6 +577,10 @@ location ~ ^/static/ {
     expires 30d;
 }
 ```
+
+Nginx https 部署
+
+参考[https.md](https.md)
 
 
 ## 统计代码行数(包含注释)
@@ -721,8 +725,6 @@ $ kill -l
 
 
 ## Todo：
-
-- Nginx https 部署
 
 - 第三方登陆
 

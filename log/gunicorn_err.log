@@ -1,7 +1,0 @@
-[2016-03-03 15:05:51 +0000] [16398] [INFO] Starting gunicorn 19.4.5
-[2016-03-03 15:05:51 +0000] [16398] [INFO] Listening at: http://0.0.0.0:8000 (16398)
-[2016-03-03 15:05:51 +0000] [16398] [INFO] Using worker: sync
-[2016-03-03 15:05:51 +0000] [16422] [INFO] Booting worker with pid: 16422
-[2016-03-03 15:05:51 +0000] [16425] [INFO] Booting worker with pid: 16425
-[2016-03-03 15:05:51 +0000] [16426] [INFO] Booting worker with pid: 16426
-[2016-03-03 15:05:51 +0000] [16429] [INFO] Booting worker with pid: 16429

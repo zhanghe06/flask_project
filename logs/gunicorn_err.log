@@ -1,0 +1,20 @@
+[2016-04-13 20:23:28 +0000] [29162] [INFO] Starting gunicorn 19.4.5
+[2016-04-13 20:23:28 +0000] [29162] [INFO] Listening at: http://0.0.0.0:8000 (29162)
+[2016-04-13 20:23:28 +0000] [29162] [INFO] Using worker: sync
+[2016-04-13 20:23:28 +0000] [29167] [INFO] Booting worker with pid: 29167
+[2016-04-13 20:23:28 +0000] [29168] [INFO] Booting worker with pid: 29168
+[2016-04-13 20:23:28 +0000] [29173] [INFO] Booting worker with pid: 29173
+[2016-04-13 20:23:28 +0000] [29176] [INFO] Booting worker with pid: 29176
+Traceback (most recent call last):
+  File "/usr/lib/python2.7/logging/handlers.py", line 928, in emit
+    smtp = smtplib.SMTP(self.mailhost, port, timeout=self._timeout)
+  File "/usr/lib/python2.7/smtplib.py", line 256, in __init__
+    (code, msg) = self.connect(host, port)
+  File "/usr/lib/python2.7/smtplib.py", line 316, in connect
+    self.sock = self._get_socket(host, port, self.timeout)
+  File "/usr/lib/python2.7/smtplib.py", line 291, in _get_socket
+    return socket.create_connection((host, port), timeout)
+  File "/usr/lib/python2.7/socket.py", line 553, in create_connection
+    for res in getaddrinfo(host, port, 0, SOCK_STREAM):
+TypeError: getaddrinfo() argument 1 must be string or None
+Logged from file app.py, line 1423
