@@ -10,6 +10,7 @@
 
 
 from app.database import db
+from sqlalchemy.inspection import inspect
 
 
 def get_row_by_id(model_name, pk_id):
@@ -30,7 +31,8 @@ def get_rows_by_ids(model_name, pk_ids):
     :param pk_ids:
     :return: list
     """
-    rows = db.session.query(model_name).filter(model_name.id.in_(pk_ids)).all()
+    model_pk = inspect(model_name).primary_key[0]
+    rows = db.session.query(model_name).filter(model_pk.in_(pk_ids)).all()
     return rows
 
 
@@ -77,11 +79,11 @@ def count(model_name, *args, **kwargs):
     """
     if args:
         result_count = db.session.query(model_name).filter(*args).count()
-        return result_count
-    if kwargs:
+    elif kwargs:
         result_count = db.session.query(model_name).filter_by(**kwargs).count()
-        return result_count
-    return 0
+    else:
+        result_count = db.session.query(model_name).count()
+    return result_count
 
 
 def add(model_name, data):
@@ -89,12 +91,16 @@ def add(model_name, data):
     添加信息
     :param model_name:
     :param data:
-    :return: None/Value of model_obj.id
+    :return: None/Value of model_obj.PK
     """
     model_obj = model_name(**data)
-    db.session.add(model_obj)
-    db.session.commit()
-    return model_obj.id
+    try:
+        db.session.add(model_obj)
+        db.session.commit()
+        return inspect(model_obj).identity[0]
+    except Exception as e:
+        db.session.rollback()
+        raise e
 
 
 def edit(model_name, pk_id, data):
@@ -105,10 +111,15 @@ def edit(model_name, pk_id, data):
     :param data:
     :return: Number of affected rows (Example: 0/1)
     """
-    model_obj = db.session.query(model_name).filter(model_name.id == pk_id)
-    result = model_obj.update(data)
-    db.session.commit()
-    return result
+    model_pk = inspect(model_name).primary_key[0]
+    try:
+        model_obj = db.session.query(model_name).filter(model_pk == pk_id)
+        result = model_obj.update(data)
+        db.session.commit()
+        return result
+    except Exception as e:
+        db.session.rollback()
+        raise e
 
 
 def delete(model_name, pk_id):
@@ -118,10 +129,15 @@ def delete(model_name, pk_id):
     :param pk_id:
     :return: Number of affected rows (Example: 0/1)
     """
-    model_obj = db.session.query(model_name).filter(model_name.id == pk_id)
-    result = model_obj.delete()
-    db.session.commit()
-    return result
+    model_pk = inspect(model_name).primary_key[0]
+    try:
+        model_obj = db.session.query(model_name).filter(model_pk == pk_id)
+        result = model_obj.delete()
+        db.session.commit()
+        return result
+    except Exception as e:
+        db.session.rollback()
+        raise e
 
 
 def get_rows(model_name, page=1, per_page=10, *args, **kwargs):
@@ -144,11 +160,11 @@ def get_rows(model_name, page=1, per_page=10, *args, **kwargs):
     """
     if args:
         rows = model_name.query.filter(*args).paginate(page, per_page, False)
-        return rows
-    if kwargs:
+    elif kwargs:
         rows = model_name.query.filter_by(**kwargs).paginate(page, per_page, False)
-        return rows
-    return model_name.query.paginate(page, per_page, False)
+    else:
+        rows = model_name.query.paginate(page, per_page, False)
+    return rows
 
 
 def test_user():

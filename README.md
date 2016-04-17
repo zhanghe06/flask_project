@@ -261,6 +261,8 @@ default         Define a default value for the column.
 
 [常见的过滤器运算符 Common Filter Operators](http://docs.sqlalchemy.org/en/rel_1_0/orm/tutorial.html#common-filter-operators)
 
+[动态获取 Model 对象的主键](http://docs.sqlalchemy.org/en/latest/orm/internals.html#sqlalchemy.orm.state.InstanceState.identity)
+
 
 ### sqlacodegen
 
