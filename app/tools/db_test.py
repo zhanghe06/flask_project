@@ -23,6 +23,10 @@ class TestDB(unittest.TestCase):
         """
         测试前准备环境的搭建
         """
+        # 备份数据
+        cmd = os.path.join(BASE_DIR, 'etc/db_dump.sh')
+        os.system(cmd)
+        # 准备测试数据
         cmd = os.path.join(BASE_DIR, 'etc/db_init.sh')
         os.system(cmd)
         print
@@ -135,6 +139,10 @@ class TestDB(unittest.TestCase):
         """
         测试后环境的还原
         """
+        # 恢复数据
+        cmd = os.path.join(BASE_DIR, 'etc/db_restore.sh')
+        os.system(cmd)
+        # 获取内存消耗
         get_memory_usage()
         pass
 

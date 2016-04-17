@@ -45,3 +45,13 @@ class User(Base):
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     last_ip = Column(String(15))
+
+
+class UserOauth(Base):
+    __tablename__ = 'user_oauth'
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer)
+    open_plat = Column(String(20))
+    open_id = Column(String(20))
+    access_token = Column(String(20), nullable=False)
