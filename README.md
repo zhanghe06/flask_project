@@ -7,22 +7,25 @@
 
 ### 项目演示步骤
 ```
-$ cd flask_project
-$ virtualenv flask.env
-$ source flask.env/bin/activate
-$ pip install -r requirements.txt
-$ chmod a+x ./etc/db_init.sh
-$ ./etc/db_init.sh
+$ cd flask_project                  # 进入项目目录
+$ virtualenv flask.env              # 新建虚拟环境
+$ source flask.env/bin/activate     # 进入虚拟环境
+$ pip install -r requirements.txt   # 安装环境依赖
+$ chmod a+x ./etc/db_init.sh        # 添加执行权限
+$ ./etc/db_init.sh                  # 数据库初始化
 ```
 
-普通模式启动服务
+服务启动方式:
+
+1. 普通模式
 ```
 $ ./run.py
 ```
 
-部署模式启动服务
+2. 部署模式
 ```
 $ supervisord -c etc/supervisord.conf
+$ supervisorctl -c etc/supervisord.conf reload
 $ supervisorctl -c etc/supervisord.conf restart all
 ```
 
@@ -252,6 +255,11 @@ index           If set to True , create an index for this column, so that querie
 nullable        If set to True , allow empty values for this column. If set to False , the column will not allow null values.
 default         Define a default value for the column.
 ```
+
+官方文档:
+[SQLAlchemy 1.0 Documentation](http://docs.sqlalchemy.org/en/rel_1_0/orm/tutorial.html)
+
+[常见的过滤器运算符 Common Filter Operators](http://docs.sqlalchemy.org/en/rel_1_0/orm/tutorial.html#common-filter-operators)
 
 
 ### sqlacodegen
@@ -740,6 +748,7 @@ $ kill -l
 - 接口参数签名校验的必要性
 参考：[在线支付逻辑漏洞总结](http://drops.wooyun.org/papers/345)
 
+- 检查数据重复, 处理效率问题
 
 ## GitHub 操作
 

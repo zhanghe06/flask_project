@@ -39,6 +39,22 @@ class TestDB(unittest.TestCase):
         row = get_row_by_id(User, 100)
         assert row is None
 
+    def test_get_rows_by_ids(self):
+        """
+        测试 通过一组 ids 获取信息列表
+        """
+        from app.tools.db import get_rows_by_ids
+        from app.models import User
+        # # 测试有记录的场景
+        rows = get_rows_by_ids(User, [1, 2, 3])
+        assert len(rows) == 3
+        assert rows[0].id == 1
+        assert rows[0].email == 'admin@gmail.com'
+        assert rows[0].nickname == 'Admin'
+        # 测试无记录的场景
+        rows = get_rows_by_ids(User, [100])
+        assert rows == []
+
     def test_get_row(self):
         """
         测试 获取信息

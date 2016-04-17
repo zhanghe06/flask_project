@@ -23,6 +23,17 @@ def get_row_by_id(model_name, pk_id):
     return row
 
 
+def get_rows_by_ids(model_name, pk_ids):
+    """
+    通过一组 ids 获取信息列表
+    :param model_name:
+    :param pk_ids:
+    :return: list
+    """
+    rows = db.session.query(model_name).filter(model_name.id.in_(pk_ids)).all()
+    return rows
+
+
 def get_row(model_name, *args, **kwargs):
     """
     获取信息
