@@ -769,3 +769,40 @@ git push -u origin master
 git remote add origin git@github.com:zhanghe06/flask_project.git
 git push -u origin master
 ```
+
+
+## Fix SNIMissingWarning
+
+机器环境:
+```
+$ python --version
+Python 2.7.6
+```
+
+虚拟环境:
+```
+$ pip freeze | grep requests
+requests==2.9.1
+requests-oauthlib==0.6.1
+```
+
+执行 pip freeze 命令后有报错信息:
+```
+/home/zhanghe/code/flask_project/flask.env/local/lib/python2.7/site-packages/pip/_vendor/requests/packages/urllib3/util/ssl_.py:315: SNIMissingWarning: An HTTPS request has been made, but the SNI (Subject Name Indication) extension to TLS is not available on this platform. This may cause the server to present an incorrect TLS certificate, which can cause validation failures. For more information, see https://urllib3.readthedocs.org/en/latest/security.html#snimissingwarning.
+```
+原因: [requests 2.6 以后的版本, pyopenssl.inject_into_urllib3()](https://github.com/kennethreitz/requests/blob/a57c87a459d51c5b17d20285109e901b8aa95752/requests/__init__.py#L54)
+
+python-2.7.9 以前的版本都会有这个问题
+
+如果不想升级 python 版本, 可以选择降级 requests 版本, 例如: requests==2.5.3
+
+最佳解决方案:
+```
+$ sudo apt-get install python-dev libffi-dev libssl-dev
+$ pip install 'requests[security]'
+```
+相应的依赖都会被装上:
+```
+Installing collected packages: idna, pyasn1, six, enum34, ipaddress, pycparser, cffi, cryptography, pyOpenSSL, ndg-httpsclient
+Successfully installed cffi-1.5.2 cryptography-1.3.1 enum34-1.1.3 idna-2.1 ipaddress-1.0.16 ndg-httpsclient-0.4.0 pyOpenSSL-16.0.0 pyasn1-0.1.9 pycparser-2.14 six-1.10.0
+```
