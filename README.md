@@ -590,7 +590,7 @@ location ~ ^/static/ {
 
 Nginx https 部署
 
-参考[https.md](https.md)
+参考: [https.md](https.md)
 
 
 ## 统计代码行数(包含注释)
@@ -731,7 +731,7 @@ $ kill -l
 - 链接中的重定向参数(next)不能为外链
 
 防止 URL 重定向/跳转漏洞
-
+redirect=<script>alert('XSS')</script>
 
 
 ## Todo：
@@ -806,3 +806,18 @@ $ pip install 'requests[security]'
 Installing collected packages: idna, pyasn1, six, enum34, ipaddress, pycparser, cffi, cryptography, pyOpenSSL, ndg-httpsclient
 Successfully installed cffi-1.5.2 cryptography-1.3.1 enum34-1.1.3 idna-2.1 ipaddress-1.0.16 ndg-httpsclient-0.4.0 pyOpenSSL-16.0.0 pyasn1-0.1.9 pycparser-2.14 six-1.10.0
 ```
+
+## 轮播大图样式
+
+- 选择 宽度1920 高度610 的高画质图片
+- 主要图像内容信息集中在中间1024的区域
+
+
+## LightBox 插件
+
+参考: [LightBox.md](LightBox.md)
+
+
+## UUID
+
+[https://docs.python.org/2/library/uuid.html#example](https://docs.python.org/2/library/uuid.html#example)

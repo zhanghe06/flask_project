@@ -8,6 +8,8 @@
 @time: 16-1-25 下午8:39
 """
 
+# todo query filter/filter_by order_by
+# todo *args *args /**kwargs  **kwargs
 
 from app.database import db
 from sqlalchemy.inspection import inspect
