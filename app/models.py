@@ -38,20 +38,22 @@ class User(Base):
     __tablename__ = 'user'
 
     id = Column(Integer, primary_key=True)
-    email = Column(String(20), nullable=False)
-    password = Column(String(20), nullable=False)
     nickname = Column(String(20), nullable=False)
+    avatar_url = Column(String(80))
+    email = Column(String(20))
+    phone = Column(String(20))
     birthday = Column(Date)
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     last_ip = Column(String(15))
 
 
-class UserOauth(Base):
-    __tablename__ = 'user_oauth'
+class UserAuth(Base):
+    __tablename__ = 'user_auth'
 
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer)
-    open_plat = Column(String(20))
-    open_id = Column(String(20))
-    access_token = Column(String(20), nullable=False)
+    user_id = Column(Integer, nullable=False)
+    auth_type = Column(String(20), nullable=False)
+    auth_key = Column(String(64), nullable=False)
+    auth_secret = Column(String(256), nullable=False)
+    verified = Column(Integer, server_default=text("0"))

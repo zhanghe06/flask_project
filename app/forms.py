@@ -70,9 +70,10 @@ class UserForm(Form):
     """
     用户表单
     """
-    email = StringField('Email', validators=[DataRequired()])
-    password = StringField('Password')
     nickname = StringField('Nick Name', validators=[DataRequired(), Length(min=2, max=20)])
+    avatar_url = StringField('Avatar Url')
+    email = StringField('Email', validators=[DataRequired()])
+    phone = StringField('Phone')
     birthday = DateField('Birthday')
     create_time = DateTimeField('Create Time')
     update_time = DateTimeField('Update Time')

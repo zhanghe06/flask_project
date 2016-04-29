@@ -28,15 +28,22 @@ open_id + access_token
 ```
 id
 nickname
-avatar
+email
+phone
+birthday
+create_time
+update_time
+last_ip
 ```
 用户授权信息表 user_auth
 ```
 id
 user_id
-identity_type 登录类型（手机号 邮箱 用户名）或第三方应用名称（微信 微博等）
-identifier 标识（手机号 邮箱 用户名或第三方应用的唯一标识）
-credential 密码凭证（站内的保存密码，站外的不保存或保存token）
+auth_type       登录类型（手机号 邮箱 用户名）或第三方应用名称（微信 微博等）
+auth_key        标识（手机号 邮箱 用户名或第三方应用的唯一标识）
+auth_secret     密码凭证（站内的保存密码，站外的不保存或保存token）
+auth_expires    过期时间
+verified        验证状态（手机号，邮箱是否验证　默认第三方登录都是已验证）
 ```
 
 ### 用户登录处理过程：
@@ -48,12 +55,12 @@ credential 密码凭证（站内的保存密码，站外的不保存或保存tok
 
 查询用户是否存在
 ```
-SELECT * FROM user_auth WHERE identity_type='登录类型' and identifier='账号标识'
+SELECT * FROM user_auth WHERE auth_type='登录类型' and auth_key='账号标识'
 ```
 
 校验用户凭证（密码）
 ```
-SELECT * FROM user_auth WHERE id='user_auth.id' and credential='password_hash(密码)'
+SELECT * FROM user_auth WHERE id='user_auth.id' and auth_secret='password_hash(密码)'
 ```
 
 查询用户信息
@@ -66,13 +73,20 @@ SELECT * FROM user WHERE id='user_id'
 
 验证用户是否存在
 ```
-SELECT * FROM user_auth WHERE type='phone' and identifier='手机号'
-SELECT * FROM user_auth WHERE type='email' and identifier='邮箱'
-SELECT * FROM user_auth WHERE type='qq' and identifier='QQ号码'
-SELECT * FROM user_auth WHERE type='weixin' and identifier='微信UserName'
+SELECT * FROM user_auth WHERE auth_type='phone' and auth_key='手机号'
+SELECT * FROM user_auth WHERE auth_type='email' and auth_key='邮箱'
+SELECT * FROM user_auth WHERE auth_type='qq' and auth_key='QQ号码'
+SELECT * FROM user_auth WHERE auth_type='weixin' and auth_key='微信UserName'
 ```
 如果有记录，则直接登录成功，使用新的 token 更新原 token。
 
+
+### 优点与缺点
+
+- 缺点
+    - sql 请求增加为 2 次
+    - 用户同时存在邮箱、用户名、手机号等多种站内登录方式时，改密码时必须一起改
+    - 代码量增加了，有些情况下逻辑判断增加了，难度增大了。
 
 ## 本地调试
 

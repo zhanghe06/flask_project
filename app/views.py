@@ -30,11 +30,17 @@ def load_user(user_id):
 
 @app.before_request
 def before_request():
+    """
+    当前用户信息
+    """
     g.user = current_user
 
 
 @app.route('/favicon.ico')
 def favicon():
+    """
+    首页ico图标
+    """
     return send_from_directory(os.path.join(app.root_path, 'static'),
                                'img/favicon.ico', mimetype='image/vnd.microsoft.icon')
 
@@ -42,18 +48,27 @@ def favicon():
 @app.route('/')
 @app.route('/index')
 def index():
+    """
+    网站首页
+    """
     # return "Hello, World!"
     return render_template('index.html', title='home')
 
 
 @app.route('/about')
 def about():
+    """
+    关于网站
+    """
     # return "Hello, World!\nAbout!"
     return render_template('about.html', title='about')
 
 
 @app.route('/contact')
 def contact():
+    """
+    联系方式
+    """
     # return "Hello, World!\nContact!"
     return render_template('contact.html', title='contact')
 
@@ -61,6 +76,9 @@ def contact():
 @app.route('/blog/list/')
 @app.route('/blog/list/<int:page>/')
 def blog_list(page=1):
+    """
+    博客列表
+    """
     # return "Hello, World!\nBlog List!"
     from blog import get_blog_rows
     per_page = 8
@@ -71,6 +89,9 @@ def blog_list(page=1):
 @app.route('/blog/new/')
 @app.route('/blog/new/<int:page>/')
 def blog_new(page=1):
+    """
+    最新博客
+    """
     # return "Hello, World!\nBlog New!"
     from blog import get_blog_rows, get_blog_list_counter, get_blog_list_container_status
     per_page = 8
@@ -92,6 +113,9 @@ def blog_new(page=1):
 @app.route('/blog/hot/')
 @app.route('/blog/hot/<int:page>/')
 def blog_hot(page=1):
+    """
+    热门博客
+    """
     # return "Hello, World!\nBlog Hot!"
     from blog import get_blog_rows
     per_page = 8
@@ -102,6 +126,9 @@ def blog_hot(page=1):
 @app.route('/blog/edit/<int:blog_id>/', methods=['GET', 'POST'])
 @login_required
 def blog_edit(blog_id):
+    """
+    博客编辑
+    """
     # return "Hello, World!\nBlog Edit!"
     form = BlogEditForm(request.form)
     if request.method == 'GET':
@@ -137,6 +164,9 @@ def blog_edit(blog_id):
 @app.route('/blog/add/', methods=['GET', 'POST'])
 @login_required
 def blog_add():
+    """
+    博客添加
+    """
     # return "Hello, World!\nBlog Add!"
     form = BlogAddForm(request.form)
     if request.method == 'POST':
@@ -163,6 +193,9 @@ def blog_add():
 
 @app.route('/blog/del/', methods=['GET', 'POST'])
 def blog_delete():
+    """
+    博客删除
+    """
     if request.method == 'GET':
         login_user_id = g.user.get_id()
         # 权限判断，只能删除自己的 blog todo
@@ -180,6 +213,7 @@ def blog_delete():
 @app.route('/blog/stat/', methods=['GET', 'POST'])
 def blog_stat():
     """
+    博客统计
     http://localhost:5000/blog/stat/?blog_id=2&stat_type=favor&num=2
     :return:
     """
@@ -197,6 +231,9 @@ def blog_stat():
 
 @app.route('/reg/', methods=['GET', 'POST'])
 def reg():
+    """
+    注册
+    """
     # return "Hello, World!\nReg!"
     form = RegForm()
     if request.method == 'POST':
@@ -210,23 +247,31 @@ def reg():
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
+    """
+    登录
+    """
     if g.user is not None and g.user.is_authenticated:
         return redirect(url_for('index'))
     form = LoginForm()
     if request.method == 'POST':
         if form.validate_on_submit():
-            from user import get_user_row
+            from user_auth import get_user_auth_row
             condition = {
-                'email': form.email.data,
-                'password': form.password.data
+                'auth_type': 'email',
+                'auth_key': form.email.data,
+                'auth_secret': form.password.data
             }
-            user_info = get_user_row(**condition)
-            if user_info is None:
+            user_auth_info = get_user_auth_row(**condition)
+            if user_auth_info is None:
                 flash(u'%s, You were logged failed' % form.email.data, 'warning')
                 return render_template('login.html', title='login', form=form)
             # session['logged_in'] = True
-            # 用户通过验证后，用 login_user 函数来登入他们
-            login_user(user_info)
+            # 用户通过验证后，记录登入IP
+            from user import edit_user
+            edit_user(user_auth_info.user_id, {'last_ip': request.remote_addr})
+            # 用 login_user 函数来登入他们
+            from user import get_user_row_by_id
+            login_user(get_user_row_by_id(user_auth_info.user_id))
             flash(u'%s, You were logged in' % form.email.data, 'success')
             return redirect(request.args.get('next') or url_for('index'))
         flash(form.errors, 'warning')  # 调试打开
@@ -241,6 +286,9 @@ def login():
 
 @app.route('/logout/')
 def logout():
+    """
+    退出登录
+    """
     logout_user()
     session.pop('qq_token', None)
     session.pop('weibo_token', None)
@@ -252,27 +300,33 @@ def logout():
 @app.route('/setting/', methods=['GET', 'POST'])
 @login_required
 def setting():
+    """
+    设置
+    """
     # return "Hello, World!\nSetting!"
     form = UserForm(request.form)
     if request.method == 'GET':
-        # from user import get_user_row_by_id
-        # user_info = get_user_row_by_id(user.id)
-        # if user_info:
-        form.email.data = current_user.email
-        form.password.data = current_user.password
-        form.nickname.data = current_user.nickname
-        form.birthday.data = current_user.birthday
-        form.create_time.data = current_user.create_time
-        form.update_time.data = current_user.update_time
-        form.last_ip.data = current_user.last_ip
+        from user import get_user_row_by_id
+        user_info = get_user_row_by_id(current_user.id)
+        if user_info:
+            form.nickname.data = user_info.nickname
+            form.avatar_url.data = user_info.avatar_url
+            form.email.data = user_info.email
+            form.phone.data = user_info.phone
+            form.birthday.data = user_info.birthday
+            form.create_time.data = user_info.create_time
+            form.update_time.data = user_info.update_time
+            form.last_ip.data = user_info.last_ip
     if request.method == 'POST':
         if form.validate_on_submit():
             # todo 判断邮箱是否重复
             from user import edit_user
             from datetime import datetime
             user_info = {
-                'email': form.email.data,
                 'nickname': form.nickname.data,
+                'avatar_url': form.avatar_url.data,
+                'email': form.email.data,
+                'phone': form.phone.data,
                 'birthday': form.birthday.data,
                 'update_time': datetime.utcnow(),
                 'last_ip': request.remote_addr,
@@ -289,11 +343,17 @@ def setting():
 
 @app.route('/search/', methods=['GET', 'POST'])
 def search():
+    """
+    搜索
+    """
     return 'search result!'
 
 
 @app.route("/email/")
 def send_email():
+    """
+    邮件发送
+    """
     try:
         from emails import send_email
         msg = 'This is a test email!'
@@ -310,6 +370,9 @@ def send_email():
 
 @app.route("/test")
 def test():
+    """
+    测试
+    """
     try:
         raise Exception('error test')
     except Exception as e:
