@@ -12,6 +12,7 @@
 from flask import Flask
 from flask.ext.login import LoginManager
 from flask_oauthlib.client import OAuth
+from app.lib.sendcloud import SendCloud
 
 
 app = Flask(__name__)
@@ -21,6 +22,9 @@ login_manager.init_app(app)  # setup_app 方法已淘汰
 login_manager.login_view = 'login'
 # login_manager.login_message = 'Please log in to access this page.'  # 设置登陆提示消息
 login_manager.login_message_category = 'info'  # 设置消息分类
+
+# SendCloud
+send_cloud_client = SendCloud(app)
 
 # 第三方开放授权登陆
 oauth = OAuth(app)

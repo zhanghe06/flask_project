@@ -9,7 +9,7 @@
 """
 
 
-from app import app, login_manager, github, qq, weibo
+from app import app, login_manager, github, qq, weibo, send_cloud_client
 from flask import render_template, request, url_for, send_from_directory, session, flash, redirect, g, jsonify, Markup
 from app.forms import RegForm, LoginForm, BlogAddForm, BlogEditForm, UserForm
 from app.login import LoginUser
@@ -378,6 +378,15 @@ def test():
     except Exception as e:
         import logging
         logging.error(e)
+
+
+@app.route("/test/sendcloud")
+def test_sendcloud():
+    """
+    测试 sendcloud
+    """
+    result = send_cloud_client.userinfo_get()
+    return json.dumps(result)
 
 
 # # 第三方登陆（QQ）

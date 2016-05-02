@@ -30,6 +30,12 @@ MAIL_DEFAULT_SENDER = ('no-reply', 'no-reply@localhost')
 # 后台管理人员邮件列表
 ADMINS = ['455091702@qq.com']
 
+
+# sendcloud 邮件发送平台
+SENDCLOUD_API_USER = 'zhang_he_test_w6kIMK'
+SENDCLOUD_API_KEY = 'eZeC3Qwciv4o0lDH'
+
+
 # 第三方开放授权登陆
 
 GITHUB_OAUTH = {
