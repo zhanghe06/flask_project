@@ -35,6 +35,11 @@ ADMINS = ['455091702@qq.com']
 SENDCLOUD_API_USER = 'zhang_he_test_w6kIMK'
 SENDCLOUD_API_KEY = 'eZeC3Qwciv4o0lDH'
 
+# qiniu 云存储
+QINIU_ACCESS_KEY = 'i3Zi_VQOoeuMDnYkksWvn6TKa0_2C9Wb2NXMtrdn'
+QINIU_SECRET_KEY = 'B_0pOtxxaQX8aPqqdMqX2A5v0R99KYKgod5vbkXf'
+QINIU_BUCKET_NAME = 'zhendi-open'                       # 七牛空间名称
+QINIU_BUCKET_DOMAIN = '7xtmj9.com2.z0.glb.clouddn.com'  # 七牛空间对应域名
 
 # 第三方开放授权登陆
 

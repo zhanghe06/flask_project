@@ -12,7 +12,8 @@
 from flask import Flask
 from flask.ext.login import LoginManager
 from flask_oauthlib.client import OAuth
-from app.lib.sendcloud import SendCloud
+from app.lib.sendcloud import SendCloudClient
+from app.lib.qiniu_store import QiNiuClient
 
 
 app = Flask(__name__)
@@ -23,8 +24,11 @@ login_manager.login_view = 'login'
 # login_manager.login_message = 'Please log in to access this page.'  # 设置登陆提示消息
 login_manager.login_message_category = 'info'  # 设置消息分类
 
-# SendCloud
-send_cloud_client = SendCloud(app)
+# SendCloud 邮件
+send_cloud_client = SendCloudClient(app)
+
+# 七牛云存储
+qi_niu_client = QiNiuClient(app)
 
 # 第三方开放授权登陆
 oauth = OAuth(app)

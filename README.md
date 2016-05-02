@@ -821,3 +821,23 @@ Successfully installed cffi-1.5.2 cryptography-1.3.1 enum34-1.1.3 idna-2.1 ipadd
 ## UUID
 
 [https://docs.python.org/2/library/uuid.html#example](https://docs.python.org/2/library/uuid.html#example)
+
+
+## SendCloud
+
+[http://sendcloud.sohu.com/](http://sendcloud.sohu.com/)
+
+## QiNiu
+
+安装
+```
+$ pip install qiniu
+```
+
+[http://www.qiniu.com/](http://www.qiniu.com/)
+
+[python SDK 官方版](https://github.com/qiniu/python-sdk)
+
+[python SDK 社区版](https://github.com/yueyoum/seven-cow)
+
+[Flask 扩展](https://github.com/csuzhangxc/Flask-QiniuStorage)

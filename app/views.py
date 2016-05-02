@@ -9,7 +9,7 @@
 """
 
 
-from app import app, login_manager, github, qq, weibo, send_cloud_client
+from app import app, login_manager, github, qq, weibo, send_cloud_client, qi_niu_client
 from flask import render_template, request, url_for, send_from_directory, session, flash, redirect, g, jsonify, Markup
 from app.forms import RegForm, LoginForm, BlogAddForm, BlogEditForm, UserForm
 from app.login import LoginUser
@@ -387,6 +387,36 @@ def test_sendcloud():
     """
     result = send_cloud_client.userinfo_get()
     return json.dumps(result)
+
+
+@app.route('/save')
+def save():
+    """
+    保存文件到七牛
+    """
+    data = 'data to save'
+    filename = 'filename'
+    ret, info = qi_niu_client.save(data, filename)
+    return str(ret)
+
+
+@app.route('/delete')
+def delete():
+    """
+    删除七牛空间中的文件
+    """
+    filename = 'filename'
+    ret, info = qi_niu_client.delete(filename)
+    return str(ret)
+
+
+@app.route('/url')
+def url():
+    """
+    根据文件名获取对应的公开URL
+    """
+    filename = 'filename'
+    return qi_niu_client.url(filename)
 
 
 # # 第三方登陆（QQ）

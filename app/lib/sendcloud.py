@@ -13,7 +13,7 @@ import requests
 import json
 
 
-class SendCloud(object):
+class SendCloudClient(object):
     """
     SendCloud 邮件发送平台
     以下方法采用 API v2 (区别：请求地址，参数命名规则)
@@ -24,7 +24,6 @@ class SendCloud(object):
         """
         初始化应用
         """
-        self.app = app
         if app is not None:
             self._api_key = app.config.get('SENDCLOUD_API_KEY', '')
             self._api_user = app.config.get('SENDCLOUD_API_USER', '')

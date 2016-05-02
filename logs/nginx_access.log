@@ -85,3 +85,4 @@
 127.0.0.1 - - [19/Apr/2016:22:24:27 +0800] "GET /favicon.ico HTTP/1.1" 502 574 "https://www.bluehostmonster.com/bluehost-ssh-enable/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36" "-"
 127.0.0.1 - - [26/Apr/2016:09:24:00 +0800] "GET /sdk/vimServiceVersions.xml HTTP/1.1" 502 172 "-" "VMware-client" "-"
 127.0.0.1 - - [27/Apr/2016:10:25:14 +0800] "GET /sdk/vimServiceVersions.xml HTTP/1.1" 502 173 "-" "VMware-client" "-"
+127.0.0.1 - - [29/Apr/2016:21:49:03 +0800] "GET /sdk/vimServiceVersions.xml HTTP/1.1" 502 173 "-" "VMware-client" "-"
