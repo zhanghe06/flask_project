@@ -11,14 +11,28 @@
 
 from flask.ext.wtf import Form
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField
-from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email
+from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError
+from app.user_auth import get_user_auth_row
+
+
+def email_repeat(form, field):
+    """
+    邮箱重复校验
+    """
+    condition = {
+        'auth_type': 'email',
+        'auth_key': field.data
+    }
+    row = get_user_auth_row(**condition)
+    if row:
+        raise ValidationError(u'注册邮箱重复')
 
 
 class RegForm(Form):
     """
     注册表单
     """
-    email = StringField('Account(Email)', validators=[DataRequired(), Email()])
+    email = StringField('Account(Email)', validators=[DataRequired(), Email(), email_repeat])
     password = PasswordField('New Password', validators=[
         DataRequired(),
         Length(min=6, max=40),
