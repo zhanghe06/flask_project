@@ -238,7 +238,43 @@ def reg():
     form = RegForm()
     if request.method == 'POST':
         if form.validate_on_submit():
-            flash(u'%s, Thanks for registering' % form.email.data, 'success')
+            # 添加用户信息
+            from user import add_user
+            from datetime import datetime
+            user_data = {
+                'email': form.email.data,
+                'create_time': datetime.utcnow(),
+                'update_time': datetime.utcnow(),
+                'last_ip': request.remote_addr
+            }
+            user_id = add_user(user_data)
+            # 添加授权信息
+            from user_auth import add_user_auth
+            user_auth_data = {
+                'user_id': user_id,
+                'auth_type': 'email',
+                'auth_key': form.email.data,
+                'auth_secret': form.password.data
+            }
+            user_auth_id = add_user_auth(user_auth_data)
+            if user_auth_id:
+                flash(u'%s, Thanks for registering' % form.email.data, 'success')
+                # todo 发送邮箱校验邮件
+                email_validate_content = {
+                    'mail_from': 'System Support<support@zhendi.me>',
+                    'mail_to': form.email.data,
+                    'mail_subject': 'verify reg email',
+                    'mail_html': 'verify reg email address in mailbox'
+                }
+                send_email_result = send_cloud_client.mail_send(**email_validate_content)
+                # 调试邮件发送结果
+                if send_email_result.get('result') is False:
+                    flash(send_email_result.get('message'), 'warning')
+                else:
+                    flash(send_email_result.get('message'), 'success')
+                # https://www.***.com/email/signup/uuid
+            else:
+                flash(u'%s, Sorry, register error' % form.email.data, 'error')
             return redirect(url_for('login'))
         # 闪现消息 success info warning danger
         flash(form.errors, 'warning')  # 调试打开
@@ -264,6 +300,9 @@ def login():
             user_auth_info = get_user_auth_row(**condition)
             if user_auth_info is None:
                 flash(u'%s, You were logged failed' % form.email.data, 'warning')
+                return render_template('login.html', title='login', form=form)
+            if user_auth_info.verified == 0:
+                flash(u'%s, Please verify email address in mailbox' % form.email.data, 'warning')
                 return render_template('login.html', title='login', form=form)
             # session['logged_in'] = True
             # 用户通过验证后，记录登入IP
@@ -384,9 +423,23 @@ def test():
 def test_sendcloud():
     """
     测试 sendcloud
+    http://localhost:5000/test/sendcloud
+    注意: 用户可以调用模板发送, 也可以普通发送(上传内容发送). 两种发送方式都要求最终的内容和至少一个模板匹配
     """
+    # 获取信息
     result = send_cloud_client.userinfo_get()
-    return json.dumps(result)
+    # return json.dumps(result)
+
+    # 发送邮件
+    email_content = {
+        'mail_from': 'System Support<support@zhendi.me>',
+        'mail_to': 'zhanghe@wealink.com',
+        'mail_subject': '来自SendCloud的第一封邮件！',
+        'mail_html': '你太棒了！你已成功的从SendCloud发送了一封测试邮件，接下来快登录前台去完善账户信息吧！'
+    }
+    send_email_result = send_cloud_client.mail_send(**email_content)
+    # 调试邮件发送结果
+    return json.dumps(send_email_result)
 
 
 @app.route('/save')

@@ -38,7 +38,7 @@ class User(Base):
     __tablename__ = 'user'
 
     id = Column(Integer, primary_key=True)
-    nickname = Column(String(20), nullable=False)
+    nickname = Column(String(20))
     avatar_url = Column(String(80))
     email = Column(String(20))
     phone = Column(String(20))

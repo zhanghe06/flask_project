@@ -15,7 +15,7 @@ from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email
 from app.user_auth import get_user_auth_row
 
 
-def email_repeat(form, field):
+def reg_email_repeat(form, field):
     """
     邮箱重复校验
     """
@@ -32,13 +32,13 @@ class RegForm(Form):
     """
     注册表单
     """
-    email = StringField('Account(Email)', validators=[DataRequired(), Email(), email_repeat])
+    email = StringField('Account(Email)', validators=[DataRequired(), Email(), reg_email_repeat])
     password = PasswordField('New Password', validators=[
         DataRequired(),
         Length(min=6, max=40),
         EqualTo('confirm', message='Passwords must match')
     ])
-    confirm = PasswordField('Repeat Password', validators=[
+    confirm = PasswordField('Confirmation Password', validators=[
         DataRequired(),
         Length(min=6, max=40)
     ])

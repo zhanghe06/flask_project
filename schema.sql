@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS user;
 CREATE TABLE user (
   id          INTEGER PRIMARY KEY  AUTOINCREMENT,
-  nickname    VARCHAR(20) NOT NULL,
+  nickname    VARCHAR(20),
   avatar_url  VARCHAR(80),
   email       VARCHAR(20),
   phone       VARCHAR(20),

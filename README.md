@@ -740,8 +740,6 @@ redirect=<script>alert('XSS')</script>
 
 - 第三方支付
 
-- 邮箱验证
-
 - 邮件列表的绑定和解绑
 
 - 找回密码安全设置
@@ -841,3 +839,21 @@ $ pip install qiniu
 [python SDK 社区版](https://github.com/yueyoum/seven-cow)
 
 [Flask 扩展](https://github.com/csuzhangxc/Flask-QiniuStorage)
+
+
+## 注册邮箱验证
+
+主要验证两点：
+- 邮箱是否可达
+- 是否本人操作
+
+验证方式：
+- 一、验证 token：https://www.***.com/email/signup/token
+- 二、验证签名：https://www.***.com/email/signup/sign
+
+显然第二种方式更好，不需要生成一个一次性的 token 并把它们存到数据库中
+
+
+## 签名模块
+
+中文文档：[http://itsdangerous.readthedocs.io/en/latest/](http://itsdangerous.readthedocs.io/en/latest/)
