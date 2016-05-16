@@ -11,7 +11,7 @@
 
 from flask.ext.wtf import Form
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField
-from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError
+from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
 from app.user_auth import get_user_auth_row
 
 
@@ -91,7 +91,7 @@ class UserForm(Form):
     birthday = DateField('Birthday')
     create_time = DateTimeField('Create Time')
     update_time = DateTimeField('Update Time')
-    last_ip = StringField('Last Ip')
+    last_ip = StringField('Last Ip', validators=[IPAddress()])
 
 
 class EditPassword(Form):

@@ -34,19 +34,19 @@ qi_niu_client = QiNiuClient(app)
 oauth = OAuth(app)
 
 # GitHub
-github = oauth.remote_app(
+oauth_github = oauth.remote_app(
     'github',
     **app.config['GITHUB_OAUTH']
 )
 
 # QQ
-qq = oauth.remote_app(
+oauth_qq = oauth.remote_app(
     'qq',
     **app.config['QQ_OAUTH']
 )
 
 # WeiBo
-weibo = oauth.remote_app(
+oauth_weibo = oauth.remote_app(
     'weibo',
     **app.config['WEIBO_OAUTH']
 )

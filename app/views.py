@@ -9,7 +9,7 @@
 """
 
 
-from app import app, login_manager, github, qq, weibo, send_cloud_client, qi_niu_client
+from app import app, login_manager, oauth_github, oauth_qq, oauth_weibo, send_cloud_client, qi_niu_client
 from flask import render_template, request, url_for, send_from_directory, session, flash, redirect, g, jsonify, Markup
 from app.forms import RegForm, LoginForm, BlogAddForm, BlogEditForm, UserForm
 from app.login import LoginUser
@@ -281,6 +281,39 @@ def reg():
     return render_template('reg.html', title='reg', form=form)
 
 
+@app.route('/email/sign')
+def email_sign():
+    """
+    邮箱签名(带过期时间)
+    http://localhost:5000/email/sign?email=zhang_he06@163.com
+    """
+    email = request.args.get('email', '')
+    from itsdangerous import TimestampSigner
+    s = TimestampSigner(app.config['SECRET_KEY'])
+    return s.sign(email)
+
+
+@app.route('/email/check')
+def email_check():
+    """
+    校验邮箱有效性
+    http://localhost:5000/email/check?sign=zhang_he06@163.com.ChstqQ.5jODirLaRF2yU0CLtZz2EmoHt4c
+    """
+    sign = request.args.get('sign', '')
+    from itsdangerous import TimestampSigner, SignatureExpired, BadTimeSignature
+    s = TimestampSigner(app.config['SECRET_KEY'])
+    try:
+        # result = s.unsign(sign, max_age=5)  # 5秒过期
+        result = s.unsign(sign, max_age=30*24*60*60)  # １个月过期
+        return result
+    except SignatureExpired as e:
+        # 处理签名超时
+        return e.message
+    except BadTimeSignature as e:
+        # 处理签名错误
+        return e.message
+
+
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
     """
@@ -419,6 +452,30 @@ def test():
         logging.error(e)
 
 
+@app.route("/test_client_ip")
+def test_client_ip():
+    """
+    测试客户端来源ip
+    http://localhost:5000/test_client_ip
+    curl -H "X-Forwarded-For: 1.2.3.4" http://localhost:5000/test_client_ip
+    """
+    if not request.headers.getlist("X-Forwarded-For"):
+        ip = request.remote_addr
+    else:
+        ip = request.headers.getlist("X-Forwarded-For")[0]
+        # todo 校验 Ip 格式
+    return ip
+
+
+@app.route("/test_down")
+def test_down():
+    """
+    测试下载
+    """
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'img/cat.jpg', as_attachment=True)
+
+
 @app.route("/test/sendcloud")
 def test_sendcloud():
     """
@@ -509,19 +566,19 @@ def update_qq_api_request_data(data={}):
 def get_user_info():
     if 'qq_token' in session:
         data = update_qq_api_request_data()
-        resp = qq.get('/user/get_user_info', data=data)
+        resp = oauth_qq.get('/user/get_user_info', data=data)
         return jsonify(status=resp.status, data=resp.data)
     return redirect(url_for('login_qq'))
 
 
 @app.route('/login/qq/')
 def login_qq():
-    return qq.authorize(callback=url_for('authorized_qq', _external=True))
+    return oauth_qq.authorize(callback=url_for('authorized_qq', _external=True))
 
 
 @app.route('/login/authorized/qq/')
 def authorized_qq():
-    resp = qq.authorized_response()
+    resp = oauth_qq.authorized_response()
     if resp is None:
         return 'Access denied: reason=%s error=%s' % (
             request.args['error_reason'],
@@ -530,7 +587,7 @@ def authorized_qq():
     session['qq_token'] = (resp['access_token'], '')
 
     # Get openid via access_token, openid and access_token are needed for API calls
-    resp = qq.get('/oauth2.0/me', {'access_token': session['qq_token'][0]})
+    resp = oauth_qq.get('/oauth2.0/me', {'access_token': session['qq_token'][0]})
     resp = json_to_dict(resp.data)
     if isinstance(resp, dict):
         session['qq_openid'] = resp.get('openid')
@@ -538,7 +595,7 @@ def authorized_qq():
     return redirect(url_for('get_user_info'))
 
 
-@qq.tokengetter
+@oauth_qq.tokengetter
 def get_qq_oauth_token():
     return session.get('qq_token')
 
@@ -555,14 +612,14 @@ def get_qq_oauth_token():
 
 @app.route('/login/weibo/')
 def login_weibo():
-    return weibo.authorize(callback=url_for('authorized_weibo',
+    return oauth_weibo.authorize(callback=url_for('authorized_weibo',
         next=request.args.get('next') or request.referrer or None,
         _external=True))
 
 
 @app.route('/login/authorized/weibo/')
 def authorized_weibo():
-    resp = weibo.authorized_response()
+    resp = oauth_weibo.authorized_response()
     if resp is None:
         return 'Access denied: reason=%s error=%s' % (
             request.args['error_reason'],
@@ -572,7 +629,7 @@ def authorized_weibo():
     return redirect(url_for('index'))
 
 
-@weibo.tokengetter
+@oauth_weibo.tokengetter
 def get_weibo_oauth_token():
     return session.get('oauth_token')
 
@@ -586,28 +643,28 @@ def change_weibo_header(uri, headers, body):
         headers['Authorization'] = auth
     return uri, headers, body
 
-weibo.pre_request = change_weibo_header
+oauth_weibo.pre_request = change_weibo_header
 
 
 # 第三方登陆（GitHub）
 @app.route('/login/github/')
 def login_github():
-    return github.authorize(callback=url_for('authorized_github', _external=True))
+    return oauth_github.authorize(callback=url_for('authorized_github', _external=True))
 
 
 @app.route('/login/authorized/github/')
 def authorized_github():
-    resp = github.authorized_response()
+    resp = oauth_github.authorized_response()
     if resp is None:
         return 'Access denied: reason=%s error=%s' % (
             request.args['error'],
             request.args['error_description']
         )
     session['github_token'] = (resp['access_token'], '')
-    me = github.get('user')
+    me = oauth_github.get('user')
     return jsonify(me.data)
 
 
-@github.tokengetter
+@oauth_github.tokengetter
 def get_github_oauth_token():
     return session.get('github_token')

@@ -420,6 +420,13 @@ CURRENT_DATE 为 “YYYY-MM-DD”
 
 而 CURRENT_TIMESTAMP 是 “YYYY-MM-DD HH:MM:SS”
 
+注意：
+数据库表中的创建时间字段一般会设置缺省当前时间。
+保存数据时，如果程序中，创建时间为空，创建时间字段存储的是数据库服务器的当前时间；
+如果程序中直接设置好创建时间为当前时间，则保存的创建时间字段是代码服务器的当前时间。
+生产环境通常 web 与 db 是分开的，时钟往往不同步。
+不同开发人员程序中如果不统一的话，会造成麻烦。
+
 
 ### 用户登陆
 
@@ -453,6 +460,17 @@ current_user 仅仅支持视图
 ### Bootstrap 轮播（Carousel）插件
 
 [http://www.runoob.com/bootstrap/bootstrap-carousel-plugin.html](http://www.runoob.com/bootstrap/bootstrap-carousel-plugin.html)
+
+
+### 轮播大图样式
+
+- 选择 宽度1920 高度610 的高画质图片
+- 主要图像内容信息集中在中间1024的区域
+
+
+### LightBox 插件
+
+参考: [LightBox.md](LightBox.md)
 
 
 ## 部署方案( Nginx + Gunicorn + Supervisor )
@@ -734,22 +752,6 @@ $ kill -l
 redirect=<script>alert('XSS')</script>
 
 
-## Todo：
-
-- 第三方登陆
-
-- 第三方支付
-
-- 邮件列表的绑定和解绑
-
-- 找回密码安全设置
-参考：[密码找回功能可能存在的问题](http://drops.wooyun.org/web/3295)
-
-- 接口参数签名校验的必要性
-参考：[在线支付逻辑漏洞总结](http://drops.wooyun.org/papers/345)
-
-- 检查数据重复, 处理效率问题
-
 ## GitHub 操作
 
 …or create a new repository on the command line
@@ -805,16 +807,6 @@ Installing collected packages: idna, pyasn1, six, enum34, ipaddress, pycparser, 
 Successfully installed cffi-1.5.2 cryptography-1.3.1 enum34-1.1.3 idna-2.1 ipaddress-1.0.16 ndg-httpsclient-0.4.0 pyOpenSSL-16.0.0 pyasn1-0.1.9 pycparser-2.14 six-1.10.0
 ```
 
-## 轮播大图样式
-
-- 选择 宽度1920 高度610 的高画质图片
-- 主要图像内容信息集中在中间1024的区域
-
-
-## LightBox 插件
-
-参考: [LightBox.md](LightBox.md)
-
 
 ## UUID
 
@@ -853,7 +845,26 @@ $ pip install qiniu
 
 显然第二种方式更好，不需要生成一个一次性的 token 并把它们存到数据库中
 
+参考：[http://itsdangerous.readthedocs.io/en/latest/](http://itsdangerous.readthedocs.io/en/latest/)
+
 
 ## 签名模块
 
 中文文档：[http://itsdangerous.readthedocs.io/en/latest/](http://itsdangerous.readthedocs.io/en/latest/)
+
+
+## Todo：
+
+- 第三方登陆
+
+- 第三方支付
+
+- 邮件列表的绑定和解绑
+
+- 找回密码安全设置
+参考：[密码找回功能可能存在的问题](http://drops.wooyun.org/web/3295)
+
+- 接口参数签名校验的必要性
+参考：[在线支付逻辑漏洞总结](http://drops.wooyun.org/papers/345)
+
+- 检查数据重复, 处理效率问题
