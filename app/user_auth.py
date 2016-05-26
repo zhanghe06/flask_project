@@ -10,7 +10,7 @@
 
 
 from app.models import UserAuth
-from app.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
+from app.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete, update_rows
 
 
 def get_user_auth_row_by_id(user_auth_id):
@@ -79,3 +79,10 @@ def get_user_auth_rows(page=1, per_page=10, *args, **kwargs):
     """
     rows = get_rows(UserAuth, page, per_page, *args, **kwargs)
     return rows
+
+
+def update_user_auth_rows(data, *args, **kwargs):
+    """
+    批量更新用户信息
+    """
+    return update_rows(UserAuth, data, *args, **kwargs)

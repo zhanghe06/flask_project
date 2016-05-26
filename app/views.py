@@ -241,10 +241,11 @@ def reg():
             # 添加用户信息
             from user import add_user
             from datetime import datetime
+            current_time = datetime.utcnow()
             user_data = {
                 'email': form.email.data,
-                'create_time': datetime.utcnow(),
-                'update_time': datetime.utcnow(),
+                'create_time': current_time,
+                'update_time': current_time,
                 'last_ip': request.remote_addr
             }
             user_id = add_user(user_data)
@@ -274,7 +275,7 @@ def reg():
                     flash(send_email_result.get('message'), 'success')
                 # https://www.***.com/email/signup/uuid
             else:
-                flash(u'%s, Sorry, register error' % form.email.data, 'error')
+                flash(u'%s, Sorry, register error' % form.email.data, 'warning')
             return redirect(url_for('login'))
         # 闪现消息 success info warning danger
         flash(form.errors, 'warning')  # 调试打开
@@ -303,15 +304,24 @@ def email_check():
     from itsdangerous import TimestampSigner, SignatureExpired, BadTimeSignature
     s = TimestampSigner(app.config['SECRET_KEY'])
     try:
-        # result = s.unsign(sign, max_age=5)  # 5秒过期
-        result = s.unsign(sign, max_age=30*24*60*60)  # １个月过期
-        return result
+        # email = s.unsign(sign, max_age=5)  # 5秒过期
+        email = s.unsign(sign, max_age=30*24*60*60)  # １个月过期
+        # return email
+        # 校验通过，更新邮箱验证状态
+        from user_auth import update_user_auth_rows
+        result = update_user_auth_rows({'verified': 1}, **{'auth_type': 'email', 'auth_key': email})
+        if result == 1:
+            flash(u'%s, Your mailbox has been verified' % email, 'success')
+            return redirect(url_for('login'))
+        else:
+            flash(u'%s, Sorry, Your mailbox validation failed' % email, 'warning')
     except SignatureExpired as e:
         # 处理签名超时
-        return e.message
+        flash(e.message, 'warning')
     except BadTimeSignature as e:
         # 处理签名错误
-        return e.message
+        flash(e.message, 'warning')
+    return redirect(url_for('reg'))
 
 
 @app.route('/login/', methods=['GET', 'POST'])

@@ -169,6 +169,45 @@ def get_rows(model_name, page=1, per_page=10, *args, **kwargs):
     return rows
 
 
+def update_rows(model_name, data, *args, **kwargs):
+    """
+    批量修改数据
+    :param model_name:
+    :param data:
+    :param args:
+    :param kwargs:
+    :return:
+    """
+    try:
+        if args:
+            model_obj = db.session.query(model_name).filter(*args)
+        elif kwargs:
+            model_obj = db.session.query(model_name).filter_by(**kwargs)
+        else:
+            model_obj = db.session.query(model_name)
+        result = model_obj.update(data, synchronize_session=False)
+        db.session.commit()
+        return result
+    except Exception as e:
+        db.session.rollback()
+        raise e
+
+
+def update_rows_by_ids(model_name, pk_ids, data):
+    """
+    根据一组主键id 批量修改数据
+    """
+    model_pk = inspect(model_name).primary_key[0]
+    try:
+        model_obj = db.session.query(model_name).filter(model_pk.in_(pk_ids))
+        result = model_obj.update(data, synchronize_session=False)
+        db.session.commit()
+        return result
+    except Exception as e:
+        db.session.rollback()
+        raise e
+
+
 def test_user():
     """
     测试 User

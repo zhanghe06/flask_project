@@ -1,0 +1,84 @@
+官方链接: [http://exploreflask.com/en/latest/blueprints.html](http://exploreflask.com/en/latest/blueprints.html)
+
+单模式（适用小规模风格统一的应用）
+```
+yourapp/
+    __init__.py
+    static/
+    templates/
+        home/
+        api/
+        admin/
+    views/
+        __init__.py
+        home.py
+        api.py
+        admin.py
+    models.py
+```
+
+多模式（适用大规模风格相对独立的应用）
+```
+yourapp/
+    __init__.py
+    home/
+        __init__.py
+        views.py
+        forms.py
+        home.py
+        static/
+        templates/
+    api/
+        __init__.py
+        views.py
+        forms.py
+        api.py
+        static/
+        templates/
+    admin/
+        __init__.py
+        views.py
+        forms.py
+        admin.py
+        static/
+        templates/
+    models.py
+```
+
+建议结构：
+前后样式不同，分离独立模块。
+```
+app/
+    __init__.py
+    frontend/
+        __init__.py
+        static/
+            img/
+            css/
+            js/
+        templates/
+            layout.html
+            api/
+        views/
+            __init__.py
+            api.py
+        forms.py
+    admin/
+        __init__.py
+        static/
+            img/
+            css/
+            js/
+        templates/
+            layout.html
+            api/
+        views/
+            __init__.py
+            api.py
+        forms.py
+    models.py
+    config/
+    logs/
+fabfile.py
+run.py
+```

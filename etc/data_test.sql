@@ -6,7 +6,7 @@ INSERT INTO `user`(id, nickname, email, phone, create_time, update_time) VALUES(
 -- user_auth 测试数据
 INSERT INTO `user_auth`(user_id, auth_type, auth_key, auth_secret) VALUES('1', 'email', 'admin@gmail.com', '123456');
 INSERT INTO `user_auth`(user_id, auth_type, auth_key, auth_secret) VALUES('2', 'email', 'guest@gmail.com', '123456');
-INSERT INTO `user_auth`(user_id, auth_type, auth_key, auth_secret) VALUES('3', 'email', 'test@gmail.com', '123456');
+INSERT INTO `user_auth`(user_id, auth_type, auth_key, auth_secret, verified) VALUES('3', 'email', 'test@gmail.com', '123456', '1');
 
 -- author 测试数据
 INSERT INTO author(`name`, email) VALUES('Mark', 'mark@gmail.com');
