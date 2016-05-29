@@ -17,7 +17,7 @@
     <!-- Bootstrap -->
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
     <!-- Custom -->
-    <link href="{{ url_for('static', filename='css/custom.css', v='1.4.22') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/custom.css', v='1.4.28') }}" rel="stylesheet">
     {% block extra_css %}{% endblock %}
 </head>
 <body data-spy="scroll" data-target="#affix_nav">
@@ -45,6 +45,13 @@
     Flask Project &copy; 2016 All Rights Reserved. 沪ICP备12024750号
 {#    </div>#}
     </nav>
+    <!-- Top Link -->
+    <span id="top-link-block" class="hidden">
+        <a href="" class="well-sm" id="top-link" title="Back to Top">
+            <i class="glyphicon glyphicon-menu-up center-block"></i>
+            <i class="glyphicon glyphicon-menu-up center-block"></i>
+        </a>
+    </span>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="{{ url_for('static', filename='js/jquery-1.11.3.min.js') }}"></script>
@@ -52,7 +59,7 @@
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/custom.js', v='1.4.25') }}"></script>
+    <script src="{{ url_for('static', filename='js/custom.js', v='1.4.28') }}"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>
