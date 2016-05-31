@@ -38,6 +38,26 @@ def get_rows_by_ids(model_name, pk_ids):
     return rows
 
 
+def get_limit_rows_by_last_id(model_name, last_pk_id, limit_num, *args):
+    """
+    通过最后一个主键 id 获取最新信息列表
+    适用场景：
+    1、动态加载
+    2、快速定位
+    :param model_name:
+    :param last_pk_id:
+    :param limit_num:
+    :param args:
+    :return: list
+    """
+    model_pk = inspect(model_name).primary_key[0]
+    if args:
+        rows = db.session.query(model_name).filter(model_pk > last_pk_id, *args).limit(limit_num).all()
+    else:
+        rows = db.session.query(model_name).filter(model_pk > last_pk_id).limit(limit_num).all()
+    return rows
+
+
 def get_row(model_name, *args, **kwargs):
     """
     获取信息

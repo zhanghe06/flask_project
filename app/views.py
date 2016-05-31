@@ -173,12 +173,13 @@ def blog_add():
         if form.validate_on_submit():
             from blog import add_blog
             from datetime import datetime
+            current_time = datetime.utcnow()
             blog_info = {
                 'author': form.author.data,
                 'title': form.title.data,
                 'pub_date': form.pub_date.data,
-                'add_time': datetime.utcnow(),
-                'edit_time': datetime.utcnow(),
+                'add_time': current_time,
+                'edit_time': current_time,
             }
             result = add_blog(blog_info)
             if result is None:
