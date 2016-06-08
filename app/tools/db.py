@@ -38,7 +38,7 @@ def get_rows_by_ids(model_name, pk_ids):
     return rows
 
 
-def get_limit_rows_by_last_id(model_name, last_pk_id, limit_num, *args):
+def get_limit_rows_by_last_id(model_name, last_pk_id, limit_num, *args, **kwargs):
     """
     通过最后一个主键 id 获取最新信息列表
     适用场景：
@@ -48,13 +48,11 @@ def get_limit_rows_by_last_id(model_name, last_pk_id, limit_num, *args):
     :param last_pk_id:
     :param limit_num:
     :param args:
+    :param kwargs:
     :return: list
     """
     model_pk = inspect(model_name).primary_key[0]
-    if args:
-        rows = db.session.query(model_name).filter(model_pk > last_pk_id, *args).limit(limit_num).all()
-    else:
-        rows = db.session.query(model_name).filter(model_pk > last_pk_id).limit(limit_num).all()
+    rows = db.session.query(model_name).filter(model_pk > last_pk_id, *args).filter_by(**kwargs).limit(limit_num).all()
     return rows
 
 
@@ -74,13 +72,8 @@ def get_row(model_name, *args, **kwargs):
     :param kwargs:
     :return: None/object
     """
-    if args:
-        row = db.session.query(model_name).filter(*args).first()
-        return row
-    if kwargs:
-        row = db.session.query(model_name).filter_by(**kwargs).first()
-        return row
-    return None
+    row = db.session.query(model_name).filter(*args).filter_by(**kwargs).first()
+    return row
 
 
 def count(model_name, *args, **kwargs):
@@ -99,12 +92,7 @@ def count(model_name, *args, **kwargs):
     :param kwargs:
     :return: 0/Number（int）
     """
-    if args:
-        result_count = db.session.query(model_name).filter(*args).count()
-    elif kwargs:
-        result_count = db.session.query(model_name).filter_by(**kwargs).count()
-    else:
-        result_count = db.session.query(model_name).count()
+    result_count = db.session.query(model_name).filter(*args).filter_by(**kwargs).count()
     return result_count
 
 
@@ -180,12 +168,7 @@ def get_rows(model_name, page=1, per_page=10, *args, **kwargs):
     :param kwargs:
     :return: None/object
     """
-    if args:
-        rows = model_name.query.filter(*args).paginate(page, per_page, False)
-    elif kwargs:
-        rows = model_name.query.filter_by(**kwargs).paginate(page, per_page, False)
-    else:
-        rows = model_name.query.paginate(page, per_page, False)
+    rows = model_name.query.filter(*args).filter_by(**kwargs).paginate(page, per_page, False)
     return rows
 
 
@@ -247,18 +230,18 @@ def test_user():
         'nickname': 'Bob',
     }
     # 测试计数
-    result_count = count(User, User.id > 1)
+    result_count = count(User, User.id > 1, **{'id': 2})
     print result_count
 
-    result = add(User, user_info)
-    print result
-    # 测试修改
-    result = edit(User, 2, {'nickname': 'Emma'})
-    print result
-    # 测试删除
-    result = delete(User, 2)
-    print result
-
+    # result = add(User, user_info)
+    # print result
+    # # 测试修改
+    # result = edit(User, 2, {'nickname': 'Emma'})
+    # print result
+    # # 测试删除
+    # result = delete(User, 2)
+    # print result
+    #
     print '\n测试单条信息'
     test_condition = {
         'nickname': "Larry"
@@ -267,22 +250,31 @@ def test_user():
     print row
     if row:
         print row.id, row.email, row.nickname
-    row = get_row(User, User.id > 0)
+    row = get_row(User, User.id > 0, id=3)
     print row
     if row:
         print row.id, row.email, row.nickname
 
-    print '测试列表信息'
-    rows = get_rows(User, 1, 10, User.id > 0, User.id < 5)
-    if rows:
-        for item in rows.items:
-            print item.id, item.email, item.nickname
 
-    rows = get_rows(User, 1, 10, **{'nickname': "Bob"})
+def test_blog():
+    """
+    测试 Blog
+    :return:
+    """
+    from app.models import Blog
+    print '测试通过上一次id获取列表信息'
+    rows = get_limit_rows_by_last_id(Blog, 1, 4, Blog.id > 2, **{'id': 7})
+    if rows:
+        for item in rows:
+            print item.id, item.author, item.title, item.pub_date
+
+    print '测试列表信息'
+    rows = get_rows(Blog, 1, 10, Blog.id > 0, Blog.id < 9, **{'id': 7})
     if rows:
         for item in rows.items:
-            print item.id, item.email, item.nickname
+            print item.id, item.author, item.title, item.pub_date
 
 
 if __name__ == '__main__':
     test_user()
+    test_blog()
