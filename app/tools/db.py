@@ -8,8 +8,8 @@
 @time: 16-1-25 下午8:39
 """
 
-# todo query filter/filter_by order_by
-# todo *args *args /**kwargs  **kwargs
+# todo get_rows order_by
+
 
 from app.database import db
 from sqlalchemy.inspection import inspect
@@ -172,6 +172,36 @@ def get_rows(model_name, page=1, per_page=10, *args, **kwargs):
     return rows
 
 
+def insert_rows(model_name, data_list):
+    """
+    批量插入数据（遇到主键/唯一索引重复，忽略报错，继续执行下一条插入任务）
+    注意：
+    Warning: Duplicate entry
+    警告有可能会提示：
+    UnicodeEncodeError: 'ascii' codec can't encode characters in position 17-20: ordinal not in range(128)
+    处理：
+    import sys
+
+    reload(sys)
+    sys.setdefaultencoding('utf8')
+
+    sql 语句大小限制
+    show VARIABLES like '%max_allowed_packet%';
+    参考：http://dev.mysql.com/doc/refman/5.7/en/packet-too-large.html
+
+    :param model_name:
+    :param data_list:
+    :return:
+    """
+    try:
+        result = db.session.execute(model_name.__table__.insert().prefix_with('IGNORE'), data_list)
+        db.session.commit()
+        return result.rowcount
+    except Exception as e:
+        db.session.rollback()
+        raise e
+
+
 def update_rows(model_name, data, *args, **kwargs):
     """
     批量修改数据
@@ -182,12 +212,7 @@ def update_rows(model_name, data, *args, **kwargs):
     :return:
     """
     try:
-        if args:
-            model_obj = db.session.query(model_name).filter(*args)
-        elif kwargs:
-            model_obj = db.session.query(model_name).filter_by(**kwargs)
-        else:
-            model_obj = db.session.query(model_name)
+        model_obj = db.session.query(model_name).filter(*args).filter_by(**kwargs)
         result = model_obj.update(data, synchronize_session=False)
         db.session.commit()
         return result
