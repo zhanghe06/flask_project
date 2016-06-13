@@ -498,6 +498,9 @@ $ gunicorn -w4 -b0.0.0.0:8000 app:app
 ```
 此时，我们需要用 8000 的端口进行访问，原先的5000并没有启用。
 
+进程数的推荐配置：
+workers = multiprocessing.cpu_count() * 2 + 1
+
 安装 supervisor
 ```
 $ pip install supervisor
@@ -851,6 +854,13 @@ $ pip install qiniu
 ## 签名模块
 
 中文文档：[http://itsdangerous.readthedocs.io/en/latest/](http://itsdangerous.readthedocs.io/en/latest/)
+
+
+## 常用链接的处理
+
+添加锚点： url_for('end_points', _anchor='part_id')
+
+_external=True 绝对路径
 
 
 ## Todo：

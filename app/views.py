@@ -16,6 +16,8 @@ from app.login import LoginUser
 from flask.ext.login import login_user, logout_user, current_user, login_required
 import os
 import json
+from werkzeug.contrib.cache import SimpleCache
+cache = SimpleCache()  # 默认最大支持500个key, 超时时间5分钟, 参数可配置
 
 
 @login_manager.user_loader
@@ -679,3 +681,31 @@ def authorized_github():
 @oauth_github.tokengetter
 def get_github_oauth_token():
     return session.get('github_token')
+
+
+# 第三方支付（支付宝）
+@app.route('/pay/alipay/')
+def pay_alipay():
+    return 'alipay'
+
+
+# 订单
+@app.route('/order/')
+def order():
+    return 'order'
+
+
+# 缓存测试
+@app.route('/test_cache/')
+def test_cache():
+    """
+    缓存测试
+    5.01s >> 9ms
+    """
+    import time
+    rv = cache.get('my-item')
+    if rv is None:
+        time.sleep(5)
+        rv = 'Hello, Cache!'
+        cache.set('my-item', rv, timeout=5 * 10)
+    return rv

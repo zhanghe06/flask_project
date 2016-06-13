@@ -1,0 +1,1 @@
+2016/06/13 09:39:05 [error] 2201#2201: *1 connect() failed (111: Connection refused) while connecting to upstream, client: 127.0.0.1, server: www.flask-app.com, request: "GET /sdk/vimServiceVersions.xml HTTP/1.1", upstream: "http://127.0.0.1:8000/sdk/vimServiceVersions.xml", host: "127.0.0.1"
