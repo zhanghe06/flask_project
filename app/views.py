@@ -709,3 +709,47 @@ def test_cache():
         rv = 'Hello, Cache!'
         cache.set('my-item', rv, timeout=5 * 10)
     return rv
+
+
+def allowed_file(filename):
+    """
+    校验文件类型
+    """
+    return '.' in filename and filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
+
+
+@app.route('/uploads', methods=['GET', 'POST', 'DELETE'])
+def uploads():
+    """
+    多文件上传
+    """
+    if request.method == 'GET':
+        return render_template('uploads.html')
+    if request.method == 'DELETE':
+        # todo
+        result = {"files": [
+            {
+                "picture1.jpg": True
+            },
+            {
+                "picture2.jpg": True
+            }
+        ]}
+        return json.dumps(result)
+    if request.method == 'POST':
+        files = []
+        from werkzeug.utils import secure_filename
+        file_list = request.files.getlist('files[]')
+        for file_item in file_list:
+            file_info = {
+                'name': secure_filename(file_item.filename),
+                'content_type': file_item.content_type,
+                'size': len(file_item.read()),
+                'delete_url': url_for('uploads'),
+                'delete_type': 'DELETE'
+            }
+            if not file_item or not allowed_file(file_item.filename):
+                file_info['error'] = u'简历格式暂不支持'
+            file_item.save(app.config['UPLOAD_FOLDER'] + file_info['name'])
+            files.append(file_info)
+        return json.dumps({'files': files})

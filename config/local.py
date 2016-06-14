@@ -20,6 +20,11 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 CSRF_ENABLED = True
 SECRET_KEY = '\x03\xabjR\xbbg\x82\x0b{\x96f\xca\xa8\xbdM\xb0x\xdbK%\xf2\x07\r\x8c'
 
+# 文件上传配置
+UPLOAD_FOLDER = os.path.join(BASE_DIR, 'app/static/uploads/')
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+MAX_CONTENT_LENGTH = 2.6 * 1024 * 1024  # 2.6M
+
 # 本地调试邮箱配置
 # $ sudo python -m smtpd -n -c DebuggingServer localhost:25
 MAIL_SERVER = 'localhost',
@@ -131,3 +136,5 @@ if __name__ == '__main__':
     print sk
     print binascii.b2a_hex(sk)
     print BASE_DIR
+    print UPLOAD_FOLDER
+    print SQLALCHEMY_DATABASE_URI
