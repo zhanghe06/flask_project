@@ -1,0 +1,109 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+        <h2 class="sub-header">Blog List!
+        </h2>
+        <div class="row">
+            <div class="table-responsive col-lg-9 col-md-12">
+                {# <table class="table table-striped"> #}
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>id</th>
+                        <th>author</th>
+                        <th>title</th>
+                        <th>pub_date</th>
+                        <th>action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in pagination.items %}
+                        <tr class="text-muted blog_tr" id="blog_{{ item.id }}">
+                            <td>{{ loop.index }}</td>
+                            <td>{{ item.id }}</td>
+                            <td>{{ item.author }}</td>
+                            <td>{{ item.title }}</td>
+                            <td>{{ item.pub_date }}</td>
+                            <td>
+                                {# <div class="pull-right"> #}
+                                {#                        <a href="{{ url_for('blog_delete', blog_id=item.id) }}"><span class="glyphicon glyphicon-trash"></span></a>#}
+                                <a href="javascript:void(0);" onclick="blog_delete({{ item.id }});" rel="tooltip"
+                                   title="删除"><span class="glyphicon glyphicon-trash"></span></a>
+                                {# </div> #}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {# 翻页 #}
+                {% from "macros.html" import render_pagination %}
+                {{ render_pagination(pagination, 'blog_list') }}
+            </div>
+            <div class="col-lg-3 col-md-12" id="blog_tr_edit">
+                <section id="user_profile">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <strong class="panel-title">Blog Edit
+                                <span class="glyphicon glyphicon-list-alt pull-right"></span>
+                            </strong>
+                        </div>
+                        <div class="panel-body">
+                            <fieldset class="form-group">
+                                <label for="author">Author</label>
+                                <input type="text" class="form-control" id="author" placeholder="Author">
+                            </fieldset>
+
+                            <fieldset class="form-group">
+                                <label for="title">Title</label>
+                                <input type="text" class="form-control" id="title" placeholder="Title">
+                            </fieldset>
+
+                            <fieldset class="form-group">
+                                <label for="pub_date">Pub Date</label>
+                                <input type="date" class="form-control" id="pub_date" placeholder="Pub Date">
+                            </fieldset>
+                            <button type="submit" class="btn btn-success btn-load" data-loading-text="Save...">Save
+                            </button>
+                            <button type="reset" class="btn btn-default">Reset</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript">
+        function blog_delete(blog_id) {
+            if (confirm("Are you sure?")) {
+                console.log(blog_id);
+                $.getJSON('{{ url_for('blog_delete') }}',
+                        {
+                            blog_id: blog_id
+                        }, function (data) {
+                            var result = data.result;  // true/false
+                            console.log(result == true);
+                            if (result == true) {
+                                window.location.reload();
+                            }
+                        });
+                return false;
+            }
+        }
+
+        $(function () {
+            $(".blog_tr").click(function () {
+                $(".blog_tr").removeClass('active');
+                $(this).addClass('active');
+                $('#author').val($(this).children('td').eq(2)[0].innerText);
+                $('#title').val($(this).children('td').eq(3)[0].innerText);
+                $('#pub_date').val($(this).children('td').eq(4)[0].innerText);
+            });
+        });
+    </script>
+{% endblock %}

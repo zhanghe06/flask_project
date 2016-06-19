@@ -88,6 +88,20 @@ def blog_list(page=1):
     return render_template('blog/list.html', title='blog_list', pagination=pagination)
 
 
+@app.route('/blog/list_edit/')
+@app.route('/blog/list_edit/<int:page>/')
+@login_required
+def blog_list_edit(page=1):
+    """
+    博客列表(带编辑)
+    """
+    # return "Hello, World!\nBlog List!"
+    from blog import get_blog_rows
+    per_page = 8
+    pagination = get_blog_rows(page, per_page)
+    return render_template('blog/list_edit.html', title='blog_list', pagination=pagination)
+
+
 @app.route('/blog/new/')
 @app.route('/blog/new/<int:page>/')
 def blog_new(page=1):
