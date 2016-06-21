@@ -10,7 +10,7 @@
 
 
 from app import app, login_manager, oauth_github, oauth_qq, oauth_weibo, send_cloud_client, qi_niu_client
-from flask import render_template, request, url_for, send_from_directory, session, flash, redirect, g, jsonify, Markup
+from flask import render_template, request, url_for, send_from_directory, session, flash, redirect, g, jsonify, Markup, abort
 from app.forms import RegForm, LoginForm, BlogAddForm, BlogEditForm, UserForm
 from app.login import LoginUser
 from flask.ext.login import login_user, logout_user, current_user, login_required
@@ -100,6 +100,31 @@ def blog_list_edit(page=1):
     per_page = 8
     pagination = get_blog_rows(page, per_page)
     return render_template('blog/list_edit.html', title='blog_list', pagination=pagination)
+
+
+@app.route('/blog/ajax/list_edit/', methods=['GET', 'POST'])
+@login_required
+def blog_ajax_list_edit():
+    """
+    博客编辑
+    """
+    if request.method == 'POST' and request.is_xhr:
+        form = request.form
+        from blog import edit_blog
+        from datetime import datetime
+        blog_id = form.get('id', 0, type=int)
+        blog_info = {
+            'author': form.get('author'),
+            'title': form.get('title'),
+            'pub_date': datetime.strptime(form.get('pub_date'), "%Y-%m-%d").date(),
+            'edit_time': datetime.utcnow(),
+        }
+        result = edit_blog(blog_id, blog_info)
+        if result == 1:
+            return json.dumps({'success': u'Edit Success'})
+        if result == 0:
+            return json.dumps({'error': u'Edit Error'})
+    abort(404)
 
 
 @app.route('/blog/new/')
@@ -263,7 +288,7 @@ def reg():
                 'email': form.email.data,
                 'create_time': current_time,
                 'update_time': current_time,
-                'last_ip': request.remote_addr
+                'last_ip': request.headers.get('X-Forwarded-For', request.remote_addr)
             }
             user_id = add_user(user_data)
             # 添加授权信息
@@ -367,7 +392,7 @@ def login():
             # session['logged_in'] = True
             # 用户通过验证后，记录登入IP
             from user import edit_user
-            edit_user(user_auth_info.user_id, {'last_ip': request.remote_addr})
+            edit_user(user_auth_info.user_id, {'last_ip': request.headers.get('X-Forwarded-For', request.remote_addr)})
             # 用 login_user 函数来登入他们
             from user import get_user_row_by_id
             login_user(get_user_row_by_id(user_auth_info.user_id))
@@ -428,7 +453,7 @@ def setting():
                 'phone': form.phone.data,
                 'birthday': form.birthday.data,
                 'update_time': datetime.utcnow(),
-                'last_ip': request.remote_addr,
+                'last_ip': request.headers.get('X-Forwarded-For', request.remote_addr),
             }
             result = edit_user(current_user.id, user_info)
             if result == 1:
@@ -767,3 +792,15 @@ def uploads():
             file_item.save(app.config['UPLOAD_FOLDER'] + file_info['name'])
             files.append(file_info)
         return json.dumps({'files': files})
+
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def internal_error(error):
+    from app.database import db
+    db.session.rollback()
+    return render_template('500.html'), 500

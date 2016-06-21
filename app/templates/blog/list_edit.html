@@ -51,23 +51,26 @@
                             </strong>
                         </div>
                         <div class="panel-body">
-                            <fieldset class="form-group">
-                                <label for="author">Author</label>
-                                <input type="text" class="form-control" id="author" placeholder="Author">
-                            </fieldset>
+                            <form id="blog_form_edit" onsubmit="return edit_blog(this);">
+                                <input type="hidden" id="id" name="id">
+                                <fieldset class="form-group">
+                                    <label for="author">Author</label>
+                                    <input type="text" class="form-control" id="author" name="author" placeholder="Author">
+                                </fieldset>
 
-                            <fieldset class="form-group">
-                                <label for="title">Title</label>
-                                <input type="text" class="form-control" id="title" placeholder="Title">
-                            </fieldset>
+                                <fieldset class="form-group">
+                                    <label for="title">Title</label>
+                                    <input type="text" class="form-control" id="title" name="title" placeholder="Title">
+                                </fieldset>
 
-                            <fieldset class="form-group">
-                                <label for="pub_date">Pub Date</label>
-                                <input type="date" class="form-control" id="pub_date" placeholder="Pub Date">
-                            </fieldset>
-                            <button type="submit" class="btn btn-success btn-load" data-loading-text="Save...">Save
-                            </button>
-                            <button type="reset" class="btn btn-default">Reset</button>
+                                <fieldset class="form-group">
+                                    <label for="pub_date">Pub Date</label>
+                                    <input type="date" class="form-control" id="pub_date" name="pub_date" placeholder="Pub Date">
+                                </fieldset>
+                                <button type="submit" class="btn btn-success btn-load" data-loading-text="Save...">Save
+                                </button>
+                                <button type="reset" class="btn btn-default">Reset</button>
+                            </form>
                         </div>
                     </div>
                 </section>
@@ -79,6 +82,25 @@
 
 {% block extra_js %}
     <script type="text/javascript">
+        function edit_blog(form) {
+            //console.log($(form).serialize());
+            $.ajax({
+                url: "{{ url_for('blog_ajax_list_edit') }}",
+                type: 'POST',
+                data: $(form).serialize(),
+                dataType: 'json',
+                success: function (result) {
+                    console.log(result);
+                    if(result.hasOwnProperty('error')){
+                        alert(result.error);
+                    }
+                    alert(result.success);
+                }
+            });
+            $(form).button('reset');  // 重置表单 恢复保存按钮
+            // todo 更新 tr 数据(blog_id)
+            return false;
+        }
         function blog_delete(blog_id) {
             if (confirm("Are you sure?")) {
                 console.log(blog_id);
@@ -100,6 +122,7 @@
             $(".blog_tr").click(function () {
                 $(".blog_tr").removeClass('active');
                 $(this).addClass('active');
+                $('#id').val($(this).children('td').eq(1)[0].innerText);
                 $('#author').val($(this).children('td').eq(2)[0].innerText);
                 $('#title').val($(this).children('td').eq(3)[0].innerText);
                 $('#pub_date').val($(this).children('td').eq(4)[0].innerText);
