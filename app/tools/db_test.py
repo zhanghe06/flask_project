@@ -10,7 +10,7 @@
 
 
 import unittest
-from app.tools.sys import get_memory_usage
+from app.tools.system import get_memory_usage
 from config import BASE_DIR
 import os
 

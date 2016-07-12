@@ -11,8 +11,9 @@
 
 import os
 import sys
-sys.path.append('../..')
-from config import BASE_DIR, SQLALCHEMY_DATABASE_URI
+from app import app
+BASE_DIR = app.config['BASE_DIR']
+SQLALCHEMY_DATABASE_URI = app.config['SQLALCHEMY_DATABASE_URI']
 
 
 def create_models():

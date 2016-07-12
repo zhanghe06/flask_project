@@ -102,6 +102,7 @@ $ pip install Flask-OAuthlib
 $ pip install sqlacodegen
 $ pip install gunicorn
 $ pip install supervisor
+$ pip install redis
 $ pip freeze > requirements.txt
 ```
 
@@ -862,6 +863,70 @@ $ pip install qiniu
 
 _external=True 绝对路径
 
+
+## 编码规范（建议）
+
+新增表单
+```
+@app.route('/add/', methods=['GET', 'POST'])
+@login_required
+def add():
+    """
+    添加
+    """
+    form = AddForm(request.form)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            from datetime import datetime
+            current_time = datetime.utcnow()
+            info = {
+                'author': form.author.data,
+                'title': form.title.data,
+                'pub_date': form.pub_date.data,
+                'add_time': current_time,
+                'edit_time': current_time,
+            }
+            result = add(info)
+            if result:
+                flash(u'Add Success', 'success')
+            else:
+                flash(u'Add Failed', 'warning')
+    return render_template('add.html', form=form)
+```
+
+编辑表单
+```
+@app.route('/edit/<int:id>/', methods=['GET', 'POST'])
+@login_required
+def edit(id):
+    """
+    编辑
+    """
+    form = EditForm(request.form)
+    if request.method == 'GET':
+        info = get_info(id)
+        if blog_info:
+            form.author.data = info.author
+            form.title.data = info.title
+            form.pub_date.data = info.pub_date
+        else:
+            return redirect(url_for('index'))
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            from datetime import datetime
+            info = {
+                'author': form.author.data,
+                'title': form.title.data,
+                'pub_date': form.pub_date.data,
+                'edit_time': datetime.utcnow(),
+            }
+            result = edit(id, info)
+            if result:
+                flash(u'Edit Success', 'success')
+            else:
+                flash(u'Edit Failed', 'warning')
+    return render_template('edit.html', id=id, form=form)
+```
 
 ## Todo：
 

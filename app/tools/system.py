@@ -4,7 +4,7 @@
 """
 @author: zhanghe
 @software: PyCharm
-@file: sys.py
+@file: system.py
 @time: 16-4-17 下午11:59
 """
 

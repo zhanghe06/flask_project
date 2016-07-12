@@ -7,5 +7,3 @@ cd ${base_path}
 sqlite3 flask.db < schema.sql
 # 添加测试数据
 sqlite3 flask.db < etc/data_test.sql
-# 生成 model
-./etc/model_create.sh
