@@ -16,15 +16,19 @@
     {% endif %}
     <!-- Bootstrap -->
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- Plugin -->
+    <link href="{{ url_for('static', filename='css/slideout.css') }}" rel="stylesheet">
     <!-- Custom -->
-    <link href="{{ url_for('static', filename='css/custom.css', v='1.4.28') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/custom.css', v='1.4.66') }}" rel="stylesheet">
     {% block extra_css %}{% endblock %}
 </head>
 <body data-spy="scroll" data-target="#affix_nav">
     <!-- Fixed navbar -->
-    {% from "macros.html" import render_nav %}
+    {% from "macros.html" import render_nav, render_ground %}
     {{ render_nav(title) }}
-{#    <div class="navbar"></div>#}
+    {{ render_ground(title) }}
+
+    <div id="panel" class="panel">
     <div class="container">
     {# 闪现消息 success info warning danger #}
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -40,7 +44,7 @@
     </div>
     {% block content %}{% endblock %}
     <!-- Fixed Footer -->
-    <nav class="navbar-fixed-bottom text-center panel-footer">
+    <nav class="text-center panel-footer">
 {#    <div class="container">#}
     Flask Project &copy; 2016 All Rights Reserved. 沪ICP备12024750号
 {#    </div>#}
@@ -52,14 +56,17 @@
             <i class="glyphicon glyphicon-menu-up center-block"></i>
         </a>
     </span>
+    </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="{{ url_for('static', filename='js/jquery-1.11.3.min.js') }}"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/custom.js', v='1.4.28') }}"></script>
+    <script src="{{ url_for('static', filename='plugin/Chart/Chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugin/Slideout/slideout.min.js') }}"></script>
+    <!-- Custom -->
+    <script src="{{ url_for('static', filename='js/custom.js', v='1.4.66') }}"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

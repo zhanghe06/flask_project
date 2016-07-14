@@ -63,3 +63,16 @@ if (($(window).height() + 100) < $(document).height()) {
         offset: {top: 100}
     });
 }
+
+/* 侧滑插件 */
+var slideout = new Slideout({
+    'panel': document.getElementById('panel'),
+    'menu': document.getElementById('menu'),
+    'padding': 256,
+    'tolerance': 70
+});
+
+// Toggle button
+document.querySelector('.toggle-button').addEventListener('click', function () {
+    slideout.toggle();
+});

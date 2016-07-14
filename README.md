@@ -429,6 +429,9 @@ CURRENT_DATE 为 “YYYY-MM-DD”
 不同开发人员程序中如果不统一的话，会造成麻烦。
 
 
+[http://momentjs.com/](http://momentjs.com/)
+
+
 ### 用户登陆
 
 Flask-Login 扩展需要在我们 model 的 User 类里实现一些方法。：

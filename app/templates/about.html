@@ -1,4 +1,3 @@
-<!-- extend from base layout -->
 {% extends "base.html" %}
 
 {% block extra_css %}
@@ -68,7 +67,7 @@
 
 {% block extra_js %}
     <!-- LightBox -->
-    <script src="{{ url_for('static', filename='js/lightbox.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugin/Lightbox/lightbox.min.js') }}"></script>
     <script>
         lightbox.option({
             'alwaysShowNavOnTouchDevices': true,
