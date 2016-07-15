@@ -71,8 +71,3 @@ var slideout = new Slideout({
     'padding': 256,
     'tolerance': 70
 });
-
-// Toggle button
-document.querySelector('.toggle-button').addEventListener('click', function () {
-    slideout.toggle();
-});

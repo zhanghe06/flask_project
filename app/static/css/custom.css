@@ -32,6 +32,6 @@ a#top-link:hover {
 
 #top-link-block.affix {
     position: fixed; /* keeps it on the bottom once in view */
-    bottom: 61px;
+    bottom: 21px;
     right: 10px;
 }

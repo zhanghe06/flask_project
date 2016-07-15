@@ -1,8 +1,12 @@
-.menu {
+.page-menu {
     background-image: linear-gradient(90deg, #eeeeee 90%, #bbbbbb 100%);
 }
 
-.panel {
+.page-menu .container {
+    margin-right: 10%;
+}
+
+.page-panel {
     background-color: #fff;
     margin-bottom: 0;
 }
@@ -23,7 +27,7 @@
 .slideout-panel {
     position: relative;
     z-index: 1;
-    will-change: transform;
+    /*will-change: transform;*/
 }
 
 .slideout-open,
