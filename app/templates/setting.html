@@ -23,17 +23,18 @@
                     <span class="glyphicon glyphicon-picture pull-right"></span>
                     </strong>
                 </div>
-                <div class="panel-body">
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 list-inline">
+                <div class="panel-body text-center row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                         <canvas id="chart_bar_canvas_01"></canvas>
+                        <span class="text-muted">Chart Bar Graphs Example 01</span>
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 list-inline">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                         <canvas id="chart_bar_canvas_02"></canvas>
+                        <span class="text-muted">Chart Bar Graphs Example 02</span>
                     </div>
                 </div>
                 <div class="panel-footer text-center text-muted">
-                    Chart Bar Graphs Example 01
-                    Chart Bar Graphs Example 02
+                    Chart Bar Graphs Example
                 </div>
                 </div>
             </section>
@@ -427,7 +428,7 @@
 
     /* 创建Bar图表 */
     var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
-	var barChartData = {
+	var barChartData01 = {
 		labels : ["January","February","March","April","May","June","July"],
 		datasets : [
 			{
@@ -448,11 +449,30 @@
 	};
     $(function() {
         var ctx = $("#chart_bar_canvas_01").get(0).getContext("2d");
-        new Chart(ctx).Bar(barChartData, {responsive: true});
+        new Chart(ctx).Bar(barChartData01, {responsive: true});
     });
+    var barChartData02 = {
+		labels : ["January","February","March","April","May","June","July"],
+		datasets : [
+			{
+				fillColor : "rgba(220,220,220,0.5)",
+				strokeColor : "rgba(220,220,220,0.8)",
+				highlightFill: "rgba(220,220,220,0.75)",
+				highlightStroke: "rgba(220,220,220,1)",
+				data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+			},
+			{
+				fillColor : "rgba(151,187,205,0.5)",
+				strokeColor : "rgba(151,187,205,0.8)",
+				highlightFill : "rgba(151,187,205,0.75)",
+				highlightStroke : "rgba(151,187,205,1)",
+				data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+			}
+		]
+	};
     $(function() {
         var ctx = $("#chart_bar_canvas_02").get(0).getContext("2d");
-        new Chart(ctx).Bar(barChartData, {responsive: true});
+        new Chart(ctx).Bar(barChartData02, {responsive: true});
     });
 </script>
 {% endblock %}

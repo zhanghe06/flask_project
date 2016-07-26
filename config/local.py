@@ -10,7 +10,9 @@
 
 
 import os
+from datetime import timedelta
 
+DEBUG = True
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__)+'/../')
 
@@ -19,6 +21,11 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 CSRF_ENABLED = True
 SECRET_KEY = '\x03\xabjR\xbbg\x82\x0b{\x96f\xca\xa8\xbdM\xb0x\xdbK%\xf2\x07\r\x8c'
+
+# 会话配置
+REMEMBER_COOKIE_DURATION = timedelta(days=14)  # 默认365天
+LOGIN_MESSAGE = u'Please log in to access this page.'
+LOGIN_MESSAGE_CATEGORY = 'warning'  # 默认'message'
 
 # 文件上传配置
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'app/static/uploads/')
@@ -105,14 +112,14 @@ LOG_CONFIG = {
             'formatter': 'detail',
             'level': 'DEBUG',
             'when': 'D',
-            'filename': BASE_DIR + '/log/app.log'
+            'filename': BASE_DIR + '/logs/app.log'
         },
         'file_db': {
             'class': 'logging.handlers.TimedRotatingFileHandler',
             'formatter': 'detail',
             'level': 'DEBUG',
             'when': 'D',
-            'filename': BASE_DIR + '/log/db.log'
+            'filename': BASE_DIR + '/logs/db.log'
         }
     },
     'loggers': {

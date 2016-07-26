@@ -1,0 +1,6 @@
+2016-07-26 11:05:52,251 - app - File: views.py - line: 745 - test_log() - DEBUG - info message
+2016-07-26 11:05:52,252 - app - File: views.py - line: 746 - test_log() - INFO - info message
+2016-07-26 11:05:52,252 - app - File: views.py - line: 747 - test_log() - ERROR - error message
+2016-07-26 11:22:18,661 - app - File: views.py - line: 745 - test_log() - DEBUG - info message
+2016-07-26 11:22:18,669 - app - File: views.py - line: 746 - test_log() - INFO - info message
+2016-07-26 11:22:18,670 - app - File: views.py - line: 747 - test_log() - ERROR - error message

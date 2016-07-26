@@ -734,6 +734,20 @@ def order():
     return 'order'
 
 
+# log测试
+@app.route('/test_log/')
+def test_log():
+    """
+    log测试
+    """
+    import logging
+    log = logging.getLogger('app')
+    log.debug('info message')
+    log.info('info message')
+    log.error('error message')
+    return 'log测试'
+
+
 # 缓存测试
 @app.route('/test_cache/')
 def test_cache():

@@ -472,6 +472,16 @@ current_user 仅仅支持视图
 - 主要图像内容信息集中在中间1024的区域
 
 
+### Swiper 移动端触摸滑动插件
+
+[http://www.swiper.com.cn/](http://www.swiper.com.cn/)
+
+
+### Slideout.js 侧滑插件
+
+[https://github.com/mango/slideout](https://github.com/mango/slideout)
+
+
 ### LightBox 插件
 
 参考: [LightBox.md](LightBox.md)

@@ -10,6 +10,7 @@
 
 
 from flask import Flask
+from logging.config import dictConfig
 from flask.ext.login import LoginManager
 from flask_oauthlib.client import OAuth
 from app.lib.sendcloud import SendCloudClient
@@ -55,7 +56,10 @@ oauth_weibo = oauth.remote_app(
 # 要银子，妹的
 
 
-if not app.debug:
+# 配置日志
+dictConfig(app.config['LOG_CONFIG'])
+
+if not app.config['DEBUG']:
     import logging
     from logging.handlers import SMTPHandler
     credentials = None
