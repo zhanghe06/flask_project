@@ -17,3 +17,7 @@
 127.0.0.1 - - [11/Jul/2016:10:09:24 +0800] "<policy-file-request/>\x00" 400 173 "-" "-" "-"
 127.0.0.1 - - [11/Jul/2016:10:09:31 +0800] "<policy-file-request/>\x00" 400 173 "-" "-" "-"
 127.0.0.1 - - [13/Jul/2016:16:13:55 +0800] "GET /sdk/vimServiceVersions.xml HTTP/1.1" 502 173 "-" "VMware-client" "-"
+127.0.0.1 - - [27/Jul/2016:16:31:54 +0800] "GET /sdk/vimServiceVersions.xml HTTP/1.1" 502 173 "-" "VMware-client" "-"
+127.0.0.1 - - [28/Jul/2016:09:53:38 +0800] "GET /sdk/vimServiceVersions.xml HTTP/1.1" 502 173 "-" "VMware-client" "-"
+127.0.0.1 - - [28/Jul/2016:21:44:44 +0800] "GET /sdk/vimServiceVersions.xml HTTP/1.1" 502 173 "-" "VMware-client" "-"
+127.0.0.1 - - [29/Jul/2016:11:12:37 +0800] "GET /sdk/vimServiceVersions.xml HTTP/1.1" 502 173 "-" "VMware-client" "-"

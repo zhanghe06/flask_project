@@ -455,6 +455,8 @@ g.user 视图和模板都可以用
 
 current_user 仅仅支持视图
 
+[https://flask-login.readthedocs.io/en/latest/](https://flask-login.readthedocs.io/en/latest/)
+
 
 ### 用 jQuery 实现 Ajax
 
