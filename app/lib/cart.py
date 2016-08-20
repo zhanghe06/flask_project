@@ -54,6 +54,20 @@ class Cart(object):
             redis_client.delete(key)
         return True
 
+    def edit_item(self, pid, num):
+        """
+        编辑物品
+        :param pid:
+        :param num:
+        :return: True/False
+        """
+        key = "%s:%s:%s" % (self.prefix, self.uid, pid)
+        # 判断物品是否存在
+        if redis_client.exists(key):
+            redis_client.hmset(key, {'pid': pid, 'num': num})
+            return True
+        return False
+
     def increase(self, pid, num=1):
         """
         增加物品数量
@@ -90,14 +104,20 @@ class Cart(object):
     def cart_list(self):
         """
         显示购物车
-        :return:
+        :return: list
         """
         key = "%s:%s:*" % (self.prefix, self.uid)
         car_key_list = redis_client.keys(key)
-        cart_list = []
-        for item in car_key_list:
-            cart_list.append(redis_client.hgetall(item))
-        return cart_list
+        return [redis_client.hgetall(item) for item in car_key_list]
+
+    def clean(self):
+        """
+        清空购物车
+        :return: 0/int
+        """
+        key = "%s:%s:*" % (self.prefix, self.uid)
+        car_key_list = redis_client.keys(key)
+        return redis_client.delete(*car_key_list) if car_key_list else 0
 
 
 def test():
@@ -114,6 +134,8 @@ def test():
     obj.add_item('4')
     print obj.cart_list()
     obj.add_item('5', 10)
+    print obj.cart_list()
+    obj.edit_item('5', 9)
     print obj.cart_list()
     obj.decrease('4', 10)
     print obj.cart_list()
