@@ -20,7 +20,7 @@ redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 class Session(object):
     """
-    会话保持 数据结构：字符串（用户信息序列化）
+    基于redis的会话管理 数据结构：字符串（用户信息序列化）
     """
     # 定义支持的实体类型
     entity_name_list = ['web', 'app']

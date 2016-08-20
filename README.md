@@ -451,9 +451,6 @@ Flask-Login 扩展需要在我们 model 的 User 类里实现一些方法。：
         except NameError:
             return str(self.id)  # python 3
 
-g.user 视图和模板都可以用
-
-current_user 仅仅支持视图
 
 [https://flask-login.readthedocs.io/en/latest/](https://flask-login.readthedocs.io/en/latest/)
 
@@ -942,6 +939,21 @@ def edit(id):
                 flash(u'Edit Failed', 'warning')
     return render_template('edit.html', id=id, form=form)
 ```
+
+
+## 模板引擎
+
+[https://github.com/aui/artTemplate](https://github.com/aui/artTemplate)
+
+[https://github.com/wycats/handlebars.js](https://github.com/wycats/handlebars.js)
+
+模板引擎与jinja结合
+```
+{% raw %}
+...
+{% endraw %}
+```
+
 
 ## Todo：
 
