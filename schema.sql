@@ -37,3 +37,23 @@ CREATE TABLE blog (
   add_time  DATETIME             DEFAULT CURRENT_TIMESTAMP,
   edit_time DATETIME             DEFAULT CURRENT_TIMESTAMP
 );
+
+DROP TABLE IF EXISTS product;
+CREATE TABLE product (
+  id        INTEGER PRIMARY KEY  AUTOINCREMENT,
+  title     VARCHAR(40) NOT NULL,
+  stock     INTEGER NOT NULL DEFAULT 0,
+  create_time DATETIME             DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME             DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TABLE IF EXISTS product_order;
+CREATE TABLE product_order (
+  id        INTEGER PRIMARY KEY  AUTOINCREMENT,
+  buyer_uid        INTEGER,
+  shop_id        INTEGER,
+  amount     DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
+  pay_status  TINYINT(1) NOT NULL DEFAULT 0,
+  create_time DATETIME             DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME             DEFAULT CURRENT_TIMESTAMP
+);

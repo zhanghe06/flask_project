@@ -65,9 +65,11 @@ if (($(window).height() + 100) < $(document).height()) {
 }
 
 /* 侧滑插件 */
+/*
 var slideout = new Slideout({
     'panel': document.getElementById('panel'),
     'menu': document.getElementById('menu'),
     'padding': 256,
     'tolerance': 70
 });
+ */

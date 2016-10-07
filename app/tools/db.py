@@ -300,6 +300,49 @@ def test_blog():
             print item.id, item.author, item.title, item.pub_date
 
 
+def test_transaction():
+    """
+    测试事务
+    """
+    from app.models import User
+    from datetime import datetime
+    print '\n测试事务'
+
+    try:
+        current_time = datetime.utcnow()
+        user_info_01 = {
+            'nickname': 'rose',
+            'avatar_url': '',
+            'email': 'rose@gmail.com',
+            'phone': '13818731111',
+            'create_time': current_time,
+            'update_time': current_time,
+            'last_ip': '0.0.0.0'
+        }
+        model_obj_01 = User(**user_info_01)
+        db.session.add(model_obj_01)
+        db.session.flush()
+        print inspect(model_obj_01).identity[0]
+
+        user_info_02 = {
+            'nickname': 'pit',
+            'avatar_url': '',
+            'email': 'pit@gmail.com',
+            'phone': '13818730000',
+            'create_time': current_time,
+            'update_time': current_time,
+            'last_ip': '0.0.0.0'
+        }
+        model_obj_02 = User(**user_info_02)
+        db.session.add(model_obj_02)
+        db.session.flush()
+        print inspect(model_obj_02).identity[0]
+
+    except Exception as e:
+        db.session.rollback()
+        raise e
+
 if __name__ == '__main__':
-    test_user()
-    test_blog()
+    # test_user()
+    # test_blog()
+    test_transaction()
