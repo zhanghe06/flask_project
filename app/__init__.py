@@ -11,7 +11,7 @@
 
 from flask import Flask
 from logging.config import dictConfig
-from flask.ext.login import LoginManager
+from flask_login import LoginManager
 from flask_oauthlib.client import OAuth
 from app.lib.sendcloud import SendCloudClient
 from app.lib.qiniu_store import QiNiuClient
@@ -77,4 +77,4 @@ if not app.config['DEBUG']:
 
 
 # 这个 import 语句放在这里, 防止views, models import发生循环import
-from app import views, models
+from app import views, models, tasks

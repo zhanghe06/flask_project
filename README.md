@@ -955,6 +955,16 @@ def edit(id):
 ```
 
 
+## 模块导入更新
+
+旧模块 | 新模块
+| --- | --- |
+flask.ext.login | flask_login
+flask.ext.wtf | flask_wtf
+flask.ext.sqlalchemy | flask_sqlalchemy
+flask.ext.mail | flask_mail
+
+
 ## Todo：
 
 - 第三方登陆

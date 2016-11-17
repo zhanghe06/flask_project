@@ -250,16 +250,16 @@ def test_user():
         print row.id, row.email, row.nickname
     # 测试添加
     user_info = {
-        'email': 'bob@gmail.com',
-        'password': '123456',
-        'nickname': 'Bob',
+        'email': 'admin@gmail.com',
+        # 'password': '123456',
+        'nickname': 'Admin',
     }
     # 测试计数
     result_count = count(User, User.id > 1, **{'id': 2})
     print result_count
 
-    # result = add(User, user_info)
-    # print result
+    result = add(User, user_info)
+    print result
     # # 测试修改
     # result = edit(User, 2, {'nickname': 'Emma'})
     # print result
@@ -345,4 +345,8 @@ def test_transaction():
 if __name__ == '__main__':
     # test_user()
     # test_blog()
-    test_transaction()
+    # test_transaction()
+    from app.models import User
+    rows = db.session.query(User).filter().order_by(User.nickname, User.create_time.desc()).all()
+    for row in rows:
+        print row.id, row.nickname, row.create_time

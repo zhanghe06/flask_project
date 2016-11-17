@@ -32,6 +32,10 @@ UPLOAD_FOLDER = os.path.join(BASE_DIR, 'app/static/uploads/')
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 MAX_CONTENT_LENGTH = 2.6 * 1024 * 1024  # 2.6M
 
+# Celery 配置 （异步任务队列/基于分布式消息传递的作业队列）
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+
 # 本地调试邮箱配置
 # $ sudo python -m smtpd -n -c DebuggingServer localhost:25
 MAIL_SERVER = 'localhost',
