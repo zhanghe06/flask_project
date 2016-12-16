@@ -13,8 +13,11 @@ from celery import Celery
 
 
 def make_celery(application):
-    celery = Celery(application.import_name, broker=application.config['CELERY_BROKER_URL'])
-    celery.conf.update(application.config)
+    celery = Celery(application.import_name,
+                    broker=application.config['CELERY_BROKER_URL'],
+                    backend=application.config['CELERY_RESULT_BACKEND']
+                    )
+    # celery.conf.update(application.config)
     TaskBase = celery.Task
 
     class ContextTask(TaskBase):

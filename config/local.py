@@ -33,8 +33,10 @@ ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 MAX_CONTENT_LENGTH = 2.6 * 1024 * 1024  # 2.6M
 
 # Celery 配置 （异步任务队列/基于分布式消息传递的作业队列）
-CELERY_BROKER_URL = 'redis://localhost:6379'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+# CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'amqp://guest:guest@localhost:5672//'
+# CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
 # 本地调试邮箱配置
 # $ sudo python -m smtpd -n -c DebuggingServer localhost:25
