@@ -36,6 +36,8 @@ from sqlalchemy.sql import func
 - func.now()
 - func.current_timestamp()
 - func.concat('x', 'y')
+- func.substr(User.nickname, 2).label('nickname_new')  # SqLite
+- func.left(User.nickname, 2).label('nickname_new')  # MySql
 
 
 ### Transtraction
