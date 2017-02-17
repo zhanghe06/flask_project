@@ -39,6 +39,18 @@ Using Celery in your Application
 http://docs.celeryproject.org/en/master/getting-started/next-steps.html
 
 
+## 角色说明
+
+- Broker
+负责创建任务队列，根据一些路由规则将任务分派到任务队列，然后将任务从任务队列传递给工作线程。
+
+- Consumer (Celery Workers)
+消费者是执行任务的一个或多个Celery工作程序。你可以根据你的用例启动很多工人。
+
+- Result Backend
+结果后端用于存储任务的结果。但是，它不是必需的元素，因此如果您不将其包括在设置中，则无法访问任务的结果。
+
+
 ## 简单测试
 
 基于 redis
