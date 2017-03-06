@@ -132,8 +132,23 @@ File >> Settings >> Languages & Frameworks >> Python Template Languages >> Templ
 
 Bootstrap 是最受欢迎的 HTML、CSS 和 JS 框架，用于开发响应式布局、移动设备优先的 WEB 项目。
 
-Bootstrap 官网：[http://v3.bootcss.com/](http://v3.bootcss.com/)
+项目地址：https://github.com/twbs/bootstrap
 
+Bootstrap 英文官网：http://getbootstrap.com/
+
+Bootstrap 中文网：http://www.bootcss.com/
+
+Bootstrap CDN
+```
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+```
 
 ### 启动 web 服务
 ```
@@ -965,6 +980,72 @@ flask.ext.sqlalchemy | flask_sqlalchemy
 flask.ext.mail | flask_mail
 
 
+## 用户注册
+
+注册方式 | 校验方式
+| --- | --- |
+手机号码 | 短信验证码
+邮箱 | 发送带身份信息加密的链接，点击校验通过后即确认身份
+
+注意：如果需要兼容国际手机号码注册，需要添加国家区号
+
+
+
+## 忘记密码
+
+
+## 业务逻辑确认外键还是数据库设置外键
+
+效率与一致性的权衡
+
+主外键只是一种保持数据一致性的手段之一，如果有别的方式来保持数据一致性（业务逻辑保持数据一致性），那么数据库不设置主外键也是可以的。
+
+
+## 数据库设计 NOT NULL 与 DEFAULT(默认非null值)
+
+1、NOT NULL DEFAULT 同时设置，可以不插入字段，但是不能插入 null 值
+2、仅仅设置 DEFAULT，可以不插入字段，也可插入 null 值
+3、仅仅设置 NOT NULL，可以不插入字段，不可插入 null 值
+
+通常，DEFAULT 的设置会简化代码的设计，
+同时考虑索引效率，会将需要建立索引的字段添加 DEFAULT，因为 null是无法比较的
+```
+MariaDB [(none)]> select 2=2, 'a'='a', NULL=NULL;
++-----+---------+-----------+
+| 2=2 | 'a'='a' | NULL=NULL |
++-----+---------+-----------+
+|   1 |       1 |      NULL |
++-----+---------+-----------+
+1 row in set (0.00 sec)
+```
+
+## 关于数据库索引优化
+
+索引的类型
+
+索引名称 | 定义 | 描述
+| --- | --- | --- |
+普通索引 | key | 唯一的作用就是加快查询的速度
+主键索引 | primary key | 字段具备唯一性 一张数据表中只有一个
+唯一索引 | unique key | 保证数据唯一性
+联合索引 | key(a,b,c) | 实际上是建立3个索引(a,b,c;a,b;a)，每个索引都包含a
+外键索引 | - | 就是用来维护数据表之间的相关性的，并且会导致数据的写入等操作的速度过慢，所以好像没啥用（对于较大的项目）
+全文索引 | FULLTEXT(column1, column2) | mysql5.6以前的InnoDB表不支持。使用：WHERE MATCH(column) AGAINST('search_content')
+
+
+能否用到索引 | 操作符
+| --- | --- |
+可以用到 | <, <=, =, >, >=, BETWEEN, IN, LIKE _%
+不能用到 | <>, !=, not in, LIKE %_
+
+对于比较长的字符串比如varchar(255)类型字段，可为该字段的前n个值建立索引，可用以下语句确定索引的长度
+```
+select count(distinct substring(字段,1,结束位置)) from 表
+```
+
+EXPLAIN 测试SQL执行计划
+
+
 ## Todo：
 
 - 第三方登陆
@@ -980,3 +1061,7 @@ flask.ext.mail | flask_mail
 参考：[在线支付逻辑漏洞总结](http://drops.wooyun.org/papers/345)
 
 - 检查数据重复, 处理效率问题
+
+- 页面导出csv
+
+- 各大搜索引擎提交入口
