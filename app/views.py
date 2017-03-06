@@ -324,6 +324,15 @@ def reg():
     return render_template('reg.html', title='reg', form=form)
 
 
+@app.route('/agreement/')
+def agreement():
+    """
+    注册协议
+    :return:
+    """
+    return 'agreement'
+
+
 @app.route('/email/sign')
 def email_sign():
     """
