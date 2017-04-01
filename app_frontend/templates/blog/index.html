@@ -1,0 +1,63 @@
+<!-- extend from base layout -->
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="container">
+    <h2 class="sub-header">Blog List!</h2>
+    <div class="table-responsive">
+        {# <table class="table table-striped"> #}
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>id</th>
+                <th>author</th>
+                <th>title</th>
+                <th>pub_date</th>
+                <th>action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in pagination.items %}
+            <tr class="text-muted" id="blog_{{ item.id }}">
+                <td>{{ loop.index }}</td>
+                <td>{{ item.id }}</td>
+                <td>{{ item.author }}</td>
+                <td>{{ item.title }}</td>
+                <td>{{ item.pub_date }}</td>
+                <td>
+                    {# <div class="pull-right"> #}
+                        <a href="{{ url_for('blog.edit', blog_id=item.id, next=request.path) }}" rel="tooltip" title="编辑"><span class="glyphicon glyphicon-pencil"></span></a>
+{#                        <a href="{{ url_for('blog.delete', blog_id=item.id) }}"><span class="glyphicon glyphicon-trash"></span></a>#}
+                        <a href="javascript:void(0);" onclick="blog_delete({{ item.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
+                    {# </div> #}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {# 翻页 #}
+        {% from "macros.html" import render_pagination %}
+        {{ render_pagination(pagination, 'blog.index') }}
+    </div>
+    </div>
+    <script type="text/javascript">
+        function blog_delete(blog_id){
+            if(confirm("Are you sure?"))
+            {
+                console.log(blog_id);
+                $.getJSON('{{ url_for('blog.delete') }}',
+                {
+                    blog_id: blog_id
+                }, function (data) {
+                    var result = data.result;  // true/false
+                    console.log(result==true);
+                    if(result==true){
+                        window.location.reload();
+                    }
+                });
+                return false;
+            }
+        }
+    </script>
+{% endblock %}

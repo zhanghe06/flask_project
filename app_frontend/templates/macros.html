@@ -1,0 +1,185 @@
+{% macro render_pagination(pagination, endpoint) %}
+    <nav class="text-center">
+        <ul class="pagination">
+            <li>
+                {% if pagination.has_prev %}
+                    <a href="{{ url_for(endpoint, page=pagination.prev_num) }}" aria-label="Previous">
+                {% else %}
+                    <a href="javascript:void(0);" aria-label="Previous">
+                {% endif %}
+                <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% for page in pagination.iter_pages() %}
+                {% if page %}
+                    {% if page == pagination.page %}
+                        <li class="active">
+                            {% else %}
+                        <li>
+                    {% endif %}
+                <a href="{{ url_for(endpoint, page=page) }}">{{ page }}</a>
+                </li>
+                {% endif %}
+            {% endfor %}
+            <li>
+                {% if pagination.has_next %}
+                    <a href="{{ url_for(endpoint, page=pagination.next_num) }}" aria-label="Next">
+                {% else %}
+                    <a href="javascript:void(0);" aria-label="Next">
+                {% endif %}
+                <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+{% endmacro %}
+
+
+{% macro render_nav(title) %}
+    {#    <nav class="navbar navbar-default">#}
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand" href="{{ url_for('index') }}">Flask Project</span>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li{% if title == 'home' %} class="active"{% endif %}><a href="{{ url_for('index') }}"><span
+                            class="glyphicon glyphicon-home"></span> Home</a></li>
+                    <li{% if title == 'about' %} class="active"{% endif %}><a href="{{ url_for('about') }}"><span
+                            class="glyphicon glyphicon-list"></span> About</a></li>
+                    <li{% if title == 'contact' %} class="active"{% endif %}><a href="{{ url_for('contact') }}"><span
+                            class="glyphicon glyphicon-envelope"></span> Contact</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false"><span class="glyphicon glyphicon-book"></span> Blog List <span
+                                class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            {% if title == 'blog_list' %}
+                                <li class="dropdown-header">Blog List</li>{% else %}
+                                <li><a href="{{ url_for('blog.index') }}">Blog List</a></li>{% endif %}
+                            {% if title == 'blog_new' %}
+                                <li class="dropdown-header">Blog New</li>{% else %}
+                                <li><a href="{{ url_for('blog.new') }}">Blog New</a></li>{% endif %}
+                            {% if title == 'blog_hot' %}
+                                <li class="dropdown-header">Blog Hot</li>{% else %}
+                                <li><a href="{{ url_for('blog.hot') }}">Blog Hot</a></li>{% endif %}
+                        </ul>
+                    </li>
+                </ul>
+                <form class="navbar-form navbar-left" role="search" action="{{ url_for('search') }}">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search for..." speech x-webkit-speech
+                               onwebkitspeechchange="$(this).cloest('form').submit()">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                        </span>
+                    </div>
+                </form>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if g.user != None and g.user.is_authenticated %}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                               aria-haspopup="true"
+                               aria-expanded="false"><span
+                                    class="glyphicon glyphicon-user"></span> {{ g.user.nickname }}<span
+                                    class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ url_for('blog.add') }}"><span class="glyphicon glyphicon-edit"></span>
+                                    Add Blog</a></li>
+                                <li><a href="{{ url_for('user.setting') }}"><span class="glyphicon glyphicon-cog"></span>
+                                    Setting</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="{{ url_for('auth.logout') }}"><span class="glyphicon glyphicon-log-out"></span>
+                                    Logout</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li{% if title == 'reg' %} class="active"{% endif %}><a href="{{ url_for('reg.index') }}"><span
+                                class="glyphicon glyphicon-list-alt"></span> Register</a></li>
+                        <li{% if title == 'login' %} class="active"{% endif %}><a href="{{ url_for('auth.login') }}"><span
+                                class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                    {% endif %}
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </nav>
+{% endmacro %}
+
+
+{% macro render_ground(title) %}
+    {#    <nav class="navbar navbar-default">#}
+    <nav class="page-menu navbar-default" id="menu">
+        <div class="container">
+            <div class="navbar-header">
+            </div>
+            <div class="collapse in" aria-expanded="true">
+                <ul class="nav navbar-nav">
+                    <li{% if title == 'home' %} class="active"{% endif %}><a href="{{ url_for('index') }}"><span
+                            class="glyphicon glyphicon-home"></span> Home</a></li>
+                    <li{% if title == 'about' %} class="active"{% endif %}><a href="{{ url_for('about') }}"><span
+                            class="glyphicon glyphicon-list"></span> About</a></li>
+                    <li{% if title == 'contact' %} class="active"{% endif %}><a href="{{ url_for('contact') }}"><span
+                            class="glyphicon glyphicon-envelope"></span> Contact</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false"><span class="glyphicon glyphicon-book"></span> Blog List <span
+                                class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            {% if title == 'blog_list' %}
+                                <li class="dropdown-header">Blog List</li>{% else %}
+                                <li><a href="{{ url_for('blog.index') }}">Blog List</a></li>{% endif %}
+                            {% if title == 'blog_new' %}
+                                <li class="dropdown-header">Blog New</li>{% else %}
+                                <li><a href="{{ url_for('blog.new') }}">Blog New</a></li>{% endif %}
+                            {% if title == 'blog_hot' %}
+                                <li class="dropdown-header">Blog Hot</li>{% else %}
+                                <li><a href="{{ url_for('blog.hot') }}">Blog Hot</a></li>{% endif %}
+                        </ul>
+                    </li>
+                </ul>
+                <form class="navbar-form navbar-left" role="search" action="{{ url_for('search') }}">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search for..." speech x-webkit-speech
+                               onwebkitspeechchange="$(this).cloest('form').submit()">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                        </span>
+                    </div>
+                </form>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if g.user != None and g.user.is_authenticated %}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                               aria-haspopup="true"
+                               aria-expanded="false"><span
+                                    class="glyphicon glyphicon-user"></span> {{ g.user.nickname }}<span
+                                    class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ url_for('blog.add') }}"><span class="glyphicon glyphicon-edit"></span>
+                                    Add Blog</a></li>
+                                <li><a href="{{ url_for('user.setting') }}"><span class="glyphicon glyphicon-cog"></span>
+                                    Setting</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="{{ url_for('auth.logout') }}"><span class="glyphicon glyphicon-log-out"></span>
+                                    Logout</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li{% if title == 'reg' %} class="active"{% endif %}><a href="{{ url_for('reg.index') }}"><span
+                                class="glyphicon glyphicon-list-alt"></span> Register</a></li>
+                        <li{% if title == 'login' %} class="active"{% endif %}><a href="{{ url_for('auth.login') }}"><span
+                                class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                    {% endif %}
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </nav>
+{% endmacro %}

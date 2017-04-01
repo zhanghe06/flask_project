@@ -1,0 +1,45 @@
+<!-- extend from base layout -->
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="container">
+    <h2 class="sub-header">Blog Hot!</h2>
+    <div class="table-responsive">
+        {# <table class="table table-striped"> #}
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>id</th>
+                <th>author</th>
+                <th>title</th>
+                <th>pub_date</th>
+                <th>action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in pagination.items %}
+            <tr class="text-muted">
+                <td>{{ loop.index }}</td>
+                <td>{{ item.id }}</td>
+                <td>{{ item.author }}</td>
+                <td>{{ item.title }}</td>
+                <td>{{ item.pub_date }}</td>
+                <td>
+                    {# <div class="pull-right"> #}
+                    <a href="#" rel="tooltip" title="收藏"><span class="glyphicon glyphicon-heart-empty"></span>收藏</a>
+                    <a href="#" rel="tooltip" title="支持"><span class="glyphicon glyphicon-thumbs-up"></span>支持</a>
+                    <a href="#" rel="tooltip" title="举报"><span class="glyphicon glyphicon-flag"></span>举报</a>
+                    {# <a href="#"><span class="glyphicon glyphicon-thumbs-down"></span>反对</a> #}
+                    {# </div> #}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {# 翻页 #}
+        {% from "macros.html" import render_pagination %}
+        {{ render_pagination(pagination, 'blog.hot') }}
+    </div>
+    </div>
+{% endblock %}
