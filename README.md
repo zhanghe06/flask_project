@@ -443,6 +443,7 @@ CURRENT_DATE 为 “YYYY-MM-DD”
 生产环境通常 web 与 db 是分开的，时钟往往不同步。
 不同开发人员程序中如果不统一的话，会造成麻烦。
 
+Flask-Moment 本地化日期和时间
 
 [http://momentjs.com/](http://momentjs.com/)
 
@@ -641,6 +642,11 @@ Nginx https 部署
 
 参考: [https.md](https.md)
 
+
+## 上传目录权限设置
+```
+$ chmod 777 /data/uploads
+```
 
 ## 统计代码行数(包含注释)
 
@@ -979,6 +985,35 @@ flask.ext.wtf | flask_wtf
 flask.ext.sqlalchemy | flask_sqlalchemy
 flask.ext.mail | flask_mail
 
+表单里，用 FlaskForm 替代历史版本 Form
+```
+from flask.ext.wtf import Form
+替换为
+from flask_wtf import FlaskForm as Form
+```
+
+
+## 过滤器
+
+注册自定义过滤器
+```
+方式一：
+@app.template_filter('reverse')
+def reverse_filter(s):
+    return s[::-1]
+
+方式二：
+def reverse_filter(s):
+    return s[::-1]
+app.jinja_env.filters['reverse'] = reverse_filter
+```
+
+过滤器使用
+```
+{% for x in mylist | reverse %}
+{% endfor %}
+```
+
 
 ## 用户注册
 
@@ -986,9 +1021,22 @@ flask.ext.mail | flask_mail
 | --- | --- |
 手机号码 | 短信验证码
 邮箱 | 发送带身份信息加密的链接，点击校验通过后即确认身份
+第三方 | oauth
 
 注意：如果需要兼容国际手机号码注册，需要添加国家区号
 
+平台内先注册，后绑定第三方账号
+
+
+## 手机注册
+
+检查手机号码
+检查图形码
+获取短信验证码
+    1、前台页面60S倒计时，60S后恢复
+    2、后台生成短信码 session存储
+    3、发送短信
+提交注册（校验 表单与session 短信验证码）
 
 
 ## 忘记密码
@@ -1044,6 +1092,33 @@ select count(distinct substring(字段,1,结束位置)) from 表
 ```
 
 EXPLAIN 测试SQL执行计划
+
+
+## 基于 redisde 会话管理
+
+登陆成功后，即可看到session信息
+```
+127.0.0.1:6379> keys *
+1) "session:.eJw9kF1vgjAYhf_K0msvsOASTbww1jkMbwmk1bU3RD5caWUoyNAa__uIS8y5PMnz5Jw7Sg5N0So0uzRdMUJJmaPZHb2laIbAZhMgEYZqY8CKnla8D5nxQGc3uhYerMEBZjDV2VhYvwcilcDcBcxxSGJDdV5KkpchiVzBVi7stlpqH0vmX0PiO0C4pYxWYI0n7JAq1oPHEXp1kyxWIVGGDsxwxz2h1VGyaHBFPeBoAhZcsaNHqmHosjl6jFDWNofkUpvi5zVBEo6BDWjsD6rMk-x7TK1UgGMDjA_z-I3q1QS070itNCXGkYv5E3c-J_W-u6imyMvmRdx_xk5G6t_ALjpYen2gF-8hWfSwnLYpzk9pOVX5V1yn7uZUVFsTuB_XoP8ndm3RPA9GLnr8AWDyey8.C58cvw._6DL2RmlQ9oqsw8IlGuX0FvLGts"
+127.0.0.1:6379> type "session:.eJw9kF1vgjAYhf_K0msvsOASTbww1jkMbwmk1bU3RD5caWUoyNAa__uIS8y5PMnz5Jw7Sg5N0So0uzRdMUJJmaPZHb2laIbAZhMgEYZqY8CKnla8D5nxQGc3uhYerMEBZjDV2VhYvwcilcDcBcxxSGJDdV5KkpchiVzBVi7stlpqH0vmX0PiO0C4pYxWYI0n7JAq1oPHEXp1kyxWIVGGDsxwxz2h1VGyaHBFPeBoAhZcsaNHqmHosjl6jFDWNofkUpvi5zVBEo6BDWjsD6rMk-x7TK1UgGMDjA_z-I3q1QS070itNCXGkYv5E3c-J_W-u6imyMvmRdx_xk5G6t_ALjpYen2gF-8hWfSwnLYpzk9pOVX5V1yn7uZUVFsTuB_XoP8ndm3RPA9GLnr8AWDyey8.C58cvw._6DL2RmlQ9oqsw8IlGuX0FvLGts"
+string
+127.0.0.1:6379> get "session:.eJw9kF1vgjAYhf_K0msvsOASTbww1jkMbwmk1bU3RD5caWUoyNAa__uIS8y5PMnz5Jw7Sg5N0So0uzRdMUJJmaPZHb2laIbAZhMgEYZqY8CKnla8D5nxQGc3uhYerMEBZjDV2VhYvwcilcDcBcxxSGJDdV5KkpchiVzBVi7stlpqH0vmX0PiO0C4pYxWYI0n7JAq1oPHEXp1kyxWIVGGDsxwxz2h1VGyaHBFPeBoAhZcsaNHqmHosjl6jFDWNofkUpvi5zVBEo6BDWjsD6rMk-x7TK1UgGMDjA_z-I3q1QS070itNCXGkYv5E3c-J_W-u6imyMvmRdx_xk5G6t_ALjpYen2gF-8hWfSwnLYpzk9pOVX5V1yn7uZUVFsTuB_XoP8ndm3RPA9GLnr8AWDyey8.C58cvw._6DL2RmlQ9oqsw8IlGuX0FvLGts"
+"(dp0\nS'csrf_token'\np1\nS'c44590d3e1d7be4250ff8c88e1b807832939b8ab'\np2\nsS'_fresh'\np3\nI01\nsS'user_id'\np4\nV3\np5\nsS'_id'\np6\nS'3790462bd3606e09982724f80c4196675c2006ace73e684d67bd7b847a171ecf26e2182405353f398c63bdc364b12e4a88d46a9e8b8ee466403d9337ace638b7'\np7\ns."
+127.0.0.1:6379>
+```
+
+
+## 并发测试
+
+flask 自带的 BaseHTTPServer 性能太差，测试过程中，连续刷新10次左右竟然报错
+```
+IOError: [Errno 32] Broken pipe
+```
+
+测试图形验证码并发
+```
+✗ ab -n 1000 -c 100 http://127.0.0.1:8000/captcha/get_code/reg/
+```
 
 
 ## Todo：
