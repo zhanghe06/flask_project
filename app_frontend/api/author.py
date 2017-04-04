@@ -9,8 +9,8 @@
 """
 
 
-from application.models import Author
-from application.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
+from app_frontend.models import Author
+from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
 
 
 def get_author_row_by_id(author_id):

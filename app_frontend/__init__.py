@@ -13,9 +13,9 @@ from flask import Flask
 from logging.config import dictConfig
 from flask_login import LoginManager
 from flask_oauthlib.client import OAuth
-from application.lib.sendcloud import SendCloudClient
-from application.lib.qiniu_store import QiNiuClient
-from application.lib.redis_session import RedisSessionInterface
+from app_frontend.lib.sendcloud import SendCloudClient
+from app_frontend.lib.qiniu_store import QiNiuClient
+from app_frontend.lib.redis_session import RedisSessionInterface
 
 
 app = Flask(__name__)
@@ -80,10 +80,10 @@ if not app.config['DEBUG']:
 
 
 # 这个 import 语句放在这里, 防止views, models import发生循环import
-from application import models, tasks
+from app_frontend import models, tasks
 
 # 导入视图（不使用蓝图的单模式方式）
-from application import views
+from app_frontend import views
 
 # 导入视图（不使用蓝图的多模块方式）
 # from application.views import auth
@@ -93,15 +93,20 @@ from application import views
 # from application.views import user
 
 # 导入蓝图（使用蓝图的多模块方式）
-from application.views.auth import bp_auth
-from application.views.blog import bp_blog
-from application.views.file import bp_file
-from application.views.reg import bp_reg
-from application.views.user import bp_user
+from app_frontend.views.captcha import bp_captcha
+from app_frontend.views.auth import bp_auth
+from app_frontend.views.blog import bp_blog
+from app_frontend.views.file import bp_file
+from app_frontend.views.reg import bp_reg
+from app_frontend.views.user import bp_user
 
 # 注册蓝图
+app.register_blueprint(bp_captcha)
 app.register_blueprint(bp_auth)
 app.register_blueprint(bp_blog)
 app.register_blueprint(bp_file)
 app.register_blueprint(bp_reg)
 app.register_blueprint(bp_user)
+
+# 导入自定义过滤器
+from app_frontend import filters

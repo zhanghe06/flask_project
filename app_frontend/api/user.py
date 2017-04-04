@@ -9,9 +9,9 @@
 """
 
 
-from application.login import LoginUser
-from application.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
-from application.lib.container import Container
+from app_frontend.login import LoginUser
+from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
+from app_frontend.lib.container import Container
 
 
 def get_user_row_by_id(user_id):

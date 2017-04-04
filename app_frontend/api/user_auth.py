@@ -9,8 +9,8 @@
 """
 
 
-from application.models import UserAuth
-from application.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete, update_rows
+from app_frontend.models import UserAuth
+from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete, update_rows
 
 
 def get_user_auth_row_by_id(user_auth_id):
