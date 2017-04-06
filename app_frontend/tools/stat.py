@@ -9,8 +9,8 @@
 """
 
 
-from application.api.blog import get_blog_counter, set_blog_counter, add_blog_stat_item, get_blog_container_status
-from application.api.user import add_user_stat_item
+from app_frontend.api.blog import get_blog_counter, set_blog_counter, add_blog_stat_item, get_blog_container_status
+from app_frontend.api.user import add_user_stat_item
 
 # 定义支持的统计类型
 stat_type_list = [

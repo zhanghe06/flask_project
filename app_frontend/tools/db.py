@@ -12,7 +12,7 @@
 # todo insert ignore
 
 
-from application.database import db
+from app_frontend.database import db
 from sqlalchemy.inspection import inspect
 
 
