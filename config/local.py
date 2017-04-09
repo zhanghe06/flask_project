@@ -19,11 +19,54 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__)+'/../')
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASE_DIR, 'flask.db')
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+# 数据库 MySQL
+DB_MYSQL = {
+    'host': '127.0.0.1',
+    'user': 'www',
+    'passwd': '123456',
+    'port': 3306,
+    'db': 's2c',
+    'charset': 'utf8'
+}
+
+SQLALCHEMY_DATABASE_URI_MYSQL = \
+    'mysql+mysqldb://%s:%s@%s:%s/%s?charset=%s' % \
+    (DB_MYSQL['user'], DB_MYSQL['passwd'], DB_MYSQL['host'], DB_MYSQL['port'], DB_MYSQL['db'], DB_MYSQL['charset'])
+
+
+REDIS = {
+    'host': 'localhost',
+    'port': 6379,
+    'db': 0,
+    'password': None
+}
+
+DB_MONGO = {
+    'host': 'localhost',
+    'port': 27017,
+    'username': '',
+    'password': '',
+    'database': ''
+}
+
+RABBIT_MQ = {
+    'host': 'localhost',
+    'port': 5672
+}
+
+# 验证码类型
+CAPTCHA_ENTITY = [
+    'reg',      # 注册
+    'login',    # 登录
+    'reset'     # 重置密码（找回密码）
+]
+
 CSRF_ENABLED = True
 SECRET_KEY = '\x03\xabjR\xbbg\x82\x0b{\x96f\xca\xa8\xbdM\xb0x\xdbK%\xf2\x07\r\x8c'
 
 # 会话配置
-REMEMBER_COOKIE_DURATION = timedelta(days=14)  # 默认365天
+PERMANENT_SESSION_LIFETIME = timedelta(minutes=20)             # 登录状态保持，默认31天
+REMEMBER_COOKIE_DURATION = timedelta(days=14)   # 记住登录状态，默认365天
 LOGIN_MESSAGE = u'Please log in to access this page.'
 LOGIN_MESSAGE_CATEGORY = 'warning'  # 默认'message'
 
