@@ -372,7 +372,7 @@ def email_check():
     except BadTimeSignature as e:
         # 处理签名错误
         flash(e.message, 'warning')
-    return redirect(url_for('reg'))
+    return redirect(url_for('reg.index'))
 
 
 @app.route('/login/', methods=['GET', 'POST'])
@@ -743,113 +743,7 @@ def order():
     return 'order'
 
 
-# log测试
-@app.route('/test_log/')
-def test_log():
-    """
-    log测试
-    """
-    import logging
-    log = logging.getLogger('app')
-    log.debug('info message')
-    log.info('info message')
-    log.error('error message')
-    return 'log测试'
 
-
-# 缓存测试
-@app.route('/test_cache/')
-def test_cache():
-    """
-    缓存测试
-    5.01s >> 9ms
-    """
-    import time
-    rv = cache.get('my-item')
-    if rv is None:
-        time.sleep(5)
-        rv = 'Hello, Cache!'
-        cache.set('my-item', rv, timeout=5 * 10)
-    return rv
-
-
-# 后台任务测试
-@app.route('/test_send_task/')
-def test_send_task(x=100, y=200):
-    """
-    后台发送任务测试
-    http://localhost:8000/test_send_task/?x=100&y=200
-    """
-    from app.tasks import add, mul, xsum
-
-    x = int(request.args.get('x', x))
-    y = int(request.args.get('y', y))
-
-    add_res = add.delay(x, y)
-    mul_res = mul.delay(x, y)
-    xsum_res = xsum.delay([x, y])
-    result = ''
-    result += '<a href="http://localhost:8000/test_task_add_result/%s/">%s</a><br/>' % (add_res.id, add_res.id)
-    result += '<a href="http://localhost:8000/test_task_mul_result/%s/">%s</a><br/>' % (mul_res.id, mul_res.id)
-    result += '<a href="http://localhost:8000/test_task_xsum_result/%s/">%s</a><br/>' % (xsum_res.id, xsum_res.id)
-    return result
-
-
-@app.route('/test_task_send_get/')
-def test_task_send_get(x=100, y=200):
-    """
-    后台发送任务并获取结果测试
-    http://localhost:8000/test_task_send_get/?x=100&y=200
-    """
-    from app.tasks import add, mul, xsum
-
-    x = int(request.args.get('x', x))
-    y = int(request.args.get('y', y))
-
-    add_res = add.delay(x, y)
-    mul_res = mul.delay(x, y)
-    xsum_res = xsum.delay([x, y])
-    import time
-    time.sleep(0.0005)
-    result = {
-        'add_res': add_res.get(timeout=1.0) if add_res.state == 'SUCCESS' else '...',
-        'mul_res': mul_res.get(timeout=1.0) if mul_res.state == 'SUCCESS' else '...',
-        'xsum_res': xsum_res.get(timeout=1.0) if xsum_res.state == 'SUCCESS' else '...'
-    }
-    return json.dumps(result)
-
-
-@app.route('/test_task_add_result/<task_id>/')
-def test_task_add_result(task_id):
-    """
-    后台任务测试结果
-    http://localhost:8000/test_task_add_result/xxxxxx/
-    """
-    from app.tasks import add, mul, xsum
-    result = add.AsyncResult(task_id).get(timeout=1.0)
-    return repr(result)
-
-
-@app.route('/test_task_mul_result/<task_id>/')
-def test_task_mul_result(task_id):
-    """
-    后台任务测试结果
-    http://localhost:8000/test_task_mul_result/xxxxxx/
-    """
-    from app.tasks import add, mul, xsum
-    result = mul.AsyncResult(task_id).get(timeout=1.0)
-    return repr(result)
-
-
-@app.route('/test_task_xsum_result/<task_id>/')
-def test_task_xsum_result(task_id):
-    """
-    后台任务测试结果
-    http://localhost:8000/test_task_xsum_result/xxxxxx/
-    """
-    from app.tasks import add, mul, xsum
-    result = xsum.AsyncResult(task_id).get(timeout=1.0)
-    return repr(result)
 
 
 def allowed_file(filename):

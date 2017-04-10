@@ -10,5 +10,5 @@
 
 
 from flask_sqlalchemy import SQLAlchemy
-from application import app
+from app_frontend import app
 db = SQLAlchemy(app)

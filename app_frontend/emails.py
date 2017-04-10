@@ -9,7 +9,7 @@
 """
 
 
-from application import app
+from app_frontend import app
 from flask_mail import Mail, Message
 mail = Mail(app)
 

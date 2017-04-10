@@ -8,7 +8,7 @@
 @time: 2016/11/17 下午2:51
 """
 
-from application import app
+from app_frontend import app
 from celery import Celery
 
 

@@ -9,7 +9,7 @@
 """
 
 
-from application.models import User
+from app_frontend.models import User
 from flask_login import UserMixin
 
 
