@@ -5,75 +5,47 @@
     <h1>Sign Up</h1>
 
     {# 表单 #}
-    <form class="form-horizontal" method="post" action="{{ url_for('reg.phone') }}">
+    <form class="form-horizontal" method="post" action="{{ url_for('reg.email') }}">
         {{ form.csrf_token }}
         {# 标签导航 #}
         <div class="form-group">
             <ul class="nav nav-tabs">  {# 填充整个导航条：nav-justified #}
                 <li role="presentation"><a href="{{ url_for('reg.index') }}">Index</a></li>
-                <li role="presentation" class="active"><a href="{{ url_for('reg.phone') }}">Phone</a></li>
-                <li role="presentation"><a href="{{ url_for('reg.email') }}">Email</a></li>
+                <li role="presentation"><a href="{{ url_for('reg.phone') }}">Phone</a></li>
+                <li role="presentation" class="active"><a href="{{ url_for('reg.email') }}">Email</a></li>
             </ul>
         </div>
-
-        <div class="form-group{% if form.area_code.errors %} has-error{% endif %}">
-            {{ form.area_code.label(class="col-sm-2 control-label") }}
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="reg_type">Reg Type</label>
             <div class="col-sm-10">
-                {{ form.area_code() }}
-                {% for error in form.area_code.errors %}
-                    <span class="help-block">{{ error }}</span>
-                {% endfor %}
+                <select class="selectpicker show-tick" data-live-search="true" title="Choose one of the following..." data-header="Select a condiment" id="reg_type">
+                    <optgroup label="Reg Type">
+                        <option value="a" data-subtext="option subtext">Email</option>
+                        <option value="b" data-subtext="option subtext">Phone</option>
+                    </optgroup>
+                    <optgroup label="Third Party">
+                        <option value="c" data-subtext="option subtext">QQ</option>
+                        <option value="d" data-subtext="option subtext">WeChat</option>
+                        <option value="e" data-subtext="option subtext">WeiBo</option>
+                        <option value="f" data-subtext="option subtext">GitHub</option>
+                    </optgroup>
+                </select>
             </div>
         </div>
 
-        <div class="form-group{% if form.phone.errors %} has-error{% endif %}">
-            {{ form.phone.label(class="col-sm-2 control-label") }}
+        <div class="form-group{% if form.email.errors %} has-error{% endif %}">
+            {{ form.email.label(class="col-sm-2 control-label") }}
             <div class="col-sm-10">
-                {{ form.phone(class="form-control", placeholder="Account(phone)", type="tel", maxlength=11) }}
-                {% for error in form.phone.errors %}
+                {{ form.email(class="form-control", placeholder="Account(email)") }}
+                {% for error in form.email.errors %}
                     <span class="help-block">{{ error }}</span>
                 {% endfor %}
             </div>
         </div>
-
-        <div class="form-group{% if form.captcha.errors %} has-error{% endif %}">
-
-            {{ form.captcha.label(class="col-sm-2 col-xs-12 control-label") }}
-
-            <div class="col-sm-8 col-xs-8">
-                {{ form.captcha(class="form-control", placeholder="Captcha", maxlength=4) }}
-                {% for error in form.captcha.errors %}
-                    <span class="help-block">{{ error }}</span>
-                {% endfor %}
-            </div>
-            <div class="col-sm-2 col-xs-2">
-                <img src="{{ url_for('captcha.get_code', code_type='reg') }}" rel="tooltip" title="看不清？换一张" id="captcha_img" onclick="refresh_code();">
-            </div>
-        </div>
-
-        <div class="form-group{% if form.sms.errors %} has-error{% endif %}">
-            {{ form.sms.label(class="col-sm-2 control-label") }}
-            <div class="col-sm-10">
-                <div class="input-group">
-                    {{ form.sms(class="form-control", placeholder="Sms", maxlength=6) }}
-                    <span class="input-group-btn">
-                        <button id="get_sms_btn" class="btn btn-default" type="button" rel="tooltip" title="免费获取短信验证码">
-                            <span class="glyphicon glyphicon-envelope"></span> <i>发送短信</i>
-                        </button>
-                    </span>
-                </div>
-                {% for error in form.sms.errors %}
-                    <span class="help-block">{{ error }}</span>
-                {% endfor %}
-            </div>
-        </div>
-
-
-
         <div class="form-group{% if form.password.errors %} has-error{% endif %}">
             {{ form.password.label(class="col-sm-2 control-label") }}
             <div class="col-sm-10">
-                {{ form.password(class="form-control", placeholder="Password[6-20位]", maxlength=20) }}
+                {{ form.password(class="form-control", placeholder="Password") }}
                 {% for error in form.password.errors %}
                     <span class="help-block">{{ error }}</span>
                 {% endfor %}
@@ -82,7 +54,7 @@
         <div class="form-group{% if form.confirm.errors %} has-error{% endif %}">
             {{ form.confirm.label(class="col-sm-2 control-label") }}
             <div class="col-sm-10">
-                {{ form.confirm(class="form-control", placeholder="Password[6-20位]", maxlength=20) }}
+                {{ form.confirm(class="form-control", placeholder="Password") }}
                 {% for error in form.confirm.errors %}
                     <span class="help-block">{{ error }}</span>
                 {% endfor %}
@@ -92,7 +64,7 @@
             <div class="col-sm-offset-2 col-sm-10">
                 <div class="checkbox">
                     <label>
-                        {{ form.accept_agreement(checked="checked") }} I accept the <a href="#" data-toggle="modal" data-target="#agreement">agreement</a>
+                        {{ form.accept_agreement }} I accept the <a href="#" data-toggle="modal" data-target="#agreement">agreement</a>
                     </label>
                     {% for error in form.accept_agreement.errors %}
                     <span class="help-block">{{ error }}</span>
@@ -155,54 +127,14 @@
 {% block extra_js %}
 <script>
     // 初始化赋值
-    $('#area_code').selectpicker('val', '{{ form.area_code.data }}');
+    $('.selectpicker').selectpicker('val', 'a');
     // 处理选项修改
-    $('#area_code').on('changed.bs.select', function (event, clickedIndex, newValue, oldValue) {
-        console.log($('#area_code').val());
+    $('#reg_type').on('changed.bs.select', function (event, clickedIndex, newValue, oldValue) {
+        console.log($('.selectpicker').val());
         // console.log(event);
         // console.log(clickedIndex);
         // console.log(newValue);
         // console.log(oldValue);
-    });
-    // 刷新验证码
-    function refresh_code() {
-        var now = new Date();
-        $('#captcha_img')[0].setAttribute("src", "{{ url_for('captcha.get_code', code_type='reg') }}" + "?t=" + now.getTime());
-    }
-
-    // 倒计时
-    var countdown=60;
-    function set_time(val) {
-        if (countdown == 0) {
-            val.removeAttr("disabled");
-            val.find("i").first().html("发送短信");
-            countdown = 60;
-            return;
-        } else {
-            val.attr("disabled", true);
-            val.find("i").first().html("重新发送(" + countdown + ")");
-            countdown--;
-        }
-        setTimeout(function () {
-            set_time(val)
-        }, 1000)
-    }
-    // 点击发送手机验证码到手机 - ajax
-    $('#get_sms_btn').click(function () {
-        var phone = $('#phone');
-        var captcha = $('#captcha');
-        // 校验手机号码，图形验证码
-        if(!phone.val()){
-            phone.focus();
-            return;
-        }
-        if(!captcha.val()){
-            captcha.focus();
-            return;
-        }
-        var cur_obj = $(this);
-        $('#sms').focus();
-        set_time(cur_obj);
     });
 </script>
 {% endblock %}

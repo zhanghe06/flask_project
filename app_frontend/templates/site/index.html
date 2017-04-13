@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<!-- .carousel -->
+<div id="myCarousel" class="carousel slide" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+        {% for i in range(6) %}
+            <li data-target="#myCarousel" data-slide-to="{{ i }}"{% if i==0 %} class="active"{% endif %}></li>
+        {% endfor %}
+    </ol>
+
+    <div class="carousel-inner">
+        {% for i in range(1,7) %}
+        <div class="item{% if i==1 %} active{% endif %}">
+            <img class="lazy center-block img-responsive" src="{{ url_for('static', filename='img/load-line.gif') }}" data-src="/static/img/{{ i }}.jpg" alt="{{ loop.index }} slide">
+            <div class="container">
+                <div class="carousel-caption">
+                    <h1>{{ loop.index }} slide</h1>
+                    <div class="visible-lg">
+                        <p><span class="glyphicon glyphicon-map-marker"></span> Address: Level 10, No.700, East Yanan Road, Huangpu District, Shanghai, P. R. China</p>
+                        <p><span class="glyphicon glyphicon-envelope"></span> Email: info@company.com</p>
+                        <p><span class="glyphicon glyphicon-phone-alt"></span> Phone: 021-8888-6666</p>
+                        <p><span class="glyphicon glyphicon-phone"></span> Mobile: 138-1873-2593</p>
+                        <p><a class="btn btn-lg btn-primary" href="#" role="button">Enter Info</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+    </a>
+    <a class="right carousel-control" href="#myCarousel" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+    </a>
+</div><!-- /.carousel -->
+
+{% endblock %}
