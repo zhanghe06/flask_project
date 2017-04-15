@@ -1,0 +1,37 @@
+body {
+    padding-top: 50px;
+    /*padding-bottom: 41px;*/
+    background-color: #f9f9f9
+}
+
+ul#affix_nav_ul.affix {
+    top: 70px; /* Set the top position of pinned element */
+}
+
+/* 防止id定位起始位置被顶部固定导航条遮住 */
+section {
+    padding-top: 70px;
+    margin-top: -70px;
+}
+
+/* 返回顶部 */
+a#top-link {
+    text-decoration: none;
+}
+
+a#top-link:hover {
+    color: #55acee;
+    text-decoration: none;
+}
+
+#top-link-block.affix-top {
+    position: absolute; /* allows it to "slide" up into view */
+    bottom: -82px;
+    right: 10px;
+}
+
+#top-link-block.affix {
+    position: fixed; /* keeps it on the bottom once in view */
+    bottom: 21px;
+    right: 10px;
+}
