@@ -5,3 +5,4 @@
 *.pyc
 #*.log
 .idea/
+data/db_*

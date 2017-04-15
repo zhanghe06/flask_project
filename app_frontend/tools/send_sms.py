@@ -17,24 +17,24 @@ import time
 
 
 # 隧道配置
-SSH_IP = '120.76.40.92'
+SSH_IP = '192.168.2.100'
 SSH_PORT = 22
 SSH_USERNAME = 'root'
-SSH_PASSWORD = 't3#R@r6FrTHK'
+SSH_PASSWORD = '123456'
 
 # DB配置
 DB_MYSQL = {
     'host': '127.0.0.1',
     'user': 'root',
-    'passwd': '..++**//520..',
+    'passwd': '123456',
     'port': 3306,
     'db': 'mm7w'
 }
 
 
 # 短信接口配置
-un = "I6814767"         # 创蓝账号
-pw = "UDqQ1dcvTg2052"   # 创蓝密码
+un = "123456"           # 创蓝账号
+pw = "123456"           # 创蓝密码
 
 
 def get_server_tunnel():
