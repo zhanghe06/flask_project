@@ -61,6 +61,29 @@ CAPTCHA_ENTITY = [
     'reset'     # 重置密码（找回密码）
 ]
 
+
+# 短信接口配置
+SMS = {
+    'UN': '123456',           # 创蓝账号
+    'PW': '123456',           # 创蓝密码
+}
+
+# 隧道配置
+SSH_CONFIG = {
+    'IP': '192.168.2.100',
+    'PORT': 22,
+    'USERNAME': 'root',
+    'PASSWORD': '123456',
+    'DB_MYSQL': {
+        'host': '127.0.0.1',
+        'user': 'root',
+        'passwd': '123456',
+        'port': 3306,
+        'db': 'flask'
+    }
+}
+
+
 CSRF_ENABLED = True
 SECRET_KEY = '\x03\xabjR\xbbg\x82\x0b{\x96f\xca\xa8\xbdM\xb0x\xdbK%\xf2\x07\r\x8c'
 

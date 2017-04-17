@@ -10,14 +10,22 @@
 
 from datetime import datetime
 
-from flask import request, render_template, redirect, url_for, flash
+from flask import request, render_template, redirect, url_for, flash, session
 
 from app_frontend import app
 
 from flask import Blueprint
 
+from app_frontend.lib.sms_chuanglan_iso import SmsChuangLanIsoApi
+from app_frontend.maps import area_code_map
+import json
+
 
 bp_reg = Blueprint('reg', __name__, url_prefix='/reg')
+
+# 短信通道配置
+UN = app.config['SMS']['UN']
+PW = app.config['SMS']['PW']
 
 
 @bp_reg.route('/', methods=['GET', 'POST'])
@@ -239,3 +247,31 @@ def email_check():
         # 处理签名错误
         flash(e.message, 'warning')
     return redirect(url_for('reg.index'))
+
+
+@bp_reg.route('/ajax/get_sms_code/', methods=['GET', 'POST'])
+def ajax_get_sms_code():
+    """
+    校验图形验证码，获取短信验证码
+    :return:
+    """
+    # 校验图形验证码
+    code_str = request.args.get('code_str', '', type=str)
+    code_key = '%s:%s' % ('code_str', 'reg')
+    session_code_str = session.get(code_key, '')
+    if not session_code_str:
+        return json.dumps({'result': False, 'msg': u'图形验证码过期，请刷新后重试'})
+    result_code = code_str.upper() == session_code_str.upper()
+    if result_code is False:
+        return json.dumps({'result': False, 'msg': u'图形验证码错误，请重新提交'})
+    # 获取短信验证码
+    area_id = request.args.get('area_id', '', type=int)
+    area_code = area_code_map.get(area_id, '86')
+    mobile = request.args.get('mobile', '', type=str)
+    mobile_iso = '%s%s' % (area_code, mobile)
+
+    sms_client = SmsChuangLanIsoApi(UN, PW)
+    msg = u'【网站签名】1234，是您注册的验证码'
+    result = sms_client.send_international(mobile_iso, msg)
+    # todo 优先级队列
+    return json.dumps({'result': True})

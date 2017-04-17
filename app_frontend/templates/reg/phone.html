@@ -57,7 +57,7 @@
                 <div class="input-group">
                     {{ form.sms(class="form-control", placeholder="Sms", maxlength=6) }}
                     <span class="input-group-btn">
-                        <button id="get_sms_btn" class="btn btn-default" type="button" rel="tooltip" title="免费获取短信验证码">
+                        <button id="get_sms_btn" class="btn btn-default" type="button">
                             <span class="glyphicon glyphicon-envelope"></span> <i>发送短信</i>
                         </button>
                     </span>
@@ -189,6 +189,7 @@
     }
     // 点击发送手机验证码到手机 - ajax
     $('#get_sms_btn').click(function () {
+        var cur_obj = $(this);
         var phone = $('#phone');
         var captcha = $('#captcha');
         // 校验手机号码，图形验证码
@@ -200,9 +201,26 @@
             captcha.focus();
             return;
         }
-        var cur_obj = $(this);
-        $('#sms').focus();
-        set_time(cur_obj);
+        // 校验图形验证码
+        //console.log(captcha.val());
+        //$.getJSON('{{ url_for('captcha.check_code', code_type='reg') }}',
+        $.getJSON('{{ url_for('reg.ajax_get_sms_code') }}',
+            {
+                code_str: captcha.val()
+            }, function (data) {
+                var result = data.result;  // true/false
+                if(result==false){
+                    //console.log(result);
+                    refresh_code();
+                    captcha.focus();
+                    return false;
+                }else {
+                    $('#sms').focus();
+                    set_time(cur_obj);
+                    // 发送短信验证码
+                }
+            }
+        );
     });
 </script>
 {% endblock %}

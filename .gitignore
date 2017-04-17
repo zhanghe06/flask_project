@@ -6,3 +6,4 @@
 #*.log
 .idea/
 data/db_*
+config/zhanghe.py

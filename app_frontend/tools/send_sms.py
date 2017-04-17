@@ -14,27 +14,22 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from app_frontend.lib.sms_chuanglan_iso import SmsChuangLanIsoApi
 import time
+from config import SSH_CONFIG, SMS
 
 
 # 隧道配置
-SSH_IP = '192.168.2.100'
-SSH_PORT = 22
-SSH_USERNAME = 'root'
-SSH_PASSWORD = '123456'
+SSH_IP = SSH_CONFIG['IP']
+SSH_PORT = SSH_CONFIG['PORT']
+SSH_USERNAME = SSH_CONFIG['USERNAME']
+SSH_PASSWORD = SSH_CONFIG['PASSWORD']
 
 # DB配置
-DB_MYSQL = {
-    'host': '127.0.0.1',
-    'user': 'root',
-    'passwd': '123456',
-    'port': 3306,
-    'db': 'mm7w'
-}
+DB_MYSQL = SSH_CONFIG['DB_MYSQL']
 
 
 # 短信接口配置
-un = "123456"           # 创蓝账号
-pw = "123456"           # 创蓝密码
+UN = SMS['UN']           # 创蓝账号
+PW = SMS['PW']           # 创蓝密码
 
 
 def get_server_tunnel():
@@ -85,7 +80,7 @@ def run_send_sms(server_tunnel=None):
     session = get_db_session(server_tunnel)
     print 'Database session created'
 
-    sms_client = SmsChuangLanIsoApi(un, pw)
+    sms_client = SmsChuangLanIsoApi(UN, PW)
 
     # test data retrieval
     while 1:

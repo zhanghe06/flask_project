@@ -59,5 +59,5 @@ def check_code(code_type):
         abort(404)
     code_str = request.args.get('code_str', '', type=str)
     code_key = '%s:%s' % ('code_str', code_type)
-    return json.dumps({'result': code_str == session[code_key]})
+    return json.dumps({'result': code_str.upper() == session[code_key].upper()})
 

@@ -1637,6 +1637,187 @@ area_code_list = [
 ]
 
 
+area_code_map = {
+    0: '86',  # [CN]中国(China) 亚洲
+    1: '852',  # [HK]中国香港(Hongkong) 亚洲
+    2: '853',  # [MO]中国澳门(Macao) 亚洲
+    3: '886',  # [TW]中国台湾(Taiwan) 亚洲
+    4: '60',  # [MY]马来西亚(Malaysia) 亚洲
+    5: '65',  # [SG]新加坡(Singapore) 亚洲
+    6: '62',  # [ID]印度尼西亚(Indonesia) 亚洲
+    7: '63',  # [PH]菲律宾(Philippines) 亚洲
+    8: '66',  # [TH]泰国(Thailand) 亚洲
+    9: '73',  # [KZ]哈萨克斯坦(Kazakhstan) 亚洲
+    10: '81',  # [JP]日本(Japan) 亚洲
+    11: '82',  # [KR]韩国(Korea) 亚洲
+    12: '84',  # [VN]越南(Vietnam) 亚洲
+    13: '90',  # [TR]土耳其(Turkey) 亚洲
+    14: '91',  # [IN]印度(India) 亚洲
+    15: '92',  # [PK]巴基斯坦(Pakistan) 亚洲
+    16: '93',  # [AF]阿富汗(Afghanistan) 亚洲
+    17: '94',  # [LK]斯里兰卡(Sri Lanka) 亚洲
+    18: '95',  # [MM]缅甸(Burma) 亚洲
+    19: '98',  # [IR]伊朗(Iran) 亚洲
+    20: '374',  # [AM]亚美尼亚(Armenia) 亚洲
+    21: '673',  # [BN]文莱(Brunei) 亚洲
+    22: '855',  # [KH]柬埔寨(Cambodia) 亚洲
+    23: '856',  # [LA]老挝(Laos) 亚洲
+    24: '880',  # [BD]孟加拉国(Bangladesh) 亚洲
+    25: '960',  # [MV]马尔代夫(Maldives) 亚洲
+    26: '961',  # [LB]黎巴嫩(Lebanon) 亚洲
+    27: '962',  # [JO]约旦(Jordan) 亚洲
+    28: '963',  # [SY]叙利亚(Syria) 亚洲
+    29: '964',  # [IQ]伊拉克(Iraq) 亚洲
+    30: '965',  # [KW]科威特(Kuwait) 亚洲
+    31: '966',  # [SA]沙特阿拉伯(Saudi Arabia) 亚洲
+    32: '967',  # [YE]也门(Yemen) 亚洲
+    33: '968',  # [OM]阿曼(Oman) 亚洲
+    34: '971',  # [AE]阿拉伯联合酋长国(Arab Emirates) 亚洲
+    35: '972',  # [IL]以色列(Israel) 亚洲
+    36: '973',  # [BH]巴林(Bahrain) 亚洲
+    37: '974',  # [QA]卡塔尔(Qatar) 亚洲
+    38: '976',  # [MN]蒙古(Mongolia) 亚洲
+    39: '977',  # [NP]尼泊尔(Nepal) 亚洲
+    40: '992',  # [TJ]塔吉克斯坦(Tajikistan) 亚洲
+    41: '993',  # [TM]土库曼斯坦(Turkmenistan) 亚洲
+    42: '994',  # [AZ]阿塞拜疆(Azerbaijan) 亚洲
+    43: '995',  # [GE]格鲁吉亚(Georgia) 亚洲
+    44: '996',  # [KG]吉尔吉斯斯坦(Kyrgyzstan) 亚洲
+    45: '998',  # [UZ]乌兹别克斯坦(Uzbekistan) 亚洲
+    46: '689',  # [PF]法属波利尼西亚(French Polynesia) 太平洋
+    47: '44',  # [GB]英国(United Kiongdom) 欧洲
+    48: '49',  # [DE]德国(Germany) 欧洲
+    49: '7',  # [RU]俄罗斯(Russia) 欧洲
+    50: '30',  # [GR]希腊(Greece) 欧洲
+    51: '31',  # [NL]荷兰(Netherlands) 欧洲
+    52: '32',  # [BE]比利时(Belgium) 欧洲
+    53: '33',  # [FR]法国(France) 欧洲
+    54: '34',  # [ES]西班牙(Spain) 欧洲
+    55: '36',  # [HU]匈牙利(Hungary) 欧洲
+    56: '39',  # [IT]意大利(Italy) 欧洲
+    57: '40',  # [RO]罗马尼亚(Romania) 欧洲
+    58: '41',  # [CH]瑞士(Switzerland) 欧洲
+    59: '43',  # [AT]奥地利(Austria) 欧洲
+    60: '45',  # [DK]丹麦(Denmark) 欧洲
+    61: '46',  # [SE]瑞典(Sweden) 欧洲
+    62: '47',  # [NO]挪威(Norway) 欧洲
+    63: '48',  # [PL]波兰(Poland) 欧洲
+    64: '350',  # [GI]直布罗陀(Gibraltar) 欧洲
+    65: '351',  # [PT]葡萄牙(Portugal) 欧洲
+    66: '352',  # [LU]卢森堡(Luxembourg) 欧洲
+    67: '353',  # [IE]爱尔兰(Ireland) 欧洲
+    68: '354',  # [IS]冰岛(Iceland) 欧洲
+    69: '355',  # [AL]阿尔巴尼亚(Albania) 欧洲
+    70: '356',  # [MT]马耳他(Malta) 欧洲
+    71: '357',  # [CY]塞浦路斯(Cyprus) 欧洲
+    72: '358',  # [FI]芬兰(Finland) 欧洲
+    73: '359',  # [BG]保加利亚(Bulgaria) 欧洲
+    74: '370',  # [LT]立陶宛(Lithuania) 欧洲
+    75: '371',  # [LV]拉脱维亚(Latvia) 欧洲
+    76: '372',  # [EE]爱沙尼亚(Estonia) 欧洲
+    77: '373',  # [MD]摩尔多瓦(Moldova) 欧洲
+    78: '375',  # [BY]白俄罗斯(Belarus) 欧洲
+    79: '377',  # [MC]摩纳哥(Monaco) 欧洲
+    80: '378',  # [SM]圣马力诺(San Marino) 欧洲
+    81: '380',  # [UA]乌克兰(Ukraine) 欧洲
+    82: '386',  # [SI]斯洛文尼亚(Slovenia) 欧洲
+    83: '420',  # [CZ]捷克(Czech) 欧洲
+    84: '421',  # [SK]斯洛伐克(Slovak) 欧洲
+    85: '423',  # [LI]列支敦士登(Liechtenstein) 欧洲
+    86: '51',  # [PE]秘鲁(Peru) 南美洲
+    87: '52',  # [MX]墨西哥(Mexico) 南美洲
+    88: '53',  # [CU]古巴(Cuba) 南美洲
+    89: '54',  # [AR]阿根廷(Argentina) 南美洲
+    90: '55',  # [BR]巴西(Brazil) 南美洲
+    91: '56',  # [CL]智利(Chile) 南美洲
+    92: '57',  # [CO]哥伦比亚(Colombia) 南美洲
+    93: '58',  # [VE]委内瑞拉(Venezuela) 南美洲
+    94: '501',  # [BZ]伯利兹(Belize) 南美洲
+    95: '503',  # [SV]萨尔瓦多(EI Salvador) 南美洲
+    96: '504',  # [HN]洪都拉斯(Honduras) 南美洲
+    97: '505',  # [NI]尼加拉瓜(Nicaragua) 南美洲
+    98: '506',  # [CR]哥斯达黎加(Costa Rica) 南美洲
+    99: '507',  # [PA]巴拿马(Panama) 南美洲
+    100: '509',  # [HT]海地(Haiti) 南美洲
+    101: '591',  # [BO]玻利维亚(Bolivia) 南美洲
+    102: '592',  # [GY]圭亚那(Guyana) 南美洲
+    103: '593',  # [EC]厄瓜多尔(Ecuador) 南美洲
+    104: '594',  # [GF]法属圭亚那(French Guiana) 南美洲
+    105: '595',  # [PY]巴拉圭(Paraguay) 南美洲
+    106: '596',  # [MQ]马提尼克(Martinique) 南美洲
+    107: '597',  # [SR]苏里南(Suriname) 南美洲
+    108: '598',  # [UY]乌拉圭(Uruguay) 南美洲
+    109: '20',  # [EG]埃及(Egypt) 非洲
+    110: '27',  # [ZA]南非(South Africa) 非洲
+    111: '212',  # [MA]摩洛哥(Morocco) 非洲
+    112: '213',  # [DZ]阿尔及利亚(Algeria) 非洲
+    113: '216',  # [TN]突尼斯(Tunisia) 非洲
+    114: '218',  # [LY]利比亚(Libya) 非洲
+    115: '220',  # [GM]冈比亚(Gambia) 非洲
+    116: '221',  # [SN]塞内加尔(Senegal) 非洲
+    117: '223',  # [ML]马里(Mali) 非洲
+    118: '224',  # [GN]几内亚(Guinea) 非洲
+    119: '225',  # [CI]科特迪瓦(Ivory Coast) 非洲
+    120: '226',  # [BF]布基纳法索(Burkina Faso) 非洲
+    121: '227',  # [NE]尼日尔(Niger) 非洲
+    122: '228',  # [TG]多哥(Togo) 非洲
+    123: '229',  # [BJ]贝宁(Benin) 非洲
+    124: '230',  # [MU]毛里求斯(Mauritius) 非洲
+    125: '231',  # [LR]利比里亚(Liberia) 非洲
+    126: '232',  # [SL]塞拉利昂(Sierra Leone) 非洲
+    127: '233',  # [GH]加纳(Ghana) 非洲
+    128: '234',  # [NG]尼日利亚(Nigeria) 非洲
+    129: '235',  # [TD]乍得(Chad) 非洲
+    130: '236',  # [CF]中非共和国(Central Africa) 非洲
+    131: '237',  # [CM]喀麦隆(Cameroon) 非洲
+    132: '239',  # [ST]圣多美和普林西比(Sao Tome and Principe) 非洲
+    133: '241',  # [GA]加蓬(Gabon) 非洲
+    134: '243',  # [CG]刚果民主共和国(Congo) 非洲
+    135: '244',  # [AO]安哥拉(Angola) 非洲
+    136: '248',  # [SC]塞舌尔(Seychelles) 非洲
+    137: '249',  # [SD]苏丹(Sudan) 非洲
+    138: '251',  # [ET]埃塞俄比亚(Ethiopia) 非洲
+    139: '252',  # [SO]索马里(Somali) 非洲
+    140: '253',  # [DJ]吉布提(Djibouti) 非洲
+    141: '254',  # [KE]肯尼亚(Kenya) 非洲
+    142: '255',  # [TZ]坦桑尼亚(Tanzania) 非洲
+    143: '256',  # [UG]乌干达(Uganda) 非洲
+    144: '257',  # [BI]布隆迪(Burundi) 非洲
+    145: '258',  # [MZ]莫桑比克(Mozambique) 非洲
+    146: '260',  # [ZM]赞比亚(Zambia) 非洲
+    147: '261',  # [MG]马达加斯加(Madagascar) 非洲
+    148: '263',  # [ZW]津巴布韦(Zimbabwe) 非洲
+    149: '264',  # [nan]纳米比亚(Namibia) 非洲
+    150: '265',  # [MW]马拉维(Malawi) 非洲
+    151: '266',  # [LS]莱索托(Lesotho) 非洲
+    152: '267',  # [BW]博茨瓦纳(Botswana) 非洲
+    153: '268',  # [SZ]斯威士兰(Swaziland) 非洲
+    154: '61',  # [AU]澳大利亚(Australia) 大洋洲
+    155: '64',  # [NZ]新西兰(New Zealand) 大洋洲
+    156: '675',  # [PG]巴布亚新几内亚(Papua New Guinea) 大洋洲
+    157: '676',  # [TO]汤加(Tonga) 大洋洲
+    158: '677',  # [SB]所罗门群岛(Solomon Is) 大洋洲
+    159: '679',  # [FJ]斐济(Fiji) 大洋洲
+    160: '682',  # [CK]库克群岛(Cook Islands) 大洋洲
+    161: '1671',  # [GU]关岛(Guam) 大洋洲
+    162: '1441',  # [BM]百慕大群岛(Bermuda) 大西洋
+    163: '1',  # [US]美国(America) 北美洲
+    164: '1',  # [CA]加拿大(Canada) 北美洲
+    165: '502',  # [GT]瓜地马拉(Guatemala) 北美洲
+    166: '1242',  # [BS]巴哈马(Bahamas) 北美洲
+    167: '1246',  # [BB]巴巴多斯(Barbados) 北美洲
+    168: '1264',  # [AI]安圭拉岛(Anguilla) 北美洲
+    169: '1268',  # [AG]安提瓜和巴布达(Antigua and Barbuda) 北美洲
+    170: '1345',  # [KY]开曼群岛(Cayman Islands) 北美洲
+    171: '1473',  # [GD]格林纳达(Grenada) 北美洲
+    172: '1758',  # [LC]圣卢西亚(Saint Lucia) 北美洲
+    173: '1787',  # [PR]波多黎各(Puerto Rico) 北美洲
+    174: '1809',  # [DO]多米尼加共和国(Dominican) 北美洲
+    175: '1868',  # [TT]特立尼达和多巴哥(Trinidad and Tobago) 北美洲
+    176: '1876',  # [JM]牙买加(Jamaica) 北美洲
+}
+
+
 if __name__ == '__main__':
     # html = ['<select>']
     # for area_data in area_code_list:
