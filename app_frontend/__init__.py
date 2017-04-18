@@ -12,6 +12,7 @@
 from flask import Flask
 from logging.config import dictConfig
 from flask_login import LoginManager
+from flask_moment import Moment
 from flask_oauthlib.client import OAuth
 from app_frontend.lib.sendcloud import SendCloudClient
 from app_frontend.lib.qiniu_store import QiNiuClient
@@ -27,6 +28,9 @@ login_manager.init_app(app)  # setup_app 方法已淘汰
 login_manager.login_view = 'auth.login'
 # login_manager.login_message = 'Please log in to access this page.'  # 设置登陆提示消息
 login_manager.login_message_category = 'info'  # 设置消息分类
+
+# Moment 时间插件
+moment = Moment(app)
 
 # SendCloud 邮件
 send_cloud_client = SendCloudClient(app)

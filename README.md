@@ -99,10 +99,19 @@ $ pip install Flask-Mail
 $ pip install Flask-SQLAlchemy
 $ pip install Flask-WTF
 $ pip install Flask-OAuthlib
+$ pip install Flask-Excel
+$ pip install Flask-Moment
 $ pip install sqlacodegen
 $ pip install gunicorn
+$ pip install schedule
 $ pip install supervisor
 $ pip install redis
+$ pip install requests
+$ pip install celery
+$ pip install librabbitmq
+$ pip install Pillow
+$ pip install sshtunnel
+$ pip install MySQL-python
 $ pip freeze > requirements.txt
 ```
 
@@ -445,6 +454,8 @@ CURRENT_DATE 为 “YYYY-MM-DD”
 
 Flask-Moment 本地化日期和时间
 
+https://github.com/miguelgrinberg/Flask-Moment
+
 [http://momentjs.com/](http://momentjs.com/)
 
 
@@ -500,6 +511,12 @@ Flask-Login 扩展需要在我们 model 的 User 类里实现一些方法。：
 ### LightBox 插件
 
 参考: [LightBox.md](LightBox.md)
+
+
+## Flask-Excel
+
+http://flask-excel.readthedocs.io/en/latest/
+
 
 
 ## 部署方案( Nginx + Gunicorn + Supervisor )
