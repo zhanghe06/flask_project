@@ -16,22 +16,42 @@ DEBUG = True
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__)+'/../')
 
-SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASE_DIR, 'flask.db')
-SQLALCHEMY_TRACK_MODIFICATIONS = False
-
 # 数据库 MySQL
 DB_MYSQL = {
     'host': '127.0.0.1',
     'user': 'www',
     'passwd': '123456',
     'port': 3306,
-    'db': 's2c',
+    'db': 'flask',
     'charset': 'utf8'
 }
 
 SQLALCHEMY_DATABASE_URI_MYSQL = \
     'mysql+mysqldb://%s:%s@%s:%s/%s?charset=%s' % \
     (DB_MYSQL['user'], DB_MYSQL['passwd'], DB_MYSQL['host'], DB_MYSQL['port'], DB_MYSQL['db'], DB_MYSQL['charset'])
+
+# 数据库 PostgreSQL
+DB_PG = {
+    'host': '127.0.0.1',
+    'user': 'postgres',
+    'password': 'postgres',  # 可修改 \password
+    'port': 5432,
+    'database': 'test'
+}
+
+SQLALCHEMY_DATABASE_URI_PG = \
+    'postgresql://%s:%s@%s:%s/%s' % \
+    (DB_PG['user'], DB_PG['password'], DB_PG['host'], DB_PG['port'], DB_PG['database'])
+
+# 数据库 SQLite
+DB_SQLITE = os.path.join(BASE_DIR, 'db/data/flask.db')
+
+SQLALCHEMY_DATABASE_URI_SQLITE = 'sqlite:///' + DB_SQLITE
+
+
+SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI_MYSQL
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+SQLALCHEMY_POOL_SIZE = 5  # 默认 pool_size=5
 
 
 REDIS = {
