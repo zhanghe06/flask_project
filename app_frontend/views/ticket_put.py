@@ -4,14 +4,14 @@
 """
 @author: zhanghe
 @software: PyCharm
-@file: apply_get.py
-@time: 2017/4/13 下午9:32
+@file: ticket_put.py
+@time: 2017/4/18 上午9:46
 """
 
 
 def add():
     """
-    创建提现申请
+    创建付款单
     :return:
     """
     pass
@@ -19,7 +19,7 @@ def add():
 
 def delete():
     """
-    删除提现申请
+    删除付款单
     :return:
     """
     pass

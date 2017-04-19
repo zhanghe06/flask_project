@@ -9,13 +9,20 @@
 """
 
 
-def func():
+def add():
+    """
+    创建投资申请
+    :return:
+    """
     pass
 
 
-class Main(object):
-    def __init__(self):
-        pass
+def delete():
+    """
+    删除投资申请
+    :return:
+    """
+    pass
 
 
 if __name__ == '__main__':
