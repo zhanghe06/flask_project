@@ -29,7 +29,7 @@
         <div class="form-group{% if form.phone.errors %} has-error{% endif %}">
             {{ form.phone.label(class="col-sm-2 control-label") }}
             <div class="col-sm-10">
-                {{ form.phone(class="form-control", placeholder="Account(phone)", type="tel", maxlength=11) }}
+                {{ form.phone(class="form-control", placeholder="Phone", type="tel", maxlength=11) }}
                 {% for error in form.phone.errors %}
                     <span class="help-block">{{ error }}</span>
                 {% endfor %}

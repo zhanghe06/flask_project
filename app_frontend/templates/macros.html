@@ -104,7 +104,7 @@
                     {% else %}
                         <li{% if title == 'reg' %} class="active"{% endif %}><a href="{{ url_for('reg.index') }}"><span
                                 class="glyphicon glyphicon-list-alt"></span> Register</a></li>
-                        <li{% if title == 'login' %} class="active"{% endif %}><a href="{{ url_for('auth.login') }}"><span
+                        <li{% if title == 'login' %} class="active"{% endif %}><a href="{{ url_for('auth.index') }}"><span
                                 class="glyphicon glyphicon-log-in"></span> Login</a></li>
                     {% endif %}
                 </ul>
@@ -175,7 +175,7 @@
                     {% else %}
                         <li{% if title == 'reg' %} class="active"{% endif %}><a href="{{ url_for('reg.index') }}"><span
                                 class="glyphicon glyphicon-list-alt"></span> Register</a></li>
-                        <li{% if title == 'login' %} class="active"{% endif %}><a href="{{ url_for('auth.login') }}"><span
+                        <li{% if title == 'login' %} class="active"{% endif %}><a href="{{ url_for('auth.index') }}"><span
                                 class="glyphicon glyphicon-log-in"></span> Login</a></li>
                     {% endif %}
                 </ul>

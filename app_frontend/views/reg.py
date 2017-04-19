@@ -42,7 +42,7 @@ def index():
 
             current_time = datetime.utcnow()
             user_data = {
-                'email': form.email.data,
+                'email': form.account.data,
                 'create_time': current_time,
                 'update_time': current_time,
                 'last_ip': request.headers.get('X-Forwarded-For', request.remote_addr)
@@ -146,8 +146,8 @@ def email():
     邮箱注册
     """
     # return "Hello, World!\nReg!"
-    from app_frontend.forms.reg import RegForm
-    form = RegForm()
+    from app_frontend.forms.reg import RegEmailForm
+    form = RegEmailForm()
     if request.method == 'POST':
         if form.validate_on_submit():
             # 添加用户信息

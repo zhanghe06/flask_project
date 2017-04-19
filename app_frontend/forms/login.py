@@ -15,24 +15,28 @@ from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email
 from app_frontend.api.user_auth import get_user_auth_row
 
 
-def reg_email_repeat(form, field):
-    """
-    邮箱重复校验
-    """
-    condition = {
-        'auth_type': 'email',
-        'auth_key': field.data
-    }
-    row = get_user_auth_row(**condition)
-    if row:
-        raise ValidationError(u'注册邮箱重复')
-
-
 class LoginForm(Form):
     """
-    登陆表单
+    账号登陆表单
     """
-    email = StringField('Account(Email)', validators=[DataRequired(), Email()])
+    account = StringField('Account', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember Me', default=False)
 
+
+class LoginPhoneForm(Form):
+    """
+    手机登陆表单
+    """
+    phone = StringField('Phone', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember = BooleanField('Remember Me', default=False)
+
+
+class LoginEmailForm(Form):
+    """
+    邮箱登陆表单
+    """
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember = BooleanField('Remember Me', default=False)

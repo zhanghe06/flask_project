@@ -24,6 +24,9 @@ except ImportError:
 import re
 from app_frontend.maps import area_code_list
 
+from app_frontend.maps.auth_type import *
+# 认证类型（0未知，1邮箱，2手机，3qq，4微信，5微博）
+
 
 def select_multi_checkbox(field, ul_class='', **kwargs):
     """
@@ -93,12 +96,25 @@ class SelectBS(SelectField):
             raise ValueError(self.gettext('Not a valid choice'))
 
 
+def reg_account_repeat(form, field):
+    """
+    账号重复校验
+    """
+    condition = {
+        'auth_type': AUTH_TYPE_ACCOUNT,
+        'auth_key': field.data
+    }
+    row = get_user_auth_row(**condition)
+    if row:
+        raise ValidationError(u'注册账号重复')
+
+
 def reg_email_repeat(form, field):
     """
     邮箱重复校验
     """
     condition = {
-        'auth_type': 'email',
+        'auth_type': AUTH_TYPE_EMAIL,
         'auth_key': field.data
     }
     row = get_user_auth_row(**condition)
@@ -139,7 +155,7 @@ def reg_phone_repeat(form, field):
     手机重复校验
     """
     condition = {
-        'auth_type': 'phone',
+        'auth_type': AUTH_TYPE_PHONE,
         'auth_key': field.data
     }
     row = get_user_auth_row(**condition)
@@ -151,7 +167,7 @@ class RegForm(Form):
     """
     注册表单
     """
-    email = StringField('Account(Email)', validators=[DataRequired(), Email(), reg_email_repeat])
+    account = StringField('Account', validators=[DataRequired(), Email(), reg_account_repeat])
     password = PasswordField('New Password', validators=[
         DataRequired(),
         Length(min=6, max=40),
@@ -161,11 +177,6 @@ class RegForm(Form):
         DataRequired(),
         Length(min=6, max=40)
     ])
-    area_code_choices = []
-    for m, n in enumerate(area_code_list):
-        area_code_choices.append((m, n))
-
-    area_code = SelectBS('Area Code', default='0', choices=area_code_choices, validators=[DataRequired()])
     accept_agreement = BooleanField('I accept the agreement', validators=[DataRequired()], default=False)
 
 
@@ -203,7 +214,7 @@ class RegEmailForm(Form):
     """
     邮箱注册表单
     """
-    email = StringField('Account(Email)', validators=[DataRequired(), Email(), reg_email_repeat])
+    email = StringField('Email', validators=[DataRequired(), Email(), reg_email_repeat])
     password = PasswordField('New Password', validators=[
         DataRequired(),
         Length(min=6, max=40),

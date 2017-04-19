@@ -15,29 +15,12 @@
                 <li role="presentation"><a href="{{ url_for('reg.email') }}">Email</a></li>
             </ul>
         </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label" for="reg_type">Reg Type</label>
-            <div class="col-sm-10">
-                <select class="selectpicker show-tick" data-live-search="true" title="Choose one of the following..." data-header="Select a condiment" id="reg_type">
-                    <optgroup label="Reg Type">
-                        <option value="a" data-subtext="option subtext">Email</option>
-                        <option value="b" data-subtext="option subtext">Phone</option>
-                    </optgroup>
-                    <optgroup label="Third Party">
-                        <option value="c" data-subtext="option subtext">QQ</option>
-                        <option value="d" data-subtext="option subtext">WeChat</option>
-                        <option value="e" data-subtext="option subtext">WeiBo</option>
-                        <option value="f" data-subtext="option subtext">GitHub</option>
-                    </optgroup>
-                </select>
-            </div>
-        </div>
 
-        <div class="form-group{% if form.email.errors %} has-error{% endif %}">
-            {{ form.email.label(class="col-sm-2 control-label") }}
+        <div class="form-group{% if form.account.errors %} has-error{% endif %}">
+            {{ form.account.label(class="col-sm-2 control-label") }}
             <div class="col-sm-10">
-                {{ form.email(class="form-control", placeholder="Account(email)") }}
-                {% for error in form.email.errors %}
+                {{ form.account(class="form-control", placeholder="Account") }}
+                {% for error in form.account.errors %}
                     <span class="help-block">{{ error }}</span>
                 {% endfor %}
             </div>

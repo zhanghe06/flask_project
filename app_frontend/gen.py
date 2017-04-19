@@ -11,9 +11,8 @@
 
 import os
 import sys
-from app_frontend import app
-BASE_DIR = app.config['BASE_DIR']
-SQLALCHEMY_DATABASE_URI = app.config['SQLALCHEMY_DATABASE_URI']
+from config import BASE_DIR, SQLALCHEMY_DATABASE_URI
+print SQLALCHEMY_DATABASE_URI
 
 
 def create_models():
@@ -34,19 +33,19 @@ def create_models():
 
     with open(file_path, 'w') as f:
         # 替换 model 关键内容
-        lines[3] = 'from database import db\n'
-        lines[6] = 'Base = db.Model\n'
+        lines[2] = 'from database import db\n'
+        lines[5] = 'Base = db.Model\n'
         # 新增 model 转 dict 方法
 
-        lines.insert(10, 'def to_dict(self):\n')
-        lines.insert(11, '    """\n')
-        lines.insert(12, '    model 对象转 字典\n')
-        lines.insert(13, '    model_obj.to_dict()\n')
-        lines.insert(14, '    """\n')
-        lines.insert(15, '    return {c.name: getattr(self, c.name, None) for c in self.__table__.columns}\n')
-        lines.insert(16, '\n')
-        lines.insert(17, 'Base.to_dict = to_dict\n')
-        lines.insert(18, '\n\n')
+        lines.insert(9, 'def to_dict(self):\n')
+        lines.insert(10, '    """\n')
+        lines.insert(11, '    model 对象转 字典\n')
+        lines.insert(12, '    model_obj.to_dict()\n')
+        lines.insert(13, '    """\n')
+        lines.insert(14, '    return {c.name: getattr(self, c.name, None) for c in self.__table__.columns}\n')
+        lines.insert(15, '\n')
+        lines.insert(16, 'Base.to_dict = to_dict\n')
+        lines.insert(17, '\n\n')
         f.write(''.join(lines))
 
 

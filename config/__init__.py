@@ -38,6 +38,8 @@ elif config_env == 'test':
     from test import *
 elif config_env == 'dev':
     from dev import *
+elif config_env == 'zhanghe':
+    from zhanghe import *
 else:
     from local import *
 
