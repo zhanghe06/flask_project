@@ -9,14 +9,14 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `nickname` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '用户名称',
-  `avatar_url` VARCHAR(60) NOT NULL DEFAULT '' COMMENT '用户头像',
+  `avatar_url` VARCHAR(60) COMMENT '用户头像',
   `email` VARCHAR(60) NOT NULL DEFAULT '' COMMENT '电子邮箱',
   `area_code` VARCHAR(4) NOT NULL DEFAULT '' COMMENT '国家区号',
   `phone` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '手机号码',
-  `birthday` DATE NOT NULL DEFAULT '0000-00-00' COMMENT '生日',
+  `birthday` DATE COMMENT '生日',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `last_ip` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '最后一次登录IP',
+  `last_ip` VARCHAR(20) COMMENT '最后一次登录IP',
   PRIMARY KEY (`id`),
   UNIQUE (`area_code`, `phone`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户信息表';
@@ -26,7 +26,7 @@ DROP TABLE IF EXISTS `user_auth`;
 CREATE TABLE `user_auth` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `user_id` INT NOT NULL DEFAULT '0' COMMENT '用户ID',
-  `auth_type` TINYINT NOT NULL DEFAULT '0' COMMENT '认证类型（0未知，1邮箱，2手机，3qq，4微信，5微博）',
+  `auth_type` TINYINT NOT NULL DEFAULT '0' COMMENT '认证类型（0账号，1邮箱，2手机，3qq，4微信，5微博）',
   `auth_key` VARCHAR(60) NOT NULL DEFAULT '' COMMENT '授权账号（如果是手机，国家区号+手机号码;第三方登陆，这里是openid）',
   `auth_secret` VARCHAR(60) NOT NULL DEFAULT '' COMMENT '密码凭证（密码;token）',
   `status_verified` TINYINT NOT NULL DEFAULT '0' COMMENT '认证状态（0未认证，1已认证）',
@@ -217,7 +217,7 @@ CREATE TABLE `admin` (
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `last_login_time` TIMESTAMP COMMENT '最后一次登录时间',
-  `last_ip` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '最后一次登录IP',
+  `last_ip` VARCHAR(20) COMMENT '最后一次登录IP',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='后台用户信息表';
 
