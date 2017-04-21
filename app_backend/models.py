@@ -21,10 +21,13 @@ class Admin(Base):
     __tablename__ = 'admin'
 
     id = Column(Integer, primary_key=True)
-    username = Column(String(20), nullable=False, server_default=text("''"))
+    username = Column(String(20), nullable=False, unique=True, server_default=text("''"))
     password = Column(String(60), nullable=False, server_default=text("''"))
     area_code = Column(String(4), nullable=False, server_default=text("''"))
     phone = Column(String(20), nullable=False, server_default=text("''"))
+    role = Column(Integer, nullable=False, server_default=text("'0'"))
+    status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
+    delete_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
     last_login_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))
@@ -71,6 +74,20 @@ class AreaCode(Base):
     name_c = Column(String(20), nullable=False, server_default=text("''"))
     name_e = Column(String(20), nullable=False, server_default=text("''"))
     country_area = Column(String(20), nullable=False, server_default=text("''"))
+    create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
+    update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+
+
+class Credit(Base):
+    __tablename__ = 'credit'
+
+    user_id = Column(Integer, primary_key=True)
+    behavior = Column(Numeric(3, 0), nullable=False, server_default=text("'0'"))
+    characteristics = Column(Numeric(3, 0), nullable=False, server_default=text("'0'"))
+    connections = Column(Numeric(3, 0), nullable=False, server_default=text("'0'"))
+    history = Column(Numeric(3, 0), nullable=False, server_default=text("'0'"))
+    performance = Column(Numeric(3, 0), nullable=False, server_default=text("'0'"))
+    credit = Column(Numeric(3, 0), nullable=False, server_default=text("'0'"))
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 

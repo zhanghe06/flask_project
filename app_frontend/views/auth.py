@@ -55,7 +55,7 @@ def index():
             edit_user(user_auth_info.user_id, {'last_ip': request.headers.get('X-Forwarded-For', request.remote_addr)})
             # 用 login_user 函数来登入他们
             from app_frontend.api.user import get_user_row_by_id
-            login_user(get_user_row_by_id(user_auth_info.user_id))
+            login_user(get_user_row_by_id(user_auth_info.user_id), remember=form.remember)
             flash(u'%s, You were logged in' % form.account.data, 'success')
             return redirect(request.args.get('next') or url_for('index'))
         flash(form.errors, 'warning')  # 调试打开
@@ -92,7 +92,7 @@ def phone():
             edit_user(user_auth_info.user_id, {'last_ip': request.headers.get('X-Forwarded-For', request.remote_addr)})
             # 用 login_user 函数来登入他们
             from app_frontend.api.user import get_user_row_by_id
-            login_user(get_user_row_by_id(user_auth_info.user_id))
+            login_user(get_user_row_by_id(user_auth_info.user_id), remember=form.remember)
             flash(u'%s, You were logged in' % form.phone.data, 'success')
             return redirect(request.args.get('next') or url_for('index'))
         flash(form.errors, 'warning')  # 调试打开
@@ -129,7 +129,7 @@ def email():
             edit_user(user_auth_info.user_id, {'last_ip': request.headers.get('X-Forwarded-For', request.remote_addr)})
             # 用 login_user 函数来登入他们
             from app_frontend.api.user import get_user_row_by_id
-            login_user(get_user_row_by_id(user_auth_info.user_id))
+            login_user(get_user_row_by_id(user_auth_info.user_id), remember=form.remember)
             flash(u'%s, You were logged in' % form.email.data, 'success')
             return redirect(request.args.get('next') or url_for('index'))
         flash(form.errors, 'warning')  # 调试打开

@@ -214,11 +214,15 @@ CREATE TABLE `admin` (
   `password` VARCHAR(60) NOT NULL DEFAULT '' COMMENT '用户密码',
   `area_code` VARCHAR(4) NOT NULL DEFAULT '' COMMENT '国家区号',
   `phone` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '手机号码',
+  `role` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '角色:0:普通，1:高级，2:系统',
+  `status_delete` TINYINT NOT NULL DEFAULT '0' COMMENT '删除状态（0未删除，1已删除）',
+  `delete_time` TIMESTAMP COMMENT '删除时间',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `last_login_time` TIMESTAMP COMMENT '最后一次登录时间',
   `last_ip` VARCHAR(20) COMMENT '最后一次登录IP',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='后台用户信息表';
 
 

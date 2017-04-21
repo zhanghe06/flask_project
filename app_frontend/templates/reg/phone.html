@@ -203,7 +203,6 @@
         }
         // 校验图形验证码
         //console.log(captcha.val());
-        //$.getJSON('{{ url_for('captcha.check_code', code_type='reg') }}',
         $.getJSON('{{ url_for('reg.ajax_get_sms_code') }}',
             {
                 code_str: captcha.val()
@@ -217,7 +216,6 @@
                 }else {
                     $('#sms').focus();
                     set_time(cur_obj);
-                    // 发送短信验证码
                 }
             }
         );

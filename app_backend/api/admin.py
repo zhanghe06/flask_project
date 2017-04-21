@@ -9,7 +9,7 @@
 """
 
 
-from app_backend.models import Admin
+from app_backend.login import LoginUser
 from app_backend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete, update_rows
 
 
@@ -19,7 +19,7 @@ def get_admin_row_by_id(user_auth_id):
     :param user_auth_id:
     :return: None/object
     """
-    return get_row_by_id(Admin, user_auth_id)
+    return get_row_by_id(LoginUser, user_auth_id)
 
 
 def get_admin_row(*args, **kwargs):
@@ -29,7 +29,7 @@ def get_admin_row(*args, **kwargs):
     :param kwargs:
     :return: None/object
     """
-    return get_row(Admin, *args, **kwargs)
+    return get_row(LoginUser, *args, **kwargs)
 
 
 def add_admin(user_auth_data):
@@ -38,7 +38,7 @@ def add_admin(user_auth_data):
     :param user_auth_data:
     :return: None/Value of user.id
     """
-    return add(Admin, user_auth_data)
+    return add(LoginUser, user_auth_data)
 
 
 def edit_admin(user_auth_id, user_auth_data):
@@ -48,7 +48,7 @@ def edit_admin(user_auth_id, user_auth_data):
     :param user_auth_data:
     :return: Number of affected rows (Example: 0/1)
     """
-    return edit(Admin, user_auth_id, user_auth_data)
+    return edit(LoginUser, user_auth_id, user_auth_data)
 
 
 def delete_admin(user_auth_id):
@@ -57,7 +57,7 @@ def delete_admin(user_auth_id):
     :param user_auth_id:
     :return: Number of affected rows (Example: 0/1)
     """
-    return delete(Admin, user_auth_id)
+    return delete(LoginUser, user_auth_id)
 
 
 def get_admin_rows(page=1, per_page=10, *args, **kwargs):
@@ -77,7 +77,7 @@ def get_admin_rows(page=1, per_page=10, *args, **kwargs):
     :param kwargs:
     :return:
     """
-    rows = get_rows(Admin, page, per_page, *args, **kwargs)
+    rows = get_rows(LoginUser, page, per_page, *args, **kwargs)
     return rows
 
 
@@ -85,4 +85,4 @@ def update_admin_rows(data, *args, **kwargs):
     """
     批量更新用户信息
     """
-    return update_rows(Admin, data, *args, **kwargs)
+    return update_rows(LoginUser, data, *args, **kwargs)

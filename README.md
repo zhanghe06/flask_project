@@ -458,6 +458,11 @@ https://github.com/miguelgrinberg/Flask-Moment
 
 [http://momentjs.com/](http://momentjs.com/)
 
+例子
+```
+{{ moment().fromNow(refresh=True).format('LLLL') }}
+```
+
 
 ### 用户登陆
 
