@@ -11,17 +11,17 @@
 
 import os
 import sys
-from app import app
-BASE_DIR = app.config['BASE_DIR']
-SQLALCHEMY_DATABASE_URI = app.config['SQLALCHEMY_DATABASE_URI']
+from config import BASE_DIR, SQLALCHEMY_DATABASE_URI
+print SQLALCHEMY_DATABASE_URI
 
 
-def create_models():
+def create_models(app_name='app_frontend'):
     """
     创建 model
     $ python gen.py gen_models
     """
-    file_path = os.path.join(BASE_DIR, 'app/models.py')
+    file_path = os.path.join(BASE_DIR, '%s/models.py' % app_name)
+    print file_path
     cmd = 'sqlacodegen %s --outfile %s' % (SQLALCHEMY_DATABASE_URI, file_path)
 
     output = os.popen(cmd)
@@ -34,52 +34,20 @@ def create_models():
 
     with open(file_path, 'w') as f:
         # 替换 model 关键内容
-        lines[3] = 'from database import db\n'
-        lines[6] = 'Base = db.Model\n'
+        lines[2] = 'from database import db\n'
+        lines[5] = 'Base = db.Model\n'
         # 新增 model 转 dict 方法
 
-        lines.insert(10, 'def to_dict(self):\n')
-        lines.insert(11, '    """\n')
-        lines.insert(12, '    model 对象转 字典\n')
-        lines.insert(13, '    model_obj.to_dict()\n')
-        lines.insert(14, '    """\n')
-        lines.insert(15, '    return {c.name: getattr(self, c.name, None) for c in self.__table__.columns}\n')
-        lines.insert(16, '\n')
-        lines.insert(17, 'Base.to_dict = to_dict\n')
-        lines.insert(18, '\n\n')
+        lines.insert(9, 'def to_dict(self):\n')
+        lines.insert(10, '    """\n')
+        lines.insert(11, '    model 对象转 字典\n')
+        lines.insert(12, '    model_obj.to_dict()\n')
+        lines.insert(13, '    """\n')
+        lines.insert(14, '    return {c.name: getattr(self, c.name, None) for c in self.__table__.columns}\n')
+        lines.insert(15, '\n')
+        lines.insert(16, 'Base.to_dict = to_dict\n')
+        lines.insert(17, '\n\n')
         f.write(''.join(lines))
-
-
-def create_db():
-    """
-    建库 建表
-    $ python gen.py create_db
-    """
-    # 初始化数据库
-    cmd = 'sqlite3 %s < %s' % (os.path.join(BASE_DIR, 'flask.db'), os.path.join(BASE_DIR, 'schema.sql'))
-    print cmd
-    output = os.popen(cmd)
-    result = output.read()
-    print result
-    # 添加测试数据
-    cmd = 'sqlite3 %s < %s' % (os.path.join(BASE_DIR, 'flask.db'), os.path.join(BASE_DIR, 'etc/data_test.sql'))
-    print cmd
-    output = os.popen(cmd)
-    result = output.read()
-    print result
-
-
-def dump_db():
-    """
-    备份数据
-    $ python gen.py dump_db
-    """
-    # 添加测试数据
-    cmd = 'sqlite3 %s ".dump" > %s' % (os.path.join(BASE_DIR, 'flask.db'), os.path.join(BASE_DIR, 'schema.dump.sql'))
-    print cmd
-    output = os.popen(cmd)
-    result = output.read()
-    print result
 
 
 def run():
@@ -88,9 +56,9 @@ def run():
     """
     # print sys.argv
     try:
-        if len(sys.argv) > 1:
+        if len(sys.argv) > 2:
             fun_name = eval(sys.argv[1])
-            fun_name()
+            fun_name(sys.argv[2])
         else:
             print '缺失参数\n'
             usage()
@@ -105,13 +73,8 @@ def usage():
     """
     print """
 创建(更新)model
-$ python gen.py create_models
-
-初始化数据库
-$ python gen.py create_db
-
-备份数据
-$ python gen.py dump_db
+$ python gen.py create_models app_frontend
+$ python gen.py create_models app_backend
 """
 
 

@@ -16,7 +16,7 @@ from flask_login import login_user
 from flask_login import logout_user
 
 from app_frontend import app, oauth_github, oauth_qq, oauth_weibo
-from app_frontend.maps.auth_type import *
+from app_api.maps.auth_type import *
 # 认证类型（0未知，1邮箱，2手机，3qq，4微信，5微博）
 
 from flask import Blueprint
@@ -39,15 +39,15 @@ def index():
             from app_frontend.api.user_auth import get_user_auth_row
             condition = {
                 'auth_type': AUTH_TYPE_ACCOUNT,
-                'auth_key': form.email.data,
+                'auth_key': form.account.data,
                 'auth_secret': form.password.data
             }
             user_auth_info = get_user_auth_row(**condition)
             if user_auth_info is None:
-                flash(u'%s, You were logged failed' % form.email.data, 'warning')
+                flash(u'%s, You were logged failed' % form.account.data, 'warning')
                 return render_template('auth/index.html', title='login', form=form)
             if user_auth_info.verified == 0:
-                flash(u'%s, Please verify email address in mailbox' % form.email.data, 'warning')
+                flash(u'%s, Please verify email address in mailbox' % form.account.data, 'warning')
                 return render_template('auth/index.html', title='login', form=form)
             # session['logged_in'] = True
             # 用户通过验证后，记录登入IP
@@ -56,7 +56,7 @@ def index():
             # 用 login_user 函数来登入他们
             from app_frontend.api.user import get_user_row_by_id
             login_user(get_user_row_by_id(user_auth_info.user_id))
-            flash(u'%s, You were logged in' % form.email.data, 'success')
+            flash(u'%s, You were logged in' % form.account.data, 'success')
             return redirect(request.args.get('next') or url_for('index'))
         flash(form.errors, 'warning')  # 调试打开
     return render_template('auth/index.html', title='login', form=form)
@@ -75,16 +75,16 @@ def phone():
         if form.validate_on_submit():
             from app_frontend.api.user_auth import get_user_auth_row
             condition = {
-                'auth_type': 'email',
-                'auth_key': form.email.data,
+                'auth_type': AUTH_TYPE_PHONE,
+                'auth_key': form.phone.data,
                 'auth_secret': form.password.data
             }
             user_auth_info = get_user_auth_row(**condition)
             if user_auth_info is None:
-                flash(u'%s, You were logged failed' % form.email.data, 'warning')
+                flash(u'%s, You were logged failed' % form.phone.data, 'warning')
                 return render_template('auth/phone.html', title='login', form=form)
             if user_auth_info.verified == 0:
-                flash(u'%s, Please verify email address in mailbox' % form.email.data, 'warning')
+                flash(u'%s, Please verify email address in mailbox' % form.phone.data, 'warning')
                 return render_template('auth/phone.html', title='login', form=form)
             # session['logged_in'] = True
             # 用户通过验证后，记录登入IP
@@ -93,7 +93,7 @@ def phone():
             # 用 login_user 函数来登入他们
             from app_frontend.api.user import get_user_row_by_id
             login_user(get_user_row_by_id(user_auth_info.user_id))
-            flash(u'%s, You were logged in' % form.email.data, 'success')
+            flash(u'%s, You were logged in' % form.phone.data, 'success')
             return redirect(request.args.get('next') or url_for('index'))
         flash(form.errors, 'warning')  # 调试打开
     return render_template('auth/phone.html', title='login', form=form)

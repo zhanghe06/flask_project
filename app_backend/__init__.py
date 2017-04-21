@@ -12,10 +12,11 @@
 from flask import Flask
 from logging.config import dictConfig
 from flask_login import LoginManager
+from flask_moment import Moment
 from flask_oauthlib.client import OAuth
-from app_frontend.lib.sendcloud import SendCloudClient
-from app_frontend.lib.qiniu_store import QiNiuClient
-from app_frontend.lib.redis_session import RedisSessionInterface
+from app_backend.lib.sendcloud import SendCloudClient
+from app_backend.lib.qiniu_store import QiNiuClient
+from app_backend.lib.redis_session import RedisSessionInterface
 
 
 app = Flask(__name__)
@@ -27,6 +28,9 @@ login_manager.init_app(app)  # setup_app 方法已淘汰
 login_manager.login_view = 'auth.login'
 # login_manager.login_message = 'Please log in to access this page.'  # 设置登陆提示消息
 login_manager.login_message_category = 'info'  # 设置消息分类
+
+# Moment 时间插件
+moment = Moment(app)
 
 # SendCloud 邮件
 send_cloud_client = SendCloudClient(app)
@@ -80,10 +84,10 @@ if not app.config['DEBUG']:
 
 
 # 这个 import 语句放在这里, 防止views, models import发生循环import
-from app_frontend import models, tasks
+from app_backend import models, tasks
 
 # 导入视图（不使用蓝图的单模式方式）
-from app_frontend import views
+from app_backend import views
 
 # 导入视图（不使用蓝图的多模块方式）
 # from application.views import auth
@@ -93,16 +97,16 @@ from app_frontend import views
 # from application.views import user
 
 # 导入蓝图（使用蓝图的多模块方式）
-from app_frontend.views.auth import bp_auth
-from app_frontend.views.blog import bp_blog
-from app_frontend.views.file import bp_file
-from app_frontend.views.reg import bp_reg
-from app_frontend.views.user import bp_user
+from app_backend.views.auth import bp_auth
+# from app_backend.views.blog import bp_blog
+# from app_backend.views.file import bp_file
+# from app_backend.views.reg import bp_reg
+from app_backend.views.user import bp_user
 
 # 注册蓝图
 app.register_blueprint(bp_auth)
-app.register_blueprint(bp_blog)
-app.register_blueprint(bp_file)
-app.register_blueprint(bp_reg)
+# app.register_blueprint(bp_blog)
+# app.register_blueprint(bp_file)
+# app.register_blueprint(bp_reg)
 app.register_blueprint(bp_user)
 

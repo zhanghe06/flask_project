@@ -17,7 +17,7 @@ from app_frontend import app
 from flask import Blueprint
 
 from app_frontend.lib.sms_chuanglan_iso import SmsChuangLanIsoApi
-from app_frontend.maps import area_code_map
+from app_api.maps import area_code_map
 import json
 
 
