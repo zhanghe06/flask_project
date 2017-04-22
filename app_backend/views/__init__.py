@@ -20,6 +20,7 @@ from flask import g, request, render_template, jsonify
 from flask import session, redirect, url_for, flash
 from flask_login import login_user
 from flask_login import logout_user
+from flask_login import current_user, login_required
 
 from app_api.maps import area_code_map
 from app_backend import app, oauth_github, oauth_qq, oauth_weibo
@@ -66,6 +67,7 @@ def favicon():
 
 @app.route('/')
 @app.route('/index/')
+@login_required
 def index():
     """
     后台首页
@@ -101,17 +103,30 @@ def login():
             # 用户通过验证后，记录登入IP
             from app_backend.api.admin import edit_admin
             ip_data = {
-                'last_ip': request.headers.get('X-Forwarded-For', request.remote_addr),
-                'last_login_time': datetime.utcnow()
+                'login_ip': request.headers.get('X-Forwarded-For', request.remote_addr),
+                'login_time': datetime.utcnow()
             }
             edit_admin(admin_info.id, ip_data)
             # 用 login_user 函数来登入他们
-            from app_backend.api.user import get_user_row_by_id
-            login_user(get_user_row_by_id(admin_info.id), remember=form.remember)
+            from app_backend.api.admin import get_admin_row_by_id
+            login_user(get_admin_row_by_id(admin_info.id), remember=form.remember)
             flash(u'%s, You were logged in' % form.account.data, 'success')
             return redirect(request.args.get('next') or url_for('index'))
         flash(form.errors, 'warning')  # 调试打开
     return render_template('login.html', title='login', form=form)
+
+
+@app.route('/logout/')
+def logout():
+    """
+    退出登录
+    """
+    logout_user()
+    session.pop('qq_token', None)
+    session.pop('weibo_token', None)
+    session.pop('github_token', None)
+    flash(u'You were logged out', 'info')
+    return redirect(url_for('index'))
 
 
 @app.route('/ajax/get_sms_code/', methods=['GET', 'POST'])

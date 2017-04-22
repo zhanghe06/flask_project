@@ -10,7 +10,7 @@
 
 
 from flask_wtf import FlaskForm as Form
-from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField
+from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField, HiddenField
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
 from app_frontend.api.user_auth import get_user_auth_row
 
@@ -28,15 +28,19 @@ def reg_email_repeat(form, field):
         raise ValidationError(u'注册邮箱重复')
 
 
-class UserForm(Form):
+class UserProfileForm(Form):
     """
-    用户表单
+    用户基本信息表单
     """
+    id = HiddenField('User Id', validators=[DataRequired()])
+    user_pid = HiddenField('User Pid', validators=[DataRequired()])
     nickname = StringField('Nick Name', validators=[DataRequired(), Length(min=2, max=20)])
     avatar_url = StringField('Avatar Url')
     email = StringField('Email', validators=[DataRequired()])
+    area_code = StringField('Area Code')
     phone = StringField('Phone')
     birthday = DateField('Birthday')
+    id_card = StringField('ID Card')
     create_time = DateTimeField('Create Time')
     update_time = DateTimeField('Update Time')
     last_ip = StringField('Last Ip', validators=[IPAddress()])

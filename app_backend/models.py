@@ -23,6 +23,7 @@ class Admin(Base):
     id = Column(Integer, primary_key=True)
     username = Column(String(20), nullable=False, unique=True, server_default=text("''"))
     password = Column(String(60), nullable=False, server_default=text("''"))
+    area_id = Column(Integer, nullable=False, server_default=text("'0'"))
     area_code = Column(String(4), nullable=False, server_default=text("''"))
     phone = Column(String(20), nullable=False, server_default=text("''"))
     role = Column(Integer, nullable=False, server_default=text("'0'"))
@@ -30,8 +31,8 @@ class Admin(Base):
     delete_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
-    last_login_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))
-    last_ip = Column(String(20))
+    login_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))
+    login_ip = Column(String(20))
 
 
 class ApplyGet(Base):
@@ -176,20 +177,17 @@ class TicketPut(Base):
 
 class User(Base):
     __tablename__ = 'user'
-    __table_args__ = (
-        Index('area_code', 'area_code', 'phone', unique=True),
-    )
 
     id = Column(Integer, primary_key=True)
-    nickname = Column(String(20), nullable=False, server_default=text("''"))
-    avatar_url = Column(String(60))
-    email = Column(String(60), nullable=False, server_default=text("''"))
-    area_code = Column(String(4), nullable=False, server_default=text("''"))
-    phone = Column(String(20), nullable=False, server_default=text("''"))
-    birthday = Column(Date)
+    status_lock = Column(Integer, nullable=False, server_default=text("'0'"))
+    status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
+    lock_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+    delete_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))
+    reg_ip = Column(String(20))
+    login_ip = Column(String(20))
+    login_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
-    last_ip = Column(String(20))
 
 
 class UserAuth(Base):
@@ -204,8 +202,6 @@ class UserAuth(Base):
     auth_key = Column(String(60), nullable=False, server_default=text("''"))
     auth_secret = Column(String(60), nullable=False, server_default=text("''"))
     status_verified = Column(Integer, nullable=False, server_default=text("'0'"))
-    status_lock = Column(Integer, nullable=False, server_default=text("'0'"))
-    status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
@@ -214,14 +210,33 @@ class UserBank(Base):
     __tablename__ = 'user_bank'
 
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, nullable=False, index=True)
-    id_card = Column(String(32), nullable=False, server_default=text("''"))
+    user_id = Column(Integer, nullable=False, unique=True)
     account_name = Column(String(60), nullable=False, server_default=text("'0'"))
     bank_name = Column(String(60), nullable=False, server_default=text("''"))
     bank_address = Column(String(60), nullable=False, server_default=text("''"))
     bank_account = Column(String(32), nullable=False, server_default=text("''"))
     status_verified = Column(Integer, nullable=False, server_default=text("'0'"))
     status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
+    create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
+    update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+
+
+class UserProfile(Base):
+    __tablename__ = 'user_profile'
+    __table_args__ = (
+        Index('area_code', 'area_code', 'phone', unique=True),
+    )
+
+    id = Column(Integer, primary_key=True)
+    user_pid = Column(Integer, nullable=False, server_default=text("'0'"))
+    nickname = Column(String(20), nullable=False, server_default=text("''"))
+    avatar_url = Column(String(60))
+    email = Column(String(60), nullable=False, server_default=text("''"))
+    area_id = Column(Integer, nullable=False, server_default=text("'0'"))
+    area_code = Column(String(4), nullable=False, server_default=text("''"))
+    phone = Column(String(20), nullable=False, server_default=text("''"))
+    birthday = Column(Date)
+    id_card = Column(String(32), nullable=False, unique=True, server_default=text("''"))
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 

@@ -13,6 +13,8 @@ from flask_wtf import FlaskForm as Form
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
 from app_frontend.api.user_auth import get_user_auth_row
+from app_frontend.forms import SelectBS
+from app_api.maps import area_code_list
 
 
 class LoginForm(Form):
@@ -28,6 +30,11 @@ class LoginPhoneForm(Form):
     """
     手机登陆表单
     """
+    area_code_choices = []
+    for m, n in enumerate(area_code_list):
+        area_code_choices.append((m, n))
+
+    area_id = SelectBS('Area Id', default='0', choices=area_code_choices, validators=[DataRequired()])
     phone = StringField('Phone', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember Me', default=False)

@@ -18,6 +18,12 @@ from flask import Blueprint
 
 from app_frontend.lib.sms_chuanglan_iso import SmsChuangLanIsoApi
 from app_api.maps import area_code_map
+from app_api.maps.auth_type import *
+
+from app_frontend.api.user import add_user
+from app_frontend.api.user_auth import add_user_auth
+from app_frontend.api.user_profile import add_user_profile
+
 import json
 
 
@@ -94,46 +100,61 @@ def phone():
     form = RegPhoneForm()
     if request.method == 'POST':
         if form.validate_on_submit():
-            # 添加用户信息
-
             current_time = datetime.utcnow()
+            # 添加用户注册信息
             user_data = {
-                'phone': form.phone.data,
+                'status_lock': 0,
+                'status_delete': 0,
+                'reg_ip': request.headers.get('X-Forwarded-For', request.remote_addr),
                 'create_time': current_time,
                 'update_time': current_time,
-                'last_ip': request.headers.get('X-Forwarded-For', request.remote_addr)
             }
-            from app_frontend.api.user import add_user
             user_id = add_user(user_data)
-            # 添加授权信息
+            if not user_id:
+                raise Exception(u'添加用户注册信息失败')
+
+            # 添加用户认证信息
+
+            # 手机号码国际化
+            area_id = form.area_id.data
+            area_code = area_code_map.get(area_id, '86')
+            mobile_iso = '%s%s' % (area_code, form.phone.data)
 
             user_auth_data = {
                 'user_id': user_id,
-                'auth_type': 'phone',
-                'auth_key': form.email.data,
-                'auth_secret': form.password.data
+                'auth_type': AUTH_TYPE_PHONE,
+                'auth_key': mobile_iso,
+                'auth_secret': form.password.data,
+                'status_verified': 1,
+                'create_time': current_time,
+                'update_time': current_time,
             }
-            from app_frontend.api.user_auth import add_user_auth
             user_auth_id = add_user_auth(user_auth_data)
+            if not user_auth_id:
+                raise Exception(u'添加用户认证信息失败')
+
+            # 添加用户基本信息
+            user_profile_data = {
+                'id': user_id,
+                'user_pid': form.user_pid.data,
+                'nickname': form.nickname.data,
+                'avatar_url': form.avatar_url.data,
+                'email': form.email.data,
+                'area_id': form.area_id.data,
+                'phone': form.phone.data,
+                'birthday': form.birthday.data,
+                'id_card': form.id_card.data,
+                'create_time': current_time,
+                'update_time': current_time,
+            }
+            user_profile_id = add_user_profile(user_profile_data)
+            if not user_profile_id:
+                raise Exception(u'添加用户基本信息失败')
+
             if user_auth_id:
-                flash(u'%s, Thanks for registering' % form.email.data, 'success')
-                # todo 发送邮箱校验邮件
-                email_validate_content = {
-                    'mail_from': 'System Support<support@zhendi.me>',
-                    'mail_to': form.email.data,
-                    'mail_subject': 'verify reg email',
-                    'mail_html': 'verify reg email address in mailbox'
-                }
-                from app_frontend import send_cloud_client
-                send_email_result = send_cloud_client.mail_send(**email_validate_content)
-                # 调试邮件发送结果
-                if send_email_result.get('result') is False:
-                    flash(send_email_result.get('message'), 'warning')
-                else:
-                    flash(send_email_result.get('message'), 'success')
-                # https://www.***.com/email/signup/uuid
+                flash(u'%s, Thanks for registering' % form.phone.data, 'success')
             else:
-                flash(u'%s, Sorry, register error' % form.email.data, 'warning')
+                flash(u'%s, Sorry, register error' % form.phone.data, 'warning')
             return redirect(url_for('auth.login'))
         # 闪现消息 success info warning danger
         flash(form.errors, 'warning')  # 调试打开
@@ -267,7 +288,7 @@ def ajax_get_sms_code():
     # 获取短信验证码
     area_id = request.args.get('area_id', '', type=int)
     area_code = area_code_map.get(area_id, '86')
-    mobile = request.args.get('mobile', '', type=str)
+    mobile = request.args.get('phone', '', type=str)
     mobile_iso = '%s%s' % (area_code, mobile)
 
     sms_client = SmsChuangLanIsoApi(UN, PW)

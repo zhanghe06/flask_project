@@ -8,18 +8,17 @@ use flask;
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `nickname` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '用户名称',
-  `avatar_url` VARCHAR(60) COMMENT '用户头像',
-  `email` VARCHAR(60) NOT NULL DEFAULT '' COMMENT '电子邮箱',
-  `area_code` VARCHAR(4) NOT NULL DEFAULT '' COMMENT '国家区号',
-  `phone` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '手机号码',
-  `birthday` DATE COMMENT '生日',
+  `status_lock` TINYINT NOT NULL DEFAULT '0' COMMENT '锁定状态（0未锁定，1已锁定）',
+  `status_delete` TINYINT NOT NULL DEFAULT '0' COMMENT '删除状态（0未删除，1已删除）',
+  `lock_time` TIMESTAMP COMMENT '锁定时间',
+  `delete_time` TIMESTAMP COMMENT '删除时间',
+  `reg_ip` VARCHAR(20) COMMENT '注册IP',
+  `login_ip` VARCHAR(20) COMMENT '最后一次登录IP',
+  `login_time` TIMESTAMP COMMENT '最后一次登录时间',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `last_ip` VARCHAR(20) COMMENT '最后一次登录IP',
-  PRIMARY KEY (`id`),
-  UNIQUE (`area_code`, `phone`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户信息表';
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户全局注册表';
 
 
 DROP TABLE IF EXISTS `user_auth`;
@@ -30,8 +29,6 @@ CREATE TABLE `user_auth` (
   `auth_key` VARCHAR(60) NOT NULL DEFAULT '' COMMENT '授权账号（如果是手机，国家区号+手机号码;第三方登陆，这里是openid）',
   `auth_secret` VARCHAR(60) NOT NULL DEFAULT '' COMMENT '密码凭证（密码;token）',
   `status_verified` TINYINT NOT NULL DEFAULT '0' COMMENT '认证状态（0未认证，1已认证）',
-  `status_lock` TINYINT NOT NULL DEFAULT '0' COMMENT '锁定状态（0未锁定，1已锁定）',
-  `status_delete` TINYINT NOT NULL DEFAULT '0' COMMENT '删除状态（0未删除，1已删除）',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
@@ -40,11 +37,30 @@ CREATE TABLE `user_auth` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户认证表';
 
 
+DROP TABLE IF EXISTS `user_profile`;
+CREATE TABLE `user_profile` (
+  `id` INT NOT NULL COMMENT '用户ID',
+  `user_pid` INT NOT NULL DEFAULT '0' COMMENT '推荐人用户ID',
+  `nickname` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '用户名称',
+  `avatar_url` VARCHAR(60) COMMENT '用户头像',
+  `email` VARCHAR(60) NOT NULL DEFAULT '' COMMENT '电子邮箱',
+  `area_id` INT(4) NOT NULL DEFAULT '0' COMMENT '国家区号id',
+  `area_code` VARCHAR(4) NOT NULL DEFAULT '' COMMENT '国家区号',
+  `phone` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '手机号码',
+  `birthday` DATE COMMENT '生日',
+  `id_card` VARCHAR(32) NOT NULL DEFAULT '' COMMENT '身份证号',
+  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE (`area_code`, `phone`),
+  UNIQUE (`id_card`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户基本信息表';
+
+
 DROP TABLE IF EXISTS `user_bank`;
 CREATE TABLE `user_bank` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `user_id` INT NOT NULL COMMENT '用户ID',
-  `id_card` VARCHAR(32) NOT NULL DEFAULT '' COMMENT '身份证号',
   `account_name` VARCHAR(60) NOT NULL DEFAULT '0' COMMENT '开户人姓名',
   `bank_name` VARCHAR(60) NOT NULL DEFAULT '' COMMENT '开户银行',
   `bank_address` VARCHAR(60) NOT NULL DEFAULT '' COMMENT '开户网点',
@@ -54,7 +70,7 @@ CREATE TABLE `user_bank` (
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
-  KEY (`user_id`)
+  UNIQUE (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户银行账号信息';
 
 
@@ -156,7 +172,7 @@ CREATE TABLE `order` (
 DROP TABLE IF EXISTS `wallet`;
 CREATE TABLE `wallet` (
   `user_id` INT NOT NULL COMMENT '用户Id',
-  `amount_initial` DECIMAL(10, 2) NOT NULL DEFAULT '0.00' COMMENT '最初总金额',
+  `amount_initial` DECIMAL(10, 2) NOT NULL DEFAULT '0.00' COMMENT '初始总金额',
   `amount_current` DECIMAL(10, 2) NOT NULL DEFAULT '0.00' COMMENT '当前总金额',
   `amount_lock` DECIMAL(10, 2) NOT NULL DEFAULT '0.00' COMMENT '锁定的金额',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -212,6 +228,7 @@ CREATE TABLE `admin` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '用户名称',
   `password` VARCHAR(60) NOT NULL DEFAULT '' COMMENT '用户密码',
+  `area_id` INT(4) NOT NULL DEFAULT '0' COMMENT '国家区号id',
   `area_code` VARCHAR(4) NOT NULL DEFAULT '' COMMENT '国家区号',
   `phone` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '手机号码',
   `role` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '角色:0:普通，1:高级，2:系统',
@@ -219,8 +236,8 @@ CREATE TABLE `admin` (
   `delete_time` TIMESTAMP COMMENT '删除时间',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `last_login_time` TIMESTAMP COMMENT '最后一次登录时间',
-  `last_ip` VARCHAR(20) COMMENT '最后一次登录IP',
+  `login_time` TIMESTAMP COMMENT '最后一次登录时间',
+  `login_ip` VARCHAR(20) COMMENT '最后一次登录IP',
   PRIMARY KEY (`id`),
   UNIQUE (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='后台用户信息表';

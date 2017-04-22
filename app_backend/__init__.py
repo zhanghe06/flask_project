@@ -21,11 +21,11 @@ from app_backend.lib.redis_session import RedisSessionInterface
 
 app = Flask(__name__)
 app.config.from_object('config')
-app.session_interface = RedisSessionInterface(**app.config['REDIS'])
+app.session_interface = RedisSessionInterface(prefix='session:admin:', **app.config['REDIS'])
 
 login_manager = LoginManager()
 login_manager.init_app(app)  # setup_app 方法已淘汰
-login_manager.login_view = 'auth.login'
+login_manager.login_view = 'login'
 # login_manager.login_message = 'Please log in to access this page.'  # 设置登陆提示消息
 login_manager.login_message_category = 'info'  # 设置消息分类
 
@@ -97,14 +97,15 @@ from app_backend import views
 # from application.views import user
 
 # 导入蓝图（使用蓝图的多模块方式）
-from app_backend.views.auth import bp_auth
+from app_backend.views.admin import bp_admin
 # from app_backend.views.blog import bp_blog
 # from app_backend.views.file import bp_file
 # from app_backend.views.reg import bp_reg
 from app_backend.views.user import bp_user
 
+
 # 注册蓝图
-app.register_blueprint(bp_auth)
+app.register_blueprint(bp_admin)
 # app.register_blueprint(bp_blog)
 # app.register_blueprint(bp_file)
 # app.register_blueprint(bp_reg)

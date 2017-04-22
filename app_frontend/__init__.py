@@ -21,7 +21,7 @@ from app_frontend.lib.redis_session import RedisSessionInterface
 
 app = Flask(__name__)
 app.config.from_object('config')
-app.session_interface = RedisSessionInterface(**app.config['REDIS'])
+app.session_interface = RedisSessionInterface(prefix='session:user:', **app.config['REDIS'])
 
 login_manager = LoginManager()
 login_manager.init_app(app)  # setup_app 方法已淘汰

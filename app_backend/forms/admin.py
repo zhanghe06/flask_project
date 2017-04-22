@@ -12,34 +12,33 @@
 from flask_wtf import FlaskForm as Form
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
-from app_backend.api.user_auth import get_user_auth_row
+from app_backend.api.admin import get_admin_row
 
 
-def reg_email_repeat(form, field):
+def reg_username_repeat(form, field):
     """
-    邮箱重复校验
+    登录账号重复校验
     """
     condition = {
-        'auth_type': 'email',
-        'auth_key': field.data
+        'username': field.data
     }
-    row = get_user_auth_row(**condition)
+    row = get_admin_row(**condition)
     if row:
-        raise ValidationError(u'注册邮箱重复')
+        raise ValidationError(u'登录账号重复')
 
 
-class UserProfileForm(Form):
+class AdminProfileForm(Form):
     """
     用户基本信息表单
     """
-    nickname = StringField('Nick Name', validators=[DataRequired(), Length(min=2, max=20)])
-    avatar_url = StringField('Avatar Url')
-    email = StringField('Email', validators=[DataRequired()])
+    username = StringField('User Name', validators=[DataRequired(), Length(min=2, max=20)])
+    password = StringField('Password', validators=[DataRequired(), Length(min=6, max=20)])
+    area_id = StringField('Area Id', validators=[DataRequired()])
     phone = StringField('Phone')
+    role = StringField('Role')
     birthday = DateField('Birthday')
     create_time = DateTimeField('Create Time')
-    update_time = DateTimeField('Update Time')
-    login_ip = StringField('Login Ip', validators=[IPAddress()])
+    login_ip = StringField('Login Ip')
     login_time = DateTimeField('Login Time')
 
 
