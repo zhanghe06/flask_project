@@ -11,4 +11,4 @@
 
 from flask_sqlalchemy import SQLAlchemy
 from app_backend import app
-db = SQLAlchemy(app)
+db = SQLAlchemy(app, session_options={'autocommit': True})

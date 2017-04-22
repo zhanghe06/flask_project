@@ -39,7 +39,7 @@ CREATE TABLE `user_auth` (
 
 DROP TABLE IF EXISTS `user_profile`;
 CREATE TABLE `user_profile` (
-  `id` INT NOT NULL COMMENT '用户ID',
+  `user_id` INT NOT NULL COMMENT '用户ID',
   `user_pid` INT NOT NULL DEFAULT '0' COMMENT '推荐人用户ID',
   `nickname` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '用户名称',
   `avatar_url` VARCHAR(60) COMMENT '用户头像',
@@ -51,7 +51,7 @@ CREATE TABLE `user_profile` (
   `id_card` VARCHAR(32) NOT NULL DEFAULT '' COMMENT '身份证号',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`user_id`),
   UNIQUE (`area_code`, `phone`),
   UNIQUE (`id_card`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户基本信息表';
@@ -59,7 +59,6 @@ CREATE TABLE `user_profile` (
 
 DROP TABLE IF EXISTS `user_bank`;
 CREATE TABLE `user_bank` (
-  `id` INT NOT NULL AUTO_INCREMENT,
   `user_id` INT NOT NULL COMMENT '用户ID',
   `account_name` VARCHAR(60) NOT NULL DEFAULT '0' COMMENT '开户人姓名',
   `bank_name` VARCHAR(60) NOT NULL DEFAULT '' COMMENT '开户银行',
@@ -69,8 +68,7 @@ CREATE TABLE `user_bank` (
   `status_delete` TINYINT NOT NULL DEFAULT '0' COMMENT '删除状态（0未删除，1已删除）',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  PRIMARY KEY (`id`),
-  UNIQUE (`user_id`)
+  PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户银行账号信息';
 
 

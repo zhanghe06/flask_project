@@ -289,6 +289,13 @@ default         Define a default value for the column.
 [动态获取 Model 对象的主键](http://docs.sqlalchemy.org/en/latest/orm/internals.html#sqlalchemy.orm.state.InstanceState.identity)
 
 
+打开自动提交
+```
+from flask.ext.sqlalchemy import SQLAlchemy
+db = SQLAlchemy(session_options={'autocommit': True})
+```
+
+
 ### sqlacodegen
 
 安装

@@ -18,7 +18,7 @@ from flask_login import current_user, login_required
 from app_backend import app
 from app_backend.forms.user import UserProfileForm
 from app_backend.models import User
-from app_backend.api.user import get_user_rows
+from app_backend.api.user import get_user_rows, get_user_profile_rows
 
 from flask import Blueprint
 
@@ -33,7 +33,9 @@ def lists(page=1):
     """
     会员列表
     """
-    pagination = get_user_rows(page)
+    pagination = get_user_profile_rows(page)
+    for i in pagination.items:
+        print i.__dict__
     return render_template('user/list.html', title='user_list', pagination=pagination)
 
 
