@@ -11,6 +11,7 @@
 
 from app_frontend.models import User
 from app_backend.models import UserProfile
+from app_backend.models import UserBank
 from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
 
 
@@ -101,8 +102,12 @@ def get_user_detail_rows(page=1, per_page=10, *args, **kwargs):
     :param kwargs:
     :return:
     """
-    rows = User.query.join(UserProfile, User.id == UserProfile.user_id). \
+    rows = User.query. \
+        outerjoin(UserProfile, User.id == UserProfile.user_id). \
+        outerjoin(UserBank, User.id == UserBank.user_id). \
         add_entity(UserProfile). \
-        filter(*args).filter_by(**kwargs). \
-        paginate(page, per_page, False)
+        add_entity(UserBank). \
+        filter(*args). \
+        filter_by(**kwargs). \
+        paginate(page, 10, False)
     return rows

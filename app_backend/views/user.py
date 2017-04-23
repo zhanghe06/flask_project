@@ -16,9 +16,10 @@ from flask import url_for
 from flask_login import current_user, login_required
 
 from app_backend import app
-from app_backend.forms.user import UserProfileForm
+from app_backend.forms.user import UserProfileForm, UserSearchForm
 from app_backend.models import User
 from app_backend.api.user import get_user_rows, get_user_detail_rows
+from app_backend.models import User, UserProfile, UserBank
 
 from flask import Blueprint
 
@@ -26,15 +27,48 @@ from flask import Blueprint
 bp_user = Blueprint('user', __name__, url_prefix='/user')
 
 
-@bp_user.route('/list/')
-@bp_user.route('/list/<int:page>/')
+@bp_user.route('/list/', methods=['GET', 'POST'])
+@bp_user.route('/list/<int:page>/', methods=['GET', 'POST'])
 @login_required
 def lists(page=1):
     """
     会员列表
     """
-    pagination = get_user_detail_rows(page)
-    return render_template('user/list.html', title='user_list', pagination=pagination)
+    form = UserSearchForm(request.form)
+
+    user_id = request.args.get('user_id', '', type=int)
+    user_name = request.args.get('user_name', '', type=str)
+    start_time = request.args.get('start_time', '', type=str)
+    end_time = request.args.get('end_time', '', type=str)
+
+    form.user_id.data = user_id
+    form.user_name.data = user_name
+    form.start_time.data = start_time
+    form.end_time.data = end_time
+
+    search_condition_user = []
+    search_condition_user_profile = []
+    search_condition_user_bank = []
+    if user_id:
+        search_condition_user.append(User.id == user_id)
+    if start_time:
+        search_condition_user.append(User.create_time >= start_time)
+    if end_time:
+        search_condition_user.append(User.create_time <= end_time)
+    if user_name:
+        search_condition_user_profile.append(UserProfile.nickname == user_name)
+
+    pagination = User.query. \
+        filter(*search_condition_user). \
+        outerjoin(UserProfile, User.id == UserProfile.user_id). \
+        filter(*search_condition_user_profile). \
+        outerjoin(UserBank, User.id == UserBank.user_id). \
+        filter(*search_condition_user_bank). \
+        add_entity(UserProfile). \
+        add_entity(UserBank). \
+        paginate(page, 10, False)
+
+    return render_template('user/list.html', title='user_list', pagination=pagination, form=form)
 
 
 @bp_user.route('/edit/profile/<int:user_id>/', methods=['GET', 'POST'])

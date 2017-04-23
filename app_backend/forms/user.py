@@ -57,3 +57,12 @@ class EditPassword(Form):
         Length(min=6, max=40)
     ])
 
+
+class UserSearchForm(Form):
+    """
+    用户搜索表单
+    """
+    user_id = StringField('User Id')
+    user_name = StringField('User Name')
+    start_time = StringField('Start Time')
+    end_time = StringField('End Time')

@@ -1,6 +1,6 @@
 USE flask;
 
--- 插入用户基本信息
+-- 插入用户全局注册信息
 TRUNCATE TABLE `user`;
 INSERT INTO `user` VALUES(1,'0','0',NULL,NULL,'127.0.0.1',NULL,'2016-01-11 11:01:10','2016-01-11 11:01:05','2016-01-11 11:01:05');
 INSERT INTO `user` VALUES(2,'0','0',NULL,NULL,'127.0.0.1',NULL,'2016-01-11 11:01:10','2016-01-11 11:01:05','2016-01-11 11:01:05');
@@ -23,6 +23,11 @@ TRUNCATE TABLE `user_profile`;
 INSERT INTO `user_profile` VALUES(1,0,'Admin',NULL,'admin@gmail.com',0,'86','13800001111',NULL,'123456789098765432','2016-01-11 11:01:05','2016-01-11 11:01:05');
 INSERT INTO `user_profile` VALUES(2,1,'Guest',NULL,'guest@gmail.com',0,'86','13800002222',NULL,'123456789098765433','2016-01-12 12:25:34','2016-01-12 12:25:34');
 INSERT INTO `user_profile` VALUES(3,1,'Test',NULL,'test@gmail.com',0,'86','13800003333',NULL,'123456789098765434','2016-01-12 01:43:42','2016-01-12 01:43:42');
+
+-- 插入用户银行信息
+TRUNCATE TABLE `user_bank`;
+INSERT INTO `user_bank` VALUES(1,'Admin','建行','上海分行','1234567890',0,0,'2016-01-11 11:01:05','2016-01-11 11:01:05');
+INSERT INTO `user_bank` VALUES(2,'Guest','农行','上海分行','1234567891',0,0,'2016-01-11 11:01:05','2016-01-11 11:01:05');
 
 -- 插入管理员基本信息
 TRUNCATE TABLE `admin`;

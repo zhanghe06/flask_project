@@ -297,7 +297,7 @@ db = SQLAlchemy(session_options={'autocommit': True})
 SQLALCHEMY_COMMIT_ON_TEARDOWN = True  # 打开自动提交
 ```
 
-联表分页查询
+联表(内联)分页查询
 ```
 paginate = User.query.join(UserProfile, User.id == UserProfile.user_id).add_entity(UserProfile).order_by(User.id.desc()).paginate(1, 10, False)
 
@@ -305,6 +305,7 @@ print paginate.items
     for (user, user_profile) in paginate.items:
         print user.id, user_profile.user_id
 ```
+如果需要外联，join 替换为 outerjoin 即可
 
 
 ### sqlacodegen

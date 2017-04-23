@@ -1,9 +1,48 @@
 <!-- extend from base layout -->
 {% extends "layout.html" %}
 
+{% block extra_css %}
+
+{% endblock %}
+
 {% block content %}
     <div class="container-fluid">
     <h2 class="sub-header">User List!</h2>
+
+    <form class="form-inline">
+        <div class="form-group{% if form.user_id.errors %} has-error{% endif %}">
+            {{ form.user_id.label(class="sr-only") }}
+            {{ form.user_id(class="form-control", placeholder="User Id") }}
+            {% for error in form.user_id.errors %}
+                <span class="help-block">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="form-group{% if form.user_name.errors %} has-error{% endif %}">
+            {{ form.user_name.label(class="sr-only") }}
+            {{ form.user_name(class="form-control", placeholder="User Name") }}
+            {% for error in form.user_name.errors %}
+                <span class="help-block">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="form-group{% if form.start_time.errors %} has-error{% endif %}">
+            {{ form.start_time.label(class="sr-only") }}
+            {{ form.start_time(class="form-control", placeholder="start_time", type='date') }}
+            {% for error in form.start_time.errors %}
+                <span class="help-block">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="form-group{% if form.end_time.errors %} has-error{% endif %}">
+            {{ form.end_time.label(class="sr-only") }}
+            {{ form.end_time(class="form-control", placeholder="end_time", type='date') }}
+            {% for error in form.end_time.errors %}
+                <span class="help-block">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <hr/>
+
     <div class="table-responsive">
         {# <table class="table table-striped"> #}
         <table class="table table-hover">
@@ -12,16 +51,20 @@
                 <th>id</th>
                 <th>nickname</th>
                 <th>phone</th>
+                <th>bank_name</th>
+                <th>bank_address</th>
                 <th>create_time</th>
                 <th>action</th>
             </tr>
             </thead>
             <tbody>
-            {% for (user, user_profile) in pagination.items %}
+            {% for (user, user_profile, user_bank) in pagination.items %}
             <tr class="text-muted">
                 <td>{{ user.id }}</td>
                 <td>{{ user_profile.nickname }}</td>
                 <td>{{ user_profile.phone }}</td>
+                <td>{{ user_bank.bank_name }}</td>
+                <td>{{ user_bank.bank_address }}</td>
                 <td>{{ user.create_time }}</td>
                 <td>
                     <a href="{{ url_for('user.edit_profile', user_id=user.id, next=request.path) }}" rel="tooltip" title="编辑"><span class="glyphicon glyphicon-pencil"></span></a>
@@ -36,4 +79,7 @@
         {{ render_pagination(pagination, 'user.lists') }}
     </div>
     </div>
+{% endblock %}
+
+{% block extra_js %}
 {% endblock %}
