@@ -17,15 +17,15 @@
             </tr>
             </thead>
             <tbody>
-            {% for item in pagination.items %}
+            {% for (user, user_profile) in pagination.items %}
             <tr class="text-muted">
-                <td>{{ item.id }}</td>
-                <td>{{ item.nickname }}</td>
-                <td>{{ item.phone }}</td>
-                <td>{{ item.create_time }}</td>
+                <td>{{ user.id }}</td>
+                <td>{{ user_profile.nickname }}</td>
+                <td>{{ user_profile.phone }}</td>
+                <td>{{ user.create_time }}</td>
                 <td>
-                    <a href="{{ url_for('user.edit_profile', user_id=item.id, next=request.path) }}" rel="tooltip" title="编辑"><span class="glyphicon glyphicon-pencil"></span></a>
-                    <a href="javascript:void(0);" onclick="user_delete({{ item.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
+                    <a href="{{ url_for('user.edit_profile', user_id=user.id, next=request.path) }}" rel="tooltip" title="编辑"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="javascript:void(0);" onclick="user_delete({{ user.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
                 </td>
             </tr>
             {% endfor %}

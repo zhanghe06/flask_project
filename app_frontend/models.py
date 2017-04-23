@@ -209,8 +209,7 @@ class UserAuth(Base):
 class UserBank(Base):
     __tablename__ = 'user_bank'
 
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, nullable=False, unique=True)
+    user_id = Column(Integer, primary_key=True)
     account_name = Column(String(60), nullable=False, server_default=text("'0'"))
     bank_name = Column(String(60), nullable=False, server_default=text("''"))
     bank_address = Column(String(60), nullable=False, server_default=text("''"))
@@ -227,7 +226,7 @@ class UserProfile(Base):
         Index('area_code', 'area_code', 'phone', unique=True),
     )
 
-    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, primary_key=True)
     user_pid = Column(Integer, nullable=False, server_default=text("'0'"))
     nickname = Column(String(20), nullable=False, server_default=text("''"))
     avatar_url = Column(String(60))

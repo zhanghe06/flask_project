@@ -82,9 +82,11 @@ def get_user_rows(page=1, per_page=10, *args, **kwargs):
     return rows
 
 
-def get_user_profile_rows(page=1, per_page=10, *args, **kwargs):
+def get_user_detail_rows(page=1, per_page=10, *args, **kwargs):
     """
-    获取用户基本信息列表（分页）
+    获取用户详细信息列表（分页）
+        User
+        UserProfile
     Usage:
         items: 信息列表
         has_next: 如果本页之后还有超过一个分页，则返回True
@@ -99,5 +101,8 @@ def get_user_profile_rows(page=1, per_page=10, *args, **kwargs):
     :param kwargs:
     :return:
     """
-    rows = User.query.join(UserProfile, User.id == UserProfile.id).filter(*args).filter_by(**kwargs).paginate(page, per_page, False)
+    rows = User.query.join(UserProfile, User.id == UserProfile.user_id). \
+        add_entity(UserProfile). \
+        filter(*args).filter_by(**kwargs). \
+        paginate(page, per_page, False)
     return rows

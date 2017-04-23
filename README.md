@@ -293,6 +293,17 @@ default         Define a default value for the column.
 ```
 from flask.ext.sqlalchemy import SQLAlchemy
 db = SQLAlchemy(session_options={'autocommit': True})
+后者:
+SQLALCHEMY_COMMIT_ON_TEARDOWN = True  # 打开自动提交
+```
+
+联表分页查询
+```
+paginate = User.query.join(UserProfile, User.id == UserProfile.user_id).add_entity(UserProfile).order_by(User.id.desc()).paginate(1, 10, False)
+
+print paginate.items
+    for (user, user_profile) in paginate.items:
+        print user.id, user_profile.user_id
 ```
 
 

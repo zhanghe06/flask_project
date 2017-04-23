@@ -359,8 +359,22 @@ def test_label():
         print row.id, row.nickname_new, row.create_time
 
 
+def test_join():
+    from app_backend.models import User, UserProfile
+    # rows = db.session.query(User, UserProfile).outerjoin(UserProfile, User.id == UserProfile.user_id).order_by(User.id.desc()).all()
+    # for row in rows:
+    #     print row[0].__dict__, row[1].__dict__
+    # paginate = User.query.join(UserProfile, User.id == UserProfile.user_id).add_columns(User.id, UserProfile.nickname).order_by(User.id.desc()).paginate(1, 10, False)
+    paginate = User.query.join(UserProfile, User.id == UserProfile.user_id).add_entity(UserProfile).order_by(User.id.desc()).paginate(1, 10, False)
+    print paginate.items
+    for (a, b) in paginate.items:
+        print a.id, b.user_id
+
+
+
 if __name__ == '__main__':
     # test_user()
     # test_blog()
     # test_transaction()
-    test_label()
+    # test_label()
+    test_join()
