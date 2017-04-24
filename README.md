@@ -541,6 +541,8 @@ Flask-Login 扩展需要在我们 model 的 User 类里实现一些方法。：
 
 http://flask-excel.readthedocs.io/en/latest/
 
+支持 csv tsv 导出
+如果需要导出 xls 格式，需要安装 pyexcel-xls
 
 
 ## 部署方案( Nginx + Gunicorn + Supervisor )

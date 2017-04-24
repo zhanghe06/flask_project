@@ -14,6 +14,7 @@ from flask import redirect
 from flask import render_template, request, flash
 from flask import url_for
 from flask_login import current_user, login_required
+import flask_excel as excel
 
 from app_backend import app
 from app_backend.forms.user import UserProfileForm, UserSearchForm
@@ -41,6 +42,7 @@ def lists(page=1):
     start_time = request.args.get('start_time', '', type=str)
     end_time = request.args.get('end_time', '', type=str)
     status_lock = request.args.get('status_lock', '', type=str)
+    op = request.args.get('op', 0, type=int)
 
     form.user_id.data = user_id
     form.user_name.data = user_name
@@ -59,7 +61,34 @@ def lists(page=1):
         search_condition_user.append(User.create_time <= end_time)
     if user_name:
         search_condition_user_profile.append(UserProfile.nickname == user_name)
-
+    # 处理导出
+    if op == 1:
+        data_list = []
+        query_sets = User.query. \
+            filter(*search_condition_user). \
+            outerjoin(UserProfile, User.id == UserProfile.user_id). \
+            filter(*search_condition_user_profile). \
+            outerjoin(UserBank, User.id == UserBank.user_id). \
+            filter(*search_condition_user_bank). \
+            add_entity(UserProfile). \
+            add_entity(UserBank). \
+            all()
+        column_names = [u'用户编号', u'用户名称', u'银行名称', u'银行地址']
+        data_list.append(column_names)
+        for (user, user_profile, user_bank) in query_sets:
+            row = [
+                user.id if user else '',
+                user_profile.nickname if user_profile else '',
+                user_bank.bank_name if user_bank else '',
+                user_bank.bank_address if user_bank else ''
+            ]
+            data_list.append(row)
+        return excel.make_response_from_array(
+            data_list,
+            "csv",
+            file_name="用户列表_%s" % datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        )
+    # 处理查询
     pagination = User.query. \
         filter(*search_condition_user). \
         outerjoin(UserProfile, User.id == UserProfile.user_id). \
