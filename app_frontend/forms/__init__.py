@@ -36,9 +36,9 @@ def select_multi_checkbox(field, ul_class='', **kwargs):
     return u''.join(html)
 
 
-class SelectBSWidget(object):
+class SelectAreaCodeWidget(object):
     """
-    自定义选择组件
+    自定义选择组件 - 区号
     """
     def __call__(self, field, **kwargs):
         params = {
@@ -61,11 +61,11 @@ class SelectBSWidget(object):
         return HTMLString('\n'.join(html))
 
 
-class SelectBS(SelectField):
+class SelectAreaCode(SelectField):
     """
     自定义选择表单控件
     """
-    widget = SelectBSWidget()
+    widget = SelectAreaCodeWidget()
 
     def pre_validate(self, form):
         """

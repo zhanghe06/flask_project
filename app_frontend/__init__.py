@@ -103,6 +103,7 @@ from app_frontend.views.blog import bp_blog
 from app_frontend.views.file import bp_file
 from app_frontend.views.reg import bp_reg
 from app_frontend.views.user import bp_user
+from app_frontend.views.credit import bp_credit
 
 # 注册蓝图
 app.register_blueprint(bp_captcha)
@@ -111,6 +112,7 @@ app.register_blueprint(bp_blog)
 app.register_blueprint(bp_file)
 app.register_blueprint(bp_reg)
 app.register_blueprint(bp_user)
+app.register_blueprint(bp_credit)
 
 # 导入自定义过滤器
 from app_frontend import filters

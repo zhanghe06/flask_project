@@ -13,6 +13,8 @@ from flask_wtf import FlaskForm as Form
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
 from app_backend.api.user_auth import get_user_auth_row
+from app_backend.forms import SelectBS
+from app_api.maps import status_lock_list
 
 
 def reg_email_repeat(form, field):
@@ -66,3 +68,4 @@ class UserSearchForm(Form):
     user_name = StringField('User Name')
     start_time = StringField('Start Time')
     end_time = StringField('End Time')
+    status_lock = SelectBS('Status Lock', default='', choices=status_lock_list)

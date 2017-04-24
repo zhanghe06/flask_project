@@ -12,7 +12,7 @@
 from flask_wtf import FlaskForm as Form
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField, SelectField, HiddenField
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress, Regexp, AnyOf
-from app_frontend.forms import SelectBS
+from app_frontend.forms import SelectAreaCode
 
 from app_frontend.api.user_auth import get_user_auth_row
 
@@ -121,7 +121,7 @@ class RegPhoneForm(Form):
     for m, n in enumerate(area_code_list):
         area_code_choices.append((m, n))
 
-    area_id = SelectBS('Area Id', default='0', choices=area_code_choices, validators=[DataRequired()])
+    area_id = SelectAreaCode('Area Id', default='0', choices=area_code_choices, validators=[DataRequired()])
     phone = StringField('Phone', validators=[DataRequired(), Email(), reg_phone_repeat])
     captcha = StringField('Captcha', validators=[
         DataRequired(),

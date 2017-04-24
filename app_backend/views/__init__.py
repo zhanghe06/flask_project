@@ -25,7 +25,7 @@ from flask_login import current_user, login_required
 from app_api.maps import area_code_map
 from app_backend import app, oauth_github, oauth_qq, oauth_weibo
 from app_api.maps.auth_type import *
-from app_api.maps.sms_msg import REG_SMS_CODE
+from app_api.maps.sms_msg import SMS_CODE_REG
 
 from app_backend import app, login_manager
 
@@ -150,7 +150,7 @@ def ajax_get_sms_code():
     mobile_iso = '%s%s' % (area_code, mobile)
 
     sms_client = SmsChuangLanIsoApi(UN, PW)
-    msg = REG_SMS_CODE % 1234
+    msg = SMS_CODE_REG % 1234
     result = sms_client.send_international(mobile_iso, msg)
     # todo 优先级队列
     return json.dumps({'result': True})

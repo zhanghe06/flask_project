@@ -58,7 +58,7 @@ def profile():
                 flash(u'Edit Failed', 'warning')
         flash(form.errors, 'warning')  # 调试打开
     flash(u'Hello, %s' % current_user.email, 'info')  # 测试打开
-    return render_template('./profile.html', title='setting', form=form)
+    return render_template('user/profile.html', title='profile', form=form)
 
 
 @bp_user.route('/setting/', methods=['GET', 'POST'])
@@ -70,8 +70,8 @@ def setting():
     # return "Hello, World!\nSetting!"
     form = UserProfileForm(request.form)
     if request.method == 'GET':
-        from app_frontend.api.user import get_user_row_by_id
-        user_info = get_user_row_by_id(current_user.id)
+        from app_frontend.api.user_profile import get_user_profile_row_by_id
+        user_info = get_user_profile_row_by_id(current_user.id)
         if user_info:
             form.nickname.data = user_info.nickname
             form.avatar_url.data = user_info.avatar_url
@@ -80,7 +80,7 @@ def setting():
             form.birthday.data = user_info.birthday
             form.create_time.data = user_info.create_time
             form.update_time.data = user_info.update_time
-            form.last_ip.data = user_info.last_ip
+            # form.last_ip.data = user_info.last_ip
     if request.method == 'POST':
         if form.validate_on_submit():
             # todo 判断邮箱是否重复
@@ -101,6 +101,6 @@ def setting():
             if result == 0:
                 flash(u'Edit Failed', 'warning')
         flash(form.errors, 'warning')  # 调试打开
-    flash(u'Hello, %s' % current_user.email, 'info')  # 测试打开
+    flash(u'Hello, %s' % current_user.id, 'info')  # 测试打开
     return render_template('./setting.html', title='setting', form=form)
 

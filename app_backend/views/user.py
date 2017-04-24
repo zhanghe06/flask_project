@@ -40,11 +40,13 @@ def lists(page=1):
     user_name = request.args.get('user_name', '', type=str)
     start_time = request.args.get('start_time', '', type=str)
     end_time = request.args.get('end_time', '', type=str)
+    status_lock = request.args.get('status_lock', '', type=str)
 
     form.user_id.data = user_id
     form.user_name.data = user_name
     form.start_time.data = start_time
     form.end_time.data = end_time
+    form.status_lock.data = status_lock
 
     search_condition_user = []
     search_condition_user_profile = []

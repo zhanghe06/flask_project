@@ -38,6 +38,13 @@
                 <span class="help-block">{{ error }}</span>
             {% endfor %}
         </div>
+        <div class="form-group{% if form.status_lock.errors %} has-error{% endif %}">
+            {{ form.status_lock.label(class="sr-only") }}
+            {{ form.status_lock(class="form-control", placeholder="锁定状态", data_width="fit", data_header="选择状态") }}
+            {% for error in form.status_lock.errors %}
+                <span class="help-block">{{ error }}</span>
+            {% endfor %}
+        </div>
         <button type="submit" class="btn btn-primary">Search</button>
     </form>
 
@@ -82,4 +89,17 @@
 {% endblock %}
 
 {% block extra_js %}
+<script>
+    // 初始化赋值
+    var status_lock = $('#status_lock');
+    status_lock.selectpicker('val', '{{ form.status_lock.data }}');
+    // 处理选项修改
+    status_lock.on('changed.bs.select', function (event, clickedIndex, newValue, oldValue) {
+        console.log($('#status_lock').val());
+        // console.log(event);
+        // console.log(clickedIndex);
+        // console.log(newValue);
+        // console.log(oldValue);
+    });
+</script>
 {% endblock %}
