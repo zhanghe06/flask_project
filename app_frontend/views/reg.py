@@ -84,7 +84,7 @@ def index():
                 # https://www.***.com/email/signup/uuid
             else:
                 flash(u'%s, Sorry, register error' % form.email.data, 'warning')
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('auth.index'))
         # 闪现消息 success info warning danger
         flash(form.errors, 'warning')  # 调试打开
     return render_template('reg/index.html', title='reg', form=form)
@@ -155,7 +155,7 @@ def phone():
                 flash(u'%s, Thanks for registering' % form.phone.data, 'success')
             else:
                 flash(u'%s, Sorry, register error' % form.phone.data, 'warning')
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('auth.index'))
         # 闪现消息 success info warning danger
         flash(form.errors, 'warning')  # 调试打开
     return render_template('reg/phone.html', title='reg', form=form)
@@ -211,7 +211,7 @@ def email():
                 # https://www.***.com/email/signup/uuid
             else:
                 flash(u'%s, Sorry, register error' % form.email.data, 'warning')
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('auth.index'))
         # 闪现消息 success info warning danger
         flash(form.errors, 'warning')  # 调试打开
     return render_template('reg/email.html', title='reg', form=form)
@@ -258,7 +258,7 @@ def email_check():
         result = update_user_auth_rows({'verified': 1}, **{'auth_type': 'email', 'auth_key': email})
         if result == 1:
             flash(u'%s, Your mailbox has been verified' % email, 'success')
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('auth.index'))
         else:
             flash(u'%s, Sorry, Your mailbox validation failed' % email, 'warning')
     except SignatureExpired as e:

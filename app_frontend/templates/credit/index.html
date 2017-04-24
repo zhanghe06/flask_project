@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="container">
+    <h2 class="sub-header">Credit</h2>
+    <section id="chart_line_graphs">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <strong class="panel-title">Chart Radar Graphs
+                <span class="glyphicon glyphicon-picture pull-right"></span>
+                </strong>
+            </div>
+            <div class="panel-body text-center row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <canvas id="radar_chart" width="360" height="180"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        var radar_data_keys = ['行为偏好', '身份特质', '人脉关系', '信用历史', '履约能力'];
+        var radar_data_values = [20, 20, 20, 20, 20]; // 仅仅显示基础分值
+
+        $(function () {
+            $.getJSON('{{ url_for('credit.ajax_get_user_data') }}',
+                {}, function (data) {
+                    var result = data.result;  // true/false
+                    // console.log(result == true);
+                    if (result == true) {
+                        var data_values = data.values;
+                        // 字符串转整数
+                        radar_data_values[0] = parseInt(data_values[0]);
+                        radar_data_values[1] = parseInt(data_values[1]);
+                        radar_data_values[2] = parseInt(data_values[2]);
+                        radar_data_values[3] = parseInt(data_values[3]);
+                        radar_data_values[4] = parseInt(data_values[4]);
+                        // console.log(radar_data_values);
+                    }
+                    var radar_data = {
+                        labels: radar_data_keys,
+                        datasets: [
+                            {
+                                fillColor: "rgba(220,220,220,0.5)",
+                                strokeColor: "rgba(220,220,220,1)",
+                                pointColor: "rgba(220,220,220,1)",
+                                pointStrokeColor: "#fff",
+                                data: radar_data_values
+                            }
+                        ]
+                    };
+                    var ctx = $("#radar_chart").get(0).getContext("2d");
+                    new Chart(ctx).Radar(radar_data, {responsive: true, pointLabelFontSize : 14});
+                }
+            );
+
+        });
+    </script>
+{% endblock %}

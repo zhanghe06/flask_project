@@ -537,6 +537,14 @@ Flask-Login 扩展需要在我们 model 的 User 类里实现一些方法。：
 参考: [LightBox.md](LightBox.md)
 
 
+### Chart.js 图表插件
+
+[http://www.bootcss.com/p/chart.js/docs/](http://www.bootcss.com/p/chart.js/docs/)
+
+响应式辅助参数：
+responsive: true
+
+
 ## Flask-Excel
 
 http://flask-excel.readthedocs.io/en/latest/

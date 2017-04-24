@@ -25,7 +25,7 @@ app.session_interface = RedisSessionInterface(prefix='session:user:', **app.conf
 
 login_manager = LoginManager()
 login_manager.init_app(app)  # setup_app 方法已淘汰
-login_manager.login_view = 'auth.login'
+login_manager.login_view = 'auth.index'
 # login_manager.login_message = 'Please log in to access this page.'  # 设置登陆提示消息
 login_manager.login_message_category = 'info'  # 设置消息分类
 

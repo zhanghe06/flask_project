@@ -255,7 +255,7 @@ def get_qq_oauth_token():
 #         access_token = session['oauth_token'][0]
 #         resp = weibo.get('statuses/home_timeline.json')
 #         return jsonify(resp.data)
-#     return redirect(url_for('auth.login'))
+#     return redirect(url_for('auth.index'))
 
 
 @bp_auth.route('/login/weibo/')
