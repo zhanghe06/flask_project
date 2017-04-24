@@ -81,9 +81,9 @@ CREATE TABLE `apply_put` (
   `status_apply` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '申请状态:0:待生效，1:已生效，2:取消',
   `status_order` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '订单状态:0:待匹配，1:部分匹配，2:完全匹配',
   `status_delete` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '删除状态:0:未删除，1:已删除',
+  `delete_time` TIMESTAMP COMMENT '删除时间',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `delete_time` TIMESTAMP COMMENT '删除时间',
   PRIMARY KEY (`id`),
   KEY `ind_user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='投资申请表';
@@ -98,9 +98,9 @@ CREATE TABLE `apply_get` (
   `status_apply` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '申请状态:0:待生效，1:生效，2:取消',
   `status_order` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '匹配状态:0:待匹配，1:部分匹配，2:完全匹配',
   `status_delete` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '删除状态:0:未删除，1:已删除',
+  `delete_time` TIMESTAMP COMMENT '删除时间',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `delete_time` TIMESTAMP COMMENT '删除时间',
   PRIMARY KEY (`id`),
   KEY `ind_user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='提现申请表';
@@ -232,10 +232,10 @@ CREATE TABLE `admin` (
   `role` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '角色:0:普通，1:高级，2:系统',
   `status_delete` TINYINT NOT NULL DEFAULT '0' COMMENT '删除状态（0未删除，1已删除）',
   `delete_time` TIMESTAMP COMMENT '删除时间',
-  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `login_time` TIMESTAMP COMMENT '最后一次登录时间',
   `login_ip` VARCHAR(20) COMMENT '最后一次登录IP',
+  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='后台用户信息表';
@@ -263,8 +263,9 @@ CREATE TABLE `feedback` (
   `reply_admin_id` INT NOT NULL COMMENT '后台回复用户Id',
   `username` VARCHAR(512) NOT NULL DEFAULT '' COMMENT '留言内容',
   `password` VARCHAR(512) NOT NULL DEFAULT '' COMMENT '回复内容',
-  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '留言时间',
   `reply_time` TIMESTAMP COMMENT '回复时间',
+  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '留言时间',
+  `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `ind_send_user_id` (`send_user_id`),
   KEY `ind_reply_admin_id` (`reply_admin_id`)

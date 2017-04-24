@@ -111,22 +111,22 @@
                             <a href="#"><i class="fa fa-wrench fa-fw"></i> 订单管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="panels-wells.html">订单列表</a>
+                                    <a href="{{ url_for('order.lists') }}">订单列表 - 进行中</a>
                                 </li>
                                 <li>
-                                    <a href="buttons.html">订单列表</a>
+                                    <a href="{{ url_for('order.lists') }}">订单列表 - 已完成</a>
                                 </li>
                                 <li>
-                                    <a href="notifications.html">提供申请列表</a>
+                                    <a href="{{ url_for('apply_put.lists') }}">投资申请列表</a>
                                 </li>
                                 <li>
-                                    <a href="typography.html">获得申请列表</a>
+                                    <a href="{{ url_for('apply_get.lists') }}">提现申请列表</a>
                                 </li>
                                 <li>
-                                    <a href="icons.html">添加提供申请</a>
+                                    <a href="{{ url_for('apply_put.add') }}">添加投资申请</a>
                                 </li>
                                 <li>
-                                    <a href="grid.html">添加获得申请</a>
+                                    <a href="{{ url_for('apply_get.add') }}">添加提现申请</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->

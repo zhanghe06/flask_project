@@ -98,6 +98,11 @@ from app_backend import views
 
 # 导入蓝图（使用蓝图的多模块方式）
 from app_backend.views.admin import bp_admin
+from app_backend.views.apply_get import bp_apply_get
+from app_backend.views.apply_put import bp_apply_put
+from app_backend.views.order import bp_order
+from app_backend.views.ticket_get import bp_ticket_get
+from app_backend.views.ticket_put import bp_ticket_put
 # from app_backend.views.blog import bp_blog
 # from app_backend.views.file import bp_file
 # from app_backend.views.reg import bp_reg
@@ -106,6 +111,11 @@ from app_backend.views.user import bp_user
 
 # 注册蓝图
 app.register_blueprint(bp_admin)
+app.register_blueprint(bp_apply_get)
+app.register_blueprint(bp_apply_put)
+app.register_blueprint(bp_order)
+app.register_blueprint(bp_ticket_get)
+app.register_blueprint(bp_ticket_put)
 # app.register_blueprint(bp_blog)
 # app.register_blueprint(bp_file)
 # app.register_blueprint(bp_reg)

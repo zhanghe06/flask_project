@@ -28,8 +28,8 @@ from flask import Blueprint
 bp_user = Blueprint('user', __name__, url_prefix='/user')
 
 
-@bp_user.route('/list/', methods=['GET', 'POST'])
-@bp_user.route('/list/<int:page>/', methods=['GET', 'POST'])
+@bp_user.route('/list/')
+@bp_user.route('/list/<int:page>/')
 @login_required
 def lists(page=1):
     """

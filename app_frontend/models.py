@@ -29,10 +29,10 @@ class Admin(Base):
     role = Column(Integer, nullable=False, server_default=text("'0'"))
     status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
     delete_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
-    create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
-    update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
     login_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))
     login_ip = Column(String(20))
+    create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
+    update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
 
 class ApplyGet(Base):
@@ -45,9 +45,9 @@ class ApplyGet(Base):
     status_apply = Column(Integer, nullable=False, server_default=text("'0'"))
     status_order = Column(Integer, nullable=False, server_default=text("'0'"))
     status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
+    delete_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
-    delete_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))
 
 
 class ApplyPut(Base):
@@ -60,9 +60,9 @@ class ApplyPut(Base):
     status_apply = Column(Integer, nullable=False, server_default=text("'0'"))
     status_order = Column(Integer, nullable=False, server_default=text("'0'"))
     status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
+    delete_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
-    delete_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))
 
 
 class AreaCode(Base):
@@ -101,8 +101,9 @@ class Feedback(Base):
     reply_admin_id = Column(Integer, nullable=False, index=True)
     username = Column(String(512), nullable=False, server_default=text("''"))
     password = Column(String(512), nullable=False, server_default=text("''"))
+    reply_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
-    reply_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))
+    update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
 
 class Order(Base):
