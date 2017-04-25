@@ -26,6 +26,9 @@ from app_frontend.api.user_auth import get_user_auth_row
 from app_frontend.forms.login import LoginPhoneForm
 from app_frontend.tools import md5
 
+from datetime import timedelta
+from itsdangerous import TimestampSigner, SignatureExpired, BadTimeSignature
+
 bp_auth = Blueprint('auth', __name__, url_prefix='/auth')
 
 
@@ -317,3 +320,46 @@ def authorized_github():
 @oauth_github.tokengetter
 def get_github_oauth_token():
     return session.get('github_token')
+
+
+@bp_auth.route('/admin_login/', methods=['GET', 'POST'])
+def admin_login():
+    """
+    管理后台登录前台账号认证
+    """
+    # 获取签名的uid
+    uid_sign = request.args.get('uid_sign', '', type=str)
+
+    time_out = app.config.get('ADMIN_TO_USER_LOGIN_TIME_OUT')
+    sign_key = app.config.get('ADMIN_TO_USER_LOGIN_SIGN_KEY')
+    s = TimestampSigner(sign_key)
+    try:
+        # 签名解密
+        uid = s.unsign(uid_sign, max_age=time_out)
+    except SignatureExpired as e:
+        # 处理签名超时
+        # raise Exception(e.message)
+        flash(u'登录超时：%s' % e.message, 'warning')
+        return redirect(request.args.get('next') or url_for('index'))
+    except BadTimeSignature as e:
+        # 处理签名错误
+        # raise Exception(e.message)
+        flash(u'登录错误：%s' % e.message, 'warning')
+        return redirect(request.args.get('next') or url_for('index'))
+
+    # 获取认证信息
+    condition = {
+        'auth_type': AUTH_TYPE_ACCOUNT,
+        'user_id': uid
+    }
+    user_auth_info = get_user_auth_row(**condition)
+    if user_auth_info is None:
+        flash(u'%s, You were logged failed' % user_auth_info.auth_key, 'warning')
+        return redirect(request.args.get('next') or url_for('index'))
+    if user_auth_info.status_verified == 0:
+        flash(u'%s, Please verify account' % user_auth_info.auth_key, 'warning')
+        return redirect(request.args.get('next') or url_for('index'))
+
+    login_user(get_user_row_by_id(uid))
+    flash(u'%s, You were logged in' % user_auth_info.auth_key, 'success')
+    return redirect(request.args.get('next') or url_for('index'))

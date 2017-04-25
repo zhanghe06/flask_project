@@ -114,6 +114,12 @@ REMEMBER_COOKIE_DURATION = timedelta(days=14)   # 记住登录状态，默认365
 LOGIN_MESSAGE = u'Please log in to access this page.'
 LOGIN_MESSAGE_CATEGORY = 'warning'  # 默认'message'
 
+
+# 后台登录前台配置
+ADMIN_TO_USER_LOGIN_TIME_OUT = 1200
+ADMIN_TO_USER_LOGIN_SIGN_KEY = '1b106105da7e88e54d42e3f4356e41d8'
+
+
 # 文件上传配置
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'app/static/uploads/')
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}

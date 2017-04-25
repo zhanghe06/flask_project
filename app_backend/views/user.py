@@ -15,6 +15,7 @@ from flask import render_template, request, flash
 from flask import url_for
 from flask_login import current_user, login_required
 import flask_excel as excel
+from itsdangerous import TimestampSigner
 
 from app_backend import app
 from app_backend.forms.user import UserProfileForm, UserSearchForm
@@ -181,3 +182,35 @@ def setting():
     flash(u'Hello, %s' % current_user.email, 'info')  # 测试打开
     return render_template('./setting.html', title='setting', form=form)
 
+
+@bp_user.route('/del/', methods=['GET', 'POST'])
+@login_required
+def delete():
+    """
+    删除用户
+    :return:
+    """
+    pass
+
+
+@bp_user.route('/stats/', methods=['GET', 'POST'])
+@login_required
+def stats():
+    """
+    用户统计
+    按日、周、月统计注册量
+    :return:
+    """
+    pass
+
+
+@bp_user.route('/admin_login/<int:user_id>/', methods=['GET', 'POST'])
+@login_required
+def admin_login(user_id):
+    """
+    后台登录前台用户
+    :return:
+    """
+    s = TimestampSigner(app.config.get('ADMIN_TO_USER_LOGIN_SIGN_KEY'))
+    user_id_sign = s.sign(str(user_id))
+    return redirect('http://0.0.0.0:8000/auth/admin_login/?uid_sign=%s' % user_id_sign)
