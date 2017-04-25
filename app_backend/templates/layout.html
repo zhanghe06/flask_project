@@ -87,7 +87,7 @@
                             <a href="/"><i class="fa fa-dashboard fa-fw"></i> 后台首页</a>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> 会员管理<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-table fa-fw"></i> 会员管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="{{ url_for('user.lists') }}">会员列表</a>
@@ -101,20 +101,20 @@
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
+{#                        <li>#}
+{#                            <a href="tables.html"><i class="fa fa-table fa-fw"></i> 金币管理</a>#}
+{#                        </li>#}
+{#                        <li>#}
+{#                            <a href="forms.html"><i class="fa fa-wrench fa-fw"></i> Forms</a>#}
+{#                        </li>#}
                         <li>
-                            <a href="tables.html"><i class="fa fa-table fa-fw"></i> 金币管理</a>
-                        </li>
-                        <li>
-                            <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-wrench fa-fw"></i> 订单管理<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-edit fa-fw"></i> 订单管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="{{ url_for('order.lists') }}">订单列表 - 进行中</a>
+                                    <a href="{{ url_for('order.lists', rec=0) }}">订单列表 - 进行中</a>
                                 </li>
                                 <li>
-                                    <a href="{{ url_for('order.lists') }}">订单列表 - 已完成</a>
+                                    <a href="{{ url_for('order.lists', rec=1) }}">订单列表 - 已完成</a>
                                 </li>
                                 <li>
                                     <a href="{{ url_for('apply_put.lists') }}">投资申请列表</a>
@@ -127,6 +127,20 @@
                                 </li>
                                 <li>
                                     <a href="{{ url_for('apply_get.add') }}">添加提现申请</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+{#                        <li class="active">#}
+                        <li>
+                            <a href="#"><i class="fa fa-files-o fa-fw"></i> 留言管理<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+{#                                    <a class="active" href="blank.html">留言列表</a>#}
+                                    <a href="blank.html">留言列表</a>
+                                </li>
+                                <li>
+                                    <a href="login.html">投诉列表</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
@@ -161,14 +175,26 @@
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
-                        <li class="active">
-                            <a href="#"><i class="fa fa-files-o fa-fw"></i> 留言管理<span class="fa arrow"></span></a>
+                        <li>
+                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> 运营统计<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a class="active" href="blank.html">留言列表</a>
+                                    <a href="{{ url_for('user.stats') }}">用户统计</a>
                                 </li>
                                 <li>
-                                    <a href="login.html">投诉列表</a>
+                                    <a href="{{ url_for('apply_put.stats') }}">投资统计</a>
+                                </li>
+                                <li>
+                                    <a href="{{ url_for('apply_get.stats') }}">提现统计</a>
+                                </li>
+                                <li>
+                                    <a href="{{ url_for('order.stats') }}">订单统计</a>
+                                </li>
+                                <li>
+                                    <a href="{{ url_for('wallet.stats') }}">钱包统计</a>
+                                </li>
+                                <li>
+                                    <a href="{{ url_for('score.stats') }}">积分统计</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->

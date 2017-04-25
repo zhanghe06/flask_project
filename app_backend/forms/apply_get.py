@@ -21,6 +21,7 @@ class ApplyGetSearchForm(Form):
     """
     提现申请搜索表单
     """
+    apply_get_id = StringField('Apply Get Id')
     user_id = StringField('User Id')
     type_apply = SelectBS('Type Apply', default='', choices=type_apply_list)
     money_apply = StringField('Type Apply')

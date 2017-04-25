@@ -101,6 +101,8 @@ from app_backend.views.admin import bp_admin
 from app_backend.views.apply_get import bp_apply_get
 from app_backend.views.apply_put import bp_apply_put
 from app_backend.views.order import bp_order
+from app_backend.views.score import bp_score
+from app_backend.views.wallet import bp_wallet
 from app_backend.views.ticket_get import bp_ticket_get
 from app_backend.views.ticket_put import bp_ticket_put
 # from app_backend.views.blog import bp_blog
@@ -114,6 +116,8 @@ app.register_blueprint(bp_admin)
 app.register_blueprint(bp_apply_get)
 app.register_blueprint(bp_apply_put)
 app.register_blueprint(bp_order)
+app.register_blueprint(bp_score)
+app.register_blueprint(bp_wallet)
 app.register_blueprint(bp_ticket_get)
 app.register_blueprint(bp_ticket_put)
 # app.register_blueprint(bp_blog)

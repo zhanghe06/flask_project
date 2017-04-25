@@ -77,3 +77,13 @@ def delete():
     :return:
     """
     pass
+
+
+@bp_apply_get.route('/stats/', methods=['GET', 'POST'])
+@login_required
+def stats():
+    """
+    提现申请统计
+    :return:
+    """
+    pass

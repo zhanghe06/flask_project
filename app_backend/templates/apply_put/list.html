@@ -1,10 +1,127 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<!-- extend from base layout -->
+{% extends "layout.html" %}
 
-</body>
-</html>
+{% block extra_css %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+    <h2 class="sub-header">Apply Put List!</h2>
+
+    <form class="form-inline">
+        <div class="form-group{% if form.apply_put_id.errors %} has-error{% endif %}">
+            {{ form.apply_put_id.label(class="sr-only") }}
+            {{ form.apply_put_id(class="form-control", placeholder="Apply Put Id") }}
+            {% for error in form.apply_put_id.errors %}
+                <span class="help-block">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="form-group{% if form.user_id.errors %} has-error{% endif %}">
+            {{ form.user_id.label(class="sr-only") }}
+            {{ form.user_id(class="form-control", placeholder="User Id") }}
+            {% for error in form.user_id.errors %}
+                <span class="help-block">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="form-group{% if form.type_apply.errors %} has-error{% endif %}">
+            {{ form.type_apply.label(class="sr-only") }}
+            {{ form.type_apply(class="form-control", placeholder="申请类型", data_width="fit", data_header="选择类型") }}
+            {% for error in form.type_apply.errors %}
+                <span class="help-block">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="form-group{% if form.start_time.errors %} has-error{% endif %}">
+            {{ form.start_time.label(class="sr-only") }}
+            {{ form.start_time(class="form-control", placeholder="start_time", type='date') }}
+            {% for error in form.start_time.errors %}
+                <span class="help-block">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="form-group{% if form.end_time.errors %} has-error{% endif %}">
+            {{ form.end_time.label(class="sr-only") }}
+            {{ form.end_time(class="form-control", placeholder="end_time", type='date') }}
+            {% for error in form.end_time.errors %}
+                <span class="help-block">{{ error }}</span>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn-primary" name="op" value="0">Search</button>
+        <button type="submit" class="btn btn-primary" name="op" value="1">Export</button>
+    </form>
+
+    <hr/>
+
+    <div class="table-responsive">
+        {# <table class="table table-striped"> #}
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>id</th>
+                <th>user_id</th>
+                <th>type_apply</th>
+                <th>money_apply</th>
+                <th>status_apply</th>
+                <th>status_order</th>
+                <th>status_delete</th>
+                <th>create_time</th>
+                <th>action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for apply_put in pagination.items %}
+            <tr class="text-muted">
+                <td>{{ apply_put.id }}</td>
+                <td>{{ apply_put.user_id }}</td>
+                <td>{{ apply_put.type_apply }}</td>
+                <td>{{ apply_put.money_apply }}</td>
+                <td>{{ apply_put.status_apply }}</td>
+                <td>{{ apply_put.status_order }}</td>
+                <td>{{ apply_put.status_delete }}</td>
+                <td>{{ apply_put.create_time }}</td>
+                <td>
+                    <a href="javascript:void(0);" onclick="apply_put_delete({{ apply_put.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {# 翻页 #}
+        {% from "macros.html" import render_pagination %}
+        {{ render_pagination(pagination, 'user.lists') }}
+    </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // 初始化赋值
+    var type_apply = $('#type_apply');
+    type_apply.selectpicker('val', '{{ form.type_apply.data }}');
+    // 处理选项修改
+    type_apply.on('changed.bs.select', function (event, clickedIndex, newValue, oldValue) {
+        console.log($('#status_lock').val());
+        // console.log(event);
+        // console.log(clickedIndex);
+        // console.log(newValue);
+        // console.log(oldValue);
+    });
+    function apply_put_delete(apply_put_id){
+        if(confirm("Are you sure?"))
+        {
+            // console.log(user_id);
+            $.getJSON('{{ url_for('apply_put.delete') }}',
+            {
+                apply_put_id: apply_put_id
+            }, function (data) {
+                var result = data.result;  // true/false
+                // console.log(result==true);
+                if(result==true){
+                    window.location.reload();
+                }
+            });
+            return false;
+        }
+    }
+</script>
+{% endblock %}
