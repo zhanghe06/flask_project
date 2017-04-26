@@ -16,18 +16,16 @@ from flask import g, request, render_template, jsonify
 from flask import session, redirect, url_for, flash
 from flask_login import login_user
 from flask_login import logout_user
+from itsdangerous import TimestampSigner, SignatureExpired, BadTimeSignature
 
 from app_api.maps import area_code_map
 from app_api.maps.auth_type import *
+from app_api.tools import md5
 from app_frontend import app, oauth_github, oauth_qq, oauth_weibo
 from app_frontend.api.user import edit_user
 from app_frontend.api.user import get_user_row_by_id
 from app_frontend.api.user_auth import get_user_auth_row
 from app_frontend.forms.login import LoginPhoneForm
-from app_frontend.tools import md5
-
-from datetime import timedelta
-from itsdangerous import TimestampSigner, SignatureExpired, BadTimeSignature
 
 bp_auth = Blueprint('auth', __name__, url_prefix='/auth')
 

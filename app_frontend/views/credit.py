@@ -36,7 +36,7 @@ def ajax_get_user_data():
     获取用户声望信息
     :return:
     """
-    login_user_id = g.user.get_id()
+    login_user_id = current_user.id
     info = get_user_credit_row_by_id(login_user_id)
     if info:
         data = {

@@ -32,7 +32,7 @@ from app_backend import app, login_manager
 # cache = SimpleCache()  # 默认最大支持500个key, 超时时间5分钟, 参数可配置
 from app_backend.api.admin import get_admin_row
 from app_backend.lib.sms_chuanglan_iso import SmsChuangLanIsoApi
-from app_backend.tools import md5
+from app_api.tools import md5
 from app_backend.tools.send_sms import UN, PW
 
 
