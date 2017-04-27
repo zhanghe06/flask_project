@@ -9,8 +9,13 @@
             <section id="chart_line_graphs">
                 <div class="panel panel-default">
                 <div class="panel-heading">
-                    <strong class="panel-title">Chart Line Graphs
-                    <span class="glyphicon glyphicon-picture pull-right"></span>
+                    <div class="btn-group pull-right" role="group" aria-label="...">
+                        <button type="button" class="btn btn-default btn-time-bar">Day</button>
+                        <button type="button" class="btn btn-default btn-time-bar">Week</button>
+                        <button type="button" class="btn btn-default btn-time-bar">Month</button>
+                    </div>
+                    <strong class="panel-title">
+                        <span class="glyphicon glyphicon-picture"></span> Chart Line Graphs
                     </strong>
                 </div>
                 <canvas id="chart_line_canvas"></canvas>
@@ -107,15 +112,6 @@
                         <div class="col-sm-10">
                             {{ form.update_time(class="form-control", placeholder="update_time", readonly="readonly") }}
                             {% for error in form.update_time.errors %}
-                                <span class="help-block">{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="form-group{% if form.last_ip.errors %} has-error{% endif %}">
-                        {{ form.last_ip.label(class="col-sm-2 control-label") }}
-                        <div class="col-sm-10">
-                            {{ form.last_ip(class="form-control", placeholder="last_ip", readonly="readonly") }}
-                            {% for error in form.last_ip.errors %}
                                 <span class="help-block">{{ error }}</span>
                             {% endfor %}
                         </div>

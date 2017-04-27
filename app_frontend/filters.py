@@ -11,6 +11,8 @@
 
 
 from app_frontend import app
+from app_frontend.api.user_profile import get_user_profile_row_by_id
+from app_api.maps.level_type import LEVEL_TYPE_DICT
 import time
 
 
@@ -58,3 +60,14 @@ def time_diff_pretty_filter(delta_s):
         count = int(delta_s)
         result += u'%s秒' % count
     return result
+
+
+@app.template_filter('user_name_level')
+def filter_user_name_level(user_id):
+    """
+    用户中心显示用户名和等级
+    :param user_id:
+    :return:
+    """
+    row = get_user_profile_row_by_id(user_id)
+    return u'%s(%s)' % (row.nickname, LEVEL_TYPE_DICT.get(row.level_type, u'普通')) if row else u'游客'

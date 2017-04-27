@@ -1,0 +1,99 @@
+<!-- extend from base layout -->
+{% extends "layout.html" %}
+
+{% block extra_css %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+    <!-- header -->
+    <nav class="sub-header row container-fluid">
+        <h2>Order Get List!</h2>
+        <div class="btn-group pull-right" role="group" aria-label="...">
+            {% if request.query_string == 'status_rec=2' %}
+            <a type="button" class="btn btn-default" href="{{ url_for('order.lists_get') }}">Holding</a>
+            <a type="button" class="btn btn-default" href="{{ url_for('order.lists_get', status_rec=1) }}">Success</a>
+            <a type="button" class="btn btn-default active">Failure</a>
+            {% elif request.query_string == 'status_rec=1' %}
+            <a type="button" class="btn btn-default" href="{{ url_for('order.lists_get') }}">Holding</a>
+            <a type="button" class="btn btn-default active">Success</a>
+            <a type="button" class="btn btn-default" href="{{ url_for('order.lists_get', status_rec=2) }}">Failure</a>
+            {% else %}
+            <a type="button" class="btn btn-default active">Holding</a>
+            <a type="button" class="btn btn-default" href="{{ url_for('order.lists_get', status_rec=1) }}">Success</a>
+            <a type="button" class="btn btn-default" href="{{ url_for('order.lists_get', status_rec=2) }}">Failure</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <hr/>
+    <!-- content -->
+    <div class="table-responsive">
+        {# <table class="table table-striped"> #}
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>id</th>
+                <th>apply_put_id</th>
+                <th>apply_get_id</th>
+                <th>apply_put_uid</th>
+                <th>apply_get_uid</th>
+                <th>ticket_put_id</th>
+                <th>ticket_get_id</th>
+                <th>status_audit</th>
+                <th>status_pay</th>
+                <th>status_rec</th>
+                <th>create_time</th>
+                <th>action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for order in pagination.items %}
+            <tr class="text-muted">
+                <td>{{ order.id }}</td>
+                <td>{{ order.apply_put_id }}</td>
+                <td>{{ order.apply_get_id }}</td>
+                <td>{{ order.apply_put_uid }}</td>
+                <td>{{ order.apply_get_uid }}</td>
+                <td>{{ order.ticket_put_id }}</td>
+                <td>{{ order.ticket_get_id }}</td>
+                <td>{{ order.status_audit }}</td>
+                <td>{{ order.status_pay }}</td>
+                <td>{{ order.status_rec }}</td>
+                <td>{{ order.create_time }}</td>
+                <td>
+                    <a href="javascript:void(0);" onclick="order_delete({{ order.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {# 翻页 #}
+        {% from "macros.html" import render_pagination %}
+        {{ render_pagination(pagination, 'order.lists_get') }}
+    </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function order_delete(order_id){
+        if(confirm("Are you sure?"))
+        {
+            // console.log(user_id);
+            $.getJSON('{{ url_for('order.delete') }}',
+            {
+                order_id: order_id
+            }, function (data) {
+                var result = data.result;  // true/false
+                // console.log(result==true);
+                if(result==true){
+                    window.location.reload();
+                }
+            });
+            return false;
+        }
+    }
+</script>
+{% endblock %}

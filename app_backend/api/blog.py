@@ -9,10 +9,10 @@
 """
 
 
-from app_frontend.models import Blog
-from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
-from app_frontend.lib.counter import Counter
-from app_frontend.lib.container import Container
+from app_backend.models import Blog
+from app_backend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
+from app_backend.lib.counter import Counter
+from app_backend.lib.container import Container
 
 
 def get_blog_row_by_id(blog_id):

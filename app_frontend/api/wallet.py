@@ -4,65 +4,65 @@
 """
 @author: zhanghe
 @software: PyCharm
-@file: order.py
-@time: 2017/4/13 下午9:45
+@file: wallet.py
+@time: 2017/4/25 下午1:29
 """
 
 
-from app_frontend.models import Order
+from app_frontend.models import Wallet
 from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
 
 
-def get_order_row_by_id(order_id):
+def get_wallet_row_by_id(wallet_id):
     """
-    通过 id 获取订单信息
-    :param order_id:
+    通过 id 获取钱包信息
+    :param wallet_id:
     :return: None/object
     """
-    return get_row_by_id(Order, order_id)
+    return get_row_by_id(Wallet, wallet_id)
 
 
-def get_order_row(*args, **kwargs):
+def get_wallet_row(*args, **kwargs):
     """
-    获取订单信息
+    获取钱包信息
     :param args:
     :param kwargs:
     :return: None/object
     """
-    return get_row(Order, *args, **kwargs)
+    return get_row(Wallet, *args, **kwargs)
 
 
-def add_order(order_data):
+def add_wallet(wallet_data):
     """
-    添加订单信息
-    :param order_data:
-    :return: None/Value of order.id
+    添加钱包信息
+    :param wallet_data:
+    :return: None/Value of wallet.id
     """
-    return add(Order, order_data)
+    return add(Wallet, wallet_data)
 
 
-def edit_order(order_id, order_data):
+def edit_wallet(wallet_id, wallet_data):
     """
-    修改订单信息
-    :param order_id:
-    :param order_data:
+    修改钱包信息
+    :param wallet_id:
+    :param wallet_data:
     :return: Number of affected rows (Example: 0/1)
     """
-    return edit(Order, order_id, order_data)
+    return edit(Wallet, wallet_id, wallet_data)
 
 
-def delete_order(order_id):
+def delete_wallet(wallet_id):
     """
-    删除订单信息
-    :param order_id:
+    删除钱包信息
+    :param wallet_id:
     :return: Number of affected rows (Example: 0/1)
     """
-    return delete(Order, order_id)
+    return delete(Wallet, wallet_id)
 
 
-def get_order_rows(page=1, per_page=10, *args, **kwargs):
+def get_wallet_rows(page=1, per_page=10, *args, **kwargs):
     """
-    获取订单列表（分页）
+    获取钱包列表（分页）
     Usage:
         items: 信息列表
         has_next: 如果本页之后还有超过一个分页，则返回True
@@ -77,6 +77,5 @@ def get_order_rows(page=1, per_page=10, *args, **kwargs):
     :param kwargs:
     :return:
     """
-    rows = get_rows(Order, page, per_page, *args, **kwargs)
+    rows = get_rows(Wallet, page, per_page, *args, **kwargs)
     return rows
-

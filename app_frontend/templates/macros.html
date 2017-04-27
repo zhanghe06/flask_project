@@ -1,4 +1,5 @@
 {% macro render_pagination(pagination, endpoint) %}
+    {% if pagination.pages > 0 %}
     <nav class="text-center">
         <ul class="pagination">
             <li>
@@ -32,6 +33,13 @@
             </li>
         </ul>
     </nav>
+    {% else %}
+    <section id="nothing">
+        <div class="well well-large text-center">
+            Nothing yet.
+        </div>
+    </section>
+    {% endif %}
 {% endmacro %}
 
 
@@ -51,11 +59,11 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li{% if title == 'home' %} class="active"{% endif %}><a href="{{ url_for('index') }}"><span
+                    <li{% if request.path == url_for('index') %} class="active"{% endif %}><a href="{{ url_for('index') }}"><span
                             class="glyphicon glyphicon-home"></span> Home</a></li>
-                    <li{% if title == 'about' %} class="active"{% endif %}><a href="{{ url_for('about') }}"><span
+                    <li{% if request.path == url_for('about') %} class="active"{% endif %}><a href="{{ url_for('about') }}"><span
                             class="glyphicon glyphicon-list"></span> About</a></li>
-                    <li{% if title == 'contact' %} class="active"{% endif %}><a href="{{ url_for('contact') }}"><span
+                    <li{% if request.path == url_for('contact') %} class="active"{% endif %}><a href="{{ url_for('contact') }}"><span
                             class="glyphicon glyphicon-envelope"></span> Contact</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
@@ -73,6 +81,54 @@
                                 <li><a href="{{ url_for('blog.hot') }}">Blog Hot</a></li>{% endif %}
                         </ul>
                     </li>
+                {% if g.user != None and g.user.is_authenticated %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false"><span class="glyphicon glyphicon-paste"></span> Put <span
+                                class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                        {% if request.path == url_for('order.lists_put') %}
+                            <li class="dropdown-header"><span class="glyphicon glyphicon-list-alt"></span> Order Put List</li>
+                        {% else %}
+                            <li><a href="{{ url_for('order.lists_put') }}"><span class="glyphicon glyphicon-list-alt"></span> Order Put List</a></li>
+                        {% endif %}
+                        {% if request.path == url_for('apply.lists_put') %}
+                            <li class="dropdown-header"><span class="glyphicon glyphicon-th-list"></span> Apply Put List</li>
+                        {% else %}
+                            <li><a href="{{ url_for('apply.lists_put') }}"><span class="glyphicon glyphicon-th-list"></span> Apply Put List</a></li>
+                        {% endif %}
+                        {% if request.path == url_for('apply.add_put') %}
+                            <li class="dropdown-header"><span class="glyphicon glyphicon-plus"></span> Apply Put Add</li>
+                        {% else %}
+                            <li><a href="{{ url_for('apply.add_put') }}"><span class="glyphicon glyphicon-plus"></span> Apply Put Add</a></li>
+                        {% endif %}
+                        </ul>
+                    </li>
+                {% endif %}
+                {% if g.user != None and g.user.is_authenticated %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false"><span class="glyphicon glyphicon-copy"></span> Get <span
+                                class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                        {% if request.path == url_for('order.lists_get') %}
+                            <li class="dropdown-header"><span class="glyphicon glyphicon-list-alt"></span> Order Get List</li>
+                        {% else %}
+                            <li><a href="{{ url_for('order.lists_get') }}"><span class="glyphicon glyphicon-list-alt"></span> Order Get List</a></li>
+                        {% endif %}
+                        {% if request.path == url_for('apply.lists_get') %}
+                            <li class="dropdown-header"><span class="glyphicon glyphicon-th-list"></span> Apply Get List</li>
+                        {% else %}
+                            <li><a href="{{ url_for('apply.lists_get') }}"><span class="glyphicon glyphicon-th-list"></span> Apply Get List</a></li>
+                        {% endif %}
+                        {% if request.path == url_for('apply.add_get') %}
+                            <li class="dropdown-header"><span class="glyphicon glyphicon-plus"></span> Apply Get Add</li>
+                        {% else %}
+                            <li><a href="{{ url_for('apply.add_get') }}"><span class="glyphicon glyphicon-plus"></span> Apply Get Add</a></li>
+                        {% endif %}
+                        </ul>
+                    </li>
+                {% endif %}
                 </ul>
                 <form class="navbar-form navbar-left" role="search" action="{{ url_for('search') }}">
                     <div class="input-group">
@@ -84,31 +140,31 @@
                     </div>
                 </form>
                 <ul class="nav navbar-nav navbar-right">
-                    {% if g.user != None and g.user.is_authenticated %}
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                               aria-haspopup="true"
-                               aria-expanded="false"><span
-                                    class="glyphicon glyphicon-user"></span> {{ g.user.nickname }}<span
-                                    class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="{{ url_for('blog.add') }}"><span class="glyphicon glyphicon-edit"></span>
-                                    Add Blog</a></li>
-                                <li><a href="{{ url_for('user.profile') }}"><span class="glyphicon glyphicon-folder-open"></span>
-                                    Profile</a></li>
-                                <li><a href="{{ url_for('user.setting') }}"><span class="glyphicon glyphicon-cog"></span>
-                                    Setting</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="{{ url_for('auth.logout') }}"><span class="glyphicon glyphicon-log-out"></span>
-                                    Logout</a></li>
-                            </ul>
-                        </li>
-                    {% else %}
-                        <li{% if title == 'reg' %} class="active"{% endif %}><a href="{{ url_for('reg.index') }}"><span
-                                class="glyphicon glyphicon-list-alt"></span> Register</a></li>
-                        <li{% if title == 'login' %} class="active"{% endif %}><a href="{{ url_for('auth.index') }}"><span
-                                class="glyphicon glyphicon-log-in"></span> Login</a></li>
-                    {% endif %}
+                {% if g.user != None and g.user.is_authenticated %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                           aria-haspopup="true"
+                           aria-expanded="false"><span
+                                class="glyphicon glyphicon-user"></span> {{ g.user.id | user_name_level }}<span
+                                class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url_for('blog.add') }}"><span class="glyphicon glyphicon-edit"></span>
+                                Add Blog</a></li>
+                            <li><a href="{{ url_for('user.profile') }}"><span class="glyphicon glyphicon-folder-open"></span>
+                                Profile</a></li>
+                            <li><a href="{{ url_for('user.setting') }}"><span class="glyphicon glyphicon-cog"></span>
+                                Setting</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{{ url_for('auth.logout') }}"><span class="glyphicon glyphicon-log-out"></span>
+                                Logout</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li{% if title == 'reg' %} class="active"{% endif %}><a href="{{ url_for('reg.index') }}"><span
+                            class="glyphicon glyphicon-list-alt"></span> Register</a></li>
+                    <li{% if title == 'login' %} class="active"{% endif %}><a href="{{ url_for('auth.index') }}"><span
+                            class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                {% endif %}
                 </ul>
             </div><!--/.nav-collapse -->
         </div>

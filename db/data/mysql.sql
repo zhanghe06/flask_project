@@ -20,9 +20,9 @@ INSERT INTO `user_auth` VALUES (9, 3, 2, '8613800003333', 'e10adc3949ba59abbe56e
 
 -- 插入用户基本信息
 TRUNCATE TABLE `user_profile`;
-INSERT INTO `user_profile` VALUES (1, 0, 'Admin', NULL, 'admin@gmail.com', 0, '86', '13800001111', NULL, '123456789098765432', '2016-01-11 11:01:05', '2016-01-11 11:01:05');
-INSERT INTO `user_profile` VALUES (2, 1, 'Guest', NULL, 'guest@gmail.com', 0, '86', '13800002222', NULL, '123456789098765433', '2016-01-12 12:25:34', '2016-01-12 12:25:34');
-INSERT INTO `user_profile` VALUES (3, 1, 'Test', NULL, 'test@gmail.com', 0, '86', '13800003333', NULL, '123456789098765434', '2016-01-12 01:43:42', '2016-01-12 01:43:42');
+INSERT INTO `user_profile` VALUES (1, 0, 'Admin', 0, NULL, 'admin@gmail.com', 0, '86', '13800001111', NULL, '123456789098765432', '2016-01-11 11:01:05', '2016-01-11 11:01:05');
+INSERT INTO `user_profile` VALUES (2, 1, 'Guest', 0, NULL, 'guest@gmail.com', 0, '86', '13800002222', NULL, '123456789098765433', '2016-01-12 12:25:34', '2016-01-12 12:25:34');
+INSERT INTO `user_profile` VALUES (3, 1, 'Test', 0, NULL, 'test@gmail.com', 0, '86', '13800003333', NULL, '123456789098765434', '2016-01-12 01:43:42', '2016-01-12 01:43:42');
 
 -- 插入用户银行信息
 TRUNCATE TABLE `user_bank`;
@@ -48,13 +48,13 @@ INSERT INTO `apply_get` VALUES (1, 2, 0, 2000.00, 1, 0, 0, NULL, '2016-01-12 12:
 
 -- 插入付款单记录
 TRUNCATE TABLE `ticket_put`;
-INSERT INTO `ticket_put` VALUES (1, 1, 1, 2000.00, 0, NULL, '2016-01-12 12:25:34', '2016-01-12 12:25:34');
+INSERT INTO `ticket_put` VALUES (1, 1, 1, 2000.00, 0, NULL, 0, NULL, '2016-01-12 12:25:34', '2016-01-12 12:25:34');
 
 -- 插入收款单记录
 TRUNCATE TABLE `ticket_get`;
-INSERT INTO `ticket_get` VALUES (1, 2, 1, 2000.00, 0, NULL, '2016-01-12 12:25:34', '2016-01-12 12:25:34');
+INSERT INTO `ticket_get` VALUES (1, 2, 1, 2000.00, 0, NULL, 0, NULL, '2016-01-12 12:25:34', '2016-01-12 12:25:34');
 
 -- 插入订单记录
 TRUNCATE TABLE `order`;
 INSERT INTO `order`
-VALUES (1, 1, 1, 1, 2, 1, 1, 0, 2000.00, 0, 0, 0, NULL, NULL, NULL, '2016-01-12 12:25:34', '2016-01-12 12:25:34');
+VALUES (1, 1, 1, 1, 2, 1, 1, 0, 2000.00, 0, 0, 0, 0, NULL, NULL, NULL, NULL, '2016-01-12 12:25:34', '2016-01-12 12:25:34');

@@ -127,7 +127,7 @@ def edit_profile(user_id):
                 'pub_date': form.pub_date.data,
                 'edit_time': datetime.utcnow(),
             }
-            from app_frontend.api.blog import edit_blog
+            from app_backend.api.blog import edit_blog
             result = edit_blog(blog_id, blog_info)
             if result == 1:
                 flash(u'Edit Success', 'success')

@@ -79,6 +79,28 @@ class AreaCode(Base):
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
 
+class Bonu(Base):
+    __tablename__ = 'bonus'
+
+    user_id = Column(Integer, primary_key=True)
+    amount = Column(Numeric(10, 0), nullable=False, server_default=text("'0'"))
+    create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
+    update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+
+
+class BonusItem(Base):
+    __tablename__ = 'bonus_item'
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, nullable=False, index=True)
+    type = Column(Integer, nullable=False, server_default=text("'0'"))
+    score = Column(Numeric(8, 0), nullable=False, server_default=text("'0'"))
+    note = Column(String(256), nullable=False, server_default=text("''"))
+    status = Column(Integer, nullable=False, server_default=text("'0'"))
+    create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
+    update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+
+
 class Credit(Base):
     __tablename__ = 'credit'
 
@@ -121,9 +143,11 @@ class Order(Base):
     status_audit = Column(Integer, nullable=False, server_default=text("'0'"))
     status_pay = Column(Integer, nullable=False, server_default=text("'0'"))
     status_rec = Column(Integer, nullable=False, server_default=text("'0'"))
+    status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
     audit_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
     pay_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))
     receipt_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))
+    delete_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
@@ -159,6 +183,8 @@ class TicketGet(Base):
     money = Column(Numeric(8, 2), nullable=False, server_default=text("'0.00'"))
     status_pay = Column(Integer, nullable=False, server_default=text("'0'"))
     receipt_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+    status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
+    delete_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
@@ -172,6 +198,8 @@ class TicketPut(Base):
     money = Column(Numeric(8, 2), nullable=False, server_default=text("'0.00'"))
     status_pay = Column(Integer, nullable=False, server_default=text("'0'"))
     pay_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+    status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
+    delete_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
@@ -230,6 +258,7 @@ class UserProfile(Base):
     user_id = Column(Integer, primary_key=True)
     user_pid = Column(Integer, nullable=False, server_default=text("'0'"))
     nickname = Column(String(20), nullable=False, server_default=text("''"))
+    level_type = Column(Integer, nullable=False, server_default=text("'0'"))
     avatar_url = Column(String(60))
     email = Column(String(60), nullable=False, server_default=text("''"))
     area_id = Column(Integer, nullable=False, server_default=text("'0'"))

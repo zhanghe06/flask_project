@@ -4,7 +4,7 @@
 """
 @author: zhanghe
 @software: PyCharm
-@file: wallet.py
+@file: score.py
 @time: 2017/4/25 下午1:25
 """
 
@@ -16,52 +16,51 @@ from flask import url_for
 from flask_login import current_user, login_required
 
 from app_frontend import app
-from app_frontend.models import User
-from app_frontend.api.wallet import get_wallet_rows
+from app_frontend.api.score import get_score_rows
 
 from flask import Blueprint
 
 
-bp_wallet = Blueprint('wallet', __name__, url_prefix='/wallet')
+bp_score = Blueprint('score', __name__, url_prefix='/score')
 
 
-@bp_wallet.route('/list/')
-@bp_wallet.route('/list/<int:page>/')
+@bp_score.route('/list/')
+@bp_score.route('/list/<int:page>/')
 @login_required
 def lists(page=1):
     """
-    钱包列表
+    积分列表
     """
 
-    pagination = get_wallet_rows(page)
-    return render_template('wallet/list.html', title='wallet_list', pagination=pagination)
+    pagination = get_score_rows(page)
+    return render_template('score/list.html', title='score_list', pagination=pagination)
 
 
-@bp_wallet.route('/add/', methods=['GET', 'POST'])
+@bp_score.route('/add/', methods=['GET', 'POST'])
 @login_required
 def add():
     """
-    创建钱包
+    创建积分
     :return:
     """
     pass
 
 
-@bp_wallet.route('/del/', methods=['GET', 'POST'])
+@bp_score.route('/del/', methods=['GET', 'POST'])
 @login_required
 def delete():
     """
-    删除钱包
+    删除积分
     :return:
     """
     pass
 
 
-@bp_wallet.route('/stats/', methods=['GET', 'POST'])
+@bp_score.route('/stats/', methods=['GET', 'POST'])
 @login_required
 def stats():
     """
-    钱包统计
+    积分统计
     :return:
     """
     pass

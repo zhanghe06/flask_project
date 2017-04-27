@@ -9,10 +9,10 @@
 """
 
 
-from app_frontend.models import User
+from app_backend.models import User
 from app_backend.models import UserProfile
 from app_backend.models import UserBank
-from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
+from app_backend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
 
 
 def get_user_row_by_id(user_id):

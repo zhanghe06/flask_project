@@ -35,3 +35,7 @@ a#top-link:hover {
     bottom: 21px;
     right: 10px;
 }
+
+.btn-time-bar {
+    padding: 0 12px;
+}

@@ -104,6 +104,12 @@ from app_frontend.views.file import bp_file
 from app_frontend.views.reg import bp_reg
 from app_frontend.views.user import bp_user
 from app_frontend.views.credit import bp_credit
+from app_frontend.views.apply import bp_apply
+from app_frontend.views.order import bp_order
+from app_frontend.views.score import bp_score
+from app_frontend.views.wallet import bp_wallet
+from app_frontend.views.ticket_get import bp_ticket_get
+from app_frontend.views.ticket_put import bp_ticket_put
 
 # 注册蓝图
 app.register_blueprint(bp_captcha)
@@ -113,6 +119,12 @@ app.register_blueprint(bp_file)
 app.register_blueprint(bp_reg)
 app.register_blueprint(bp_user)
 app.register_blueprint(bp_credit)
+app.register_blueprint(bp_apply)
+app.register_blueprint(bp_order)
+app.register_blueprint(bp_score)
+app.register_blueprint(bp_wallet)
+app.register_blueprint(bp_ticket_get)
+app.register_blueprint(bp_ticket_put)
 
 # 导入自定义过滤器
 from app_frontend import filters

@@ -1,0 +1,87 @@
+<!-- extend from base layout -->
+{% extends "layout.html" %}
+
+{% block extra_css %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+    <!-- header -->
+    <nav class="sub-header row container-fluid">
+        <h2>Apply Put List!</h2>
+        <div class="btn-group pull-right" role="group" aria-label="...">
+            {% if request.query_string == 'status_order=2' %}
+            <a type="button" class="btn btn-default" href="{{ url_for('apply.lists_put') }}">Processing</a>
+            <a type="button" class="btn btn-default active">Completed</a>
+            {% else %}
+            <a type="button" class="btn btn-default active">Processing</a>
+            <a type="button" class="btn btn-default" href="{{ url_for('apply.lists_put', status_order=2) }}">Completed</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <hr/>
+    <!-- content -->
+    <div class="table-responsive">
+        {# <table class="table table-striped"> #}
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>id</th>
+                <th>user_id</th>
+                <th>type_apply</th>
+                <th>money_apply</th>
+                <th>status_apply</th>
+                <th>status_order</th>
+                <th>status_delete</th>
+                <th>create_time</th>
+                <th>action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for apply_put in pagination.items %}
+            <tr class="text-muted">
+                <td>{{ apply_put.id }}</td>
+                <td>{{ apply_put.user_id }}</td>
+                <td>{{ apply_put.type_apply }}</td>
+                <td>{{ apply_put.money_apply }}</td>
+                <td>{{ apply_put.status_apply }}</td>
+                <td>{{ apply_put.status_order }}</td>
+                <td>{{ apply_put.status_delete }}</td>
+                <td>{{ apply_put.create_time }}</td>
+                <td>
+                    <a href="javascript:void(0);" onclick="apply_put_delete({{ apply_put.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {# 翻页 #}
+        {% from "macros.html" import render_pagination %}
+        {{ render_pagination(pagination, 'apply.lists_put') }}
+    </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function apply_put_delete(apply_put_id){
+        if(confirm("Are you sure?"))
+        {
+            // console.log(user_id);
+            $.getJSON('{{ url_for('apply.delete_put') }}',
+            {
+                apply_put_id: apply_put_id
+            }, function (data) {
+                var result = data.result;  // true/false
+                // console.log(result==true);
+                if(result==true){
+                    window.location.reload();
+                }
+            });
+            return false;
+        }
+    }
+</script>
+{% endblock %}
