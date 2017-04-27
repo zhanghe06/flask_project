@@ -107,10 +107,10 @@ def add(model_name, data):
     model_obj = model_name(**data)
     try:
         db.session.add(model_obj)
-        # db.session.commit()
+        db.session.commit()
         return inspect(model_obj).identity[0]
     except Exception as e:
-        # db.session.rollback()
+        db.session.rollback()
         raise e
 
 
@@ -126,10 +126,10 @@ def edit(model_name, pk_id, data):
     try:
         model_obj = db.session.query(model_name).filter(model_pk == pk_id)
         result = model_obj.update(data)
-        # db.session.commit()
+        db.session.commit()
         return result
     except Exception as e:
-        # db.session.rollback()
+        db.session.rollback()
         raise e
 
 
@@ -144,10 +144,10 @@ def delete(model_name, pk_id):
     try:
         model_obj = db.session.query(model_name).filter(model_pk == pk_id)
         result = model_obj.delete()
-        # db.session.commit()
+        db.session.commit()
         return result
     except Exception as e:
-        # db.session.rollback()
+        db.session.rollback()
         raise e
 
 
@@ -169,7 +169,11 @@ def get_rows(model_name, page=1, per_page=10, *args, **kwargs):
     :param kwargs:
     :return: None/object
     """
-    rows = model_name.query.filter(*args).filter_by(**kwargs).paginate(page, per_page, False)
+    rows = model_name.query. \
+        filter(*args). \
+        filter_by(**kwargs). \
+        order_by(inspect(model_name).primary_key[0].desc()). \
+        paginate(page, per_page, False)
     return rows
 
 
@@ -196,10 +200,10 @@ def insert_rows(model_name, data_list):
     """
     try:
         result = db.session.execute(model_name.__table__.insert().prefix_with('IGNORE'), data_list)
-        # db.session.commit()
+        db.session.commit()
         return result.rowcount
     except Exception as e:
-        # db.session.rollback()
+        db.session.rollback()
         raise e
 
 
@@ -215,10 +219,10 @@ def update_rows(model_name, data, *args, **kwargs):
     try:
         model_obj = db.session.query(model_name).filter(*args).filter_by(**kwargs)
         result = model_obj.update(data, synchronize_session=False)
-        # db.session.commit()
+        db.session.commit()
         return result
     except Exception as e:
-        # db.session.rollback()
+        db.session.rollback()
         raise e
 
 
@@ -230,10 +234,10 @@ def update_rows_by_ids(model_name, pk_ids, data):
     try:
         model_obj = db.session.query(model_name).filter(model_pk.in_(pk_ids))
         result = model_obj.update(data, synchronize_session=False)
-        # db.session.commit()
+        db.session.commit()
         return result
     except Exception as e:
-        # db.session.rollback()
+        db.session.rollback()
         raise e
 
 

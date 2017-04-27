@@ -1,0 +1,474 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="container">
+    <h2 class="sub-header">Setting</h2>
+
+    <div class="row">
+        <div class="col-lg-8 col-md-12">
+            <section id="chart_line_graphs">
+                <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="btn-group pull-right" role="group" aria-label="...">
+                        <button type="button" class="btn btn-default btn-time-bar">Day</button>
+                        <button type="button" class="btn btn-default btn-time-bar">Week</button>
+                        <button type="button" class="btn btn-default btn-time-bar">Month</button>
+                    </div>
+                    <strong class="panel-title">
+                        <span class="glyphicon glyphicon-picture"></span> Chart Line Graphs
+                    </strong>
+                </div>
+                <canvas id="chart_line_canvas"></canvas>
+                </div>
+            </section>
+            <section id="chart_bar_graphs">
+                <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong class="panel-title">Chart Bar Graphs
+                    <span class="glyphicon glyphicon-picture pull-right"></span>
+                    </strong>
+                </div>
+                <div class="panel-body text-center row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <canvas id="chart_bar_canvas_01"></canvas>
+                        <span class="text-muted">Chart Bar Graphs Example 01</span>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <canvas id="chart_bar_canvas_02"></canvas>
+                        <span class="text-muted">Chart Bar Graphs Example 02</span>
+                    </div>
+                </div>
+                <div class="panel-footer text-center text-muted">
+                    Chart Bar Graphs Example
+                </div>
+                </div>
+            </section>
+            <section id="user_profile">
+                <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong class="panel-title">User profile
+                    <span class="glyphicon glyphicon-cog pull-right"></span>
+                    </strong>
+                </div>
+                <div class="panel-body">
+                    <form class="form-horizontal" method="post" action="">
+                    {{ form.csrf_token }}
+                    <div class="form-group{% if form.nickname.errors %} has-error{% endif %}">
+                        {{ form.nickname.label(class="col-sm-2 control-label") }}
+                        <div class="col-sm-10">
+                            {{ form.nickname(class="form-control", placeholder="nickname") }}
+                            {% for error in form.nickname.errors %}
+                                <span class="help-block">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group{% if form.avatar_url.errors %} has-error{% endif %}">
+                        {{ form.avatar_url.label(class="col-sm-2 control-label") }}
+                        <div class="col-sm-10">
+                            {{ form.avatar_url(class="form-control", placeholder="avatar_url") }}
+                            {% for error in form.avatar_url.errors %}
+                                <span class="help-block">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group{% if form.email.errors %} has-error{% endif %}">
+                        {{ form.email.label(class="col-sm-2 control-label") }}
+                        <div class="col-sm-10">
+                            {{ form.email(class="form-control", placeholder="Email") }}
+                            {% for error in form.email.errors %}
+                                <span class="help-block">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group{% if form.phone.errors %} has-error{% endif %}">
+                        {{ form.phone.label(class="col-sm-2 control-label") }}
+                        <div class="col-sm-10">
+                            {{ form.phone(class="form-control", placeholder="Phone") }}
+                            {% for error in form.phone.errors %}
+                                <span class="help-block">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group{% if form.birthday.errors %} has-error{% endif %}">
+                        {{ form.birthday.label(class="col-sm-2 control-label") }}
+                        <div class="col-sm-10">
+                            {{ form.birthday(class="form-control", placeholder="birthday", type='date') }}
+                            {% for error in form.birthday.errors %}
+                                <span class="help-block">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group{% if form.create_time.errors %} has-error{% endif %}">
+                        {{ form.create_time.label(class="col-sm-2 control-label") }}
+                        <div class="col-sm-10">
+                            {{ form.create_time(class="form-control", placeholder="create_time", readonly="readonly") }}
+                            {% for error in form.create_time.errors %}
+                                <span class="help-block">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group{% if form.update_time.errors %} has-error{% endif %}">
+                        {{ form.update_time.label(class="col-sm-2 control-label") }}
+                        <div class="col-sm-10">
+                            {{ form.update_time(class="form-control", placeholder="update_time", readonly="readonly") }}
+                            {% for error in form.update_time.errors %}
+                                <span class="help-block">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-default">Edit</button>
+                            <button type="reset" class="btn btn-default">Reset</button>
+                        </div>
+                    </div>
+                </form>
+                </div>
+            </div>
+            </section>
+            <section id="first_options">
+                <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong class="panel-title">First server management options
+                    <span class="glyphicon glyphicon-cog pull-right"></span>
+                    </strong>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Permission Item</th>
+                            <th>Community Edition</th>
+                            <th><b>Enterprise Edition</b></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="#">Create and remove admins based on an LDAP group</a></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">Groups consisting of multiple people with a shared namespace</a></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">Close JIRA issues with GitLab commits</a></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </section>
+            <section id="user_permissions">
+                <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong class="panel-title">User permissions
+                    <span class="glyphicon glyphicon-cog pull-right"></span>
+                    </strong>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Permission Item</th>
+                            <th>Community Edition</th>
+                            <th><b>Enterprise Edition</b></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="#">Create and remove admins based on an LDAP group</a></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">Groups consisting of multiple people with a shared namespace</a></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">Close JIRA issues with GitLab commits</a></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">Groups consisting of multiple people with a shared namespace</a></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">Close JIRA issues with GitLab commits</a></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </section>
+            <section id="additional_options">
+                <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong class="panel-title">Additional server management options
+                    <span class="glyphicon glyphicon-cog pull-right"></span>
+                    </strong>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Permission Item</th>
+                            <th>Community Edition</th>
+                            <th><b>Enterprise Edition</b></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="#">Create and remove admins based on an LDAP group</a></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">Groups consisting of multiple people with a shared namespace</a></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">Close JIRA issues with GitLab commits</a></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">Create and remove admins based on an LDAP group</a></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">Groups consisting of multiple people with a shared namespace</a></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">Close JIRA issues with GitLab commits</a></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">Create and remove admins based on an LDAP group</a></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">Groups consisting of multiple people with a shared namespace</a></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">Close JIRA issues with GitLab commits</a></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </section>
+            <section id="last_options">
+                <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong class="panel-title">Last server management options
+                    <span class="glyphicon glyphicon-cog pull-right"></span>
+                    </strong>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Permission Item</th>
+                            <th>Community Edition</th>
+                            <th><b>Enterprise Edition</b></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="#">Create and remove admins based on an LDAP group</a></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">Groups consisting of multiple people with a shared namespace</a></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">Close JIRA issues with GitLab commits</a></td>
+                            <td><span class="glyphicon glyphicon-ok"></span></td>
+                            <td><span class="glyphicon glyphicon-remove"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </section>
+            <section id="contributions">
+                <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong class="panel-title">Contributions
+                    <span class="glyphicon glyphicon-stats pull-right"></span>
+                    </strong>
+                </div>
+                <table class="table table-bordered text-center">
+                    <tr>
+                        <td class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                            <span class="text-muted center-block">Contributions in the last year</span>
+                            <h2 class="center-block">432 total</h2>
+                            <span class="text-muted center-block">Feb 20, 2015 – Feb 20, 2016</span>
+                        </td>
+                        <td class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                            <span class="text-muted center-block">Longest streak</span>
+                            <h2 class="center-block">48 days</h2>
+                            <span class="text-muted center-block">October 23 – December 9</span>
+                        </td>
+                        <td class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                            <span class="text-muted center-block">Current streak</span>
+                            <h2 class="center-block">4 days</h2>
+                            <span class="text-muted center-block">February 17 – February 20</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            </section>
+            <section id="nothing">
+                <div class="well well-large text-center">
+                    Nothing yet.
+                </div>
+            </section>
+        </div>
+
+        <nav class="col-lg-4 col-md-12" id="affix_nav">
+            <ul class="nav nav-pills nav-stacked" data-spy="affix" data-offset-top="10" id="affix_nav_ul">
+                <li class="active">
+                    <a href="#chart_line_graphs" class="list-group-item">
+                        <span class="glyphicon glyphicon-chevron-right"></span> Chart Line Graphs
+                    </a>
+                </li>
+                <li>
+                    <a href="#chart_bar_graphs" class="list-group-item">
+                        <span class="glyphicon glyphicon-chevron-right"></span> Chart Bar Graphs
+                    </a>
+                </li>
+                <li>
+                    <a href="#user_profile" class="list-group-item">
+                        <span class="glyphicon glyphicon-chevron-right"></span> User profile
+                    </a>
+                </li>
+                <li>
+                    <a href="#first_options" class="list-group-item">
+                        <span class="glyphicon glyphicon-chevron-right"></span> First server management options
+                    </a>
+                </li>
+                <li>
+                    <a href="#user_permissions" class="list-group-item">
+                        <span class="glyphicon glyphicon-chevron-right"></span> User permissions
+                    </a>
+                </li>
+                <li>
+                    <a href="#additional_options" class="list-group-item">
+                        <span class="glyphicon glyphicon-chevron-right"></span> Additional server management options
+                    </a>
+                </li>
+                <li>
+                    <a href="#last_options" class="list-group-item">
+                        <span class="glyphicon glyphicon-chevron-right"></span> Last server management options
+                    </a>
+                </li>
+                <li>
+                    <a href="#contributions" class="list-group-item">
+                        <span class="glyphicon glyphicon-chevron-right"></span> Contributions
+                    </a>
+                </li>
+                <li>
+                    <a href="#nothing" class="list-group-item">
+                        <span class="glyphicon glyphicon-chevron-right"></span> Nothing
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    /* 创建Line图表 */
+    var lineChartData = {
+        labels : ["January","February","March","April","May","June","July"],
+        datasets : [
+            {
+                fillColor : "rgba(220,220,220,0.5)",
+                strokeColor : "rgba(220,220,220,1)",
+                pointColor : "rgba(220,220,220,1)",
+                pointStrokeColor : "#fff",
+                data : [65,59,90,81,56,55,40]
+            },
+            {
+                fillColor : "rgba(151,187,205,0.5)",
+                strokeColor : "rgba(151,187,205,1)",
+                pointColor : "rgba(151,187,205,1)",
+                pointStrokeColor : "#fff",
+                data : [28,48,40,19,96,27,100]
+            }
+        ]
+    };
+
+    $(function() {
+        var ctx = $("#chart_line_canvas").get(0).getContext("2d");
+        new Chart(ctx).Line(lineChartData, {responsive: true});
+    });
+
+    /* 创建Bar图表 */
+    var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+	var barChartData01 = {
+		labels : ["January","February","March","April","May","June","July"],
+		datasets : [
+			{
+				fillColor : "rgba(220,220,220,0.5)",
+				strokeColor : "rgba(220,220,220,0.8)",
+				highlightFill: "rgba(220,220,220,0.75)",
+				highlightStroke: "rgba(220,220,220,1)",
+				data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+			},
+			{
+				fillColor : "rgba(151,187,205,0.5)",
+				strokeColor : "rgba(151,187,205,0.8)",
+				highlightFill : "rgba(151,187,205,0.75)",
+				highlightStroke : "rgba(151,187,205,1)",
+				data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+			}
+		]
+	};
+    $(function() {
+        var ctx = $("#chart_bar_canvas_01").get(0).getContext("2d");
+        new Chart(ctx).Bar(barChartData01, {responsive: true});
+    });
+    var barChartData02 = {
+		labels : ["January","February","March","April","May","June","July"],
+		datasets : [
+			{
+				fillColor : "rgba(220,220,220,0.5)",
+				strokeColor : "rgba(220,220,220,0.8)",
+				highlightFill: "rgba(220,220,220,0.75)",
+				highlightStroke: "rgba(220,220,220,1)",
+				data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+			},
+			{
+				fillColor : "rgba(151,187,205,0.5)",
+				strokeColor : "rgba(151,187,205,0.8)",
+				highlightFill : "rgba(151,187,205,0.75)",
+				highlightStroke : "rgba(151,187,205,1)",
+				data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+			}
+		]
+	};
+    $(function() {
+        var ctx = $("#chart_bar_canvas_02").get(0).getContext("2d");
+        new Chart(ctx).Bar(barChartData02, {responsive: true});
+    });
+</script>
+{% endblock %}

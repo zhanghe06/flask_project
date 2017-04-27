@@ -125,3 +125,5 @@ app.register_blueprint(bp_ticket_put)
 # app.register_blueprint(bp_reg)
 app.register_blueprint(bp_user)
 
+# 导入自定义过滤器
+from app_backend import filters

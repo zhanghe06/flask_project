@@ -28,7 +28,7 @@ class Admin(Base):
     phone = Column(String(20), nullable=False, server_default=text("''"))
     role = Column(Integer, nullable=False, server_default=text("'0'"))
     status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
-    delete_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+    delete_time = Column(DateTime)
     login_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))
     login_ip = Column(String(20))
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
@@ -45,7 +45,7 @@ class ApplyGet(Base):
     status_apply = Column(Integer, nullable=False, server_default=text("'0'"))
     status_order = Column(Integer, nullable=False, server_default=text("'0'"))
     status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
-    delete_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+    delete_time = Column(DateTime)
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
@@ -60,7 +60,7 @@ class ApplyPut(Base):
     status_apply = Column(Integer, nullable=False, server_default=text("'0'"))
     status_order = Column(Integer, nullable=False, server_default=text("'0'"))
     status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
-    delete_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+    delete_time = Column(DateTime)
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
@@ -147,7 +147,7 @@ class Order(Base):
     audit_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
     pay_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))
     receipt_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))
-    delete_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))
+    delete_time = Column(DateTime)
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
@@ -184,7 +184,7 @@ class TicketGet(Base):
     status_pay = Column(Integer, nullable=False, server_default=text("'0'"))
     receipt_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
     status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
-    delete_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))
+    delete_time = Column(DateTime)
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
@@ -199,7 +199,7 @@ class TicketPut(Base):
     status_pay = Column(Integer, nullable=False, server_default=text("'0'"))
     pay_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
     status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
-    delete_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))
+    delete_time = Column(DateTime)
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
@@ -211,7 +211,7 @@ class User(Base):
     status_lock = Column(Integer, nullable=False, server_default=text("'0'"))
     status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
     lock_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
-    delete_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))
+    delete_time = Column(DateTime)
     reg_ip = Column(String(20))
     login_ip = Column(String(20))
     login_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))

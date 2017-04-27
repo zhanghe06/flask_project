@@ -72,6 +72,36 @@ def lists_get(page=1):
     return render_template('order/get_list.html', title='order_get_list', pagination=pagination)
 
 
+@bp_order.route('/put/info/<int:order_id>/', methods=['GET', 'POST'])
+@login_required
+def info_put(order_id):
+    """
+    投资订单详情
+    """
+    uid = current_user.id
+    condition = {
+        'id': order_id,
+        'apply_put_uid': uid
+    }
+    order_info = get_order_row(**condition)
+    return render_template('order/put_info.html', title='order_put_info', order_info=order_info)
+
+
+@bp_order.route('/get/info/<int:order_id>/', methods=['GET', 'POST'])
+@login_required
+def info_get(order_id):
+    """
+    提现订单详情
+    """
+    uid = current_user.id
+    condition = {
+        'id': order_id,
+        'apply_get_uid': uid
+    }
+    order_info = get_order_row(**condition)
+    return render_template('order/get_info.html', title='order_get_info', order_info=order_info)
+
+
 @bp_order.route('/add/', methods=['GET', 'POST'])
 @login_required
 def add():

@@ -101,6 +101,7 @@ $ pip install Flask-WTF
 $ pip install Flask-OAuthlib
 $ pip install Flask-Excel
 $ pip install Flask-Moment
+$ pip install Flask-Uploads
 $ pip install sqlacodegen
 $ pip install gunicorn
 $ pip install schedule
@@ -551,6 +552,11 @@ http://flask-excel.readthedocs.io/en/latest/
 
 支持 csv tsv 导出
 如果需要导出 xls 格式，需要安装 pyexcel-xls
+
+
+## Flask-Uploads
+
+https://pythonhosted.org/Flask-Uploads/
 
 
 ## 部署方案( Nginx + Gunicorn + Supervisor )

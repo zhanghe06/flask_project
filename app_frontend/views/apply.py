@@ -17,9 +17,14 @@ from flask_login import current_user, login_required
 
 from app_frontend import app
 from app_frontend.models import User
-from app_frontend.api.apply_get import get_apply_get_rows, get_apply_get_row
-from app_frontend.api.apply_put import get_apply_put_rows, get_apply_put_row
+from app_frontend.api.apply_get import get_apply_get_rows, get_apply_get_row, add_apply_get
+from app_frontend.api.apply_put import get_apply_put_rows, get_apply_put_row, add_apply_put
 from app_api.maps.status_order import *
+from app_api.maps.type_apply import *
+from app_api.maps.status_apply import *
+from app_api.maps.status_delete import *
+from app_frontend.forms.apply_get import ApplyGetAddForm
+from app_frontend.forms.apply_put import ApplyPutAddForm
 from flask import Blueprint
 
 
@@ -77,7 +82,27 @@ def add_put():
     创建投资申请
     :return:
     """
-    pass
+    form = ApplyPutAddForm(request.form)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            current_time = datetime.utcnow()
+            apply_put_info = {
+                'user_id': current_user.id,
+                'type_apply': TYPE_APPLY_USER,
+                'money_apply': form.money_apply.data,
+                'status_apply': STATUS_APPLY_HANDING,
+                'status_order': STATUS_ORDER_HANDING,
+                'status_delete': STATUS_DEL_NO,
+                'create_time': current_time,
+                'update_time': current_time,
+            }
+            result = add_apply_put(apply_put_info)
+            if result:
+                flash(u'Add Success', 'success')
+            else:
+                flash(u'Add Failed', 'warning')
+            return redirect(url_for('apply.lists_put'))
+    return render_template('apply/put_add.html', title='apply_put_add', form=form)
 
 
 @bp_apply.route('/get/add/', methods=['GET', 'POST'])
@@ -87,7 +112,27 @@ def add_get():
     创建提现申请
     :return:
     """
-    pass
+    form = ApplyGetAddForm(request.form)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            current_time = datetime.utcnow()
+            apply_get_info = {
+                'user_id': current_user.id,
+                'type_apply': TYPE_APPLY_USER,
+                'money_apply': form.money_apply.data,
+                'status_apply': STATUS_APPLY_HANDING,
+                'status_order': STATUS_ORDER_HANDING,
+                'status_delete': STATUS_DEL_NO,
+                'create_time': current_time,
+                'update_time': current_time,
+            }
+            result = add_apply_get(apply_get_info)
+            if result:
+                flash(u'Add Success', 'success')
+            else:
+                flash(u'Add Failed', 'warning')
+            return redirect(url_for('apply.lists_get'))
+    return render_template('apply/get_add.html', title='apply_get_add', form=form)
 
 
 @bp_apply.route('/put/del/', methods=['GET', 'POST'])
