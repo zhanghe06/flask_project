@@ -11,9 +11,10 @@
 
 import os
 
-from flask import render_template
-from flask import send_from_directory, g
+from flask import render_template, request, redirect
+from flask import send_from_directory, g, flash, url_for
 from flask_login import current_user
+from itsdangerous import URLSafeSerializer, BadSignature
 
 from app_frontend import app, login_manager
 
@@ -49,13 +50,27 @@ def favicon():
                                'img/favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 
-@app.route('/')
 @app.route('/index/')
+@app.route('/')
 def index():
     """
     网站首页
     """
     # return "Hello, World!"
+    # 判断是否推广链接
+    i = request.args.get('i', '')
+    if i:
+        try:
+            s = URLSafeSerializer(app.config.get('USER_INVITE_LINK_SIGN_KEY', ''))
+            link_param = s.loads(i)
+            # 如果未登陆，或登陆用户打开的不是自己的推广链接
+            if not current_user.get_id() or current_user.get_id() != link_param.get('user_id'):
+                # 跳转注册页面
+                return redirect(url_for('auth.phone'))
+        except BadSignature as e:
+            flash(u'Invite Link Failed, %s' % e.message, 'warning')
+        except Exception as e:
+            flash(e.message, 'warning')
     return render_template('index.html', title='home')
 
 
