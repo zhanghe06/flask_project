@@ -119,6 +119,8 @@ LOGIN_MESSAGE_CATEGORY = 'warning'  # 默认'message'
 ADMIN_TO_USER_LOGIN_TIME_OUT = 1200
 ADMIN_TO_USER_LOGIN_SIGN_KEY = '1b106105da7e88e54d42e3f4356e41d8'
 
+# 用户推广链接配置
+USER_INVITE_LINK_SIGN_KEY = 'ff99bae31b7bd480deee291dd55d6864'
 
 # 文件上传配置
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'app/static/uploads/')

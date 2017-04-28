@@ -8,7 +8,7 @@
 @time: 2017/4/13 下午2:33
 @desc: 自定义过滤器
 """
-
+from itsdangerous import URLSafeSerializer
 
 from app_frontend import app
 from app_frontend.api.user_profile import get_user_profile_row_by_id
@@ -71,3 +71,15 @@ def filter_user_name_level(user_id):
     """
     row = get_user_profile_row_by_id(user_id)
     return u'%s(%s)' % (row.nickname, LEVEL_TYPE_DICT.get(row.level_type, u'普通')) if row else u'游客'
+
+
+@app.template_filter('user_invite_link')
+def filter_user_invite_link(user_id):
+    """
+    用户邀请链接参数
+    :param user_id:
+    :return:
+    """
+    s = URLSafeSerializer(app.config.get('USER_INVITE_LINK_SIGN_KEY', ''))
+    link_param = s.dumps({'user_id': user_id})
+    return link_param

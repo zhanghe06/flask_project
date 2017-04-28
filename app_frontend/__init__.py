@@ -8,19 +8,22 @@
 @time: 16-1-7 上午12:08
 """
 
+from logging.config import dictConfig
 
 from flask import Flask
-from logging.config import dictConfig
 from flask_login import LoginManager
 from flask_moment import Moment
 from flask_oauthlib.client import OAuth
-from app_frontend.lib.sendcloud import SendCloudClient
+
 from app_frontend.lib.qiniu_store import QiNiuClient
 from app_frontend.lib.redis_session import RedisSessionInterface
+from app_frontend.lib.sendcloud import SendCloudClient
+from app_frontend.middlewares import HTTPMethodOverrideMiddleware
 
 
 app = Flask(__name__)
 app.config.from_object('config')
+app.wsgi_app = HTTPMethodOverrideMiddleware(app.wsgi_app)
 app.session_interface = RedisSessionInterface(prefix='session:user:', **app.config['REDIS'])
 
 login_manager = LoginManager()

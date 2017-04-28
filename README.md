@@ -546,6 +546,11 @@ Flask-Login 扩展需要在我们 model 的 User 类里实现一些方法。：
 responsive: true
 
 
+## clipboard.js 剪贴板插件
+
+https://github.com/zenorocha/clipboard.js/
+
+
 ## Flask-Excel
 
 http://flask-excel.readthedocs.io/en/latest/
@@ -1197,3 +1202,5 @@ IOError: [Errno 32] Broken pipe
 - 页面导出csv
 
 - 各大搜索引擎提交入口
+
+- 用户推广，注册邀请
