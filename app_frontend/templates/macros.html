@@ -65,22 +65,22 @@
                             class="glyphicon glyphicon-list"></span> About</a></li>
                     <li{% if request.path == url_for('contact') %} class="active"{% endif %}><a href="{{ url_for('contact') }}"><span
                             class="glyphicon glyphicon-envelope"></span> Contact</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="false"><span class="glyphicon glyphicon-book"></span> Blog List <span
-                                class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            {% if title == 'blog_list' %}
-                                <li class="dropdown-header">Blog List</li>{% else %}
-                                <li><a href="{{ url_for('blog.index') }}">Blog List</a></li>{% endif %}
-                            {% if title == 'blog_new' %}
-                                <li class="dropdown-header">Blog New</li>{% else %}
-                                <li><a href="{{ url_for('blog.new') }}">Blog New</a></li>{% endif %}
-                            {% if title == 'blog_hot' %}
-                                <li class="dropdown-header">Blog Hot</li>{% else %}
-                                <li><a href="{{ url_for('blog.hot') }}">Blog Hot</a></li>{% endif %}
-                        </ul>
-                    </li>
+{#                    <li class="dropdown">#}
+{#                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"#}
+{#                           aria-expanded="false"><span class="glyphicon glyphicon-book"></span> Blog List <span#}
+{#                                class="caret"></span></a>#}
+{#                        <ul class="dropdown-menu">#}
+{#                            {% if title == 'blog_list' %}#}
+{#                                <li class="dropdown-header">Blog List</li>{% else %}#}
+{#                                <li><a href="{{ url_for('blog.index') }}">Blog List</a></li>{% endif %}#}
+{#                            {% if title == 'blog_new' %}#}
+{#                                <li class="dropdown-header">Blog New</li>{% else %}#}
+{#                                <li><a href="{{ url_for('blog.new') }}">Blog New</a></li>{% endif %}#}
+{#                            {% if title == 'blog_hot' %}#}
+{#                                <li class="dropdown-header">Blog Hot</li>{% else %}#}
+{#                                <li><a href="{{ url_for('blog.hot') }}">Blog Hot</a></li>{% endif %}#}
+{#                        </ul>#}
+{#                    </li>#}
                 {% if g.user != None and g.user.is_authenticated %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
@@ -140,6 +140,37 @@
                     </div>
                 </form>
                 <ul class="nav navbar-nav navbar-right">
+                {% if g.user != None and g.user.is_authenticated %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <span class="glyphicon glyphicon-envelope"></span> 留言反馈
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="{{ url_for('message.lists_send') }}">
+                                    <span class="glyphicon glyphicon-folder-open"></span> 留言发送
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('message.lists_receive') }}">
+                                    <span class="glyphicon glyphicon-folder-close"></span> 留言接收
+                                </a>
+                            </li>
+                            <li role="separator" class="divider"></li>
+                            <li>
+                                <a href="{{ url_for('complaint.add') }}">
+                                    <span class="glyphicon glyphicon-pencil"></span> 我要投诉
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('complaint.lists') }}">
+                                    <span class="glyphicon glyphicon-book"></span> 投诉记录
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                {% endif %}
                 {% if g.user != None and g.user.is_authenticated %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"

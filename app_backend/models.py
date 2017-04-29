@@ -29,7 +29,7 @@ class Admin(Base):
     role = Column(Integer, nullable=False, server_default=text("'0'"))
     status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
     delete_time = Column(DateTime)
-    login_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))
+    login_time = Column(DateTime)
     login_ip = Column(String(20))
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
@@ -101,6 +101,22 @@ class BonusItem(Base):
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
 
+class Complaint(Base):
+    __tablename__ = 'complaint'
+
+    id = Column(Integer, primary_key=True)
+    send_user_id = Column(Integer, nullable=False, index=True)
+    reply_admin_id = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
+    content_send = Column(String(512), nullable=False, server_default=text("''"))
+    content_reply = Column(String(512), nullable=False, server_default=text("''"))
+    status_reply = Column(Integer, nullable=False, server_default=text("'0'"))
+    reply_time = Column(DateTime)
+    status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
+    delete_time = Column(DateTime)
+    create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
+    update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+
+
 class Credit(Base):
     __tablename__ = 'credit'
 
@@ -115,15 +131,15 @@ class Credit(Base):
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
 
-class Feedback(Base):
-    __tablename__ = 'feedback'
+class Message(Base):
+    __tablename__ = 'message'
 
     id = Column(Integer, primary_key=True)
     send_user_id = Column(Integer, nullable=False, index=True)
-    reply_admin_id = Column(Integer, nullable=False, index=True)
-    username = Column(String(512), nullable=False, server_default=text("''"))
-    password = Column(String(512), nullable=False, server_default=text("''"))
-    reply_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+    receive_user_id = Column(Integer, nullable=False, index=True)
+    content_send = Column(String(512), nullable=False, server_default=text("''"))
+    status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
+    delete_time = Column(DateTime)
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
@@ -144,9 +160,9 @@ class Order(Base):
     status_pay = Column(Integer, nullable=False, server_default=text("'0'"))
     status_rec = Column(Integer, nullable=False, server_default=text("'0'"))
     status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
-    audit_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
-    pay_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))
-    receipt_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))
+    audit_time = Column(DateTime)
+    pay_time = Column(DateTime)
+    receipt_time = Column(DateTime)
     delete_time = Column(DateTime)
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
@@ -182,7 +198,7 @@ class TicketGet(Base):
     apply_get_id = Column(Integer, nullable=False, index=True)
     money = Column(Numeric(8, 2), nullable=False, server_default=text("'0.00'"))
     status_pay = Column(Integer, nullable=False, server_default=text("'0'"))
-    receipt_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+    receipt_time = Column(DateTime)
     status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
     delete_time = Column(DateTime)
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
@@ -197,7 +213,7 @@ class TicketPut(Base):
     apply_put_id = Column(Integer, nullable=False, index=True)
     money = Column(Numeric(8, 2), nullable=False, server_default=text("'0.00'"))
     status_pay = Column(Integer, nullable=False, server_default=text("'0'"))
-    pay_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+    pay_time = Column(DateTime)
     status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
     delete_time = Column(DateTime)
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
@@ -210,11 +226,11 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     status_lock = Column(Integer, nullable=False, server_default=text("'0'"))
     status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
-    lock_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+    lock_time = Column(DateTime)
     delete_time = Column(DateTime)
     reg_ip = Column(String(20))
     login_ip = Column(String(20))
-    login_time = Column(DateTime, nullable=False, server_default=text("'0000-00-00 00:00:00'"))
+    login_time = Column(DateTime)
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
@@ -264,7 +280,7 @@ class UserProfile(Base):
     area_id = Column(Integer, nullable=False, server_default=text("'0'"))
     area_code = Column(String(4), nullable=False, server_default=text("''"))
     phone = Column(String(20), nullable=False, server_default=text("''"))
-    birthday = Column(Date)
+    birthday = Column(Date, nullable=False, server_default=text("'1900-01-01'"))
     id_card = Column(String(32), nullable=False, unique=True, server_default=text("''"))
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))

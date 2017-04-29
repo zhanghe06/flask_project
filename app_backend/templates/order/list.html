@@ -137,9 +137,9 @@
                 <td>{{ order.apply_get_uid }}</td>
                 <td>{{ order.ticket_put_id }}</td>
                 <td>{{ order.ticket_get_id }}</td>
-                <td>{{ order.status_audit }}</td>
-                <td>{{ order.status_pay }}</td>
-                <td>{{ order.status_rec }}</td>
+                <td>{{ order.status_audit | status_audit }}</td>
+                <td>{{ order.status_pay | status_pay }}</td>
+                <td>{{ order.status_rec | status_rec }}</td>
                 <td>{{ order.create_time }}</td>
                 <td>
                     <a href="javascript:void(0);" onclick="order_delete({{ order.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>

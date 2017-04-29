@@ -113,6 +113,8 @@ from app_frontend.views.score import bp_score
 from app_frontend.views.wallet import bp_wallet
 from app_frontend.views.ticket_get import bp_ticket_get
 from app_frontend.views.ticket_put import bp_ticket_put
+from app_frontend.views.complaint import bp_complaint
+from app_frontend.views.message import bp_message
 
 # 注册蓝图
 app.register_blueprint(bp_captcha)
@@ -128,6 +130,8 @@ app.register_blueprint(bp_score)
 app.register_blueprint(bp_wallet)
 app.register_blueprint(bp_ticket_get)
 app.register_blueprint(bp_ticket_put)
+app.register_blueprint(bp_complaint)
+app.register_blueprint(bp_message)
 
 # 导入自定义过滤器
 from app_frontend import filters

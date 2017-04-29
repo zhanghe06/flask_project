@@ -10,11 +10,11 @@ CREATE TABLE `user` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `status_lock` TINYINT NOT NULL DEFAULT '0' COMMENT '锁定状态（0未锁定，1已锁定）',
   `status_delete` TINYINT NOT NULL DEFAULT '0' COMMENT '删除状态（0未删除，1已删除）',
-  `lock_time` TIMESTAMP COMMENT '锁定时间',
+  `lock_time` TIMESTAMP NULL COMMENT '锁定时间',
   `delete_time` TIMESTAMP NULL COMMENT '删除时间',
   `reg_ip` VARCHAR(20) COMMENT '注册IP',
   `login_ip` VARCHAR(20) COMMENT '最后一次登录IP',
-  `login_time` TIMESTAMP COMMENT '最后一次登录时间',
+  `login_time` TIMESTAMP NULL COMMENT '最后一次登录时间',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
@@ -48,7 +48,7 @@ CREATE TABLE `user_profile` (
   `area_id` INT(4) NOT NULL DEFAULT '0' COMMENT '国家区号id',
   `area_code` VARCHAR(4) NOT NULL DEFAULT '' COMMENT '国家区号',
   `phone` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '手机号码',
-  `birthday` DATE COMMENT '生日',
+  `birthday` DATE NOT NULL DEFAULT '1900-01-01' COMMENT '生日',
   `id_card` VARCHAR(32) NOT NULL DEFAULT '' COMMENT '身份证号',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -114,7 +114,7 @@ CREATE TABLE `ticket_put` (
   `apply_put_id` INT NOT NULL COMMENT '投资申请Id',
   `money` DECIMAL(8, 2) NOT NULL DEFAULT '0.00' COMMENT '投资金额',
   `status_pay` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '支付状态:0:待支付，1:支付成功，2:支付失败',
-  `pay_time` TIMESTAMP COMMENT '支付时间（成功、失败）',
+  `pay_time` TIMESTAMP NULL COMMENT '支付时间（成功、失败）',
   `status_delete` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '删除状态:0:未删除，1:已删除',
   `delete_time` TIMESTAMP NULL COMMENT '删除时间',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -132,7 +132,7 @@ CREATE TABLE `ticket_get` (
   `apply_get_id` INT NOT NULL COMMENT '提现申请Id',
   `money` DECIMAL(8, 2) NOT NULL DEFAULT '0.00' COMMENT '提现金额',
   `status_pay` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '收款状态:0:待收款，1:收款成功，2:收款失败',
-  `receipt_time` TIMESTAMP COMMENT '收款时间（成功、失败）',
+  `receipt_time` TIMESTAMP NULL COMMENT '收款时间（成功、失败）',
   `status_delete` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '删除状态:0:未删除，1:已删除',
   `delete_time` TIMESTAMP NULL COMMENT '删除时间',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -158,9 +158,9 @@ CREATE TABLE `order` (
   `status_pay` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '支付状态:0:待支付，1:支付成功，2:支付失败',
   `status_rec` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '收款状态:0:待收款，1:收款成功，2:收款失败',
   `status_delete` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '删除状态:0:未删除，1:已删除',
-  `audit_time` TIMESTAMP COMMENT '审核时间（通过、失败）',
-  `pay_time` TIMESTAMP COMMENT '支付时间（成功、失败）',
-  `receipt_time` TIMESTAMP COMMENT '收款时间（成功、失败）',
+  `audit_time` TIMESTAMP NULL COMMENT '审核时间（通过、失败）',
+  `pay_time` TIMESTAMP NULL COMMENT '支付时间（成功、失败）',
+  `receipt_time` TIMESTAMP NULL COMMENT '收款时间（成功、失败）',
   `delete_time` TIMESTAMP NULL COMMENT '删除时间',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -264,7 +264,7 @@ CREATE TABLE `admin` (
   `role` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '角色:0:普通，1:高级，2:系统',
   `status_delete` TINYINT NOT NULL DEFAULT '0' COMMENT '删除状态（0未删除，1已删除）',
   `delete_time` TIMESTAMP NULL COMMENT '删除时间',
-  `login_time` TIMESTAMP COMMENT '最后一次登录时间',
+  `login_time` TIMESTAMP NULL COMMENT '最后一次登录时间',
   `login_ip` VARCHAR(20) COMMENT '最后一次登录IP',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -288,20 +288,39 @@ CREATE TABLE `area_code` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='区号';
 
 
-DROP TABLE IF EXISTS `feedback`;
-CREATE TABLE `feedback` (
+DROP TABLE IF EXISTS `message`;
+CREATE TABLE `message` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `send_user_id` INT NOT NULL COMMENT '消息发送用户Id',
+  `receive_user_id` INT NOT NULL COMMENT '消息接收用户Id',
+  `content_send` VARCHAR(512) NOT NULL DEFAULT '' COMMENT '留言内容',
+  `status_delete` TINYINT NOT NULL DEFAULT '0' COMMENT '删除状态（0未删除，1已删除）',
+  `delete_time` TIMESTAMP NULL COMMENT '删除时间',
+  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '留言时间',
+  `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `ind_send_user_id` (`send_user_id`),
+  KEY `ind_receive_user_id` (`receive_user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户留言';
+
+
+DROP TABLE IF EXISTS `complaint`;
+CREATE TABLE `complaint` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `send_user_id` INT NOT NULL COMMENT '前台留言用户Id',
-  `reply_admin_id` INT NOT NULL COMMENT '后台回复用户Id',
-  `username` VARCHAR(512) NOT NULL DEFAULT '' COMMENT '留言内容',
-  `password` VARCHAR(512) NOT NULL DEFAULT '' COMMENT '回复内容',
-  `reply_time` TIMESTAMP COMMENT '回复时间',
+  `reply_admin_id` INT NOT NULL DEFAULT '0' COMMENT '后台回复用户Id',
+  `content_send` VARCHAR(512) NOT NULL DEFAULT '' COMMENT '留言内容',
+  `content_reply` VARCHAR(512) NOT NULL DEFAULT '' COMMENT '回复内容',
+  `status_reply` TINYINT NOT NULL DEFAULT '0' COMMENT '回复状态（0未回复，1已回复）',
+  `reply_time` TIMESTAMP NULL COMMENT '回复时间',
+  `status_delete` TINYINT NOT NULL DEFAULT '0' COMMENT '删除状态（0未删除，1已删除）',
+  `delete_time` TIMESTAMP NULL COMMENT '删除时间',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '留言时间',
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `ind_send_user_id` (`send_user_id`),
   KEY `ind_reply_admin_id` (`reply_admin_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='留言反馈';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='投诉';
 
 
 DROP TABLE IF EXISTS `credit`;

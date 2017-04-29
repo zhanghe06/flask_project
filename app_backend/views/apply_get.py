@@ -66,7 +66,7 @@ def add():
     创建提现申请
     :return:
     """
-    pass
+    return render_template('apply_get/add.html', title='apply_get_add')
 
 
 @bp_apply_get.route('/del/', methods=['GET', 'POST'])

@@ -2,67 +2,67 @@
 # encoding: utf-8
 
 """
-@user: zhanghe
+@author: zhanghe
 @software: PyCharm
-@file: user_profile.py
-@time: 16-1-23 下午11:42
+@file: message.py
+@time: 2017/4/29 下午2:30
 """
 
 
-from app_frontend.models import UserProfile
+from app_frontend.models import Message
 from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
 
 
-def get_user_profile_row_by_id(user_id):
+def get_message_row_by_id(order_id):
     """
-    通过 id 获取用户信息
-    :param user_id:
+    通过 id 获取留言信息
+    :param order_id:
     :return: None/object
     """
-    return get_row_by_id(UserProfile, user_id)
+    return get_row_by_id(Message, order_id)
 
 
-def get_user_profile_row(*args, **kwargs):
+def get_message_row(*args, **kwargs):
     """
-    获取用户信息
+    获取留言信息
     :param args:
     :param kwargs:
     :return: None/object
     """
-    return get_row(UserProfile, *args, **kwargs)
+    return get_row(Message, *args, **kwargs)
 
 
-def add_user_profile(user_data):
+def add_message(order_data):
     """
-    添加用户信息
-    :param user_data:
-    :return: None/Value of user.id
+    添加留言信息
+    :param order_data:
+    :return: None/Value of order.id
     """
-    return add(UserProfile, user_data)
+    return add(Message, order_data)
 
 
-def edit_user_profile(user_id, user_data):
+def edit_message(order_id, order_data):
     """
-    修改用户信息
-    :param user_id:
-    :param user_data:
+    修改留言信息
+    :param order_id:
+    :param order_data:
     :return: Number of affected rows (Example: 0/1)
     """
-    return edit(UserProfile, user_id, user_data)
+    return edit(Message, order_id, order_data)
 
 
-def delete_user_profile(user_id):
+def delete_message(order_id):
     """
-    删除用户信息
-    :param user_id:
+    删除留言信息
+    :param order_id:
     :return: Number of affected rows (Example: 0/1)
     """
-    return delete(UserProfile, user_id)
+    return delete(Message, order_id)
 
 
-def get_user_profile_rows(page=1, per_page=10, *args, **kwargs):
+def get_message_rows(page=1, per_page=10, *args, **kwargs):
     """
-    获取用户列表（分页）
+    获取留言列表（分页）
     Usage:
         items: 信息列表
         has_next: 如果本页之后还有超过一个分页，则返回True
@@ -77,6 +77,5 @@ def get_user_profile_rows(page=1, per_page=10, *args, **kwargs):
     :param kwargs:
     :return:
     """
-    rows = get_rows(UserProfile, page, per_page, *args, **kwargs)
+    rows = get_rows(Message, page, per_page, *args, **kwargs)
     return rows
-

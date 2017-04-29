@@ -4,93 +4,145 @@
     <div class="container">
     <h1>Bank</h1>
 
-    {# 表单 #}
-    <form class="form-horizontal" method="post" action="">
-        {{ form.csrf_token }}
-        {# 标签导航 #}
-        <div class="form-group">
-            <ul class="nav nav-tabs">  {# 填充整个导航条：nav-justified #}
-                <li role="presentation"><a href="{{ url_for('user.profile') }}">Profile</a></li>
-                <li role="presentation"><a href="{{ url_for('user.auth') }}">Auth</a></li>
-                <li role="presentation" class="active"><a href="{{ url_for('user.bank') }}">Bank</a></li>
-            </ul>
+    <div class="row">
+        <div class="table-responsive col-lg-8 col-md-12">
+            {# 表单 #}
+            <form class="form-horizontal" method="post" action="">
+                {{ form.csrf_token }}
+                {# 标签导航 #}
+                <ul class="nav nav-tabs">  {# 填充整个导航条：nav-justified #}
+                    <li role="presentation"><a href="{{ url_for('user.profile') }}">Profile</a></li>
+                    <li role="presentation"><a href="{{ url_for('user.auth') }}">Auth</a></li>
+                    <li role="presentation" class="active"><a href="{{ url_for('user.bank') }}">Bank</a></li>
+                </ul>
+                <p></p>
+                <div class="form-group{% if form.account_name.errors %} has-error{% endif %}">
+                    {{ form.account_name.label(class="col-sm-2 control-label") }}
+                    <div class="col-sm-10">
+                        {{ form.account_name(class="form-control", placeholder="Account Name") }}
+                        {% for error in form.account_name.errors %}
+                            <span class="help-block">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="form-group{% if form.bank_name.errors %} has-error{% endif %}">
+                    {{ form.bank_name.label(class="col-sm-2 control-label") }}
+                    <div class="col-sm-10">
+                        {{ form.bank_name(class="form-control", placeholder="Bank Name") }}
+                        {% for error in form.bank_name.errors %}
+                            <span class="help-block">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="form-group{% if form.bank_address.errors %} has-error{% endif %}">
+                    {{ form.bank_address.label(class="col-sm-2 control-label") }}
+                    <div class="col-sm-10">
+                        {{ form.bank_address(class="form-control", placeholder="Bank Address") }}
+                        {% for error in form.bank_address.errors %}
+                            <span class="help-block">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="form-group{% if form.bank_account.errors %} has-error{% endif %}">
+                    {{ form.bank_account.label(class="col-sm-2 control-label") }}
+                    <div class="col-sm-10">
+                        {{ form.bank_account(class="form-control", placeholder="Bank Account") }}
+                        {% for error in form.bank_account.errors %}
+                            <span class="help-block">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="form-group{% if form.status_verified.errors %} has-error{% endif %}">
+                    {{ form.status_verified.label(class="col-sm-2 control-label") }}
+                    <div class="col-sm-10">
+                        {{ form.status_verified(class="form-control", placeholder="Status Verified") }}
+                        {% for error in form.status_verified.errors %}
+                            <span class="help-block">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="form-group{% if form.create_time.errors %} has-error{% endif %}">
+                    {{ form.create_time.label(class="col-sm-2 control-label") }}
+                    <div class="col-sm-10">
+                        <div class="form-control">
+                            {{ moment(form.create_time.data).format('YYYY-MM-DD HH:mm:ss') }}
+                        </div>
+                        {% for error in form.create_time.errors %}
+                            <span class="help-block">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="form-group{% if form.update_time.errors %} has-error{% endif %}">
+                    {{ form.update_time.label(class="col-sm-2 control-label") }}
+                    <div class="col-sm-10">
+                        <div class="form-control">
+                            {{ moment(form.update_time.data).format('YYYY-MM-DD HH:mm:ss') }}
+                        </div>
+                        {% for error in form.update_time.errors %}
+                            <span class="help-block">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-default btn-load" data-loading-text="Editing...">Edit</button>
+                        <button type="reset" class="btn btn-default">Reset</button>
+                    </div>
+                </div>
+            </form>
         </div>
-        <div class="form-group{% if form.account_name.errors %} has-error{% endif %}">
-            {{ form.account_name.label(class="col-sm-2 control-label") }}
-            <div class="col-sm-10">
-                {{ form.account_name(class="form-control", placeholder="Account Name") }}
-                {% for error in form.account_name.errors %}
-                    <span class="help-block">{{ error }}</span>
-                {% endfor %}
-            </div>
+        <!-- 用户概要 -->
+        <div class="col-lg-4 col-md-12">
+            <section id="user_profile">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <strong class="panel-title">User Profile
+                            <span class="glyphicon glyphicon-list-alt pull-right"></span>
+                        </strong>
+                    </div>
+                    <div class="panel-body">
+
+                        <label for="invite_link">Invite Link</label>
+                        <div class="input-group">
+                            <!-- Target -->
+                            <input class="form-control input-copy" rel="tooltip" title="invite link" id="invite_link" value="{{ url_for('index', _external=True, i=g.user.id | user_invite_link) }}">
+                            <!-- Trigger -->
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" rel="tooltip" title="Copy to clipboard" data-clipboard-action="copy" data-clipboard-target="#invite_link">
+                                    <span class="glyphicon glyphicon-duplicate"></span>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
-        <div class="form-group{% if form.bank_name.errors %} has-error{% endif %}">
-            {{ form.bank_name.label(class="col-sm-2 control-label") }}
-            <div class="col-sm-10">
-                {{ form.bank_name(class="form-control", placeholder="Bank Name") }}
-                {% for error in form.bank_name.errors %}
-                    <span class="help-block">{{ error }}</span>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="form-group{% if form.bank_address.errors %} has-error{% endif %}">
-            {{ form.bank_address.label(class="col-sm-2 control-label") }}
-            <div class="col-sm-10">
-                {{ form.bank_address(class="form-control", placeholder="Bank Address") }}
-                {% for error in form.bank_address.errors %}
-                    <span class="help-block">{{ error }}</span>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="form-group{% if form.bank_account.errors %} has-error{% endif %}">
-            {{ form.bank_account.label(class="col-sm-2 control-label") }}
-            <div class="col-sm-10">
-                {{ form.bank_account(class="form-control", placeholder="Bank Account") }}
-                {% for error in form.bank_account.errors %}
-                    <span class="help-block">{{ error }}</span>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="form-group{% if form.status_verified.errors %} has-error{% endif %}">
-            {{ form.status_verified.label(class="col-sm-2 control-label") }}
-            <div class="col-sm-10">
-                {{ form.status_verified(class="form-control", placeholder="Status Verified") }}
-                {% for error in form.status_verified.errors %}
-                    <span class="help-block">{{ error }}</span>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="form-group{% if form.create_time.errors %} has-error{% endif %}">
-            {{ form.create_time.label(class="col-sm-2 control-label") }}
-            <div class="col-sm-10">
-                {{ form.create_time(class="form-control", placeholder="ID Card", type="datetime") }}
-                {% for error in form.create_time.errors %}
-                    <span class="help-block">{{ error }}</span>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="form-group{% if form.update_time.errors %} has-error{% endif %}">
-            {{ form.update_time.label(class="col-sm-2 control-label") }}
-            <div class="col-sm-10">
-                {{ form.update_time(class="form-control", placeholder="Update Time", type="datetime") }}
-                {% for error in form.update_time.errors %}
-                    <span class="help-block">{{ error }}</span>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-default btn-load" data-loading-text="Editing...">Edit</button>
-                <button type="reset" class="btn btn-default">Reset</button>
-            </div>
-        </div>
-    </form>
+    </div>
+
+
     </div>
 
 {% endblock %}
 
 {% block extra_js %}
-<script>
+<script src="{{ url_for('static', filename='plugin/clipboard.js-1.6.1/dist/clipboard.min.js') }}"></script>
 
+<script>
+    //
+    var clipboard = new Clipboard('.btn');
+
+    clipboard.on('success', function(e) {
+        // console.info('Action:', e.action);
+        // console.info('Text:', e.text);
+        // console.info('Trigger:', e.trigger);
+        e.clearSelection();
+        alert('复制成功，粘贴使用推广链接');
+    });
+
+    clipboard.on('error', function(e) {
+        // console.error('Action:', e.action);
+        // console.error('Trigger:', e.trigger);
+        alert('操作失败，重新复制推广链接');
+    });
 </script>
 {% endblock %}

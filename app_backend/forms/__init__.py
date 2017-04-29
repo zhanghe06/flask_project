@@ -80,3 +80,48 @@ class SelectBS(SelectField):
             raise ValueError(self.gettext('Not a valid choice'))
 
 
+class SelectAreaCodeWidget(object):
+    """
+    自定义选择组件 - 区号
+    """
+    def __call__(self, field, **kwargs):
+        params = {
+            'id': field.id,
+            'name': field.id,
+            'class': 'selectpicker show-tick',
+            'data-live-search': 'true',
+            'title': 'Choose one of the following...',
+            'data-header': 'Select a condiment',
+        }
+        html = ['<select %s>' % html_params(**params)]
+        for _, area_data in field.choices:
+            for area_name, area_list in area_data.items():
+                html.append('\t<optgroup label="%s">' % area_name)
+                for country_data in area_list:
+                    # html.append('\t\t<option value="%s" data-subtext="%s(%s)">[%s] %s</option>' % (country_data['id'], country_data['name_c'], country_data['name_e'], country_data['short_code'], country_data['phone_pre']))
+                    html.append('\t\t<option value="%s" data-subtext="%s">[%s] %s</option>' % (country_data['id'], country_data['name_c'], country_data['short_code'], country_data['phone_pre']))
+                html.append('\t</optgroup>')
+        html.append('</select>')
+        return HTMLString('\n'.join(html))
+
+
+class SelectAreaCode(SelectField):
+    """
+    自定义选择表单控件
+    """
+    widget = SelectAreaCodeWidget()
+
+    def pre_validate(self, form):
+        """
+        校验表单传值是否合法
+        """
+        is_find = False
+        for _, area_data in self.choices:
+            for area_list in area_data.values():
+                if self.data in [str(i['id']) for i in area_list]:
+                    is_find = True
+                    break
+            if is_find:
+                break
+        else:
+            raise ValueError(self.gettext('Not a valid choice'))

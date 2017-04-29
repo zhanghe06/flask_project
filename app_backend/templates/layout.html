@@ -93,10 +93,10 @@
                                     <a href="{{ url_for('user.lists') }}">会员列表</a>
                                 </li>
                                 <li>
-                                    <a href="flot.html">会员添加</a>
+                                    <a href="{{ url_for('user.add') }}">会员添加</a>
                                 </li>
                                 <li>
-                                    <a href="morris.html">会员关系</a>
+                                    <a href="{{ url_for('user.relationship') }}">会员关系</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
@@ -111,10 +111,10 @@
                             <a href="#"><i class="fa fa-edit fa-fw"></i> 订单管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="{{ url_for('order.lists', rec=0) }}">订单列表 - 进行中</a>
+                                    <a href="{{ url_for('order.lists', status_rec=0) }}">订单列表 - 进行中</a>
                                 </li>
                                 <li>
-                                    <a href="{{ url_for('order.lists', rec=1) }}">订单列表 - 已完成</a>
+                                    <a href="{{ url_for('order.lists', status_rec=1) }}">订单列表 - 已完成</a>
                                 </li>
                                 <li>
                                     <a href="{{ url_for('apply_put.lists') }}">投资申请列表</a>
@@ -228,6 +228,11 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="{{ url_for('static', filename='js/sb-admin-2.js') }}"></script>
+
+    {{ moment.include_moment() }}
+
+    {{ moment.lang('zh-cn') }}
+
     {% block extra_js %}{% endblock %}
 </body>
 

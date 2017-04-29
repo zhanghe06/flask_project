@@ -5,12 +5,12 @@
 @user: zhanghe
 @software: PyCharm
 @file: user_profile.py
-@time: 16-1-23 下午11:42
+@time: 17-4-29 下午16:36
 """
 
 
-from app_frontend.models import UserProfile
-from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
+from app_backend.models import UserProfile
+from app_backend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
 
 
 def get_user_profile_row_by_id(user_id):

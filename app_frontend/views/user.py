@@ -11,6 +11,7 @@
 from flask import render_template, request, flash, redirect, url_for
 from flask_login import current_user, login_required
 
+from app_api.maps import area_code_map
 from app_api.tools import md5
 from app_frontend import app
 from app_frontend.forms.user import UserProfileForm, UserAuthForm, UserBankForm
@@ -33,26 +34,16 @@ def profile():
     用户基本信息
     """
     form = UserProfileForm(request.form)
-    if request.method == 'GET':
-        user_info = get_user_profile_row_by_id(current_user.id)
-        if user_info:
-            form.user_id.data = user_info.user_id
-            form.user_pid.data = user_info.user_pid
-            form.nickname.data = user_info.nickname
-            form.avatar_url.data = user_info.avatar_url
-            form.email.data = user_info.email
-            form.area_id.data = user_info.area_id
-            form.area_code.data = user_info.area_code
-            form.phone.data = user_info.phone
-            form.birthday.data = user_info.birthday
-            form.id_card.data = user_info.id_card
-            form.create_time.data = user_info.create_time
-            form.update_time.data = user_info.update_time
     if request.method == 'POST':
         if form.validate_on_submit():
             current_time = datetime.utcnow()
+            # 手机号码国际化
+            area_id = form.area_id.data
+            area_code = area_code_map.get(area_id, '86')
             user_info = {
                 'email': form.email.data,
+                'area_id': area_id,
+                'area_code': area_code,
                 'phone': form.phone.data,
                 'birthday': form.birthday.data,
                 'update_time': current_time,
@@ -62,7 +53,20 @@ def profile():
                 flash(u'Edit Success', 'success')
             if result == 0:
                 flash(u'Edit Failed', 'warning')
-        flash(form.errors, 'warning')  # 调试打开
+        # flash(form.errors, 'warning')  # 调试打开
+    user_info = get_user_profile_row_by_id(current_user.id)
+    if user_info:
+        form.user_pid.data = user_info.user_pid
+        form.nickname.data = user_info.nickname
+        form.avatar_url.data = user_info.avatar_url
+        form.email.data = user_info.email
+        form.area_id.data = user_info.area_id
+        form.area_code.data = user_info.area_code
+        form.phone.data = user_info.phone
+        form.birthday.data = user_info.birthday
+        form.id_card.data = user_info.id_card
+        form.create_time.data = user_info.create_time
+        form.update_time.data = user_info.update_time
     # flash(u'Hello, %s' % current_user.id, 'info')  # 测试打开
     return render_template('user/profile.html', title='profile', form=form)
 
@@ -74,20 +78,6 @@ def auth():
     用户登录认证信息
     """
     form = UserAuthForm(request.form)
-    if request.method == 'GET':
-        condition = {
-            'user_id': current_user.id,
-            'auth_type': AUTH_TYPE_ACCOUNT,
-        }
-        user_auth_info = get_user_auth_row(**condition)
-        if user_auth_info:
-            form.id.data = user_auth_info.id
-            form.auth_type.data = user_auth_info.auth_type
-            form.auth_key.data = user_auth_info.auth_key
-            form.auth_secret.data = ''
-            form.status_verified.data = user_auth_info.status_verified
-            form.create_time.data = user_auth_info.create_time
-            form.update_time.data = user_auth_info.update_time
     if request.method == 'POST':
         if form.validate_on_submit():
             # 权限校验
@@ -115,7 +105,20 @@ def auth():
                 flash(u'Edit Success', 'success')
             if result == 0:
                 flash(u'Edit Failed', 'warning')
-        flash(form.errors, 'warning')  # 调试打开
+        # flash(form.errors, 'warning')  # 调试打开
+    condition = {
+        'user_id': current_user.id,
+        'auth_type': AUTH_TYPE_ACCOUNT,
+    }
+    user_auth_info = get_user_auth_row(**condition)
+    if user_auth_info:
+        form.id.data = user_auth_info.id
+        form.auth_type.data = user_auth_info.auth_type
+        form.auth_key.data = user_auth_info.auth_key
+        form.auth_secret.data = ''
+        form.status_verified.data = user_auth_info.status_verified
+        form.create_time.data = user_auth_info.create_time
+        form.update_time.data = user_auth_info.update_time
     # flash(u'Hello, %s' % current_user.id, 'info')  # 测试打开
     return render_template('user/auth.html', title='auth', form=form)
 
@@ -128,15 +131,6 @@ def bank():
     :return:
     """
     form = UserBankForm(request.form)
-    if request.method == 'GET':
-        bank_info = get_user_bank_row_by_id(current_user.id)
-        if bank_info:
-            form.bank_name.data = bank_info.bank_name
-            form.bank_address.data = bank_info.bank_address
-            form.bank_account.data = bank_info.bank_account
-            form.status_verified.data = bank_info.status_verified
-            form.create_time.data = bank_info.create_time
-            form.update_time.data = bank_info.update_time
     if request.method == 'POST':
         if form.validate_on_submit():
             current_time = datetime.utcnow()
@@ -145,9 +139,8 @@ def bank():
                 'bank_name': form.bank_name.data,
                 'bank_address': form.bank_address.data,
                 'bank_account': form.bank_account.data,
-                'status_verified': form.status_verified.data,
+                # 'status_verified': form.status_verified.data,
                 'update_time': current_time,
-                'last_ip': request.headers.get('X-Forwarded-For', request.remote_addr),
             }
             if bank_info:
                 result = edit_user_bank(current_user.id, bank_data)
@@ -158,7 +151,15 @@ def bank():
                 flash(u'Edit Success', 'success')
             if not result:
                 flash(u'Edit Failed', 'warning')
-        flash(form.errors, 'warning')  # 调试打开
+        # flash(form.errors, 'warning')  # 调试打开
+    bank_info = get_user_bank_row_by_id(current_user.id)
+    if bank_info:
+        form.bank_name.data = bank_info.bank_name
+        form.bank_address.data = bank_info.bank_address
+        form.bank_account.data = bank_info.bank_account
+        form.status_verified.data = bank_info.status_verified
+        form.create_time.data = bank_info.create_time
+        form.update_time.data = bank_info.update_time
     # flash(u'Hello, %s' % current_user.id, 'info')  # 测试打开
     return render_template('user/bank.html', title='bank', form=form)
 
@@ -206,3 +207,11 @@ def setting():
     # flash(u'Hello, %s' % current_user.id, 'info')  # 测试打开
     return render_template('./setting.html', title='setting', form=form)
 
+
+@bp_user.route('/team/')
+@login_required
+def team():
+    """
+    团队
+    :return:
+    """

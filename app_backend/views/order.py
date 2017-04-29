@@ -64,7 +64,28 @@ def lists(page=1):
     form.start_time.data = start_time
     form.end_time.data = end_time
 
-    pagination = get_order_rows(page)
+    # 搜索条件
+    condition = {
+        'status_delete': 0
+    }
+    if order_id:
+        condition['id'] = order_id
+    if apply_put_id:
+        condition['apply_put_id'] = apply_put_id
+    if apply_get_id:
+        condition['apply_get_id'] = apply_get_id
+    if apply_put_uid:
+        condition['apply_put_uid'] = apply_put_uid
+    if apply_get_uid:
+        condition['apply_get_uid'] = apply_get_uid
+    if status_audit:
+        condition['status_audit'] = status_audit
+    if status_pay:
+        condition['status_pay'] = status_pay
+    if status_rec:
+        condition['status_rec'] = status_rec
+
+    pagination = get_order_rows(page, **condition)
     return render_template('order/list.html', title='order_list', pagination=pagination, form=form)
 
 

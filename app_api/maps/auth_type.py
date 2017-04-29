@@ -16,3 +16,12 @@ AUTH_TYPE_PHONE = '2'
 AUTH_TYPE_QQ = '3'
 AUTH_TYPE_WECHAT = '4'
 AUTH_TYPE_WEIBO = '5'
+
+AUTH_TYPE_DICT = {
+    0: u'未知',
+    1: u'邮箱',
+    2: u'手机',
+    3: u'QQ',
+    4: u'微信',
+    5: u'微博',
+}

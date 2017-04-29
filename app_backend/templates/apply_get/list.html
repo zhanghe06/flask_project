@@ -73,11 +73,11 @@
             <tr class="text-muted">
                 <td>{{ apply_get.id }}</td>
                 <td>{{ apply_get.user_id }}</td>
-                <td>{{ apply_get.type_apply }}</td>
+                <td>{{ apply_get.type_apply | type_apply }}</td>
                 <td>{{ apply_get.money_apply }}</td>
-                <td>{{ apply_get.status_apply }}</td>
-                <td>{{ apply_get.status_order }}</td>
-                <td>{{ apply_get.status_delete }}</td>
+                <td>{{ apply_get.status_apply | status_apply }}</td>
+                <td>{{ apply_get.status_order | status_order }}</td>
+                <td>{{ apply_get.status_delete | status_delete }}</td>
                 <td>{{ apply_get.create_time }}</td>
                 <td>
                     <a href="javascript:void(0);" onclick="apply_get_delete({{ apply_get.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>

@@ -9,8 +9,8 @@
 """
 
 
-from app_frontend.models import UserBank
-from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete, update_rows
+from app_backend.models import UserBank
+from app_backend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete, update_rows
 
 
 def get_user_bank_row_by_id(user_bank_id):

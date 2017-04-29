@@ -35,11 +35,10 @@ class UserProfileForm(Form):
     """
     用户基本信息表单
     """
-    user_id = HiddenField('User Id', validators=[DataRequired()])
     user_pid = StringField('User Pid', validators=[DataRequired()])
-    nickname = StringField('Nick Name', validators=[DataRequired(), Length(min=2, max=20)])
+    nickname = StringField('Nick Name')
     avatar_url = StringField('Avatar Url')
-    email = StringField('Email', validators=[DataRequired()])
+    email = StringField('Email')
     area_code_choices = []
     for m, n in enumerate(area_code_list):
         area_code_choices.append((m, n))

@@ -66,7 +66,7 @@ def add():
     创建投资申请
     :return:
     """
-    pass
+    return render_template('apply_put/add.html', title='apply_put_add')
 
 
 @bp_apply_put.route('/del/', methods=['GET', 'POST'])

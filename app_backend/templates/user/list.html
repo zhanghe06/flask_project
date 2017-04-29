@@ -80,7 +80,7 @@
                 <td>{{ user_bank.bank_address }}</td>
                 <td>{{ user.create_time }}</td>
                 <td>
-                    <a href="{{ url_for('user.edit_profile', user_id=user.id, next=request.path) }}" rel="tooltip" title="编辑"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="{{ url_for('user.profile', user_id=user.id, next=request.path) }}" rel="tooltip" title="编辑"><span class="glyphicon glyphicon-pencil"></span></a>
                     <a href="javascript:void(0);" onclick="user_delete({{ user.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
                 </td>
             </tr>
