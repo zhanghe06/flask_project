@@ -15,7 +15,8 @@ OFF = False
 
 
 # 网站配置
-
+PER_PAGE_FRONTEND = 12   # 分页显示数据条数 前台
+PER_PAGE_BACKEND = 12   # 分页显示数据条数 后台
 
 # 功能开关
 

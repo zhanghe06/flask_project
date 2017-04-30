@@ -13,7 +13,7 @@ from flask_wtf import FlaskForm as Form
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField, HiddenField
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
 from app_backend.api.user_auth import get_user_auth_row
-from app_backend.forms import SelectBS
+from app_backend.forms import SelectBS, CheckBoxBS
 from app_api.maps import status_lock_list
 from app_api.maps import area_code_list
 from app_backend.api.user_auth import get_user_auth_row
@@ -63,7 +63,7 @@ class UserAuthForm(Form):
     auth_type = StringField('Auth Type')
     auth_key = StringField('Auth Key')
     auth_secret = StringField('Auth Secret')
-    status_verified = StringField('Status Verified')
+    status_verified = CheckBoxBS('Status Verified')
     create_time = DateTimeField('Create Time')
     update_time = DateTimeField('Update Time')
 
@@ -77,7 +77,7 @@ class UserBankForm(Form):
     bank_name = StringField('Bank Name')
     bank_address = StringField('Bank Address')
     bank_account = StringField('Bank Account')
-    status_verified = StringField('Status Verified')
+    status_verified = CheckBoxBS('Status Verified')
     status_delete = StringField('Status Delete')
     create_time = DateTimeField('Create Time')
     update_time = DateTimeField('Update Time')

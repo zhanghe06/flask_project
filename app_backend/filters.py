@@ -21,6 +21,7 @@ from app_api.maps.status_delete import STATUS_DEL_DICT
 from app_api.maps.status_pay import STATUS_PAY_DICT
 from app_api.maps.status_rec import STATUS_REC_DICT
 from app_backend import app
+from app_backend.views.user import get_user_profile_row_by_id
 
 
 @app.template_filter('reverse')
@@ -67,6 +68,16 @@ def time_diff_pretty_filter(delta_s):
         count = int(delta_s)
         result += u'%s秒' % count
     return result
+
+
+@app.template_filter('nickname')
+def filter_nickname(user_id):
+    """
+    显示用户名称
+    :param user_id:
+    :return:
+    """
+    return get_user_profile_row_by_id(user_id).nickname
 
 
 @app.template_filter('role_admin')

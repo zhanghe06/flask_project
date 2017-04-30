@@ -28,5 +28,7 @@ class ApplyGetSearchForm(Form):
     status_apply = StringField('Type Apply')
     status_order = StringField('Status Order')
     status_delete = StringField('Status Delete')
+    min_money = StringField('Min Money')
+    max_money = StringField('Max Money')
     start_time = StringField('Start Time')
     end_time = StringField('End Time')

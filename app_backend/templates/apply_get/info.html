@@ -1,0 +1,275 @@
+<!-- extend from base layout -->
+{% extends "layout.html" %}
+
+{% block extra_css %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+    <h2 class="sub-header">Apply Get Matcher!</h2>
+    <section id="apply_put_info">
+        <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong class="panel-title">Apply Get Info
+            <span class="glyphicon glyphicon-cog pull-right"></span>
+            </strong>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>user_id</th>
+                    <th>nickname</th>
+                    <th>type_apply</th>
+                    <th>money_apply</th>
+                    <th>status_apply</th>
+                    <th>status_order</th>
+                    <th>status_delete</th>
+                    <th>create_time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ apply_get_info.id }}</td>
+                    <td>{{ apply_get_info.user_id }}</td>
+                    <td>{{ apply_get_info.user_id | nickname }}</td>
+                    <td>{{ apply_get_info.type_apply | type_apply }}</td>
+                    <td>{{ apply_get_info.money_apply }}</td>
+                    <td>{{ apply_get_info.status_apply | status_apply }}</td>
+                    <td>{{ apply_get_info.status_order | status_order }}</td>
+                    <td>{{ apply_get_info.status_delete | status_delete }}</td>
+                    <td>{{ apply_get_info.create_time }}</td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+    </section>
+    {% if apply_get_info.status_order > STATUS_ORDER_HANDING | int %}
+    <section id="apply_match_get_info">
+        <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong class="panel-title">Apply Match Put Info
+            <span class="glyphicon glyphicon-cog pull-right"></span>
+            </strong>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>user_id</th>
+                    <th>nickname</th>
+                    <th>type_apply</th>
+                    <th>money_apply</th>
+                    <th>status_apply</th>
+                    <th>status_order</th>
+                    <th>status_delete</th>
+                    <th>create_time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for apply_put_info in apply_put_list %}
+                <tr>
+                    <td>{{ apply_put_info.id }}</td>
+                    <td>{{ apply_put_info.user_id }}</td>
+                    <td>{{ apply_put_info.user_id | nickname }}</td>
+                    <td>{{ apply_put_info.type_apply | type_apply }}</td>
+                    <td>{{ apply_put_info.money_apply }}</td>
+                    <td>{{ apply_put_info.status_apply | status_apply }}</td>
+                    <td>{{ apply_put_info.status_order | status_order }}</td>
+                    <td>{{ apply_put_info.status_delete | status_delete }}</td>
+                    <td>{{ apply_put_info.create_time }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </section>
+    {% endif %}
+
+    {% if apply_get_info.status_order < STATUS_ORDER_COMPLETED | int %}
+    <section id="apply_get_list">
+        <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong class="panel-title">Apply Put List
+            <span class="glyphicon glyphicon-cog pull-right"></span>
+            </strong>
+        </div>
+        <div class="panel-body">
+        <form class="form-inline">
+{#            <div class="form-group{% if form.apply_get_id.errors %} has-error{% endif %}">#}
+{#                {{ form.apply_get_id.label(class="sr-only") }}#}
+{#                {{ form.apply_get_id(class="form-control", placeholder="Apply Get Id") }}#}
+{#                {% for error in form.apply_get_id.errors %}#}
+{#                    <span class="help-block">{{ error }}</span>#}
+{#                {% endfor %}#}
+{#            </div>#}
+{#            <div class="form-group{% if form.user_id.errors %} has-error{% endif %}">#}
+{#                {{ form.user_id.label(class="sr-only") }}#}
+{#                {{ form.user_id(class="form-control", placeholder="User Id") }}#}
+{#                {% for error in form.user_id.errors %}#}
+{#                    <span class="help-block">{{ error }}</span>#}
+{#                {% endfor %}#}
+{#            </div>#}
+{#            <div class="form-group{% if form.type_apply.errors %} has-error{% endif %}">#}
+{#                {{ form.type_apply.label(class="sr-only") }}#}
+{#                {{ form.type_apply(class="form-control", placeholder="申请类型", data_width="fit", data_header="选择类型") }}#}
+{#                {% for error in form.type_apply.errors %}#}
+{#                    <span class="help-block">{{ error }}</span>#}
+{#                {% endfor %}#}
+{#            </div>#}
+            <div class="form-group{% if form.min_money.errors %} has-error{% endif %}">
+                {{ form.min_money.label(class="") }}
+                {{ form.min_money(class="form-control", placeholder="min money", type="number", min="100", max="100000", step="100") }}
+                {% for error in form.min_money.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group{% if form.max_money.errors %} has-error{% endif %}">
+                {{ form.max_money.label(class="") }}
+                {{ form.max_money(class="form-control", placeholder="max money", type="number", min="100", max="100000", step="100") }}
+                {% for error in form.max_money.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group{% if form.start_time.errors %} has-error{% endif %}">
+                {{ form.start_time.label(class="") }}
+                {{ form.start_time(class="form-control", placeholder="start_time", type='date') }}
+                {% for error in form.start_time.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group{% if form.end_time.errors %} has-error{% endif %}">
+                {{ form.end_time.label(class="") }}
+                {{ form.end_time(class="form-control", placeholder="end_time", type='date') }}
+                {% for error in form.end_time.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="btn btn-primary" name="op" value="0">Search</button>
+        </form>
+
+
+        <hr/>
+        <form onsubmit="apply_get_match(this)">
+        <input type="hidden" name="apply_get_id" value="{{ apply_get_info.id }}">
+        <div class="container-fluid">
+            <div class="btn-group pull-right" role="group" aria-label="...">
+                <button type="button" class="btn btn-default">Amount:<i id="amount-money">0</i></button>
+                <button type="submit" class="btn btn-success btn-load" data-loading-text="Match..." autocomplete="off" id="match-submit">Match</button>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            {# <table class="table table-striped"> #}
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>user_id</th>
+                    <th>nickname</th>
+                    <th>type_apply</th>
+                    <th>money_apply</th>
+                    <th>status_apply</th>
+                    <th>status_order</th>
+                    <th>status_delete</th>
+                    <th>create_time</th>
+                    <th>action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for apply_put, user_profile in pagination.items %}
+                <tr class="text-muted">
+                    <td>{{ apply_put.id }}</td>
+                    <td>{{ apply_put.user_id }}</td>
+                    <td>{{ user_profile.nickname }}</td>
+                    <td>{{ apply_put.type_apply | type_apply }}</td>
+                    <td>{{ apply_put.money_apply }}</td>
+                    <td>{{ apply_put.status_apply | status_apply }}</td>
+                    <td>{{ apply_put.status_order | status_order }}</td>
+                    <td>{{ apply_put.status_delete | status_delete }}</td>
+                    <td>{{ apply_put.create_time }}</td>
+                    <td>
+                        <input title="选择" type="checkbox" class="apply_put_check" name="apply_put_id" id="{{ apply_put.money_apply }}" value="{{ apply_put.id }}" />
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {# 翻页 #}
+            {% from "macros.html" import render_pagination %}
+            {{ render_pagination(pagination, 'user.lists') }}
+        </div>
+        </form>
+        </div>
+        </div>
+    </section>
+    {% endif %}
+
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // 初始化赋值
+    var type_apply = $('#type_apply');
+    type_apply.selectpicker('val', '{{ form.type_apply.data }}');
+    // 处理选项修改
+    type_apply.on('changed.bs.select', function (event, clickedIndex, newValue, oldValue) {
+        console.log($('#status_lock').val());
+        // console.log(event);
+        // console.log(clickedIndex);
+        // console.log(newValue);
+        // console.log(oldValue);
+    });
+    function apply_put_delete(apply_put_id){
+        if(confirm("Are you sure?"))
+        {
+            // console.log(user_id);
+            $.getJSON('{{ url_for('apply_put.delete') }}',
+            {
+                apply_put_id: apply_put_id
+            }, function (data) {
+                var result = data.result;  // true/false
+                // console.log(result==true);
+                if(result==true){
+                    window.location.reload();
+                }
+            });
+            return false;
+        }
+    }
+    // 提现匹配
+    function apply_get_match(form) {
+        //console.log($(form).serialize());
+        $.ajax({
+            url: "{{ url_for('apply_get.ajax_match') }}",
+            type: 'POST',
+            data: $(form).serialize(),
+            dataType: 'json',
+            success: function (result) {
+                console.log(result);
+                if(result.hasOwnProperty('error')){
+                    alert(result.error);
+                }else {
+                    alert(result.success);
+                }
+            }
+        });
+        //$(form).button('reset');  // 重置表单 恢复保存按钮
+        // todo 更新 tr 数据(blog_id)
+        return false;
+    }
+    // 计算金额
+    $(function(){
+        $('.apply_put_check').change(function () {
+            var sum=0;
+            $("input:checkbox:checked").each(function(){
+                sum+= parseInt(this.id);
+            });
+            $('#amount-money').html(sum);
+        });
+    });
+</script>
+{% endblock %}

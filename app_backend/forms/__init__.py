@@ -9,7 +9,7 @@
 """
 
 
-from wtforms import SelectField
+from wtforms import SelectField, BooleanField
 from wtforms.widgets import HTMLString
 from wtforms.compat import text_type, iteritems
 from wtforms.widgets import html_params
@@ -78,6 +78,36 @@ class SelectBS(SelectField):
                 break
         else:
             raise ValueError(self.gettext('Not a valid choice'))
+
+
+class CheckBoxBSWidget(object):
+    """
+    自定义复选框组件
+    """
+    input_type = 'checkbox'
+
+    def __call__(self, field, **kwargs):
+        if getattr(field, 'checked', field.data):
+            kwargs['checked'] = True
+        kwargs.setdefault('id', field.id)
+        kwargs.setdefault('type', self.input_type)
+        if 'value' not in kwargs:
+            kwargs['value'] = 1
+        html = [
+            '<div class="checkbox">',
+            '<label>',
+            '<input %s>' % html_params(name=field.name, **kwargs),
+            '</label>',
+            '</div>'
+        ]
+        return HTMLString('\n'.join(html))
+
+
+class CheckBoxBS(BooleanField):
+    """
+    自定义复选框控件
+    """
+    widget = CheckBoxBSWidget()
 
 
 class SelectAreaCodeWidget(object):

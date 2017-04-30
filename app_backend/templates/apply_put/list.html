@@ -59,6 +59,7 @@
             <tr>
                 <th>id</th>
                 <th>user_id</th>
+                <th>nickname</th>
                 <th>type_apply</th>
                 <th>money_apply</th>
                 <th>status_apply</th>
@@ -69,10 +70,11 @@
             </tr>
             </thead>
             <tbody>
-            {% for apply_put in pagination.items %}
+            {% for apply_put, user_profile in pagination.items %}
             <tr class="text-muted">
                 <td>{{ apply_put.id }}</td>
                 <td>{{ apply_put.user_id }}</td>
+                <td>{{ user_profile.nickname }}</td>
                 <td>{{ apply_put.type_apply | type_apply }}</td>
                 <td>{{ apply_put.money_apply }}</td>
                 <td>{{ apply_put.status_apply | status_apply }}</td>
@@ -80,6 +82,7 @@
                 <td>{{ apply_put.status_delete | status_delete }}</td>
                 <td>{{ apply_put.create_time }}</td>
                 <td>
+                    <a href="{{ url_for('apply_put.info', apply_put_id=apply_put.id) }}" rel="tooltip" title="匹配"><span class="glyphicon glyphicon-retweet"></span></a>
                     <a href="javascript:void(0);" onclick="apply_put_delete({{ apply_put.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
                 </td>
             </tr>

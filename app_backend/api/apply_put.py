@@ -10,7 +10,7 @@
 
 
 from app_backend.models import ApplyPut
-from app_backend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
+from app_backend.tools.db import get_row, get_rows_by_ids, get_lists, get_rows, get_row_by_id, add, edit, delete
 
 
 def get_apply_put_row_by_id(apply_put_id):
@@ -58,6 +58,25 @@ def delete_apply_put(apply_put_id):
     :return: Number of affected rows (Example: 0/1)
     """
     return delete(ApplyPut, apply_put_id)
+
+
+def get_apply_put_rows_by_ids(ids):
+    """
+    获取投资申请列表
+    :param ids:
+    :return: None/object
+    """
+    return get_rows_by_ids(ApplyPut, ids)
+
+
+def get_apply_put_lists(*args, **kwargs):
+    """
+    获取投资申请列表
+    :param args:
+    :param kwargs:
+    :return: None/list
+    """
+    return get_lists(ApplyPut, *args, **kwargs)
 
 
 def get_apply_put_rows(page=1, per_page=10, *args, **kwargs):
