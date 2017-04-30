@@ -63,9 +63,11 @@
             <tr>
                 <th>id</th>
                 <th>nickname</th>
+                <th>level_type</th>
                 <th>phone</th>
                 <th>bank_name</th>
                 <th>bank_address</th>
+                <th>status_lock</th>
                 <th>create_time</th>
                 <th>action</th>
             </tr>
@@ -75,12 +77,19 @@
             <tr class="text-muted">
                 <td>{{ user.id }}</td>
                 <td><a href="{{ url_for('user.admin_login', user_id=user.id) }}" rel="tooltip" title="登录" target="_blank">{{ user_profile.nickname }}</a></td>
+                <td>{{ user_profile.level_type | level_type }}</td>
                 <td>{{ user_profile.phone }}</td>
                 <td>{{ user_bank.bank_name }}</td>
                 <td>{{ user_bank.bank_address }}</td>
+                <td>{{ user.status_lock | status_lock }}</td>
                 <td>{{ user.create_time }}</td>
                 <td>
                     <a href="{{ url_for('user.profile', user_id=user.id, next=request.path) }}" rel="tooltip" title="编辑"><span class="glyphicon glyphicon-pencil"></span></a>
+                    {% if user.status_lock == STATUS_LOCK_OK | int %}
+                    <a href="javascript:void(0);" onclick="user_unlock({{ user.id }});" rel="tooltip" title="解锁"><span class="fa fa-unlock-alt"></span></a>
+                    {% else %}
+                    <a href="javascript:void(0);" onclick="user_lock({{ user.id }});" rel="tooltip" title="锁定"><span class="glyphicon glyphicon-lock"></span></a>
+                    {% endif %}
                     <a href="javascript:void(0);" onclick="user_delete({{ user.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
                 </td>
             </tr>
@@ -108,17 +117,59 @@
         // console.log(oldValue);
     });
 
+    // 用户锁定
+    function user_lock(user_id){
+        if(confirm("Are you sure?"))
+        {
+            // console.log(user_id);
+            $.getJSON('{{ url_for('user.ajax_lock') }}',
+            {
+                user_id: user_id
+            }, function (result) {
+                if(result.hasOwnProperty('error')){
+                    alert(result.error);
+                }else {
+                    alert(result.success);
+                    window.location.reload();
+                }
+            });
+            return false;
+        }
+    }
+
+    // 用户解锁
+    function user_unlock(user_id){
+        if(confirm("Are you sure?"))
+        {
+            // console.log(user_id);
+            $.getJSON('{{ url_for('user.ajax_unlock') }}',
+            {
+                user_id: user_id
+            }, function (result) {
+                if(result.hasOwnProperty('error')){
+                    alert(result.error);
+                }else {
+                    alert(result.success);
+                    window.location.reload();
+                }
+            });
+            return false;
+        }
+    }
+
+    // 用户删除
     function user_delete(user_id){
         if(confirm("Are you sure?"))
         {
             // console.log(user_id);
-            $.getJSON('{{ url_for('user.delete') }}',
+            $.getJSON('{{ url_for('user.ajax_delete') }}',
             {
                 user_id: user_id
-            }, function (data) {
-                var result = data.result;  // true/false
-                // console.log(result==true);
-                if(result==true){
+            }, function (result) {
+                if(result.hasOwnProperty('error')){
+                    alert(result.error);
+                }else {
+                    alert(result.success);
                     window.location.reload();
                 }
             });

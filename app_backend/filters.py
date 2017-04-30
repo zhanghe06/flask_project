@@ -20,6 +20,8 @@ from app_api.maps.status_order import STATUS_ORDER_DICT
 from app_api.maps.status_delete import STATUS_DEL_DICT
 from app_api.maps.status_pay import STATUS_PAY_DICT
 from app_api.maps.status_rec import STATUS_REC_DICT
+from app_api.maps.level_type import LEVEL_TYPE_DICT
+from app_api.maps.status_lock import STATUS_LOCK_DICT
 from app_backend import app
 from app_backend.views.user import get_user_profile_row_by_id
 
@@ -168,3 +170,23 @@ def filter_status_rec(status_rec_id):
     :return:
     """
     return STATUS_REC_DICT.get(status_rec_id, u'')
+
+
+@app.template_filter('level_type')
+def filter_level_type(level_type_id):
+    """
+    等级类型
+    :param level_type_id:
+    :return:
+    """
+    return LEVEL_TYPE_DICT.get(level_type_id, u'')
+
+
+@app.template_filter('status_lock')
+def filter_status_lock(status_lock_id):
+    """
+    等级类型
+    :param status_lock_id:
+    :return:
+    """
+    return STATUS_LOCK_DICT.get(status_lock_id, u'')

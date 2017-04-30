@@ -7,11 +7,12 @@
 @file: user.py
 @time: 2017/3/17 下午11:47
 """
-
+import json
 from datetime import datetime
 
 import flask_excel as excel
 from flask import Blueprint
+from flask import abort
 from flask import redirect
 from flask import render_template, request, flash
 from flask import url_for
@@ -22,11 +23,15 @@ from app_api.maps import area_code_map
 from app_api.maps.auth_type import *
 from app_api.tools import md5
 from app_backend import app
+from app_backend.api.user import edit_user
 from app_backend.api.user_auth import get_user_auth_row, edit_user_auth
 from app_backend.api.user_bank import get_user_bank_row_by_id, add_user_bank, edit_user_bank
 from app_backend.api.user_profile import get_user_profile_row_by_id, edit_user_profile
 from app_backend.forms.user import UserProfileForm, UserAuthForm, UserBankForm, UserSearchForm
 from app_backend.models import User, UserProfile, UserBank
+
+from app_api.maps.status_lock import *
+from app_api.maps.status_delete import *
 
 bp_user = Blueprint('user', __name__, url_prefix='/user')
 
@@ -53,7 +58,7 @@ def lists(page=1):
     form.end_time.data = end_time
     form.status_lock.data = status_lock
 
-    search_condition_user = []
+    search_condition_user = [User.status_delete == STATUS_DEL_NO]
     search_condition_user_profile = []
     search_condition_user_bank = []
     if user_id:
@@ -103,7 +108,14 @@ def lists(page=1):
         order_by(User.id.desc()). \
         paginate(page, 10, False)
 
-    return render_template('user/list.html', title='user_list', pagination=pagination, form=form)
+    return render_template(
+        'user/list.html',
+        title='user_list',
+        pagination=pagination,
+        form=form,
+        STATUS_LOCK_OK=STATUS_LOCK_OK,
+        STATUS_DEL_OK=STATUS_DEL_OK,
+    )
 
 
 @bp_user.route('/add/')
@@ -302,14 +314,78 @@ def setting():
     return render_template('./setting.html', title='setting', form=form)
 
 
-@bp_user.route('/del/', methods=['GET', 'POST'])
+@bp_user.route('/ajax/lock/', methods=['GET', 'POST'])
 @login_required
-def delete():
+def ajax_lock():
+    """
+    锁定用户
+    :return:
+    """
+    if request.method == 'GET' and request.is_xhr:
+        user_id = request.args.get('user_id', 0, type=int)
+        if not user_id:
+            return json.dumps({'error': u'锁定失败'})
+        current_time = datetime.utcnow()
+        user_data = {
+            'status_lock': STATUS_LOCK_OK,
+            'lock_time': current_time,
+            'update_time': current_time
+        }
+        result = edit_user(user_id, user_data)
+        if result == 1:
+            return json.dumps({'success': u'锁定成功'})
+        if result == 0:
+            return json.dumps({'error': u'锁定失败'})
+    abort(404)
+
+
+@bp_user.route('/ajax/unlock/', methods=['GET', 'POST'])
+@login_required
+def ajax_unlock():
+    """
+    锁定用户
+    :return:
+    """
+    if request.method == 'GET' and request.is_xhr:
+        user_id = request.args.get('user_id', 0, type=int)
+        if not user_id:
+            return json.dumps({'error': u'解锁失败'})
+        current_time = datetime.utcnow()
+        user_data = {
+            'status_lock': STATUS_LOCK_NO,
+            'update_time': current_time
+        }
+        result = edit_user(user_id, user_data)
+        if result == 1:
+            return json.dumps({'success': u'解锁成功'})
+        if result == 0:
+            return json.dumps({'error': u'解锁失败'})
+    abort(404)
+
+
+@bp_user.route('/ajax/del/', methods=['GET', 'POST'])
+@login_required
+def ajax_delete():
     """
     删除用户
     :return:
     """
-    pass
+    if request.method == 'GET' and request.is_xhr:
+        user_id = request.args.get('user_id', 0, type=int)
+        if not user_id:
+            return json.dumps({'error': u'删除失败'})
+        current_time = datetime.utcnow()
+        user_data = {
+            'status_delete': STATUS_DEL_OK,
+            'delete_time': current_time,
+            'update_time': current_time
+        }
+        result = edit_user(user_id, user_data)
+        if result == 1:
+            return json.dumps({'success': u'删除成功'})
+        if result == 0:
+            return json.dumps({'error': u'删除失败'})
+    abort(404)
 
 
 @bp_user.route('/stats/', methods=['GET', 'POST'])
@@ -320,7 +396,7 @@ def stats():
     按日、周、月统计注册量
     :return:
     """
-    pass
+    return render_template('user/stats.html', title='user_stats')
 
 
 @bp_user.route('/admin_login/<int:user_id>/', methods=['GET', 'POST'])
