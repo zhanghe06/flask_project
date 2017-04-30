@@ -290,4 +290,4 @@ def stats():
     投资申请统计
     :return:
     """
-    pass
+    return render_template('apply_put/stats.html', title='apply_put_stats')

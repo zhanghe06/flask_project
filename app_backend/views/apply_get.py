@@ -293,4 +293,4 @@ def stats():
     提现申请统计
     :return:
     """
-    pass
+    return render_template('apply_get/stats.html', title='apply_get_stats')

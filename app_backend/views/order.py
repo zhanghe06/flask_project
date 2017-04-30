@@ -116,4 +116,4 @@ def stats():
     订单统计
     :return:
     """
-    pass
+    return render_template('order/stats.html', title='order_stats')

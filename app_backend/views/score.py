@@ -63,4 +63,4 @@ def stats():
     积分统计
     :return:
     """
-    pass
+    return render_template('score/stats.html', title='score_stats')

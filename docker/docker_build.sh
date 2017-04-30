@@ -2,4 +2,4 @@
 
 docker build \
         --rm=true \
-        -t scrapy_project .
+        -t flask_project .

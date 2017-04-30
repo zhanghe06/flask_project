@@ -65,4 +65,4 @@ def stats():
     钱包统计
     :return:
     """
-    pass
+    return render_template('wallet/stats.html', title='wallet_stats')

@@ -24,6 +24,7 @@
     <link href="{{ url_for('static', filename='css/bootstrap-select.min.css') }}" rel="stylesheet">
     <!-- Custom -->
     <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/custom.css', v='1.4.69') }}" rel="stylesheet">
     {% block extra_css %}{% endblock %}
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -138,10 +139,10 @@
                             <ul class="nav nav-second-level">
                                 <li>
 {#                                    <a class="active" href="blank.html">留言列表</a>#}
-                                    <a href="blank.html">留言列表</a>
+                                    <a href="{{ url_for('message.lists') }}">留言列表</a>
                                 </li>
                                 <li>
-                                    <a href="login.html">投诉列表</a>
+                                    <a href="{{ url_for('complaint.lists') }}">投诉列表</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
@@ -150,25 +151,34 @@
                             <a href="#"><i class="fa fa-sitemap fa-fw"></i> 系统配置<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="#">会员配置</a>
+                                    <a href="{{ url_for('settings.user') }}">会员配置</a>
                                 </li>
                                 <li>
-                                    <a href="#">订单配置</a>
+                                    <a href="{{ url_for('settings.order') }}">订单配置</a>
+                                </li>
+                                <li>
+                                    <a href="{{ url_for('settings.wallet') }}">钱包配置</a>
+                                </li>
+                                <li>
+                                    <a href="{{ url_for('settings.score') }}">积分配置</a>
+                                </li>
+                                <li>
+                                    <a href="{{ url_for('settings.bonus') }}">奖金配置</a>
                                 </li>
                                 <li>
                                     <a href="#">利息配置 <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
                                         <li>
-                                            <a href="#">提前打款</a>
+                                            <a href="{{ url_for('settings.interest', op='pay_early') }}">提前打款</a>
                                         </li>
                                         <li>
-                                            <a href="#">延迟打款</a>
+                                            <a href="{{ url_for('settings.interest', op='pay_delay') }}">延迟打款</a>
                                         </li>
                                         <li>
-                                            <a href="#">提前收货</a>
+                                            <a href="{{ url_for('settings.interest', op='rec_early') }}">提前收货</a>
                                         </li>
                                         <li>
-                                            <a href="#">延迟收货</a>
+                                            <a href="{{ url_for('settings.interest', op='rec_delay') }}">延迟收货</a>
                                         </li>
                                     </ul>
                                     <!-- /.nav-third-level -->

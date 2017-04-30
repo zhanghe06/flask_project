@@ -34,8 +34,9 @@ def profile():
     :return:
     """
     login_user_id = g.user.get_id()
-    return login_user_id
+    # return login_user_id
     # get_admin_row()
+    return render_template('admin/profile.html', title='admin_profile')
 
 
 def add():
