@@ -43,6 +43,7 @@
                 <td>{{ moment(admin.create_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
                 <td>{{ moment(admin.update_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
                 <td>
+                    <a href="{{ url_for('admin.edit', admin_id=admin.id, next=request.path) }}" rel="tooltip" title="编辑"><span class="glyphicon glyphicon-pencil"></span></a>
                     <a href="javascript:void(0);" onclick="admin_delete({{ admin.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
                 </td>
             </tr>

@@ -286,7 +286,7 @@ def ajax_get_sms_code():
     if result_code is False:
         return json.dumps({'result': False, 'msg': u'图形验证码错误，请重新提交'})
     # 获取短信验证码
-    area_id = request.args.get('area_id', '', type=int)
+    area_id = request.args.get('area_id', '', type=str)
     area_code = area_code_map.get(area_id, '86')
     mobile = request.args.get('phone', '', type=str)
     mobile_iso = '%s%s' % (area_code, mobile)

@@ -12,6 +12,9 @@ from itsdangerous import URLSafeSerializer
 
 from app_frontend import app
 from app_frontend.api.user_profile import get_user_profile_row_by_id
+from app_frontend.api.wallet import get_wallet_row_by_id
+from app_frontend.api.score import get_score_row_by_id
+from app_frontend.api.bonus import get_bonus_row_by_id
 from app_common.maps.level_type import LEVEL_TYPE_DICT
 from app_common.maps.type_apply import TYPE_APPLY_DICT
 from app_common.maps.auth_type import AUTH_TYPE_DICT
@@ -79,6 +82,39 @@ def filter_user_name_level(user_id):
     """
     row = get_user_profile_row_by_id(user_id)
     return u'%s(%s)' % (row.nickname, LEVEL_TYPE_DICT.get(row.level_type, u'普通')) if row else u'游客'
+
+
+@app.template_filter('user_wallet')
+def filter_user_wallet(user_id):
+    """
+    用户钱包余额
+    :param user_id:
+    :return:
+    """
+    row = get_wallet_row_by_id(user_id)
+    return row.amount_current if row else 0
+
+
+@app.template_filter('user_score')
+def filter_user_score(user_id):
+    """
+    用户积分余额
+    :param user_id:
+    :return:
+    """
+    row = get_score_row_by_id(user_id)
+    return row.amount if row else 0
+
+
+@app.template_filter('user_bonus')
+def filter_user_bonus(user_id):
+    """
+    用户奖金余额
+    :param user_id:
+    :return:
+    """
+    row = get_bonus_row_by_id(user_id)
+    return row.amount if row else 0
 
 
 @app.template_filter('user_invite_link')

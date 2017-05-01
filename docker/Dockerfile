@@ -10,8 +10,33 @@ RUN apt-get update && apt-get install -qy --no-install-recommends \
     vim \
     ntpdate
 
-ADD ./requirements.txt /requirements.txt
-RUN pip install -r /requirements.txt
+#ADD ./requirements.txt /requirements.txt
+#RUN pip install -r /requirements.txt
+
+RUN pip install --no-cache-dir \
+    Flask \
+    Flask-Login \
+    Flask-Mail \
+    Flask-SQLAlchemy \
+    Flask-WTF \
+    Flask-OAuthlib \
+    Flask-Excel \
+    Flask-Moment \
+    Flask-Uploads \
+    sqlacodegen \
+    gunicorn \
+    schedule \
+    supervisor \
+    redis \
+    requests \
+    celery \
+    librabbitmq \
+    pika \
+    Pillow \
+    sshtunnel \
+    MySQL-python \
+    pymongo
+
 
 EXPOSE 9001
 

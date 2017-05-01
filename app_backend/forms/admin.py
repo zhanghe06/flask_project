@@ -10,7 +10,7 @@
 
 
 from flask_wtf import FlaskForm as Form
-from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField
+from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField, HiddenField
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
 
 from app_common.maps import area_code_list, role_admin_list
@@ -30,18 +30,35 @@ def reg_username_repeat(form, field):
         raise ValidationError(u'登录账号重复')
 
 
+def password_edit_validator(form, field):
+    """
+    密码修改表单校验
+    :param form:
+    :param field:
+    :return:
+    """
+    field_data_length = len(field.data) if field.data else 0
+    if field_data_length > 0 and (field_data_length < 6 or field_data_length > 20):
+        raise ValidationError(u'密码长度不符')
+
+
 class AdminProfileForm(Form):
     """
     管理员基本信息表单
     """
+    id = HiddenField('Id')
     username = StringField('User Name', validators=[DataRequired(), Length(min=2, max=20)])
-    password = StringField('Password', validators=[DataRequired(), Length(min=6, max=20)])
-    area_id = StringField('Area Id', validators=[DataRequired()])
+    password = StringField('Password', validators=[password_edit_validator])
+    area_code_choices = []
+    for m, n in enumerate(area_code_list):
+        area_code_choices.append((m, n))
+    area_id = SelectAreaCode('Area Id', default='0', choices=area_code_choices, validators=[DataRequired()])
     phone = StringField('Phone')
-    role = StringField('Role')
-    create_time = DateTimeField('Create Time')
+    role = SelectBS('Role', default='', choices=role_admin_list, validators=[DataRequired()])
     login_ip = StringField('Login Ip')
     login_time = DateTimeField('Login Time')
+    create_time = DateTimeField('Create Time')
+    update_time = DateTimeField('Update Time')
 
 
 class AdminAddForm(Form):
@@ -56,9 +73,27 @@ class AdminAddForm(Form):
     area_id = SelectAreaCode('Area Id', default='0', choices=area_code_choices, validators=[DataRequired()])
     phone = StringField('Phone')
     role = SelectBS('Role', default='', choices=role_admin_list, validators=[DataRequired()])
-    create_time = DateTimeField('Create Time')
     login_ip = StringField('Login Ip')
     login_time = DateTimeField('Login Time')
+
+
+class AdminEditForm(Form):
+    """
+    管理员编辑表单
+    """
+    id = HiddenField('Id')
+    username = StringField('User Name', validators=[DataRequired(), Length(min=2, max=20)])
+    password = StringField('Password', validators=[password_edit_validator])
+    area_code_choices = []
+    for m, n in enumerate(area_code_list):
+        area_code_choices.append((m, n))
+    area_id = SelectAreaCode('Area Id', default='0', choices=area_code_choices, validators=[DataRequired()])
+    phone = StringField('Phone')
+    role = SelectBS('Role', default='', choices=role_admin_list, validators=[DataRequired()])
+    login_ip = StringField('Login Ip')
+    login_time = DateTimeField('Login Time')
+    create_time = DateTimeField('Create Time')
+    update_time = DateTimeField('Update Time')
 
 
 class EditPassword(Form):

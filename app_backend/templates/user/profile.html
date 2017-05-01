@@ -4,7 +4,7 @@
     <div class="container-fluid">
     <ol class="breadcrumb">
         <li><a href="/">后台管理</a></li>
-        <li><a href="/">会员管理</a></li>
+        <li><a href="javascript:void(0);" onclick="$('#menu-user').trigger('click');">会员管理</a></li>
         <li class="active">会员信息</li>
     </ol>
     <h1>Profile</h1>
@@ -15,9 +15,9 @@
         {{ form.user_id() }}
         {# 标签导航 #}
         <ul class="nav nav-tabs">  {# 填充整个导航条：nav-justified #}
-            <li role="presentation" class="active"><a href="{{ url_for('user.profile', user_id=form.user_id.data) }}">Profile</a></li>
             <li role="presentation"><a href="{{ url_for('user.auth', user_id=form.user_id.data) }}">Auth</a></li>
             <li role="presentation"><a href="{{ url_for('user.bank', user_id=form.user_id.data) }}">bank</a></li>
+            <li role="presentation" class="active"><a href="{{ url_for('user.profile', user_id=form.user_id.data) }}">Profile</a></li>
         </ul>
         <p></p>
         <div class="form-group{% if form.user_pid.errors %} has-error{% endif %}">

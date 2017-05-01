@@ -110,6 +110,7 @@ $ pip install redis
 $ pip install requests
 $ pip install celery
 $ pip install librabbitmq
+$ pip install pika
 $ pip install Pillow
 $ pip install sshtunnel
 $ pip install MySQL-python
@@ -488,7 +489,28 @@ https://github.com/miguelgrinberg/Flask-Moment
 本地加载：
 ```
 <script src="{{ url_for('static', filename='plugin/moment-2.18.1/min/moment-with-locales.min.js') }}"></script>
-<script>moment.locale('zh-cn');</script>
+<script>
+    moment.locale("zh-cn");
+    function flask_moment_render(elem) {
+        $(elem).text(eval('moment("' + $(elem).data('timestamp') + '").' + $(elem).data('format') + ';'));
+        $(elem).removeClass('flask-moment').show();
+    }
+    function flask_moment_render_all() {
+        $('.flask-moment').each(function () {
+            flask_moment_render(this);
+            if ($(this).data('refresh')) {
+                (function (elem, interval) {
+                    setInterval(function () {
+                        flask_moment_render(elem)
+                    }, interval);
+                })(this, $(this).data('refresh'));
+            }
+        })
+    }
+    $(document).ready(function () {
+        flask_moment_render_all();
+    });
+</script>
 ```
 
 cdn方案：

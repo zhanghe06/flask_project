@@ -15,7 +15,7 @@ from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email
 
 from app_common.maps import area_code_list
 from app_frontend.api.user_auth import get_user_auth_row
-from app_frontend.forms import SelectAreaCode
+from app_frontend.forms import SelectAreaCode, CheckBoxBS
 
 
 def reg_email_repeat(form, field):
@@ -59,7 +59,7 @@ class UserAuthForm(Form):
     auth_type = StringField('Auth Type')
     auth_key = StringField('Auth Key')
     auth_secret = StringField('Auth Secret')
-    status_verified = StringField('Status Verified')
+    status_verified = CheckBoxBS('Status Verified')
     create_time = DateTimeField('Create Time')
     update_time = DateTimeField('Update Time')
 
@@ -72,7 +72,7 @@ class UserBankForm(Form):
     bank_name = StringField('Bank Name')
     bank_address = StringField('Bank Address')
     bank_account = StringField('Bank Account')
-    status_verified = StringField('Status Verified')
+    status_verified = CheckBoxBS('Status Verified')
     status_delete = StringField('Status Delete')
     create_time = DateTimeField('Create Time')
     update_time = DateTimeField('Update Time')

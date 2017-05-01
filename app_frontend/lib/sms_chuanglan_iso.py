@@ -10,6 +10,7 @@
 
 
 import requests
+from config import REQUESTS_TIME_OUT
 
 
 class SmsChuangLanIsoApi(object):
@@ -69,7 +70,7 @@ class SmsChuangLanIsoApi(object):
             'rf': 2,
             'tf': 3,
         }
-        result = requests.get(self.ISENDURL, params).json()
+        result = requests.get(self.ISENDURL, params, timeout=REQUESTS_TIME_OUT or 30).json()
         return result
 
     def query_balance_international(self):
@@ -82,7 +83,7 @@ class SmsChuangLanIsoApi(object):
             'pw': self._pw,
             'rf': 2,
         }
-        result = requests.get(self.IQUERYURL, params).json()
+        result = requests.get(self.IQUERYURL, params, timeout=REQUESTS_TIME_OUT or 30).json()
         return result
 
 

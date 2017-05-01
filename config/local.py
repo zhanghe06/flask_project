@@ -16,6 +16,11 @@ DEBUG = True
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__)+'/../')
 
+
+# requests 超时设置
+REQUESTS_TIME_OUT = (30, 30)
+
+
 # 数据库 MySQL
 DB_MYSQL = {
     'host': '127.0.0.1',
