@@ -48,8 +48,16 @@ def add():
 @login_required
 def lists(page=1):
     """
-    会员列表
+    管理列表
     """
     pagination = get_admin_rows(page)
     return render_template('admin/list.html', title='admin_list', pagination=pagination)
 
+
+@bp_admin.route('/add/')
+@login_required
+def add():
+    """
+    添加管理
+    """
+    return render_template('admin/add.html', title='admin_add')

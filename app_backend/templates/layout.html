@@ -89,7 +89,19 @@
                             <a href="/"><i class="fa fa-dashboard fa-fw"></i> 后台首页</a>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-table fa-fw"></i> 会员管理<span class="fa arrow"></span></a>
+                            <a id="menu-admin" href="#"><i class="fa fa-files-o fa-fw"></i> 运营管理<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="{{ url_for('admin.lists') }}">成员列表</a>
+                                </li>
+                                <li>
+                                    <a href="{{ url_for('admin.add') }}">添加成员</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a id="menu-user" href="#"><i class="fa fa-table fa-fw"></i> 会员管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="{{ url_for('user.lists') }}">会员列表</a>
@@ -103,14 +115,9 @@
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
-{#                        <li>#}
-{#                            <a href="tables.html"><i class="fa fa-table fa-fw"></i> 金币管理</a>#}
-{#                        </li>#}
-{#                        <li>#}
-{#                            <a href="forms.html"><i class="fa fa-wrench fa-fw"></i> Forms</a>#}
-{#                        </li>#}
+
                         <li>
-                            <a href="#"><i class="fa fa-edit fa-fw"></i> 订单管理<span class="fa arrow"></span></a>
+                            <a id="menu-order" href="#"><i class="fa fa-edit fa-fw"></i> 订单管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="{{ url_for('order.lists', status_rec=0) }}">订单列表 - 进行中</a>
@@ -133,12 +140,10 @@
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
-{#                        <li class="active">#}
                         <li>
-                            <a href="#"><i class="fa fa-files-o fa-fw"></i> 留言管理<span class="fa arrow"></span></a>
+                            <a id="menu-message" href="#"><i class="fa fa-files-o fa-fw"></i> 留言管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-{#                                    <a class="active" href="blank.html">留言列表</a>#}
                                     <a href="{{ url_for('message.lists') }}">留言列表</a>
                                 </li>
                                 <li>
@@ -148,7 +153,7 @@
                             <!-- /.nav-second-level -->
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-sitemap fa-fw"></i> 系统配置<span class="fa arrow"></span></a>
+                            <a id="menu-settings" href="#"><i class="fa fa-sitemap fa-fw"></i> 系统配置<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="{{ url_for('settings.user') }}">会员配置</a>
@@ -166,7 +171,7 @@
                                     <a href="{{ url_for('settings.bonus') }}">奖金配置</a>
                                 </li>
                                 <li>
-                                    <a href="#">利息配置 <span class="fa arrow"></span></a>
+                                    <a id="menu-settings-interest" href="#">利息配置 <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
                                         <li>
                                             <a href="{{ url_for('settings.interest', op='pay_early') }}">提前打款</a>
@@ -187,7 +192,7 @@
                             <!-- /.nav-second-level -->
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> 运营统计<span class="fa arrow"></span></a>
+                            <a id="menu-stats" href="#"><i class="fa fa-bar-chart-o fa-fw"></i> 运营统计<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="{{ url_for('user.stats') }}">用户统计</a>

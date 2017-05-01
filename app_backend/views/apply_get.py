@@ -149,7 +149,7 @@ def info(apply_get_id, page=1):
     search_condition_apply_put = [
         ApplyPut.status_delete == STATUS_DEL_NO,
         ApplyPut.status_order < STATUS_ORDER_COMPLETED,
-        ApplyPut.user_id != apply_get_id
+        ApplyPut.user_id != apply_get_info.user_id
     ]
     if user_id:
         search_condition_apply_put.append(ApplyPut.user_id == user_id)

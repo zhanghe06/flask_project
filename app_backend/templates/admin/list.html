@@ -1,10 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "layout.html" %}
 
-</body>
-</html>
+{% block content %}
+<div class="container-fluid">
+    <ol class="breadcrumb">
+        <li><a href="/">后台管理</a></li>
+        <li><a href="javascript:void(0);" onclick="$('#menu-admin').trigger('click');">运营管理</a></li>
+        <li class="active">成员列表</li>
+    </ol>
+    <h2 class="sub-header">Admin List!</h2>
+
+
+</div>
+
+{% endblock %}
