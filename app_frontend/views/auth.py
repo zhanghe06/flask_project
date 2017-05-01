@@ -18,9 +18,9 @@ from flask_login import login_user
 from flask_login import logout_user
 from itsdangerous import TimestampSigner, SignatureExpired, BadTimeSignature
 
-from app_api.maps import area_code_map
-from app_api.maps.auth_type import *
-from app_api.tools import md5
+from app_common.maps import area_code_map
+from app_common.maps.auth_type import *
+from app_common.tools import md5
 from app_frontend import app, oauth_github, oauth_qq, oauth_weibo
 from app_frontend.api.user import edit_user
 from app_frontend.api.user import get_user_row_by_id

@@ -29,12 +29,12 @@ from app_backend.models import User, ApplyGet, UserProfile, ApplyPut
 from app_backend.api.apply_get import get_apply_get_rows, get_apply_get_row, get_apply_get_row_by_id, \
     get_apply_get_rows_by_ids, edit_apply_get
 from app_backend.forms.apply_get import ApplyGetSearchForm
-from app_api.settings import PER_PAGE_BACKEND
-from app_api.maps.status_delete import *
-from app_api.maps.status_order import *
-from app_api.maps.status_pay import *
-from app_api.maps.status_rec import *
-from app_api.maps.status_audit import *
+from app_common.settings import PER_PAGE_BACKEND
+from app_common.maps.status_delete import *
+from app_common.maps.status_order import *
+from app_common.maps.status_pay import *
+from app_common.maps.status_rec import *
+from app_common.maps.status_audit import *
 
 from flask import Blueprint
 

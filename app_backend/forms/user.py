@@ -14,8 +14,8 @@ from wtforms import StringField, PasswordField, BooleanField, DateField, DateTim
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
 from app_backend.api.user_auth import get_user_auth_row
 from app_backend.forms import SelectBS, CheckBoxBS
-from app_api.maps import status_lock_list
-from app_api.maps import area_code_list
+from app_common.maps import status_lock_list
+from app_common.maps import area_code_list
 from app_backend.api.user_auth import get_user_auth_row
 from app_backend.forms import SelectAreaCode
 

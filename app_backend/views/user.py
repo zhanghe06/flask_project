@@ -19,9 +19,9 @@ from flask import url_for
 from flask_login import current_user, login_required
 from itsdangerous import TimestampSigner
 
-from app_api.maps import area_code_map
-from app_api.maps.auth_type import *
-from app_api.tools import md5
+from app_common.maps import area_code_map
+from app_common.maps.auth_type import *
+from app_common.tools import md5
 from app_backend import app
 from app_backend.api.user import edit_user
 from app_backend.api.user_auth import get_user_auth_row, edit_user_auth
@@ -30,8 +30,8 @@ from app_backend.api.user_profile import get_user_profile_row_by_id, edit_user_p
 from app_backend.forms.user import UserProfileForm, UserAuthForm, UserBankForm, UserSearchForm
 from app_backend.models import User, UserProfile, UserBank
 
-from app_api.maps.status_lock import *
-from app_api.maps.status_delete import *
+from app_common.maps.status_lock import *
+from app_common.maps.status_delete import *
 
 bp_user = Blueprint('user', __name__, url_prefix='/user')
 

@@ -28,12 +28,12 @@ from app_backend.models import User, ApplyGet, UserProfile, ApplyPut
 from app_backend.api.apply_put import get_apply_put_rows, get_apply_put_row, get_apply_put_row_by_id, edit_apply_put
 from app_backend.api.order import get_order_row, get_order_rows, get_order_lists, add_order
 from app_backend.forms.apply_put import ApplyPutSearchForm
-from app_api.settings import PER_PAGE_BACKEND
-from app_api.maps.status_delete import *
-from app_api.maps.status_order import *
-from app_api.maps.status_pay import *
-from app_api.maps.status_rec import *
-from app_api.maps.status_audit import *
+from app_common.settings import PER_PAGE_BACKEND
+from app_common.maps.status_delete import *
+from app_common.maps.status_order import *
+from app_common.maps.status_pay import *
+from app_common.maps.status_rec import *
+from app_common.maps.status_audit import *
 
 from flask import Blueprint
 

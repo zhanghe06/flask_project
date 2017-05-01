@@ -18,7 +18,7 @@ from app_frontend.api.user_profile import get_user_profile_row_by_id, edit_user_
 from datetime import datetime
 from flask import Blueprint, g
 from app_frontend.api.credit import get_user_credit_row_by_id
-from app_api.tools import json_default
+from app_common.tools import json_default
 
 
 bp_credit = Blueprint('credit', __name__, url_prefix='/credit')

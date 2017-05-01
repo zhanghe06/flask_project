@@ -13,7 +13,7 @@ from flask_wtf import FlaskForm as Form
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
 
-from app_api.maps import area_code_list, role_admin_list
+from app_common.maps import area_code_list, role_admin_list
 from app_backend.api.admin import get_admin_row
 from app_backend.forms import SelectAreaCode, SelectBS
 

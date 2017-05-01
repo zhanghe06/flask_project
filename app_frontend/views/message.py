@@ -19,7 +19,7 @@ import flask_excel as excel
 from app_frontend import app
 from app_frontend.models import User, UserProfile
 from app_frontend.api.message import get_message_rows, get_message_row
-from app_api.maps.status_reply import STATUS_REPLY_DICT
+from app_common.maps.status_reply import STATUS_REPLY_DICT
 
 from flask import Blueprint
 

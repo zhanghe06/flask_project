@@ -19,10 +19,10 @@ from app_frontend import app
 from app_frontend.models import User
 from app_frontend.api.apply_get import get_apply_get_rows, get_apply_get_row, add_apply_get
 from app_frontend.api.apply_put import get_apply_put_rows, get_apply_put_row, add_apply_put
-from app_api.maps.status_order import *
-from app_api.maps.type_apply import *
-from app_api.maps.status_apply import *
-from app_api.maps.status_delete import *
+from app_common.maps.status_order import *
+from app_common.maps.type_apply import *
+from app_common.maps.status_apply import *
+from app_common.maps.status_delete import *
 from app_frontend.forms.apply_get import ApplyGetAddForm
 from app_frontend.forms.apply_put import ApplyPutAddForm
 from flask import Blueprint

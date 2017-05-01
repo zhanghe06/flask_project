@@ -22,9 +22,9 @@ try:
 except ImportError:
     from cgi import escape
 import re
-from app_api.maps import area_code_list
+from app_common.maps import area_code_list
 
-from app_api.maps.auth_type import *
+from app_common.maps.auth_type import *
 # 认证类型（0未知，1邮箱，2手机，3qq，4微信，5微博）
 
 

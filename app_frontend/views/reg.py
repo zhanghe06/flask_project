@@ -17,8 +17,8 @@ from app_frontend import app
 from flask import Blueprint
 
 from app_frontend.lib.sms_chuanglan_iso import SmsChuangLanIsoApi
-from app_api.maps import area_code_map
-from app_api.maps.auth_type import *
+from app_common.maps import area_code_map
+from app_common.maps.auth_type import *
 
 from app_frontend.api.user import add_user
 from app_frontend.api.user_auth import add_user_auth

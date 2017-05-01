@@ -22,17 +22,17 @@ from flask_login import login_user
 from flask_login import logout_user
 from flask_login import current_user, login_required
 
-from app_api.maps import area_code_map
+from app_common.maps import area_code_map
 from app_backend import app, oauth_github, oauth_qq, oauth_weibo
-from app_api.maps.auth_type import *
-from app_api.maps.sms_msg import SMS_CODE_REG
+from app_common.maps.auth_type import *
+from app_common.maps.sms_msg import SMS_CODE_REG
 
 from app_backend import app, login_manager
 
 # cache = SimpleCache()  # 默认最大支持500个key, 超时时间5分钟, 参数可配置
 from app_backend.api.admin import get_admin_row
 from app_backend.lib.sms_chuanglan_iso import SmsChuangLanIsoApi
-from app_api.tools import md5
+from app_common.tools import md5
 from app_backend.tools.send_sms import UN, PW
 
 

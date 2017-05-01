@@ -12,15 +12,15 @@ from itsdangerous import URLSafeSerializer
 
 from app_frontend import app
 from app_frontend.api.user_profile import get_user_profile_row_by_id
-from app_api.maps.level_type import LEVEL_TYPE_DICT
-from app_api.maps.type_apply import TYPE_APPLY_DICT
-from app_api.maps.auth_type import AUTH_TYPE_DICT
-from app_api.maps.status_audit import STATUS_AUDIT_DICT
-from app_api.maps.status_apply import STATUS_APPLY_DICT
-from app_api.maps.status_order import STATUS_ORDER_DICT
-from app_api.maps.status_delete import STATUS_DEL_DICT
-from app_api.maps.status_pay import STATUS_PAY_DICT
-from app_api.maps.status_rec import STATUS_REC_DICT
+from app_common.maps.level_type import LEVEL_TYPE_DICT
+from app_common.maps.type_apply import TYPE_APPLY_DICT
+from app_common.maps.auth_type import AUTH_TYPE_DICT
+from app_common.maps.status_audit import STATUS_AUDIT_DICT
+from app_common.maps.status_apply import STATUS_APPLY_DICT
+from app_common.maps.status_order import STATUS_ORDER_DICT
+from app_common.maps.status_delete import STATUS_DEL_DICT
+from app_common.maps.status_pay import STATUS_PAY_DICT
+from app_common.maps.status_rec import STATUS_REC_DICT
 import time
 
 

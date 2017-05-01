@@ -19,8 +19,8 @@ import flask_excel as excel
 from app_frontend import app
 from app_frontend.models import User, UserProfile
 from app_frontend.api.order import get_order_rows, get_order_row
-from app_api.maps.status_pay import STATUS_PAY_DICT
-from app_api.maps.status_rec import STATUS_REC_DICT
+from app_common.maps.status_pay import STATUS_PAY_DICT
+from app_common.maps.status_rec import STATUS_REC_DICT
 
 from flask import Blueprint
 
