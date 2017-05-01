@@ -74,8 +74,8 @@
     <script src="{{ url_for('static', filename='plugin/Chart/Chart.min.js') }}"></script>
     <script src="{{ url_for('static', filename='plugin/Slideout/slideout.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap-select.min.js') }}"></script>
-    {{ moment.include_moment() }}
-    {{ moment.lang('zh-cn') }}
+    <script src="{{ url_for('static', filename='plugin/moment-2.18.1/min/moment-with-locales.min.js') }}"></script>
+    <script>moment.locale('zh-cn');</script>
     <!-- Custom -->
     <script src="{{ url_for('static', filename='js/custom.js', v='1.4.68') }}"></script>
     {% block extra_js %}{% endblock %}

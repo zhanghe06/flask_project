@@ -10,11 +10,7 @@
     <meta name="author" content="">
     {# <link rel="icon" href="{{ url_for('static', _external=True, filename='img/favicon.ico') }}"> #}
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
-    {% if title %}
-    <title>{{ title }} - 后台管理</title>
-    {% else %}
-    <title>后台管理</title>
-    {% endif %}
+    <title>{% if title %}{{ title }} - {% endif %}后台管理</title>
     <!-- Bootstrap -->
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/bootstrap-theme.min.css') }}" rel="stylesheet">
@@ -246,9 +242,8 @@
     <script src="{{ url_for('static', filename='js/sb-admin-2.js') }}"></script>
     <script src="{{ url_for('static', filename='js/custom.js', v='1.4.68') }}"></script>
 
-    {{ moment.include_moment() }}
-
-    {{ moment.lang('zh-cn') }}
+    <script src="{{ url_for('static', filename='plugin/moment-2.18.1/min/moment-with-locales.min.js') }}"></script>
+    <script>moment.locale('zh-cn');</script>
 
     {% block extra_js %}{% endblock %}
 </body>

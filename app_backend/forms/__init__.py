@@ -48,8 +48,8 @@ class SelectBSWidget(object):
             'class': 'selectpicker show-tick',
             # 'data-live-search': 'true',
             'title': kwargs.pop('placeholder') or 'Choose one of the following...',
-            'data-header': kwargs.pop('data_header') or 'Select a condiment',
-            'data-width': kwargs.pop('data_width') or 'auto'
+            'data-header': kwargs.pop('data_header', 'Select a condiment'),
+            'data-width': kwargs.pop('data_width', 'auto')
         }
         html = ['<select %s>' % html_params(**params)]
         for k, v in field.choices:
@@ -68,13 +68,9 @@ class SelectBS(SelectField):
         """
         校验表单传值是否合法
         """
-        is_find = False
-        for _, area_data in self.choices:
-            for area_list in area_data.values():
-                if self.data in [str(i['id']) for i in area_list]:
-                    is_find = True
-                    break
-            if is_find:
+        for v, _ in self.choices:
+            # print self.data, v, type(self.data), type(v)
+            if str(self.data) == str(v):
                 break
         else:
             raise ValueError(self.gettext('Not a valid choice'))

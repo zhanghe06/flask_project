@@ -8,7 +8,7 @@
     </ol>
     <div class="col-md-8 col-sm-offset-2 text-center">
         <h2 class="sub-header">Welcome!</h2>
-        <div id="current_time">{{ moment().format('dddd, YYYY年MM月DD日, a hh:MM:ss') }}</div>
+        <div id="current_time">{{ moment().format('dddd, YYYY年MM月DD日, a hh:mm:ss') }}</div>
     </div>
 </div>
 {% endblock %}
@@ -18,7 +18,7 @@
 // 当前时间同步刷新
 var update_time;
 (update_time = function () {
-    $('#current_time').html(moment().format('dddd, YYYY年MM月DD日, a hh:MM:ss'));
+    $('#current_time').html(moment().format('dddd, YYYY年MM月DD日, a hh:mm:ss'));
 })();
 setInterval(update_time, 1000);
 </script>

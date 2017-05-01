@@ -9,7 +9,74 @@
     </ol>
     <h2 class="sub-header">Admin List!</h2>
 
-
+    <div class="table-responsive">
+        {# <table class="table table-striped"> #}
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>id</th>
+                <th>username</th>
+{#                <th>area_id</th>#}
+                <th>area_code</th>
+                <th>phone</th>
+                <th>role</th>
+                <th>status_delete</th>
+                <th>login_time</th>
+                <th>login_ip</th>
+                <th>create_time</th>
+                <th>update_time</th>
+                <th>action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for admin in pagination.items %}
+            <tr class="text-muted">
+                <td>{{ admin.id }}</td>
+                <td>{{ admin.username }}</td>
+{#                <td>{{ admin.area_id }}</td>#}
+                <td>{{ admin.area_code }}</td>
+                <td>{{ admin.phone }}</td>
+                <td>{{ admin.role | role_admin }}</td>
+                <td>{{ admin.status_delete | status_delete }}</td>
+                <td>{% if admin.login_time %}{{ moment(admin.login_time).format('YYYY-MM-DD HH:mm:ss') }}{% endif %}</td>
+                <td>{% if admin.login_ip %}{{ admin.login_ip }}{% endif %}</td>
+                <td>{{ moment(admin.create_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
+                <td>{{ moment(admin.update_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
+                <td>
+                    <a href="javascript:void(0);" onclick="admin_delete({{ admin.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {# 翻页 #}
+        {% from "macros.html" import render_pagination %}
+        {{ render_pagination(pagination, 'admin.lists') }}
+    </div>
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// 成员删除
+function admin_delete(admin_uid){
+    if(confirm("Are you sure?"))
+    {
+        // console.log(admin_uid);
+        $.getJSON('{{ url_for('admin.ajax_delete') }}',
+        {
+            admin_uid: admin_uid
+        }, function (result) {
+            if(result.hasOwnProperty('error')){
+                alert(result.error);
+            }else {
+                alert(result.success);
+                window.location.reload();
+            }
+        });
+        return false;
+    }
+}
+</script>
 {% endblock %}

@@ -483,6 +483,20 @@ https://github.com/miguelgrinberg/Flask-Moment
 {{ moment().fromNow(refresh=True).format('LLLL') }}
 ```
 
+页面配置
+
+本地加载：
+```
+<script src="{{ url_for('static', filename='plugin/moment-2.18.1/min/moment-with-locales.min.js') }}"></script>
+<script>moment.locale('zh-cn');</script>
+```
+
+cdn方案：
+```
+{{ moment.include_moment() }}
+{{ moment.locale('zh-cn') }}
+```
+
 
 ### 用户登陆
 

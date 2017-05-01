@@ -8,8 +8,93 @@
         <li class="active">添加成员</li>
     </ol>
     <h2 class="sub-header">Admin Add!</h2>
+    {# 表单 #}
+    <form class="form-horizontal" method="post" action="">
+        {{ form.csrf_token }}
+        {# 标签导航 #}
+
+        <div class="form-group{% if form.username.errors %} has-error{% endif %}">
+            {{ form.username.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.username(class="form-control", placeholder="Username") }}
+                {% for error in form.username.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.password.errors %} has-error{% endif %}">
+            {{ form.password.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.password(class="form-control", placeholder="Password") }}
+                {% for error in form.password.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.area_id.errors %} has-error{% endif %}">
+            {{ form.area_id.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.area_id() }}
+                {% for error in form.area_id.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.phone.errors %} has-error{% endif %}">
+            {{ form.phone.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.phone(class="form-control", placeholder="Phone", type="tel", maxlength=11) }}
+                {% for error in form.phone.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.role.errors %} has-error{% endif %}">
+            {{ form.role.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.role(class="form-control", placeholder="管理角色", data_width="fit", data_header="选择角色") }}
+                {% for error in form.role.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default btn-load" data-loading-text="Adding...">Add</button>
+                <button type="reset" class="btn btn-default">Reset</button>
+            </div>
+        </div>
+    </form>
 
 
-</div>
+    </div>
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // 初始化赋值
+    var area_id = $('#area_id');
+    area_id.selectpicker('val', '{{ form.area_id.data }}');
+    // 处理选项修改
+    area_id.on('changed.bs.select', function (event, clickedIndex, newValue, oldValue) {
+        console.log($('#area_id').val());
+        // console.log(event);
+        // console.log(clickedIndex);
+        // console.log(newValue);
+        // console.log(oldValue);
+    });
+
+    // 初始化赋值
+    var role = $('#role');
+    role.selectpicker('val', '{{ form.role.data }}');
+    // 处理选项修改
+    role.on('changed.bs.select', function (event, clickedIndex, newValue, oldValue) {
+        console.log($('#role').val());
+        // console.log(event);
+        // console.log(clickedIndex);
+        // console.log(newValue);
+        // console.log(oldValue);
+    });
+</script>
 {% endblock %}
