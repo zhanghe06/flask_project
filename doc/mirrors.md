@@ -35,3 +35,21 @@ deb-src http://mirrors.aliyun.com/debian/ jessie-proposed-updates main non-free 
 ```
 sudo apt-get update
 ```
+
+
+## pypi 镜像
+
+参考：
+
+阿里镜像：http://mirrors.aliyun.com/help/pypi
+
+官方镜像：https://pypi.python.org/mirrors
+
+~/.pip/pip.conf
+```
+[global]
+index-url = http://mirrors.aliyun.com/pypi/simple/
+
+[install]
+trusted-host=mirrors.aliyun.com
+```
