@@ -5,6 +5,7 @@ RUN echo "deb http://mirrors.aliyun.com/debian/ jessie main non-free contrib\n" 
     && echo "deb http://mirrors.aliyun.com/debian/ jessie-proposed-updates main non-free contrib\n" >> /etc/apt/sources.list \
     && echo "deb-src http://mirrors.aliyun.com/debian/ jessie main non-free contrib\n" >> /etc/apt/sources.list \
     && echo "deb-src http://mirrors.aliyun.com/debian/ jessie-proposed-updates main non-free contrib\n" >> /etc/apt/sources.list \
+    && mkdir -p ~/.pip/ \
     && echo "[global]\n" > ~/.pip/pip.conf \
     && echo "index-url = http://mirrors.aliyun.com/pypi/simple/\n\n" >> ~/.pip/pip.conf \
     && echo "[install]\n" >> ~/.pip/pip.conf \
@@ -19,8 +20,8 @@ RUN apt-get update && apt-get install -qy --no-install-recommends \
     vim \
     ntpdate
 
-ADD ../requirements.txt /requirements.txt
-RUN pip install -r /requirements.txt && rm -f /requirements.txt
+ADD requirements.txt /requirements.txt
+RUN pip install --no-cache-dir -r /requirements.txt && rm -f /requirements.txt
 
 #RUN pip install --no-cache-dir \
 #    Flask \

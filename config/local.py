@@ -16,6 +16,8 @@ DEBUG = True
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__)+'/../')
 
+# 宿主机IP
+HOST_IP = '127.0.0.1'
 
 # requests 超时设置
 REQUESTS_TIME_OUT = (30, 30)
@@ -23,7 +25,7 @@ REQUESTS_TIME_OUT = (30, 30)
 
 # 数据库 MySQL
 DB_MYSQL = {
-    'host': '127.0.0.1',
+    'host': HOST_IP,
     'user': 'www',
     'passwd': '123456',
     'port': 3306,
@@ -37,7 +39,7 @@ SQLALCHEMY_DATABASE_URI_MYSQL = \
 
 # 数据库 PostgreSQL
 DB_PG = {
-    'host': '127.0.0.1',
+    'host': HOST_IP,
     'user': 'postgres',
     'password': 'postgres',  # 可修改 \password
     'port': 5432,
@@ -61,14 +63,14 @@ SQLALCHEMY_POOL_SIZE = 5  # 默认 pool_size=5
 
 
 REDIS = {
-    'host': 'localhost',
+    'host': HOST_IP,
     'port': 6379,
     'db': 0,
     'password': None
 }
 
 DB_MONGO = {
-    'host': 'localhost',
+    'host': HOST_IP,
     'port': 27017,
     'username': '',
     'password': '',
@@ -76,7 +78,7 @@ DB_MONGO = {
 }
 
 RABBIT_MQ = {
-    'host': 'localhost',
+    'host': HOST_IP,
     'port': 5672
 }
 

@@ -2,4 +2,5 @@
 
 docker build \
         --rm=true \
-        -t flask_project .
+        -t flask_project \
+        -f Dockerfile ..

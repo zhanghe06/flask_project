@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-
-[ -d logs ] || mkdir logs
-
 PROJECT_PATH=`(cd ../;pwd)`
+
+[ -d ${PROJECT_PATH}/logs ] || mkdir ${PROJECT_PATH}/logs
+
 CONFIG_MODE_TEXT=`cat ${PROJECT_PATH}/config/config.env`
 
 # docker rm $(docker ps -a -q)
@@ -18,7 +18,7 @@ docker run \
         --cap-add SYS_PTRACE \
         --restart=always \
         -e TZ=Asia/Shanghai \
-        -v `(cd ../;pwd)`:/flask_project \
+        -v ${PROJECT_PATH}:/flask_project \
         -d \
         -p 8000:8000 \
         -p 8010:8010 \
