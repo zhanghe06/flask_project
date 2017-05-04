@@ -34,6 +34,7 @@ oauthlib==2.0.0
 olefile==0.44
 packaging==16.8
 paramiko==2.1.2
+pika==0.10.0
 Pillow==4.1.0
 pyasn1==0.2.3
 pycparser==2.17

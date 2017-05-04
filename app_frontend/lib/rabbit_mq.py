@@ -4,7 +4,7 @@
 """
 @author: zhanghe
 @software: PyCharm
-@file: rabbit_client.py
+@file: rabbit_mq.py
 @time: 2017/4/1 上午9:55
 """
 
@@ -14,7 +14,7 @@ import json
 import traceback
 
 
-from app.config import RABBIT_MQ
+from config import RABBIT_MQ
 
 _client_conn = {'conn': None}
 
@@ -305,6 +305,51 @@ class RabbitDelayQueue(object):
         self.close_conn()
 
 
+class RabbitPriorityQueue(RabbitQueue):
+    """
+    优先级队列
+    max_priority=255
+    """
+    def __init__(self, exchange, queue_name, exchange_type='direct', durable=True, **arguments):
+        super(RabbitPriorityQueue, self).__init__(exchange, queue_name, exchange_type, durable, **arguments)
+
+    def declare(self):
+        """
+        声明队列
+        """
+        self.channel.exchange_declare(exchange=self.exchange, exchange_type=self.exchange_type, durable=self.durable)
+        self.channel.queue_declare(
+            queue=self.queue_name,
+            durable=self.durable,
+            arguments={
+                'x-max-priority': self.arguments.get('max_priority', 255)
+            }
+        )
+        self.channel.queue_bind(exchange=self.exchange,
+                                queue=self.queue_name,
+                                routing_key=self.queue_name)
+        self.channel.basic_qos(prefetch_count=1)
+
+    def put(self, message, priority=0):
+        """
+        推送队列消息
+        :param message:
+        :param priority:
+        :return:
+        """
+        print '--priority:', priority
+        if isinstance(message, dict):
+            message = json.dumps(message)
+        self.channel.basic_publish(exchange=self.exchange,
+                                   routing_key=self.queue_name,
+                                   body=message,
+                                   properties=pika.BasicProperties(
+                                       delivery_mode=2 if self.durable else 1,  # make message persistent
+                                       priority=priority
+                                   ))
+        print " [x] Sent %r" % (message,)
+
+
 def test_queue():
     """
     队列测试
@@ -315,8 +360,8 @@ def test_queue():
     print sys.argv
     if len(sys.argv) < 3:
         print u'参数：方法 队列名称 消息'
-        print u'python app/tools/rabbit_client.py put q_task 123456'
-        print u'python app/tools/rabbit_client.py get q_task'
+        print u'python rabbit_mq.py put q_task 123456'
+        print u'python rabbit_mq.py get q_task'
         return
     method, q_name, msg = sys.argv[1], sys.argv[2], ''.join(sys.argv[3:4])
     q_client = RabbitQueue('e_test', q_name)
@@ -343,8 +388,8 @@ def test_pub_sub():
     print sys.argv
     if len(sys.argv) < 3:
         print u'参数：方法 队列名称 消息'
-        print u'python app/tools/rabbit_client.py pub q_task 123456'
-        print u'python app/tools/rabbit_client.py sub q_task'
+        print u'python rabbit_mq.py pub q_task 123456'
+        print u'python rabbit_mq.py sub q_task'
         return
     method, q_name, msg = sys.argv[1], sys.argv[2], ''.join(sys.argv[3:4])
     q_client = RabbitPubSub(q_name)
@@ -368,8 +413,8 @@ def test_delay_queue():
     print sys.argv
     if len(sys.argv) < 3:
         print u'参数：方法 队列名称 消息'
-        print u'python app/tools/rabbit_client.py put q_delay_task 123456'
-        print u'python app/tools/rabbit_client.py get q_delay_task'
+        print u'python rabbit_mq.py put q_delay_task 123456'
+        print u'python rabbit_mq.py get q_delay_task'
         return
     method, q_name, msg = sys.argv[1], sys.argv[2], ''.join(sys.argv[3:4])
     q_client = RabbitDelayQueue('amq.direct', q_name)
@@ -386,8 +431,41 @@ def test_delay_queue():
     q_client.close_conn()
 
 
+def test_priority_queue():
+    """
+    优先级队列测试
+    参数：方法 队列名称 消息
+    :return:
+    """
+    import sys
+    print sys.argv
+    if len(sys.argv) < 3:
+        print u'参数：方法 队列名称 消息'
+        print u'python rabbit_mq.py put q_priority_task 111 100'
+        print u'python rabbit_mq.py put q_priority_task 222 200'
+        print u'python rabbit_mq.py put q_priority_task 333 150'
+        print u'python rabbit_mq.py get q_priority_task'  # 222
+        print u'python rabbit_mq.py get q_priority_task'  # 333
+        print u'python rabbit_mq.py get q_priority_task'  # 111
+        return
+    method, q_name, msg, priority = sys.argv[1], sys.argv[2], ''.join(sys.argv[3:4]), ''.join(sys.argv[4:5])
+    q_client = RabbitPriorityQueue('amq.direct', q_name)
+    print u'连接id:%s' % id(q_client.conn)
+    # 获取消息
+    if method == 'get':
+        q_client.get()
+    # 推送消息
+    if method == 'put':
+        q_client.put(msg, int(priority) if priority else 0)
+    # 阻塞获取消息
+    if method == 'get_block':
+        q_client.get_block()
+    q_client.close_conn()
+
+
 if __name__ == '__main__':
     # test_queue()
     # test_pub_sub()
-    test_delay_queue()
+    # test_delay_queue()
+    test_priority_queue()
 
