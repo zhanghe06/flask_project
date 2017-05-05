@@ -22,7 +22,7 @@ def create_models(app_name='app_frontend'):
     """
     file_path = os.path.join(BASE_DIR, '%s/models.py' % app_name)
     print file_path
-    cmd = 'sqlacodegen %s --outfile %s' % (SQLALCHEMY_DATABASE_URI, file_path)
+    cmd = 'sqlacodegen %s --noinflect --outfile %s' % (SQLALCHEMY_DATABASE_URI, file_path)
 
     output = os.popen(cmd)
     result = output.read()

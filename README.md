@@ -348,6 +348,10 @@ $ sqlacodegen mysql://root:root@127.0.0.1:3306/db_name --outfile models.py
 
 [http://docs.sqlalchemy.org/en/latest/core/engines.html](http://docs.sqlalchemy.org/en/latest/core/engines.html)
 
+注意：
+
+添加选项 --noinflect 否则工具默认会将表名后缀s去掉
+
 
 ### 存入数据库中文乱码
 
