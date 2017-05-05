@@ -4,7 +4,7 @@
         <ul class="pagination">
             <li>
                 {% if pagination.has_prev %}
-                    <a href="{{ url_for(endpoint, page=pagination.prev_num) }}" aria-label="Previous">
+                    <a href="{{ url_for(endpoint, page=pagination.prev_num, **request.args) }}" aria-label="Previous">
                 {% else %}
                     <a href="javascript:void(0);" aria-label="Previous">
                 {% endif %}
@@ -18,13 +18,13 @@
                             {% else %}
                         <li>
                     {% endif %}
-                <a href="{{ url_for(endpoint, page=page) }}">{{ page }}</a>
+                <a href="{{ url_for(endpoint, page=page, **request.args) }}">{{ page }}</a>
                 </li>
                 {% endif %}
             {% endfor %}
             <li>
                 {% if pagination.has_next %}
-                    <a href="{{ url_for(endpoint, page=pagination.next_num) }}" aria-label="Next">
+                    <a href="{{ url_for(endpoint, page=pagination.next_num, **request.args) }}" aria-label="Next">
                 {% else %}
                     <a href="javascript:void(0);" aria-label="Next">
                 {% endif %}
@@ -104,8 +104,6 @@
                         {% endif %}
                         </ul>
                     </li>
-                {% endif %}
-                {% if g.user != None and g.user.is_authenticated %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false"><span class="glyphicon glyphicon-copy"></span> Get <span
@@ -128,6 +126,8 @@
                         {% endif %}
                         </ul>
                     </li>
+                    <li{% if request.path == url_for('user.team') %} class="active"{% endif %}><a href="{{ url_for('user.team') }}"><span
+                            class="glyphicon glyphicon-king"></span> Team</a></li>
                 {% endif %}
                 </ul>
                 <form class="navbar-form navbar-left" role="search" action="{{ url_for('search') }}">
