@@ -55,3 +55,10 @@ https://hub.docker.com/_/mongo/
 ```
 docker pull mongo
 ```
+
+## 查看容器信息
+
+查看容器ip地址
+```
+docker inspect --format '{{ .NetworkSettings.IPAddress }}' [容器ID]
+```

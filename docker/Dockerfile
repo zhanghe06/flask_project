@@ -18,7 +18,8 @@ RUN apt-get update && apt-get install -qy --no-install-recommends \
     openssh-server \
     libmariadbd-dev \
     vim \
-    ntpdate
+    ntpdate \
+    net-tools
 
 ADD requirements.txt /requirements.txt
 RUN pip install --no-cache-dir -r /requirements.txt && rm -f /requirements.txt
