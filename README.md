@@ -1144,6 +1144,14 @@ app.jinja_env.filters['reverse'] = reverse_filter
 ## 忘记密码
 
 
+## 页面全选功能设计
+```
+$("#check_all").change(function(){ 
+    $('.check_children').prop("checked",this.checked); 
+}); 
+```
+
+
 ## 业务逻辑确认外键还是数据库设置外键
 
 效率与一致性的权衡

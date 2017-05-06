@@ -9,6 +9,7 @@
 """
 
 
+from flask import session
 from flask_wtf import FlaskForm as Form
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField, SelectField, HiddenField
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress, Regexp, AnyOf
@@ -22,36 +23,10 @@ try:
 except ImportError:
     from cgi import escape
 import re
-from app_common.maps import area_code_list
+from app_common.maps import area_code_list, area_code_map
 
-from app_common.maps.auth_type import *
+from app_common.maps.type_auth import *
 # 认证类型（0未知，1邮箱，2手机，3qq，4微信，5微博）
-
-
-def reg_account_repeat(form, field):
-    """
-    账号重复校验
-    """
-    condition = {
-        'auth_type': AUTH_TYPE_ACCOUNT,
-        'auth_key': field.data
-    }
-    row = get_user_auth_row(**condition)
-    if row:
-        raise ValidationError(u'注册账号重复')
-
-
-def reg_email_repeat(form, field):
-    """
-    邮箱重复校验
-    """
-    condition = {
-        'auth_type': AUTH_TYPE_EMAIL,
-        'auth_key': field.data
-    }
-    row = get_user_auth_row(**condition)
-    if row:
-        raise ValidationError(u'注册邮箱重复')
 
 
 class UserNameValidate(object):
@@ -82,24 +57,88 @@ class ChineseNameValidate(object):
             raise ValidationError(self.message or u"请输入正确的中文姓名")
 
 
-def reg_phone_repeat(form, field):
+class SmsCodeValidate(object):
     """
-    手机重复校验
+    短信验证码校验
     """
-    condition = {
-        'auth_type': AUTH_TYPE_PHONE,
-        'auth_key': field.data
-    }
-    row = get_user_auth_row(**condition)
-    if row:
-        raise ValidationError(u'注册手机重复')
+    def __init__(self, message=None):
+        self.message = message
+
+        self._reg = re.compile(ur'^\d{6}$')
+
+    def __call__(self, form, field):
+        data = field.data
+        if not self._reg.match(data):
+            raise ValidationError(self.message or u"短信验证码格式错误")
+
+        code_key = '%s:%s' % ('sms_code', 'reg')
+        # print session.get(code_key), type(session.get(code_key)), data, type(data)
+        if session.get(code_key) != data:
+            raise ValidationError(self.message or u"短信验证码校验错误")
+
+
+class RegAccountRepeatValidate(object):
+    """
+    注册账号重复校验
+    """
+    def __init__(self, message=None):
+        self.message = message
+
+    def __call__(self, form, field):
+        condition = {
+            'type_auth': TYPE_AUTH_ACCOUNT,
+            'auth_key': field.data
+        }
+        row = get_user_auth_row(**condition)
+        if row:
+            raise ValidationError(self.message or u'注册账号重复')
+
+
+class RegEmailRepeatValidate(object):
+    """
+    注册邮箱重复校验
+    """
+    def __init__(self, message=None):
+        self.message = message
+
+    def __call__(self, form, field):
+        condition = {
+            'type_auth': TYPE_AUTH_EMAIL,
+            'auth_key': field.data
+        }
+        row = get_user_auth_row(**condition)
+        if row:
+            raise ValidationError(self.message or u'注册邮箱重复')
+
+
+class RegPhoneRepeatValidate(object):
+    """
+    注册手机重复校验
+    """
+    def __init__(self, message=None):
+        self.message = message
+
+    def __call__(self, form, field):
+        # 手机号码国际化
+        area_id = form['area_id'].data
+        area_code = area_code_map.get(area_id, '86')
+        mobile_iso = '%s%s' % (area_code, field.data)
+
+        condition = {
+            'type_auth': TYPE_AUTH_PHONE,
+            'auth_key': mobile_iso
+        }
+        row = get_user_auth_row(**condition)
+
+        if row:
+            raise ValidationError(self.message or u'注册手机重复')
 
 
 class RegForm(Form):
     """
     注册表单
     """
-    account = StringField('Account', validators=[DataRequired(), reg_account_repeat])
+    account = StringField('Account', validators=[DataRequired(), RegAccountRepeatValidate()])
     password = PasswordField('New Password', validators=[
         DataRequired(),
         Length(min=6, max=20),
@@ -122,33 +161,34 @@ class RegPhoneForm(Form):
         area_code_choices.append((m, n))
 
     area_id = SelectAreaCode('Area Id', default='0', choices=area_code_choices, validators=[DataRequired()])
-    phone = StringField('Phone', validators=[DataRequired(), Email(), reg_phone_repeat])
+    phone = StringField('Phone', validators=[DataRequired(u'手机号码不能为空'), RegPhoneRepeatValidate()])
     captcha = StringField('Captcha', validators=[
         DataRequired(),
-        Length(min=4, max=4, message='Captcha must match')
+        Length(min=4, max=4, message=u'图形验证码长度不符')
     ])
     sms = StringField('Sms', validators=[
-        DataRequired(),
-        Length(min=6, max=6, message='Sms out of range')
+        DataRequired(u'短信验证码不能为空'),
+        Length(min=6, max=6, message=u'短信验证码长度不符'),
+        SmsCodeValidate()
     ])
     password = PasswordField('New Password', validators=[
-        DataRequired(),
-        Length(min=6, max=20, message='Passwords out of range'),
-        EqualTo('confirm', message='Passwords must match')
+        DataRequired(u'密码不能为空'),
+        Length(min=6, max=20, message=u'密码长度不符'),
+        EqualTo('confirm', message=u'密码不一致')
     ])
     confirm = PasswordField('Confirmation Password', validators=[
-        DataRequired(),
-        Length(min=6, max=20)
+        DataRequired(u'密码不能为空'),
+        Length(min=6, max=20, message=u'密码长度不符')
     ])
     user_pid = HiddenField('User Pid', default='0')
-    accept_agreement = BooleanField('I accept the agreement', validators=[DataRequired()], default=False)
+    accept_agreement = BooleanField(u'我已阅读并同意注册协议', validators=[DataRequired(u'敬请同意注册协议')], default=True)
 
 
 class RegEmailForm(Form):
     """
     邮箱注册表单
     """
-    email = StringField('Email', validators=[DataRequired(), Email(), reg_email_repeat])
+    email = StringField('Email', validators=[DataRequired(), Email(), RegEmailRepeatValidate()])
     password = PasswordField('New Password', validators=[
         DataRequired(),
         Length(min=6, max=20),

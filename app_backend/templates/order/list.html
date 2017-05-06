@@ -50,20 +50,6 @@
                 <span class="help-block">{{ error }}</span>
             {% endfor %}
         </div>
-        <div class="form-group{% if form.ticket_put_id.errors %} has-error{% endif %}">
-            {{ form.ticket_put_id.label(class="sr-only") }}
-            {{ form.ticket_put_id(class="form-control", placeholder="Ticket Put Id") }}
-            {% for error in form.ticket_put_id.errors %}
-                <span class="help-block">{{ error }}</span>
-            {% endfor %}
-        </div>
-        <div class="form-group{% if form.ticket_get_id.errors %} has-error{% endif %}">
-            {{ form.ticket_get_id.label(class="sr-only") }}
-            {{ form.ticket_get_id(class="form-control", placeholder="Ticket Get Id") }}
-            {% for error in form.ticket_get_id.errors %}
-                <span class="help-block">{{ error }}</span>
-            {% endfor %}
-        </div>
         <div class="form-group{% if form.order_id.errors %} has-error{% endif %}">
             {{ form.order_id.label(class="sr-only") }}
             {{ form.order_id(class="form-control", placeholder="Order Id") }}
@@ -123,8 +109,6 @@
                 <th>apply_get_id</th>
                 <th>apply_put_uid</th>
                 <th>apply_get_uid</th>
-                <th>ticket_put_id</th>
-                <th>ticket_get_id</th>
                 <th>status_audit</th>
                 <th>status_pay</th>
                 <th>status_rec</th>
@@ -140,12 +124,10 @@
                 <td>{{ order.apply_get_id }}</td>
                 <td>{{ order.apply_put_uid }}</td>
                 <td>{{ order.apply_get_uid }}</td>
-                <td>{{ order.ticket_put_id }}</td>
-                <td>{{ order.ticket_get_id }}</td>
                 <td>{{ order.status_audit | status_audit }}</td>
                 <td>{{ order.status_pay | status_pay }}</td>
                 <td>{{ order.status_rec | status_rec }}</td>
-                <td>{{ order.create_time }}</td>
+                <td>{{ moment(order.create_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
                 <td>
                     <a href="javascript:void(0);" onclick="order_delete({{ order.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
                 </td>

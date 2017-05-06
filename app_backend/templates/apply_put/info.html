@@ -16,22 +16,27 @@
     <section id="apply_put_info">
         <div class="panel panel-default">
         <div class="panel-heading">
-            <strong class="panel-title">Apply Put Info
+            <strong class="panel-title">投资申请详情
+            {% if apply_put_info.money_apply > apply_put_info.money_order %}
+            <i>[ 待匹配金额：{{ apply_put_info.money_apply - apply_put_info.money_order }} ]</i>
+            {% endif %}
             <span class="glyphicon glyphicon-cog pull-right"></span>
             </strong>
         </div>
         <table class="table">
             <thead>
                 <tr>
-                    <th>id</th>
-                    <th>user_id</th>
-                    <th>nickname</th>
-                    <th>type_apply</th>
-                    <th>money_apply</th>
-                    <th>status_apply</th>
-                    <th>status_order</th>
-                    <th>status_delete</th>
-                    <th>create_time</th>
+                    <th>投资ID</th>
+                    <th>用户ID</th>
+                    <th>用户名称</th>
+                    <th>申请类型</th>
+                    <th>申请金额</th>
+                    <th>订单金额</th>
+                    <th>申请状态</th>
+                    <th>订单状态</th>
+                    <th>删除状态</th>
+                    <th>申请时间</th>
+                    <th>是否允许拆分</th>
                 </tr>
             </thead>
             <tbody>
@@ -41,10 +46,14 @@
                     <td>{{ apply_put_info.user_id | nickname }}</td>
                     <td>{{ apply_put_info.type_apply | type_apply }}</td>
                     <td>{{ apply_put_info.money_apply }}</td>
+                    <td>{{ apply_put_info.money_order }}</td>
                     <td>{{ apply_put_info.status_apply | status_apply }}</td>
                     <td>{{ apply_put_info.status_order | status_order }}</td>
                     <td>{{ apply_put_info.status_delete | status_delete }}</td>
                     <td>{{ apply_put_info.create_time }}</td>
+                    <td>
+                        <label><input title="选择" type="checkbox" id="apply_put_accept_split" value="1" /> 允许拆分</label>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -54,36 +63,38 @@
     <section id="apply_match_get_info">
         <div class="panel panel-default">
         <div class="panel-heading">
-            <strong class="panel-title">Apply Match Get Info
+            <strong class="panel-title">匹配订单列表
             <span class="glyphicon glyphicon-cog pull-right"></span>
             </strong>
         </div>
-        <table class="table">
+        <table class="table table-hover table-responsive">
             <thead>
                 <tr>
-                    <th>id</th>
-                    <th>user_id</th>
-                    <th>nickname</th>
-                    <th>type_apply</th>
-                    <th>money_apply</th>
-                    <th>status_apply</th>
-                    <th>status_order</th>
-                    <th>status_delete</th>
-                    <th>create_time</th>
+                    <th>订单ID</th>
+                    <th>用户ID</th>
+                    <th>用户名称</th>
+                    <th>订单类型</th>
+                    <th>订单金额</th>
+                    <th>审核状态</th>
+                    <th>支付状态</th>
+                    <th>收款状态</th>
+                    <th>删除状态</th>
+                    <th>订单时间</th>
                 </tr>
             </thead>
             <tbody>
-                {% for apply_get_info in apply_get_list %}
+                {% for order_info, apply_get_info in apply_get_list %}
                 <tr>
-                    <td>{{ apply_get_info.id }}</td>
-                    <td>{{ apply_get_info.user_id }}</td>
-                    <td>{{ apply_get_info.user_id | nickname }}</td>
-                    <td>{{ apply_get_info.type_apply | type_apply }}</td>
-                    <td>{{ apply_get_info.money_apply }}</td>
-                    <td>{{ apply_get_info.status_apply | status_apply }}</td>
-                    <td>{{ apply_get_info.status_order | status_order }}</td>
-                    <td>{{ apply_get_info.status_delete | status_delete }}</td>
-                    <td>{{ apply_get_info.create_time }}</td>
+                    <td>{{ order_info.id }}</td>
+                    <td>{{ order_info.apply_get_uid }}</td>
+                    <td>{{ order_info.apply_get_uid | nickname }}</td>
+                    <td>{{ order_info.type | type_order }}</td>
+                    <td>{{ order_info.money }}</td>
+                    <td>{{ order_info.status_audit | status_audit }}</td>
+                    <td>{{ order_info.status_pay | status_pay }}</td>
+                    <td>{{ order_info.status_rec | status_rec }}</td>
+                    <td>{{ order_info.status_delete | status_delete }}</td>
+                    <td>{{ order_info.create_time }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -96,7 +107,7 @@
     <section id="apply_get_list">
         <div class="panel panel-default">
         <div class="panel-heading">
-            <strong class="panel-title">Apply Get List
+            <strong class="panel-title">匹配订单列表
             <span class="glyphicon glyphicon-cog pull-right"></span>
             </strong>
         </div>
@@ -159,10 +170,11 @@
         <hr/>
         <form onsubmit="apply_put_match(this)">
         <input type="hidden" name="apply_put_id" value="{{ apply_put_info.id }}">
+        <input type="hidden" id="accept_split" name="accept_split" value="">
         <div class="container-fluid">
             <div class="btn-group pull-right" role="group" aria-label="...">
-                <button type="button" class="btn btn-default">Amount:<i id="amount-money">0</i></button>
-                <button type="submit" class="btn btn-success btn-load" data-loading-text="Match..." autocomplete="off" id="match-submit">Match</button>
+                <button type="button" class="btn btn-default">金额:<i id="amount-money">0</i></button>
+                <button type="submit" class="btn btn-success btn-load" data-loading-text="匹配中" autocomplete="off" id="match-submit">匹配</button>
             </div>
         </div>
 
@@ -171,16 +183,16 @@
             <table class="table table-hover">
                 <thead>
                 <tr>
-                    <th>id</th>
-                    <th>user_id</th>
-                    <th>nickname</th>
-                    <th>type_apply</th>
-                    <th>money_apply</th>
-                    <th>status_apply</th>
-                    <th>status_order</th>
-                    <th>status_delete</th>
-                    <th>create_time</th>
-                    <th>action</th>
+                    <th>提现ID</th>
+                    <th>用户ID</th>
+                    <th>用户名称</th>
+                    <th>申请类型</th>
+                    <th>申请金额</th>
+                    <th>申请状态</th>
+                    <th>订单状态</th>
+                    <th>删除状态</th>
+                    <th>申请时间</th>
+                    <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -196,7 +208,7 @@
                     <td>{{ apply_get.status_delete | status_delete }}</td>
                     <td>{{ apply_get.create_time }}</td>
                     <td>
-                        <input title="选择" type="checkbox" class="apply_get_check" name="apply_get_id" id="{{ apply_get.money_apply }}" value="{{ apply_get.id }}" />
+                        <label><input title="选择" type="checkbox" class="apply_get_check" name="apply_get_id" id="{{ apply_get.money_apply }}" value="{{ apply_get.id }}" /> 选择</label>
                     </td>
                 </tr>
                 {% endfor %}
@@ -268,12 +280,22 @@
     }
     // 计算金额
     $(function(){
+        //选中状态变化同步更新选中金额
         $('.apply_get_check').change(function () {
             var sum=0;
-            $("input:checkbox:checked").each(function(){
+            $("input.apply_get_check:checkbox:checked").each(function(){
                 sum+= parseInt(this.id);
             });
             $('#amount-money').html(sum);
+        });
+        //选中允许拆分
+        $('#apply_put_accept_split').change(function () {
+            //console.log($(this).prop("checked"));
+            if($(this).prop("checked") == true){
+                $('#accept_split').val('1');
+            }else {
+                $('#accept_split').val('');
+            }
         });
     });
 </script>

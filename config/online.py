@@ -57,10 +57,10 @@ SQLALCHEMY_DATABASE_URI_SQLITE = 'sqlite:///' + DB_SQLITE
 
 
 SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI_MYSQL
-SQLALCHEMY_COMMIT_ON_TEARDOWN = True  # 打开自动提交
+# SQLALCHEMY_COMMIT_ON_TEARDOWN = True  # 打开自动提交 官方已经移除(http://flask-sqlalchemy.pocoo.org/2.1/changelog/#version-2-0)
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_POOL_SIZE = 5  # 默认 pool_size=5
-
+SQLALCHEMY_ECHO = False
 
 REDIS = {
     'host': HOST_IP,

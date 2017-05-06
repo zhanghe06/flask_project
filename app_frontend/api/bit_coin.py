@@ -4,65 +4,65 @@
 """
 @author: zhanghe
 @software: PyCharm
-@file: bonus.py
-@time: 2017/5/2 上午12:36
+@file: bit_coin.py
+@time: 2017/5/5 下午7:56
 """
 
 
-from app_frontend.models import Bonus
+from app_frontend.models import BitCoin
 from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
 
 
-def get_bonus_row_by_id(bonus_id):
+def get_bit_coin_row_by_id(bit_coin_id):
     """
-    通过 id 获取奖金信息
-    :param bonus_id:
+    通过 id 获取数字货币信息
+    :param bit_coin_id:
     :return: None/object
     """
-    return get_row_by_id(Bonus, bonus_id)
+    return get_row_by_id(BitCoin, bit_coin_id)
 
 
-def get_bonus_row(*args, **kwargs):
+def get_bit_coin_row(*args, **kwargs):
     """
-    获取奖金信息
+    获取数字货币信息
     :param args:
     :param kwargs:
     :return: None/object
     """
-    return get_row(Bonus, *args, **kwargs)
+    return get_row(BitCoin, *args, **kwargs)
 
 
-def add_bonus(bonus_data):
+def add_bit_coin(bit_coin_data):
     """
-    添加奖金信息
-    :param bonus_data:
-    :return: None/Value of wallet.id
+    添加数字货币信息
+    :param bit_coin_data:
+    :return: None/Value of bit_coin.id
     """
-    return add(Bonus, bonus_data)
+    return add(BitCoin, bit_coin_data)
 
 
-def edit_bonus(bonus_id, bonus_data):
+def edit_bit_coin(bit_coin_id, bit_coin_data):
     """
-    修改奖金信息
-    :param bonus_id:
-    :param bonus_data:
+    修改数字货币信息
+    :param bit_coin_id:
+    :param bit_coin_data:
     :return: Number of affected rows (Example: 0/1)
     """
-    return edit(Bonus, bonus_id, bonus_data)
+    return edit(BitCoin, bit_coin_id, bit_coin_data)
 
 
-def delete_bonus(bonus_id):
+def delete_bit_coin(bit_coin_id):
     """
-    删除奖金信息
-    :param bonus_id:
+    删除数字货币信息
+    :param bit_coin_id:
     :return: Number of affected rows (Example: 0/1)
     """
-    return delete(Bonus, bonus_id)
+    return delete(BitCoin, bit_coin_id)
 
 
-def get_bonus_rows(page=1, per_page=10, *args, **kwargs):
+def get_bit_coin_rows(page=1, per_page=10, *args, **kwargs):
     """
-    获取奖金列表（分页）
+    获取数字货币列表（分页）
     Usage:
         items: 信息列表
         has_next: 如果本页之后还有超过一个分页，则返回True
@@ -77,5 +77,5 @@ def get_bonus_rows(page=1, per_page=10, *args, **kwargs):
     :param kwargs:
     :return:
     """
-    rows = get_rows(Bonus, page, per_page, *args, **kwargs)
+    rows = get_rows(BitCoin, page, per_page, *args, **kwargs)
     return rows

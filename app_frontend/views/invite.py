@@ -19,7 +19,7 @@ from app_frontend.api.user_profile import get_user_profile_row_by_id, edit_user_
 from app_frontend.api.user_bank import get_user_bank_row_by_id, add_user_bank, edit_user_bank
 from app_frontend.api.user_auth import get_user_auth_row_by_id, get_user_auth_row, edit_user_auth
 from app_frontend.api.user import edit_user
-from app_common.maps.auth_type import *
+from app_common.maps.type_auth import *
 from datetime import datetime
 from flask import Blueprint
 

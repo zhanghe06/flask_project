@@ -12,14 +12,15 @@ from flask import render_template, request, flash, redirect, url_for
 from flask_login import current_user, login_required
 
 from app_common.maps import area_code_map
+from app_common.settings import PER_PAGE_BACKEND
 from app_common.tools import md5
 from app_frontend import app
 from app_frontend.forms.user import UserProfileForm, UserAuthForm, UserBankForm
 from app_frontend.api.user_profile import get_user_profile_row_by_id, edit_user_profile
 from app_frontend.api.user_bank import get_user_bank_row_by_id, add_user_bank, edit_user_bank
 from app_frontend.api.user_auth import get_user_auth_row_by_id, get_user_auth_row, edit_user_auth
-from app_frontend.api.user import edit_user
-from app_common.maps.auth_type import *
+from app_frontend.api.user import edit_user, get_user_team_rows
+from app_common.maps.type_auth import *
 from datetime import datetime
 from flask import Blueprint
 
@@ -37,12 +38,12 @@ def auth():
     if request.method == 'GET':
         condition = {
             'user_id': current_user.id,
-            'auth_type': AUTH_TYPE_ACCOUNT,
+            'type_auth': TYPE_AUTH_ACCOUNT,
         }
         user_auth_info = get_user_auth_row(**condition)
         if user_auth_info:
             form.id.data = user_auth_info.id
-            form.auth_type.data = user_auth_info.auth_type
+            form.type_auth.data = user_auth_info.type_auth
             form.auth_key.data = user_auth_info.auth_key
             form.auth_secret.data = ''
             form.status_verified.data = user_auth_info.status_verified
@@ -54,7 +55,7 @@ def auth():
             condition = {
                 'id': form.id.data,
                 'user_id': current_user.id,
-                'auth_type': AUTH_TYPE_ACCOUNT,
+                'type_auth': TYPE_AUTH_ACCOUNT,
             }
             op_right = get_user_auth_row(**condition)
             if not op_right:
@@ -63,7 +64,7 @@ def auth():
 
             current_time = datetime.utcnow()
             user_auth_data = {
-                # 'auth_type': AUTH_TYPE_ACCOUNT,
+                # 'type_auth': AUTH_TYPE_ACCOUNT,
                 'auth_key': form.auth_key.data,
                 # 'status_verified': form.status_verified.data,
                 'update_time': current_time,
@@ -215,9 +216,26 @@ def setting():
 
 
 @bp_user.route('/team/')
+@bp_user.route('/team/<int:page>/')
 @login_required
-def team():
+def team(page=1):
     """
     团队
+    :param page:
     :return:
     """
+    condition = {
+        'user_pid': current_user.id
+    }
+    status_active = request.args.get('status_active', '', type=str)
+    status_lock = request.args.get('status_lock', '', type=str)
+    if status_active:
+        condition['status_active'] = status_active
+    if status_lock:
+        condition['status_lock'] = status_lock
+
+    pagination = get_user_team_rows(
+        page,
+        PER_PAGE_BACKEND,
+        **condition)
+    return render_template('user/team.html', title='team', pagination=pagination)

@@ -13,17 +13,19 @@ import time
 
 from app_common.maps.role_admin import ROLE_ADMIN_DICT
 from app_common.maps.type_apply import TYPE_APPLY_DICT
-from app_common.maps.auth_type import AUTH_TYPE_DICT
+from app_common.maps.type_auth import TYPE_AUTH_DICT
 from app_common.maps.status_audit import STATUS_AUDIT_DICT
 from app_common.maps.status_apply import STATUS_APPLY_DICT
 from app_common.maps.status_order import STATUS_ORDER_DICT
 from app_common.maps.status_delete import STATUS_DEL_DICT
 from app_common.maps.status_pay import STATUS_PAY_DICT
 from app_common.maps.status_rec import STATUS_REC_DICT
-from app_common.maps.level_type import LEVEL_TYPE_DICT
+from app_common.maps.type_level import TYPE_LEVEL_DICT
+from app_common.maps.status_active import STATUS_ACTIVE_DICT
 from app_common.maps.status_lock import STATUS_LOCK_DICT
 from app_backend import app
 from app_backend.views.user import get_user_profile_row_by_id
+from app_common.maps.type_order import TYPE_ORDER_DICT
 
 
 @app.template_filter('reverse')
@@ -102,14 +104,24 @@ def filter_type_apply(type_apply_id):
     return TYPE_APPLY_DICT.get(type_apply_id, u'')
 
 
-@app.template_filter('auth_type')
-def filter_auth_type(auth_type_id):
+@app.template_filter('type_order')
+def filter_type_order(type_order_id):
     """
-    认证类型
-    :param auth_type_id:
+    订单类型
+    :param type_order_id:
     :return:
     """
-    return AUTH_TYPE_DICT.get(auth_type_id, u'')
+    return TYPE_ORDER_DICT.get(type_order_id, u'')
+
+
+@app.template_filter('type_auth')
+def filter_type_auth(type_auth_id):
+    """
+    认证类型
+    :param type_auth_id:
+    :return:
+    """
+    return TYPE_AUTH_DICT.get(type_auth_id, u'')
 
 
 @app.template_filter('status_apply')
@@ -172,20 +184,30 @@ def filter_status_rec(status_rec_id):
     return STATUS_REC_DICT.get(status_rec_id, u'')
 
 
-@app.template_filter('level_type')
-def filter_level_type(level_type_id):
+@app.template_filter('type_level')
+def filter_type_level(type_level_id):
     """
     等级类型
-    :param level_type_id:
+    :param type_level_id:
     :return:
     """
-    return LEVEL_TYPE_DICT.get(level_type_id, u'')
+    return TYPE_LEVEL_DICT.get(type_level_id, u'')
+
+
+@app.template_filter('status_active')
+def filter_status_active(status_active_id):
+    """
+    激活状态
+    :param status_active_id:
+    :return:
+    """
+    return STATUS_ACTIVE_DICT.get(status_active_id, u'')
 
 
 @app.template_filter('status_lock')
 def filter_status_lock(status_lock_id):
     """
-    等级类型
+    锁定状态
     :param status_lock_id:
     :return:
     """

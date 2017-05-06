@@ -9,8 +9,14 @@
 """
 
 
-from app_backend.models import ApplyGet
+from datetime import datetime
+
+
+from app_backend.models import ApplyGet, Order, ApplyPut
 from app_backend.tools.db import get_row, get_rows_by_ids, get_lists, get_rows, get_row_by_id, add, edit, delete
+from app_backend.database import db
+from app_common.maps.status_audit import STATUS_AUDIT_SUCCESS
+from app_common.maps.status_order import STATUS_ORDER_COMPLETED, STATUS_ORDER_PROCESSING
 
 
 def get_apply_get_row_by_id(apply_get_id):
@@ -64,7 +70,7 @@ def get_apply_get_rows_by_ids(ids):
     """
     获取提现申请列表通过主键列表
     :param ids:
-    :return: None/object
+    :return: list
     """
     return get_rows_by_ids(ApplyGet, ids)
 
@@ -98,3 +104,85 @@ def get_apply_get_rows(page=1, per_page=10, *args, **kwargs):
     """
     rows = get_rows(ApplyGet, page, per_page, *args, **kwargs)
     return rows
+
+
+def apply_get_match(apply_get_id, apply_put_ids, accept_split=0):
+    """
+    提现申请匹配
+    :param apply_get_id:
+    :param apply_put_ids:
+    :param accept_split:
+    :return:
+    """
+    from app_backend.api.apply_put import get_apply_put_rows_by_ids
+
+    apply_get_info = get_apply_get_row_by_id(apply_get_id)
+
+    # 判断是否已经匹配
+    if apply_get_info.status_order == STATUS_ORDER_COMPLETED:
+        raise Exception(u'不能重复匹配')
+    apply_put_list = get_apply_put_rows_by_ids(apply_put_ids)
+
+    # 判断是否同一个人
+    apply_put_user_ids = [apply_put_item.user_id for apply_put_item in apply_put_list]
+    if apply_get_info.user_id in apply_put_user_ids:
+        raise Exception(u'不能匹配给自己')
+
+    # 判断金额
+    money_need_match = apply_get_info.money_apply - apply_get_info.money_order
+
+    apply_put_amount = sum([apply_put_item.money_apply-apply_put_item.money_order for apply_put_item in apply_put_list])
+    # 如果接收拆分，判断被拆金额是否大于被匹配金额
+    if accept_split:
+        if money_need_match < apply_put_amount:
+            raise Exception(u'选择金额太大')
+    elif money_need_match != apply_put_amount:
+        raise Exception(u'金额不匹配')
+
+    # 循环投资申请，生成对应的订单
+    try:
+        money_order = 0
+        for apply_put_item in apply_put_list:
+            money_match = apply_put_item.money_apply - apply_put_item.money_order
+            current_time = datetime.utcnow()
+
+            order_info = {
+                'apply_put_id': apply_put_item.id,
+                'apply_get_id': apply_get_id,
+                'apply_put_uid': apply_put_item.user_id,
+                'apply_get_uid': apply_get_info.user_id,
+                'money': money_match,
+                'status_audit': STATUS_AUDIT_SUCCESS,
+                'audit_time': current_time,
+                'create_time': current_time,
+                'update_time': current_time,
+            }
+            db.session.add(Order(**order_info))
+
+            # 更新投资申请状态
+            apply_put_update_info = {
+                'money_order': apply_put_item.money_order + money_match,
+                'status_order': STATUS_ORDER_COMPLETED,
+                'update_time': current_time,
+            }
+            apply_put_obj = db.session.query(ApplyPut).filter(ApplyPut.id == apply_put_item.id)
+            apply_put_obj.update(apply_put_update_info)
+
+            money_order += money_match
+
+        # 更新提现订单金额和申请状态
+        current_time = datetime.utcnow()
+        apply_get_update_info = {
+            'money_order': money_order,
+            'status_order': STATUS_ORDER_COMPLETED if money_order == money_need_match else STATUS_ORDER_PROCESSING,
+            'update_time': current_time,
+        }
+        # result = edit_apply_get(apply_get_id, apply_get_update_info)
+        apply_get_obj = db.session.query(ApplyGet).filter(ApplyGet.id == apply_get_id)
+        result = apply_get_obj.update(apply_get_update_info)
+
+        db.session.commit()
+        return result
+    except Exception as e:
+        db.session.rollback()
+        raise e

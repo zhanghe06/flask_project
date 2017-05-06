@@ -88,10 +88,10 @@
                             <a id="menu-admin" href="#"><i class="fa fa-files-o fa-fw"></i> 运营管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="{{ url_for('admin.lists') }}">成员列表</a>
+                                    <a href="{{ url_for('admin.lists') }}">运营列表</a>
                                 </li>
                                 <li>
-                                    <a href="{{ url_for('admin.add') }}">添加成员</a>
+                                    <a href="{{ url_for('admin.add') }}">添加运营</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
@@ -220,6 +220,19 @@
 
         <!-- Page Content -->
         <div id="page-wrapper">
+            <div class="container">
+            {# 闪现消息 success info warning danger #}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    {{ message }}
+                </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            </div>
             {% block content %}{% endblock %}
             <!-- /.container-fluid -->
         </div>

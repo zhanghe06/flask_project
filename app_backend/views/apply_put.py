@@ -20,13 +20,12 @@ from flask_login import current_user, login_required
 
 from app_backend import app
 from app_backend.api.apply_get import get_apply_get_rows, get_apply_get_rows_by_ids, edit_apply_get
-from app_backend.api.ticket_get import add_ticket_get
-from app_backend.api.ticket_put import add_ticket_put
+
 from app_backend.forms.admin import AdminProfileForm
 from app_backend.forms.apply_get import ApplyGetSearchForm
 from app_backend.models import User, ApplyGet, UserProfile, ApplyPut
-from app_backend.api.apply_put import get_apply_put_rows, get_apply_put_row, get_apply_put_row_by_id, edit_apply_put
-from app_backend.api.order import get_order_row, get_order_rows, get_order_lists, add_order
+from app_backend.api.apply_put import get_apply_put_rows, get_apply_put_row, get_apply_put_row_by_id, edit_apply_put, apply_put_match
+from app_backend.api.order import get_order_row, get_order_rows, get_order_lists, add_order, get_put_match_order_rows
 from app_backend.forms.apply_put import ApplyPutSearchForm
 from app_common.settings import PER_PAGE_BACKEND
 from app_common.maps.status_delete import *
@@ -78,6 +77,12 @@ def lists(page=1):
         search_condition_apply_put.append(ApplyPut.id == apply_put_id)
     if user_id:
         search_condition_apply_put.append(ApplyPut.user_id == user_id)
+    if status_apply:
+        search_condition_apply_put.append(ApplyPut.status_apply == status_apply)
+    if status_order:
+        search_condition_apply_put.append(ApplyPut.status_order == status_order)
+    if status_delete:
+        search_condition_apply_put.append(ApplyPut.status_delete == status_delete)
     if start_time:
         search_condition_apply_put.append(ApplyPut.create_time >= start_time)
     if end_time:
@@ -110,13 +115,7 @@ def info(apply_put_id, page=1):
     apply_get_list = []
     # 已经匹配, 显示匹配的信息
     if apply_put_info.status_order > int(STATUS_ORDER_HANDING):
-        condition = {
-            'apply_put_id': apply_put_id,
-            'status_delete': STATUS_DEL_NO
-        }
-        order_list = get_order_lists(**condition)
-        apply_get_ids = [order_item.apply_get_id for order_item in order_list]
-        apply_get_list = get_apply_get_rows_by_ids(apply_get_ids)
+        apply_get_list = get_put_match_order_rows(apply_put_id)
 
     form = ApplyGetSearchForm(request.form)
 
@@ -188,78 +187,18 @@ def ajax_match():
     """
     if request.method == 'POST' and request.is_xhr:
         form = request.form
+        accept_split = form.get('accept_split', 0, type=int)
         apply_put_id = form.get('apply_put_id', 0, type=int)
         apply_get_ids = form.getlist('apply_get_id')
-        apply_put_info = get_apply_put_row_by_id(apply_put_id)
-        # 判断是否已经匹配
-        if apply_put_info.status_order == STATUS_ORDER_COMPLETED:
-            return json.dumps({'error': u'不能重复匹配'})
-        apply_get_list = get_apply_get_rows_by_ids(apply_get_ids)
-        # 判断是否同一个人
-        apply_get_user_ids = [apply_get_item.user_id for apply_get_item in apply_get_list]
-        if apply_put_info.user_id in apply_get_user_ids:
-            return json.dumps({'error': u'不能匹配给自己'})
-        # 判断金额
-        apply_get_amount = sum([apply_get_item.money_apply for apply_get_item in apply_get_list])
-        if apply_put_info.money_apply != apply_get_amount:
-            return json.dumps({'error': u'金额不匹配'})
 
-        # 循环提现申请，生成对应的付款单和收款单，同时生成订单
-        for apply_get_item in apply_get_list:
-
-            current_time = datetime.utcnow()
-            # 创建投资付款单(根据提现申请金额拆分)
-            ticket_put_info = {
-                'user_id': apply_put_info.user_id,
-                'apply_put_id': apply_put_id,
-                'money': apply_get_item.money_apply,
-                'create_time': current_time,
-                'update_time': current_time,
-            }
-            ticket_put_id = add_ticket_put(ticket_put_info)
-            # 创建提现收款单
-            ticket_get_info = {
-                'user_id': apply_get_item.user_id,
-                'apply_get_id': apply_get_item.id,
-                'money': apply_get_item.money_apply,
-                'create_time': current_time,
-                'update_time': current_time,
-            }
-            ticket_get_id = add_ticket_get(ticket_get_info)
-
-            order_info = {
-                'apply_put_id': apply_put_id,
-                'apply_get_id': apply_get_item.id,
-                'apply_put_uid': apply_put_info.user_id,
-                'apply_get_uid': apply_get_item.user_id,
-                'ticket_put_id': ticket_put_id,
-                'ticket_get_id': ticket_get_id,
-                'money': apply_get_item.money_apply,
-                'status_audit': STATUS_AUDIT_SUCCESS,
-                'audit_time': current_time,
-                'create_time': current_time,
-                'update_time': current_time,
-            }
-            order_id = add_order(order_info)
-
-            # 更新提现申请状态
-            apply_get_update_info = {
-                'status_order': STATUS_ORDER_COMPLETED,
-                'update_time': current_time,
-            }
-            edit_apply_get(apply_get_item.id, apply_get_update_info)
-        # 更新投资申请状态
-        current_time = datetime.utcnow()
-        apply_put_update_info = {
-            'status_order': STATUS_ORDER_COMPLETED,
-            'update_time': current_time,
-        }
-        result = edit_apply_put(apply_put_id, apply_put_update_info)
-
-        if result == 1:
-            return json.dumps({'success': u'匹配成功'})
-        if result == 0:
-            return json.dumps({'error': u'匹配失败'})
+        try:
+            result = apply_put_match(apply_put_id, apply_get_ids, accept_split)
+            if result == 1:
+                return json.dumps({'success': u'匹配成功'})
+            if result == 0:
+                return json.dumps({'error': u'匹配失败'})
+        except Exception as e:
+            return json.dumps({'error': e.message})
     abort(404)
 
 

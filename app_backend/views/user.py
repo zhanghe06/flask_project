@@ -20,7 +20,7 @@ from flask_login import current_user, login_required
 from itsdangerous import TimestampSigner
 
 from app_common.maps import area_code_map
-from app_common.maps.auth_type import *
+from app_common.maps.type_auth import *
 from app_common.tools import md5
 from app_backend import app
 from app_backend.api.user import edit_user
@@ -28,10 +28,17 @@ from app_backend.api.user_auth import get_user_auth_row, edit_user_auth
 from app_backend.api.user_bank import get_user_bank_row_by_id, add_user_bank, edit_user_bank
 from app_backend.api.user_profile import get_user_profile_row_by_id, edit_user_profile
 from app_backend.forms.user import UserProfileForm, UserAuthForm, UserBankForm, UserSearchForm
-from app_backend.models import User, UserProfile, UserBank
+from app_backend.models import User
+from app_backend.models import UserProfile
+from app_backend.models import UserBank
+from app_backend.models import Wallet
+from app_backend.models import Score
+from app_backend.models import Bonus
+from app_backend.models import BitCoin
 
 from app_common.maps.status_lock import *
 from app_common.maps.status_delete import *
+from app_common.settings import SWITCH_EXPORT, PER_PAGE_BACKEND
 
 bp_user = Blueprint('user', __name__, url_prefix='/user')
 
@@ -49,6 +56,7 @@ def lists(page=1):
     user_name = request.args.get('user_name', '', type=str)
     start_time = request.args.get('start_time', '', type=str)
     end_time = request.args.get('end_time', '', type=str)
+    status_active = request.args.get('status_active', '', type=str)
     status_lock = request.args.get('status_lock', '', type=str)
     op = request.args.get('op', 0, type=int)
 
@@ -56,30 +64,51 @@ def lists(page=1):
     form.user_name.data = user_name
     form.start_time.data = start_time
     form.end_time.data = end_time
+    form.status_active.data = status_active
     form.status_lock.data = status_lock
 
     search_condition_user = [User.status_delete == STATUS_DEL_NO]
     search_condition_user_profile = []
-    search_condition_user_bank = []
     if user_id:
         search_condition_user.append(User.id == user_id)
     if start_time:
         search_condition_user.append(User.create_time >= start_time)
     if end_time:
         search_condition_user.append(User.create_time <= end_time)
+    if status_active:
+        search_condition_user.append(User.status_active == status_active)
+    if status_lock:
+        search_condition_user.append(User.status_lock == status_lock)
     if user_name:
         search_condition_user_profile.append(UserProfile.nickname == user_name)
     # 处理导出
     if op == 1:
+        if not SWITCH_EXPORT:
+            flash(u'导出功能关闭，暂不支持导出', 'warning')
+            return redirect(url_for('user.lists'))
         data_list = []
+        # query_sets = User.query. \
+        #     filter(*search_condition_user). \
+        #     outerjoin(UserProfile, User.id == UserProfile.user_id). \
+        #     filter(*search_condition_user_profile). \
+        #     outerjoin(UserBank, User.id == UserBank.user_id). \
+        #     filter(*search_condition_user_bank). \
+        #     add_entity(UserProfile). \
+        #     add_entity(UserBank). \
+        #     all()
         query_sets = User.query. \
             filter(*search_condition_user). \
             outerjoin(UserProfile, User.id == UserProfile.user_id). \
             filter(*search_condition_user_profile). \
-            outerjoin(UserBank, User.id == UserBank.user_id). \
-            filter(*search_condition_user_bank). \
+            outerjoin(Wallet, User.id == Wallet.user_id). \
+            outerjoin(BitCoin, User.id == BitCoin.user_id). \
+            outerjoin(Score, User.id == Score.user_id). \
+            outerjoin(Bonus, User.id == Bonus.user_id). \
             add_entity(UserProfile). \
-            add_entity(UserBank). \
+            add_entity(Wallet). \
+            add_entity(BitCoin). \
+            add_entity(Score). \
+            add_entity(Bonus). \
             all()
         column_names = [u'用户编号', u'用户名称', u'银行名称', u'银行地址']
         data_list.append(column_names)
@@ -101,12 +130,16 @@ def lists(page=1):
         filter(*search_condition_user). \
         outerjoin(UserProfile, User.id == UserProfile.user_id). \
         filter(*search_condition_user_profile). \
-        outerjoin(UserBank, User.id == UserBank.user_id). \
-        filter(*search_condition_user_bank). \
+        outerjoin(Wallet, User.id == Wallet.user_id). \
+        outerjoin(BitCoin, User.id == BitCoin.user_id). \
+        outerjoin(Score, User.id == Score.user_id). \
+        outerjoin(Bonus, User.id == Bonus.user_id). \
         add_entity(UserProfile). \
-        add_entity(UserBank). \
-        order_by(User.id.desc()). \
-        paginate(page, 10, False)
+        add_entity(Wallet). \
+        add_entity(BitCoin). \
+        add_entity(Score). \
+        add_entity(Bonus). \
+        paginate(page, PER_PAGE_BACKEND, False)
 
     return render_template(
         'user/list.html',
@@ -140,13 +173,13 @@ def auth(user_id):
     if request.method == 'GET':
         condition = {
             'user_id': user_id,
-            'auth_type': AUTH_TYPE_ACCOUNT,
+            'type_auth': TYPE_AUTH_ACCOUNT,
         }
         user_auth_info = get_user_auth_row(**condition)
         if user_auth_info:
             form.id.data = user_auth_info.id
             form.user_id.data = user_id
-            form.auth_type.data = user_auth_info.auth_type
+            form.type_auth.data = user_auth_info.type_auth
             form.auth_key.data = user_auth_info.auth_key
             form.auth_secret.data = ''
             form.status_verified.data = user_auth_info.status_verified
@@ -158,7 +191,7 @@ def auth(user_id):
             condition = {
                 'id': form.id.data,
                 'user_id': user_id,
-                'auth_type': AUTH_TYPE_ACCOUNT,
+                'type_auth': TYPE_AUTH_ACCOUNT,
             }
             op_right = get_user_auth_row(**condition)
             if not op_right:
@@ -167,7 +200,7 @@ def auth(user_id):
 
             current_time = datetime.utcnow()
             user_auth_data = {
-                # 'auth_type': AUTH_TYPE_ACCOUNT,
+                # 'type_auth': TYPE_AUTH_ACCOUNT,
                 'auth_key': form.auth_key.data,
                 # 'status_verified': form.status_verified.data,
                 'update_time': current_time,

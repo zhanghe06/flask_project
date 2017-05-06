@@ -36,6 +36,20 @@
                 <span class="help-block">{{ error }}</span>
             {% endfor %}
         </div>
+        <div class="form-group{% if form.status_order.errors %} has-error{% endif %}">
+            {{ form.status_order.label(class="sr-only") }}
+            {{ form.status_order(class="form-control", placeholder="订单状态", data_width="fit", data_header="选择状态") }}
+            {% for error in form.status_order.errors %}
+                <span class="help-block">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="form-group{% if form.status_delete.errors %} has-error{% endif %}">
+            {{ form.status_delete.label(class="sr-only") }}
+            {{ form.status_delete(class="form-control", placeholder="删除状态", data_width="fit", data_header="选择状态") }}
+            {% for error in form.status_delete.errors %}
+                <span class="help-block">{{ error }}</span>
+            {% endfor %}
+        </div>
         <div class="form-group{% if form.start_time.errors %} has-error{% endif %}">
             {{ form.start_time.label(class="sr-only") }}
             {{ form.start_time(class="form-control", placeholder="start_time", type='date') }}
@@ -62,16 +76,17 @@
         <table class="table table-hover">
             <thead>
             <tr>
-                <th>id</th>
-                <th>user_id</th>
-                <th>nickname</th>
-                <th>type_apply</th>
-                <th>money_apply</th>
-                <th>status_apply</th>
-                <th>status_order</th>
-                <th>status_delete</th>
-                <th>create_time</th>
-                <th>action</th>
+                <th>ID</th>
+                <th>用户ID</th>
+                <th>用户名称</th>
+                <th>申请类型</th>
+                <th>申请金额</th>
+                <th>订单金额</th>
+                <th>申请状态</th>
+                <th>订单状态</th>
+                <th>删除状态</th>
+                <th>申请时间</th>
+                <th>操作</th>
             </tr>
             </thead>
             <tbody>
@@ -82,10 +97,11 @@
                 <td>{{ user_profile.nickname }}</td>
                 <td>{{ apply_get.type_apply | type_apply }}</td>
                 <td>{{ apply_get.money_apply }}</td>
+                <td>{{ apply_get.money_order }}</td>
                 <td>{{ apply_get.status_apply | status_apply }}</td>
                 <td>{{ apply_get.status_order | status_order }}</td>
                 <td>{{ apply_get.status_delete | status_delete }}</td>
-                <td>{{ apply_get.create_time }}</td>
+                <td>{{ moment(apply_get.create_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
                 <td>
                     <a href="{{ url_for('apply_get.info', apply_get_id=apply_get.id) }}" rel="tooltip" title="匹配"><span class="glyphicon glyphicon-retweet"></span></a>
                     <a href="javascript:void(0);" onclick="apply_get_delete({{ apply_get.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
@@ -108,12 +124,35 @@
     type_apply.selectpicker('val', '{{ form.type_apply.data }}');
     // 处理选项修改
     type_apply.on('changed.bs.select', function (event, clickedIndex, newValue, oldValue) {
-        console.log($('#status_lock').val());
+        console.log($('#type_apply').val());
         // console.log(event);
         // console.log(clickedIndex);
         // console.log(newValue);
         // console.log(oldValue);
     });
+
+    var status_order = $('#status_order');
+    status_order.selectpicker('val', '{{ form.status_order.data }}');
+    // 处理选项修改
+    status_order.on('changed.bs.select', function (event, clickedIndex, newValue, oldValue) {
+        console.log($('#status_order').val());
+        // console.log(event);
+        // console.log(clickedIndex);
+        // console.log(newValue);
+        // console.log(oldValue);
+    });
+
+    var status_delete = $('#status_delete');
+    status_delete.selectpicker('val', '{{ form.status_delete.data }}');
+    // 处理选项修改
+    status_delete.on('changed.bs.select', function (event, clickedIndex, newValue, oldValue) {
+        console.log($('#status_delete').val());
+        // console.log(event);
+        // console.log(clickedIndex);
+        // console.log(newValue);
+        // console.log(oldValue);
+    });
+
     function apply_get_delete(apply_get_id){
         if(confirm("Are you sure?"))
         {

@@ -10,14 +10,18 @@
 """
 from itsdangerous import URLSafeSerializer
 
+from app_common.maps.status_active import STATUS_ACTIVE_DICT
+from app_common.maps.status_lock import STATUS_LOCK_DICT
+from app_common.maps.type_order import TYPE_ORDER_DICT
 from app_frontend import app
 from app_frontend.api.user_profile import get_user_profile_row_by_id
 from app_frontend.api.wallet import get_wallet_row_by_id
+from app_frontend.api.bit_coin import get_bit_coin_row_by_id
 from app_frontend.api.score import get_score_row_by_id
 from app_frontend.api.bonus import get_bonus_row_by_id
-from app_common.maps.level_type import LEVEL_TYPE_DICT
+from app_common.maps.type_level import TYPE_LEVEL_DICT
 from app_common.maps.type_apply import TYPE_APPLY_DICT
-from app_common.maps.auth_type import AUTH_TYPE_DICT
+from app_common.maps.type_auth import TYPE_AUTH_DICT
 from app_common.maps.status_audit import STATUS_AUDIT_DICT
 from app_common.maps.status_apply import STATUS_APPLY_DICT
 from app_common.maps.status_order import STATUS_ORDER_DICT
@@ -81,7 +85,7 @@ def filter_user_name_level(user_id):
     :return:
     """
     row = get_user_profile_row_by_id(user_id)
-    return u'%s(%s)' % (row.nickname, LEVEL_TYPE_DICT.get(row.level_type, u'普通')) if row else u'游客'
+    return u'%s(%s)' % (row.nickname, TYPE_LEVEL_DICT.get(row.type_level, u'普通')) if row else u'游客'
 
 
 @app.template_filter('user_wallet')
@@ -93,6 +97,17 @@ def filter_user_wallet(user_id):
     """
     row = get_wallet_row_by_id(user_id)
     return row.amount_current if row else 0
+
+
+@app.template_filter('user_bit_coin')
+def filter_user_bit_coin(user_id):
+    """
+    用户数字货币
+    :param user_id:
+    :return:
+    """
+    row = get_bit_coin_row_by_id(user_id)
+    return row.amount if row else 0
 
 
 @app.template_filter('user_score')
@@ -129,6 +144,16 @@ def filter_user_invite_link(user_id):
     return link_param
 
 
+@app.template_filter('type_level')
+def filter_type_level(type_level_id):
+    """
+    用户等级
+    :param type_level_id:
+    :return:
+    """
+    return TYPE_LEVEL_DICT.get(type_level_id, u'')
+
+
 @app.template_filter('type_apply')
 def filter_type_apply(type_apply_id):
     """
@@ -139,14 +164,24 @@ def filter_type_apply(type_apply_id):
     return TYPE_APPLY_DICT.get(type_apply_id, u'')
 
 
-@app.template_filter('auth_type')
-def filter_auth_type(auth_type_id):
+@app.template_filter('type_order')
+def filter_type_order(type_order_id):
     """
-    认证类型
-    :param auth_type_id:
+    订单类型
+    :param type_order_id:
     :return:
     """
-    return AUTH_TYPE_DICT.get(auth_type_id, u'')
+    return TYPE_ORDER_DICT.get(type_order_id, u'')
+
+
+@app.template_filter('type_auth')
+def filter_type_auth(type_auth_id):
+    """
+    认证类型
+    :param type_auth_id:
+    :return:
+    """
+    return TYPE_AUTH_DICT.get(type_auth_id, u'')
 
 
 @app.template_filter('status_apply')
@@ -207,3 +242,24 @@ def filter_status_rec(status_rec_id):
     :return:
     """
     return STATUS_REC_DICT.get(status_rec_id, u'')
+
+
+@app.template_filter('status_active')
+def filter_status_active(status_active_id):
+    """
+    激活状态
+    :param status_active_id:
+    :return:
+    """
+    return STATUS_ACTIVE_DICT.get(status_active_id, u'')
+
+
+@app.template_filter('status_lock')
+def filter_status_lock(status_lock_id):
+    """
+    锁定状态
+    :param status_lock_id:
+    :return:
+    """
+    return STATUS_LOCK_DICT.get(status_lock_id, u'')
+

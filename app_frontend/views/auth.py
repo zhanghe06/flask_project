@@ -19,13 +19,17 @@ from flask_login import logout_user
 from itsdangerous import TimestampSigner, SignatureExpired, BadTimeSignature
 
 from app_common.maps import area_code_map
-from app_common.maps.auth_type import *
+from app_common.maps.type_auth import *
 from app_common.tools import md5
 from app_frontend import app, oauth_github, oauth_qq, oauth_weibo
 from app_frontend.api.user import edit_user
 from app_frontend.api.user import get_user_row_by_id
 from app_frontend.api.user_auth import get_user_auth_row
 from app_frontend.forms.login import LoginPhoneForm
+
+from app_common.settings import SWITCH_LOGIN_ACCOUNT
+from app_common.settings import SWITCH_LOGIN_PHONE
+from app_common.settings import SWITCH_LOGIN_EMAIL
 
 bp_auth = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -37,13 +41,16 @@ def index():
     """
     if g.user is not None and g.user.is_authenticated:
         return redirect(url_for('index'))
+    if not SWITCH_LOGIN_ACCOUNT:
+        flash(u'账号登录功能关闭，暂不支持账号登录', 'warning')
+        return redirect(url_for('index'))
     from app_frontend.forms.login import LoginForm
     form = LoginForm()
     if request.method == 'POST':
         if form.validate_on_submit():
             # 获取认证信息
             condition = {
-                'auth_type': AUTH_TYPE_ACCOUNT,
+                'type_auth': TYPE_AUTH_ACCOUNT,
                 'auth_key': form.account.data,
                 'auth_secret': md5(form.password.data)
             }
@@ -79,7 +86,9 @@ def phone():
     """
     if g.user is not None and g.user.is_authenticated:
         return redirect(url_for('index'))
-
+    if not SWITCH_LOGIN_PHONE:
+        flash(u'手机登录功能关闭，暂不支持手机登录', 'warning')
+        return redirect(url_for('index'))
     form = LoginPhoneForm()
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -89,7 +98,7 @@ def phone():
             mobile_iso = '%s%s' % (area_code, form.phone.data)
             # 获取认证信息
             condition = {
-                'auth_type': AUTH_TYPE_PHONE,
+                'type_auth': TYPE_AUTH_PHONE,
                 'auth_key': mobile_iso,
                 'auth_secret': md5(form.password.data)
             }
@@ -124,13 +133,16 @@ def email():
     """
     if g.user is not None and g.user.is_authenticated:
         return redirect(url_for('index'))
+    if not SWITCH_LOGIN_EMAIL:
+        flash(u'邮箱登录功能关闭，暂不支持邮箱登录', 'warning')
+        return redirect(url_for('index'))
     from app_frontend.forms.login import LoginEmailForm
     form = LoginEmailForm()
     if request.method == 'POST':
         if form.validate_on_submit():
             # 获取认证信息
             condition = {
-                'auth_type': AUTH_TYPE_EMAIL,
+                'type_auth': TYPE_AUTH_EMAIL,
                 'auth_key': form.email.data,
                 'auth_secret': md5(form.password.data)
             }
@@ -347,7 +359,7 @@ def admin_login():
 
     # 获取认证信息
     condition = {
-        'auth_type': AUTH_TYPE_ACCOUNT,
+        'type_auth': TYPE_AUTH_ACCOUNT,
         'user_id': uid
     }
     user_auth_info = get_user_auth_row(**condition)

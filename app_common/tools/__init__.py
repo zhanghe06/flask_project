@@ -13,6 +13,7 @@ import json
 import hashlib
 from datetime import date, datetime
 from decimal import Decimal
+from random import randint
 
 
 def md5(source_str):
@@ -41,5 +42,15 @@ def json_default(obj):
         raise TypeError('%r is not JSON serializable' % obj)
 
 
+def get_randint(length=6):
+    """
+    获取随机数字
+    :param length:
+    :return:
+    """
+    return randint(10**(length-1), 10**length-1)
+
+
 if __name__ == '__main__':
     print md5('123456')  # e10adc3949ba59abbe56e057f20f883e
+    print get_randint(), 10**5, 10**6-1  # 210551 100000 999999

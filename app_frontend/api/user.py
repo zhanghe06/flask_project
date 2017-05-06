@@ -10,6 +10,7 @@
 
 
 from app_frontend.login import LoginUser
+from app_frontend.models import User, UserProfile, Wallet, BitCoin, Score, Bonus
 from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
 from app_frontend.lib.container import Container
 
@@ -93,3 +94,30 @@ def add_user_stat_item(stat_type, uid, blog_id):
     blog_container_obj = Container('user')
     return blog_container_obj.add_item(stat_type, uid, blog_id)
 
+
+def get_user_team_rows(page=1, per_page=10, **kwargs):
+    """
+    获取团队列表（分页）
+    :param page:
+    :param per_page:
+    :param kwargs:
+    :return:
+    """
+    condition_user = []
+    condition_user_profile = []
+    if 'user_pid' in kwargs:
+        condition_user_profile.append(UserProfile.user_pid == kwargs['user_pid'])
+    if 'status_active' in kwargs:
+        condition_user.append(User.status_active == kwargs['status_active'])
+    if 'status_lock' in kwargs:
+        condition_user.append(User.status_lock == kwargs['status_lock'])
+    if 'status_delete' in kwargs:
+        condition_user.append(User.status_delete == kwargs['status_delete'])
+
+    pagination = UserProfile.query. \
+        filter(*condition_user_profile). \
+        outerjoin(User, User.id == UserProfile.user_pid). \
+        filter(*condition_user). \
+        add_entity(User). \
+        paginate(page, per_page, False)
+    return pagination

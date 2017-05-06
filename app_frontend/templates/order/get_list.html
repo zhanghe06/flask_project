@@ -39,8 +39,6 @@
                 <th>apply_get_id</th>
                 <th>apply_put_uid</th>
                 <th>apply_get_uid</th>
-                <th>ticket_put_id</th>
-                <th>ticket_get_id</th>
                 <th>status_audit</th>
                 <th>status_pay</th>
                 <th>status_rec</th>
@@ -56,13 +54,12 @@
                 <td>{{ order.apply_get_id }}</td>
                 <td>{{ order.apply_put_uid }}</td>
                 <td>{{ order.apply_get_uid }}</td>
-                <td>{{ order.ticket_put_id }}</td>
-                <td>{{ order.ticket_get_id }}</td>
                 <td>{{ order.status_audit | status_audit }}</td>
                 <td>{{ order.status_pay | status_pay }}</td>
                 <td>{{ order.status_rec | status_rec }}</td>
-                <td>{{ order.create_time }}</td>
+                <td>{{ moment(order.create_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
                 <td>
+                    <a href="" rel="tooltip" title="确认收款"><span class="glyphicon glyphicon-piggy-bank"></span></a>
                     <a href="javascript:void(0);" onclick="order_delete({{ order.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
                 </td>
             </tr>

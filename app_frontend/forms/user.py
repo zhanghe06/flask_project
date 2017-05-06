@@ -23,7 +23,7 @@ def reg_email_repeat(form, field):
     邮箱重复校验
     """
     condition = {
-        'auth_type': 'email',
+        'type_auth': 'email',
         'auth_key': field.data
     }
     row = get_user_auth_row(**condition)
@@ -56,7 +56,7 @@ class UserAuthForm(Form):
     用户登录认证信息表单
     """
     id = HiddenField('Id', validators=[DataRequired()])
-    auth_type = StringField('Auth Type')
+    type_auth = StringField('Auth Type')
     auth_key = StringField('Auth Key')
     auth_secret = StringField('Auth Secret')
     status_verified = CheckBoxBS('Status Verified')

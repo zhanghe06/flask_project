@@ -43,6 +43,13 @@
                 <span class="help-block">{{ error }}</span>
             {% endfor %}
         </div>
+        <div class="form-group{% if form.status_active.errors %} has-error{% endif %}">
+            {{ form.status_active.label(class="sr-only") }}
+            {{ form.status_active(class="form-control", placeholder="激活状态", data_width="fit", data_header="选择状态") }}
+            {% for error in form.status_active.errors %}
+                <span class="help-block">{{ error }}</span>
+            {% endfor %}
+        </div>
         <div class="form-group{% if form.status_lock.errors %} has-error{% endif %}">
             {{ form.status_lock.label(class="sr-only") }}
             {{ form.status_lock(class="form-control", placeholder="锁定状态", data_width="fit", data_header="选择状态") }}
@@ -63,24 +70,30 @@
             <tr>
                 <th>id</th>
                 <th>nickname</th>
-                <th>level_type</th>
+                <th>type_level</th>
                 <th>phone</th>
-                <th>bank_name</th>
-                <th>bank_address</th>
+                <th>wallet</th>
+                <th>bit_coin</th>
+                <th>score</th>
+                <th>bonus</th>
+                <th>status_active</th>
                 <th>status_lock</th>
                 <th>create_time</th>
                 <th>action</th>
             </tr>
             </thead>
             <tbody>
-            {% for (user, user_profile, user_bank) in pagination.items %}
+            {% for (user, user_profile, wallet, bit_coin, score, bonus) in pagination.items %}
             <tr class="text-muted">
                 <td>{{ user.id }}</td>
                 <td><a href="{{ url_for('user.admin_login', user_id=user.id) }}" rel="tooltip" title="登录" target="_blank">{{ user_profile.nickname }}</a></td>
-                <td>{{ user_profile.level_type | level_type }}</td>
+                <td>{{ user_profile.type_level | type_level }}</td>
                 <td>{{ user_profile.phone }}</td>
-                <td>{{ user_bank.bank_name }}</td>
-                <td>{{ user_bank.bank_address }}</td>
+                <td>{{ wallet.amount_current | default('0') }}</td>
+                <td>{{ bit_coin.amount | default('0') }}</td>
+                <td>{{ score.amount | default('0') }}</td>
+                <td>{{ bonus.amount | default('0') }}</td>
+                <td>{{ user.status_active | status_active }}</td>
                 <td>{{ user.status_lock | status_lock }}</td>
                 <td>{{ user.create_time }}</td>
                 <td>
@@ -106,6 +119,17 @@
 {% block extra_js %}
 <script>
     // 初始化赋值
+    var status_active = $('#status_active');
+    status_active.selectpicker('val', '{{ form.status_active.data }}');
+    // 处理选项修改
+    status_active.on('changed.bs.select', function (event, clickedIndex, newValue, oldValue) {
+        console.log($('#status_active').val());
+        // console.log(event);
+        // console.log(clickedIndex);
+        // console.log(newValue);
+        // console.log(oldValue);
+    });
+
     var status_lock = $('#status_lock');
     status_lock.selectpicker('val', '{{ form.status_lock.data }}');
     // 处理选项修改

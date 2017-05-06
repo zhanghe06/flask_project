@@ -12,13 +12,15 @@ from datetime import datetime
 
 from flask import request, render_template, redirect, url_for, flash, session
 
+from app_common.settings.sms_msg import SMS_CODE_REG
+from app_common.tools import md5, get_randint
 from app_frontend import app
 
 from flask import Blueprint
 
 from app_frontend.lib.sms_chuanglan_iso import SmsChuangLanIsoApi
 from app_common.maps import area_code_map
-from app_common.maps.auth_type import *
+from app_common.maps.type_auth import *
 
 from app_frontend.api.user import add_user
 from app_frontend.api.user_auth import add_user_auth
@@ -44,49 +46,45 @@ def index():
     form = RegForm()
     if request.method == 'POST':
         if form.validate_on_submit():
-            # 添加用户信息
-
             current_time = datetime.utcnow()
+            # 添加用户注册信息
             user_data = {
-                'email': form.account.data,
                 'create_time': current_time,
                 'update_time': current_time,
-                'last_ip': request.headers.get('X-Forwarded-For', request.remote_addr)
+                'reg_ip': request.headers.get('X-Forwarded-For', request.remote_addr)
             }
             from app_frontend.api.user import add_user
             user_id = add_user(user_data)
-            # 添加授权信息
 
+            # 添加用户认证信息
             user_auth_data = {
                 'user_id': user_id,
-                'auth_type': 'email',
-                'auth_key': form.email.data,
-                'auth_secret': form.password.data
+                'type_auth': 'account',
+                'auth_key': form.account.data,
+                'auth_secret': md5(form.password.data),
+                'status_verified': 1,
+                'create_time': current_time,
+                'update_time': current_time,
             }
             from app_frontend.api.user_auth import add_user_auth
-            user_auth_id = add_user_auth(user_auth_data)
-            if user_auth_id:
-                flash(u'%s, Thanks for registering' % form.email.data, 'success')
-                # todo 发送邮箱校验邮件
-                email_validate_content = {
-                    'mail_from': 'System Support<support@zhendi.me>',
-                    'mail_to': form.email.data,
-                    'mail_subject': 'verify reg email',
-                    'mail_html': 'verify reg email address in mailbox'
-                }
-                from app_frontend import send_cloud_client
-                send_email_result = send_cloud_client.mail_send(**email_validate_content)
-                # 调试邮件发送结果
-                if send_email_result.get('result') is False:
-                    flash(send_email_result.get('message'), 'warning')
-                else:
-                    flash(send_email_result.get('message'), 'success')
-                # https://www.***.com/email/signup/uuid
+            add_user_auth(user_auth_data)
+
+            # 添加用户基本信息
+            user_profile_data = {
+                'user_id': user_id,
+                'user_pid': form.user_pid.data,
+                'nickname': form.account.data,
+                'create_time': current_time,
+                'update_time': current_time,
+            }
+            add_user_profile(user_profile_data)
+            if user_id:
+                flash(u'%s, 恭喜您注册成功' % form.account.data, 'success')
             else:
-                flash(u'%s, Sorry, register error' % form.email.data, 'warning')
+                flash(u'%s, 很遗憾注册失败' % form.account.data, 'warning')
             return redirect(url_for('auth.index'))
         # 闪现消息 success info warning danger
-        flash(form.errors, 'warning')  # 调试打开
+        # flash(form.errors, 'warning')  # 调试打开
     return render_template('reg/index.html', title='reg', form=form)
 
 
@@ -103,15 +101,11 @@ def phone():
             current_time = datetime.utcnow()
             # 添加用户注册信息
             user_data = {
-                'status_lock': 0,
-                'status_delete': 0,
                 'reg_ip': request.headers.get('X-Forwarded-For', request.remote_addr),
                 'create_time': current_time,
                 'update_time': current_time,
             }
             user_id = add_user(user_data)
-            if not user_id:
-                raise Exception(u'添加用户注册信息失败')
 
             # 添加用户认证信息
 
@@ -122,42 +116,33 @@ def phone():
 
             user_auth_data = {
                 'user_id': user_id,
-                'auth_type': AUTH_TYPE_PHONE,
+                'type_auth': TYPE_AUTH_PHONE,
                 'auth_key': mobile_iso,
-                'auth_secret': form.password.data,
+                'auth_secret': md5(form.password.data),
                 'status_verified': 1,
                 'create_time': current_time,
                 'update_time': current_time,
             }
-            user_auth_id = add_user_auth(user_auth_data)
-            if not user_auth_id:
-                raise Exception(u'添加用户认证信息失败')
+            add_user_auth(user_auth_data)
 
             # 添加用户基本信息
             user_profile_data = {
-                'id': user_id,
+                'user_id': user_id,
                 'user_pid': form.user_pid.data,
-                'nickname': form.nickname.data,
-                'avatar_url': form.avatar_url.data,
-                'email': form.email.data,
                 'area_id': form.area_id.data,
                 'phone': form.phone.data,
-                'birthday': form.birthday.data,
-                'id_card': form.id_card.data,
                 'create_time': current_time,
                 'update_time': current_time,
             }
-            user_profile_id = add_user_profile(user_profile_data)
-            if not user_profile_id:
-                raise Exception(u'添加用户基本信息失败')
+            add_user_profile(user_profile_data)
 
-            if user_auth_id:
-                flash(u'%s, Thanks for registering' % form.phone.data, 'success')
+            if user_id:
+                flash(u'%s, 恭喜您注册成功' % form.phone.data, 'success')
             else:
-                flash(u'%s, Sorry, register error' % form.phone.data, 'warning')
+                flash(u'%s, 很遗憾注册失败' % form.phone.data, 'warning')
             return redirect(url_for('auth.index'))
         # 闪现消息 success info warning danger
-        flash(form.errors, 'warning')  # 调试打开
+        # flash(form.errors, 'warning')  # 调试打开
     return render_template('reg/phone.html', title='reg', form=form)
 
 
@@ -171,43 +156,52 @@ def email():
     form = RegEmailForm()
     if request.method == 'POST':
         if form.validate_on_submit():
-            # 添加用户信息
-
+            # 添加用户注册信息
             current_time = datetime.utcnow()
             user_data = {
-                'email': form.email.data,
                 'create_time': current_time,
                 'update_time': current_time,
-                'last_ip': request.headers.get('X-Forwarded-For', request.remote_addr)
+                'reg_ip': request.headers.get('X-Forwarded-For', request.remote_addr)
             }
             from app_frontend.api.user import add_user
             user_id = add_user(user_data)
-            # 添加授权信息
 
+            # 添加用户认证信息
             user_auth_data = {
                 'user_id': user_id,
-                'auth_type': 'email',
+                'type_auth': TYPE_AUTH_EMAIL,
                 'auth_key': form.email.data,
-                'auth_secret': form.password.data
+                'auth_secret': md5(form.password.data)
             }
             from app_frontend.api.user_auth import add_user_auth
-            user_auth_id = add_user_auth(user_auth_data)
-            if user_auth_id:
+            add_user_auth(user_auth_data)
+
+            # 添加用户基本信息
+            user_profile_data = {
+                'user_id': user_id,
+                'user_pid': form.user_pid.data,
+                'email': form.email.data,
+                'create_time': current_time,
+                'update_time': current_time,
+            }
+            add_user_profile(user_profile_data)
+
+            if user_id:
                 flash(u'%s, Thanks for registering' % form.email.data, 'success')
                 # todo 发送邮箱校验邮件
-                email_validate_content = {
-                    'mail_from': 'System Support<support@zhendi.me>',
-                    'mail_to': form.email.data,
-                    'mail_subject': 'verify reg email',
-                    'mail_html': 'verify reg email address in mailbox'
-                }
-                from app_frontend import send_cloud_client
-                send_email_result = send_cloud_client.mail_send(**email_validate_content)
-                # 调试邮件发送结果
-                if send_email_result.get('result') is False:
-                    flash(send_email_result.get('message'), 'warning')
-                else:
-                    flash(send_email_result.get('message'), 'success')
+                # email_validate_content = {
+                #     'mail_from': 'System Support<support@zhendi.me>',
+                #     'mail_to': form.email.data,
+                #     'mail_subject': 'verify reg email',
+                #     'mail_html': 'verify reg email address in mailbox'
+                # }
+                # from app_frontend import send_cloud_client
+                # send_email_result = send_cloud_client.mail_send(**email_validate_content)
+                # # 调试邮件发送结果
+                # if send_email_result.get('result') is False:
+                #     flash(send_email_result.get('message'), 'warning')
+                # else:
+                #     flash(send_email_result.get('message'), 'success')
                 # https://www.***.com/email/signup/uuid
             else:
                 flash(u'%s, Sorry, register error' % form.email.data, 'warning')
@@ -255,7 +249,7 @@ def email_check():
         # return email
         # 校验通过，更新邮箱验证状态
         from app_frontend.api.user_auth import update_user_auth_rows
-        result = update_user_auth_rows({'verified': 1}, **{'auth_type': 'email', 'auth_key': email})
+        result = update_user_auth_rows({'verified': 1}, **{'type_auth': 'email', 'auth_key': email})
         if result == 1:
             flash(u'%s, Your mailbox has been verified' % email, 'success')
             return redirect(url_for('auth.index'))
@@ -292,7 +286,11 @@ def ajax_get_sms_code():
     mobile_iso = '%s%s' % (area_code, mobile)
 
     sms_client = SmsChuangLanIsoApi(UN, PW)
-    msg = u'【网站签名】1234，是您注册的验证码'
+    sms_code = str(get_randint())
+    code_key = '%s:%s' % ('sms_code', 'reg')
+    session[code_key] = sms_code
+
+    msg = SMS_CODE_REG % sms_code
     result = sms_client.send_international(mobile_iso, msg)
     # todo 优先级队列
     return json.dumps({'result': True})

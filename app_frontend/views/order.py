@@ -102,6 +102,22 @@ def info_get(order_id):
     return render_template('order/get_info.html', title='order_get_info', order_info=order_info)
 
 
+@bp_order.route('/pay/<int:order_id>/', methods=['GET', 'POST'])
+@login_required
+def pay(order_id):
+    """
+    订单支付
+    """
+    uid = current_user.id
+    # 获取投资订单详情
+    condition = {
+        'id': order_id,
+        'apply_put_uid': uid
+    }
+    order_info = get_order_row(**condition)
+    return render_template('order/pay.html', title='order_pay', order_info=order_info)
+
+
 @bp_order.route('/add/', methods=['GET', 'POST'])
 @login_required
 def add():

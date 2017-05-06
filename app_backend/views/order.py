@@ -42,8 +42,6 @@ def lists(page=1):
     apply_get_id = request.args.get('apply_get_id', '', type=int)
     apply_put_uid = request.args.get('apply_put_uid', '', type=int)
     apply_get_uid = request.args.get('apply_get_uid', '', type=int)
-    ticket_put_id = request.args.get('ticket_put_id', '', type=int)
-    ticket_get_id = request.args.get('ticket_get_id', '', type=int)
     status_audit = request.args.get('status_audit', '', type=str)
     status_pay = request.args.get('status_pay', '', type=str)
     status_rec = request.args.get('status_rec', '', type=str)
@@ -56,8 +54,6 @@ def lists(page=1):
     form.apply_get_id.data = apply_get_id
     form.apply_put_uid.data = apply_put_uid
     form.apply_get_uid.data = apply_get_uid
-    form.ticket_put_id.data = ticket_put_id
-    form.ticket_get_id.data = ticket_get_id
     form.status_audit.data = status_audit
     form.status_pay.data = status_pay
     form.status_rec.data = status_rec

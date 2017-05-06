@@ -9,8 +9,11 @@
 """
 
 
-from app_backend.models import Order
+from app_backend.models import Order, ApplyGet, ApplyPut
 from app_backend.tools.db import get_row, get_lists, get_rows, get_row_by_id, add, edit, delete
+from app_backend.database import db
+from app_common.maps.status_audit import STATUS_AUDIT_SUCCESS
+from app_common.maps.status_order import STATUS_ORDER_COMPLETED, STATUS_ORDER_PROCESSING
 
 
 def get_order_row_by_id(order_id):
@@ -90,3 +93,40 @@ def get_order_rows(page=1, per_page=10, *args, **kwargs):
     rows = get_rows(Order, page, per_page, *args, **kwargs)
     return rows
 
+
+def get_put_match_order_rows(apply_put_id):
+    """
+    获取投资匹配订单列表
+    :param apply_put_id:
+    :return: list
+    """
+    rows = db.session.query(Order, ApplyGet). \
+        filter(Order.apply_put_id == apply_put_id, ApplyGet.id == Order.apply_get_id). \
+        all()
+    return rows
+
+
+def get_get_match_order_rows(apply_get_id):
+    """
+    获取提现匹配订单列表
+    :param apply_get_id:
+    :return: list
+    """
+    rows = db.session.query(Order, ApplyPut). \
+        filter(Order.apply_get_id == apply_get_id, ApplyPut.id == Order.apply_put_id). \
+        all()
+    return rows
+
+
+def flow(order_id, next_uid):
+    """
+    订单流转
+    :param order_id:
+    :param next_uid:
+    :return:
+    """
+    # 获取订单信息
+    # 新增投资
+    # 新增匹配订单（流转类型）
+    # 修改原始订单（流转状态）
+    # 新增订单流转记录

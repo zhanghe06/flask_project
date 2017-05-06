@@ -24,8 +24,8 @@ from flask_login import current_user, login_required
 
 from app_common.maps import area_code_map
 from app_backend import app, oauth_github, oauth_qq, oauth_weibo
-from app_common.maps.auth_type import *
-from app_common.maps.sms_msg import SMS_CODE_REG
+from app_common.maps.type_auth import *
+from app_common.settings.sms_msg import SMS_CODE_REG
 
 from app_backend import app, login_manager
 

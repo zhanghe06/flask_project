@@ -15,6 +15,7 @@ from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email
 from app_backend.api.user_auth import get_user_auth_row
 from app_backend.forms import SelectBS, CheckBoxBS
 from app_common.maps import status_lock_list
+from app_common.maps import status_active_list
 from app_common.maps import area_code_list
 from app_backend.api.user_auth import get_user_auth_row
 from app_backend.forms import SelectAreaCode
@@ -60,7 +61,7 @@ class UserAuthForm(Form):
     """
     id = HiddenField('Id', validators=[DataRequired()])
     user_id = HiddenField('User Id', validators=[DataRequired()])
-    auth_type = StringField('Auth Type')
+    type_auth = StringField('Auth Type')
     auth_key = StringField('Auth Key')
     auth_secret = StringField('Auth Secret')
     status_verified = CheckBoxBS('Status Verified')
@@ -106,4 +107,5 @@ class UserSearchForm(Form):
     user_name = StringField('User Name')
     start_time = StringField('Start Time')
     end_time = StringField('End Time')
+    status_active = SelectBS('Status Active', default='', choices=status_active_list)
     status_lock = SelectBS('Status Lock', default='', choices=status_lock_list)
