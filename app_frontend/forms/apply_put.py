@@ -21,7 +21,7 @@ class ApplyPutAddForm(Form):
     """
     投资申请添加表单
     """
-    money_apply = IntegerField('Money Apply', validators=[
+    money_apply = IntegerField(u'申请金额', validators=[
         DataRequired(message=u'金额必须为整数'),
         NumberRange(min=0, message=u'金额必须为整数')
     ])

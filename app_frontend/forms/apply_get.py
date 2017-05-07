@@ -21,7 +21,7 @@ class ApplyGetAddForm(Form):
     """
     提现申请添加表单
     """
-    money_apply = IntegerField('Money Apply', validators=[
+    money_apply = IntegerField(u'申请金额', validators=[
         DataRequired(message=u'金额必须为整数'),
         NumberRange(min=100, message=u'金额必须为100的倍数')
     ])

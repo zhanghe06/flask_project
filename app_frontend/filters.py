@@ -31,6 +31,26 @@ from app_common.maps.status_rec import STATUS_REC_DICT
 import time
 
 
+@app.template_filter('project_name')
+def project_name_filter(s):
+    """
+    显示项目名称
+    :param s:
+    :return:
+    """
+    return app.config.get('PROJECT_NAME', s)
+
+
+@app.template_filter('icp_code')
+def icp_code_filter(s):
+    """
+    显示ICP备案号
+    :param s:
+    :return:
+    """
+    return app.config.get('ICP_CODE', s)
+
+
 @app.template_filter('reverse')
 def reverse_filter(s):
     return s[::-1]

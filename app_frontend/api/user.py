@@ -9,10 +9,14 @@
 """
 
 
+from datetime import datetime
+
 from app_frontend.login import LoginUser
 from app_frontend.models import User, UserProfile, Wallet, BitCoin, Score, Bonus
 from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
 from app_frontend.lib.container import Container
+
+from app_common.maps.status_lock import *
 
 
 def get_user_row_by_id(user_id):
@@ -121,3 +125,34 @@ def get_user_team_rows(page=1, per_page=10, **kwargs):
         add_entity(User). \
         paginate(page, per_page, False)
     return pagination
+
+
+def lock(user_id):
+    """
+    锁定用户
+    :param user_id:
+    :return: Number of affected rows (Example: 0/1)
+    """
+    current_time = datetime.utcnow()
+    user_data = {
+        'status_lock': STATUS_LOCK_OK,
+        'lock_time': current_time,
+        'update_time': current_time
+    }
+    result = edit_user(user_id, user_data)
+    return result
+
+
+def unlock(user_id):
+    """
+    解锁用户
+    :param user_id:
+    :return: Number of affected rows (Example: 0/1)
+    """
+    current_time = datetime.utcnow()
+    user_data = {
+        'status_lock': STATUS_LOCK_NO,
+        'update_time': current_time
+    }
+    result = edit_user(user_id, user_data)
+    return result

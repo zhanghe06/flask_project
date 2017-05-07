@@ -7,9 +7,13 @@
 
 {% block content %}
     <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="/">首页</a></li>
+        <li class="active">我的团队</li>
+    </ol>
     <!-- header -->
     <nav class="sub-header row container-fluid">
-        <h2>My Team!</h2>
+
         <div class="btn-group pull-right" role="group" aria-label="...">
             {% if request.query_string == 'status_active=0' %}
             <a type="button" class="btn btn-default" href="{{ url_for('user.team') }}">全部团队</a>

@@ -36,7 +36,7 @@
     {% else %}
     <section id="nothing">
         <div class="well well-large text-center">
-            Nothing yet.
+            记录为空
         </div>
     </section>
     {% endif %}
@@ -55,16 +55,16 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <span class="navbar-brand" href="{{ url_for('index') }}">Flask Project</span>
+                <span class="navbar-brand" href="{{ url_for('index') }}">{{ "项目名称" | project_name }}</span>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li{% if request.path == url_for('index') %} class="active"{% endif %}><a href="{{ url_for('index') }}"><span
-                            class="glyphicon glyphicon-home"></span> Home</a></li>
+                            class="glyphicon glyphicon-home"></span> 首页</a></li>
                     <li{% if request.path == url_for('about') %} class="active"{% endif %}><a href="{{ url_for('about') }}"><span
-                            class="glyphicon glyphicon-list"></span> About</a></li>
+                            class="glyphicon glyphicon-list"></span> 关于我们</a></li>
                     <li{% if request.path == url_for('contact') %} class="active"{% endif %}><a href="{{ url_for('contact') }}"><span
-                            class="glyphicon glyphicon-envelope"></span> Contact</a></li>
+                            class="glyphicon glyphicon-envelope"></span> 联系我们</a></li>
 {#                    <li class="dropdown">#}
 {#                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"#}
 {#                           aria-expanded="false"><span class="glyphicon glyphicon-book"></span> Blog List <span#}
@@ -84,52 +84,53 @@
                 {% if g.user != None and g.user.is_authenticated %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="false"><span class="glyphicon glyphicon-paste"></span> Put <span
+                           aria-expanded="false"><span class="glyphicon glyphicon-paste"></span> 投资中心 <span
                                 class="caret"></span></a>
                         <ul class="dropdown-menu">
                         {% if request.path == url_for('order.lists_put') %}
-                            <li class="dropdown-header"><span class="glyphicon glyphicon-list-alt"></span> Order Put List</li>
+                            <li class="dropdown-header"><span class="glyphicon glyphicon-list-alt"></span> 投资订单</li>
                         {% else %}
-                            <li><a href="{{ url_for('order.lists_put') }}"><span class="glyphicon glyphicon-list-alt"></span> Order Put List</a></li>
+                            <li><a href="{{ url_for('order.lists_put') }}"><span class="glyphicon glyphicon-list-alt"></span> 投资订单</a></li>
                         {% endif %}
                         {% if request.path == url_for('apply.lists_put') %}
-                            <li class="dropdown-header"><span class="glyphicon glyphicon-th-list"></span> Apply Put List</li>
+                            <li class="dropdown-header"><span class="glyphicon glyphicon-th-list"></span> 申请记录</li>
                         {% else %}
-                            <li><a href="{{ url_for('apply.lists_put') }}"><span class="glyphicon glyphicon-th-list"></span> Apply Put List</a></li>
+                            <li><a href="{{ url_for('apply.lists_put') }}"><span class="glyphicon glyphicon-th-list"></span> 申请记录</a></li>
                         {% endif %}
                         {% if request.path == url_for('apply.add_put') %}
-                            <li class="dropdown-header"><span class="glyphicon glyphicon-plus"></span> Apply Put Add</li>
+                            <li class="dropdown-header"><span class="glyphicon glyphicon-plus"></span> 我要投资</li>
                         {% else %}
-                            <li><a href="{{ url_for('apply.add_put') }}"><span class="glyphicon glyphicon-plus"></span> Apply Put Add</a></li>
+                            <li><a href="{{ url_for('apply.add_put') }}"><span class="glyphicon glyphicon-plus"></span> 我要投资</a></li>
                         {% endif %}
                         </ul>
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="false"><span class="glyphicon glyphicon-copy"></span> Get <span
+                           aria-expanded="false"><span class="glyphicon glyphicon-copy"></span> 提现中心 <span
                                 class="caret"></span></a>
                         <ul class="dropdown-menu">
                         {% if request.path == url_for('order.lists_get') %}
-                            <li class="dropdown-header"><span class="glyphicon glyphicon-list-alt"></span> Order Get List</li>
+                            <li class="dropdown-header"><span class="glyphicon glyphicon-list-alt"></span> 提现订单</li>
                         {% else %}
-                            <li><a href="{{ url_for('order.lists_get') }}"><span class="glyphicon glyphicon-list-alt"></span> Order Get List</a></li>
+                            <li><a href="{{ url_for('order.lists_get') }}"><span class="glyphicon glyphicon-list-alt"></span> 提现订单</a></li>
                         {% endif %}
                         {% if request.path == url_for('apply.lists_get') %}
-                            <li class="dropdown-header"><span class="glyphicon glyphicon-th-list"></span> Apply Get List</li>
+                            <li class="dropdown-header"><span class="glyphicon glyphicon-th-list"></span> 申请记录</li>
                         {% else %}
-                            <li><a href="{{ url_for('apply.lists_get') }}"><span class="glyphicon glyphicon-th-list"></span> Apply Get List</a></li>
+                            <li><a href="{{ url_for('apply.lists_get') }}"><span class="glyphicon glyphicon-th-list"></span> 申请记录</a></li>
                         {% endif %}
                         {% if request.path == url_for('apply.add_get') %}
-                            <li class="dropdown-header"><span class="glyphicon glyphicon-plus"></span> Apply Get Add</li>
+                            <li class="dropdown-header"><span class="glyphicon glyphicon-plus"></span> 我要提现</li>
                         {% else %}
-                            <li><a href="{{ url_for('apply.add_get') }}"><span class="glyphicon glyphicon-plus"></span> Apply Get Add</a></li>
+                            <li><a href="{{ url_for('apply.add_get') }}"><span class="glyphicon glyphicon-plus"></span> 我要提现</a></li>
                         {% endif %}
                         </ul>
                     </li>
                     <li{% if request.path == url_for('user.team') %} class="active"{% endif %}><a href="{{ url_for('user.team') }}"><span
-                            class="glyphicon glyphicon-king"></span> Team</a></li>
+                            class="glyphicon glyphicon-king"></span> 我的团队</a></li>
                 {% endif %}
                 </ul>
+                {% if 1 == 2 %}
                 <form class="navbar-form navbar-left" role="search" action="{{ url_for('search') }}">
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Search for..." speech x-webkit-speech
@@ -139,8 +140,9 @@
                         </span>
                     </div>
                 </form>
+                {% endif %}
                 <ul class="nav navbar-nav navbar-right">
-                {% if g.user != None and g.user.is_authenticated %}
+                {% if 1==2 and g.user != None and g.user.is_authenticated %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                             <span class="glyphicon glyphicon-envelope"></span> 留言反馈
@@ -179,15 +181,19 @@
                                 class="glyphicon glyphicon-user"></span> {{ g.user.id | user_name_level }}<span
                                 class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ url_for('blog.add') }}"><span class="glyphicon glyphicon-edit"></span>
-                                Add Blog</a></li>
-                            <li><a href="{{ url_for('user.profile') }}"><span class="glyphicon glyphicon-folder-open"></span>
-                                Profile</a></li>
-                            <li><a href="{{ url_for('user.setting') }}"><span class="glyphicon glyphicon-cog"></span>
-                                Setting</a></li>
+                            <li>
+                                <a href="{{ url_for('user.profile') }}">
+                                    <span class="glyphicon glyphicon-folder-open"></span> 用户中心
+                                </a>
+                            </li>
+{#                            <li><a href="{{ url_for('user.setting') }}"><span class="glyphicon glyphicon-cog"></span>#}
+{#                                Setting</a></li>#}
                             <li role="separator" class="divider"></li>
-                            <li><a href="{{ url_for('auth.logout') }}"><span class="glyphicon glyphicon-log-out"></span>
-                                Logout</a></li>
+                            <li>
+                                <a href="{{ url_for('auth.logout') }}">
+                                    <span class="glyphicon glyphicon-log-out"></span> 退出登录
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 {% else %}

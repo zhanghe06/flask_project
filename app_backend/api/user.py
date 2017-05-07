@@ -7,12 +7,14 @@
 @file: user.py
 @time: 17-4-21 下午10:42
 """
-
+from datetime import datetime
 
 from app_backend.models import User
 from app_backend.models import UserProfile
 from app_backend.models import UserBank
 from app_backend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
+
+from app_common.maps.status_lock import *
 
 from app_common.settings import PER_PAGE_BACKEND
 
@@ -113,3 +115,34 @@ def get_user_detail_rows(page=1, per_page=10, *args, **kwargs):
         filter_by(**kwargs). \
         paginate(page, PER_PAGE_BACKEND, False)
     return rows
+
+
+def lock(user_id):
+    """
+    锁定用户
+    :param user_id:
+    :return: Number of affected rows (Example: 0/1)
+    """
+    current_time = datetime.utcnow()
+    user_data = {
+        'status_lock': STATUS_LOCK_OK,
+        'lock_time': current_time,
+        'update_time': current_time
+    }
+    result = edit_user(user_id, user_data)
+    return result
+
+
+def unlock(user_id):
+    """
+    解锁用户
+    :param user_id:
+    :return: Number of affected rows (Example: 0/1)
+    """
+    current_time = datetime.utcnow()
+    user_data = {
+        'status_lock': STATUS_LOCK_NO,
+        'update_time': current_time
+    }
+    result = edit_user(user_id, user_data)
+    return result

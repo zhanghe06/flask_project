@@ -16,11 +16,13 @@ from flask import url_for
 from flask_login import current_user, login_required
 import flask_excel as excel
 
+from app_common.settings import PER_PAGE_FRONTEND
 from app_frontend import app
-from app_frontend.models import User, UserProfile
+from app_frontend.models import User, UserProfile, Order
 from app_frontend.api.order import get_order_rows, get_order_row
-from app_common.maps.status_pay import STATUS_PAY_DICT
-from app_common.maps.status_rec import STATUS_REC_DICT
+from app_common.maps.status_pay import *
+from app_common.maps.status_rec import *
+from app_common.maps.status_delete import *
 
 from flask import Blueprint
 
@@ -36,17 +38,26 @@ def lists_put(page=1):
     投资订单列表
     """
     uid = current_user.id
-    condition = {
-        'apply_put_uid': uid,
-        'status_rec': 0,        # 默认未处理
-        'status_delete': 0
-    }
+
     # 支付状态
     status_pay = request.args.get('status_pay', 0, type=int)
-    if status_pay in STATUS_PAY_DICT:
-        condition['status_pay'] = status_pay
 
-    pagination = get_order_rows(page, **condition)
+    search_condition_order = [
+        Order.apply_put_uid == uid,
+        Order.status_rec == STATUS_REC_HOLDING,  # 默认未处理
+        Order.status_delete == STATUS_DEL_NO,  # 默认未删除
+    ]
+
+    if status_pay in STATUS_PAY_DICT:
+        search_condition_order.append(Order.status_pay == status_pay)
+
+    pagination = Order.query. \
+        filter(*search_condition_order). \
+        outerjoin(UserProfile, Order.apply_get_uid == UserProfile.user_id). \
+        add_entity(UserProfile). \
+        order_by(Order.id.desc()). \
+        paginate(page, PER_PAGE_FRONTEND, False)
+
     return render_template('order/put_list.html', title='order_put_list', pagination=pagination)
 
 
@@ -58,17 +69,26 @@ def lists_get(page=1):
     提现订单列表
     """
     uid = current_user.id
-    condition = {
-        'apply_get_uid': uid,
-        'status_rec': 0,        # 默认未处理
-        'status_delete': 0
-    }
+
     # 收款状态
     status_rec = request.args.get('status_rec', 0, type=int)
-    if status_rec in STATUS_REC_DICT:
-        condition['status_rec'] = status_rec
 
-    pagination = get_order_rows(page, **condition)
+    search_condition_order = [
+        Order.apply_get_uid == uid,
+        Order.status_rec == STATUS_REC_HOLDING,  # 默认未处理
+        Order.status_delete == STATUS_DEL_NO,  # 默认未删除
+    ]
+
+    if status_rec in STATUS_REC_DICT:
+        search_condition_order.append(Order.status_rec == status_rec)
+
+    pagination = Order.query. \
+        filter(*search_condition_order). \
+        outerjoin(UserProfile, Order.apply_put_uid == UserProfile.user_id). \
+        add_entity(UserProfile). \
+        order_by(Order.id.desc()). \
+        paginate(page, PER_PAGE_FRONTEND, False)
+
     return render_template('order/get_list.html', title='order_get_list', pagination=pagination)
 
 

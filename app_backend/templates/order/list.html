@@ -17,43 +17,36 @@
     <form class="form-inline">
         <div class="form-group{% if form.order_id.errors %} has-error{% endif %}">
             {{ form.order_id.label(class="sr-only") }}
-            {{ form.order_id(class="form-control", placeholder="Order Id") }}
+            {{ form.order_id(class="form-control", placeholder="订单ID") }}
             {% for error in form.order_id.errors %}
                 <span class="help-block">{{ error }}</span>
             {% endfor %}
         </div>
         <div class="form-group{% if form.apply_put_id.errors %} has-error{% endif %}">
             {{ form.apply_put_id.label(class="sr-only") }}
-            {{ form.apply_put_id(class="form-control", placeholder="Apply Put Id") }}
+            {{ form.apply_put_id(class="form-control", placeholder="申请投资ID") }}
             {% for error in form.apply_put_id.errors %}
                 <span class="help-block">{{ error }}</span>
             {% endfor %}
         </div>
         <div class="form-group{% if form.apply_get_id.errors %} has-error{% endif %}">
             {{ form.apply_get_id.label(class="sr-only") }}
-            {{ form.apply_get_id(class="form-control", placeholder="Apply Get Id") }}
+            {{ form.apply_get_id(class="form-control", placeholder="申请提现ID") }}
             {% for error in form.apply_get_id.errors %}
                 <span class="help-block">{{ error }}</span>
             {% endfor %}
         </div>
         <div class="form-group{% if form.apply_put_uid.errors %} has-error{% endif %}">
             {{ form.apply_put_uid.label(class="sr-only") }}
-            {{ form.apply_put_uid(class="form-control", placeholder="Apply Put Uid") }}
+            {{ form.apply_put_uid(class="form-control", placeholder="申请投资UID") }}
             {% for error in form.apply_put_uid.errors %}
                 <span class="help-block">{{ error }}</span>
             {% endfor %}
         </div>
         <div class="form-group{% if form.apply_get_uid.errors %} has-error{% endif %}">
             {{ form.apply_get_uid.label(class="sr-only") }}
-            {{ form.apply_get_uid(class="form-control", placeholder="Apply Get Uid") }}
+            {{ form.apply_get_uid(class="form-control", placeholder="申请提现UID") }}
             {% for error in form.apply_get_uid.errors %}
-                <span class="help-block">{{ error }}</span>
-            {% endfor %}
-        </div>
-        <div class="form-group{% if form.order_id.errors %} has-error{% endif %}">
-            {{ form.order_id.label(class="sr-only") }}
-            {{ form.order_id(class="form-control", placeholder="Order Id") }}
-            {% for error in form.order_id.errors %}
                 <span class="help-block">{{ error }}</span>
             {% endfor %}
         </div>
@@ -104,16 +97,16 @@
         <table class="table table-hover">
             <thead>
             <tr>
-                <th>id</th>
-                <th>apply_put_id</th>
-                <th>apply_get_id</th>
-                <th>apply_put_uid</th>
-                <th>apply_get_uid</th>
-                <th>status_audit</th>
-                <th>status_pay</th>
-                <th>status_rec</th>
-                <th>create_time</th>
-                <th>action</th>
+                <th>订单ID</th>
+                <th>投资ID</th>
+                <th>提现ID</th>
+                <th>投资UID</th>
+                <th>提现UID</th>
+                <th>认证状态</th>
+                <th>支付状态</th>
+                <th>确认状态</th>
+                <th>匹配时间</th>
+                <th>操作</th>
             </tr>
             </thead>
             <tbody>

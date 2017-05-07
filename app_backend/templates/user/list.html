@@ -68,18 +68,18 @@
         <table class="table table-hover">
             <thead>
             <tr>
-                <th>id</th>
-                <th>nickname</th>
-                <th>type_level</th>
-                <th>phone</th>
-                <th>wallet</th>
-                <th>bit_coin</th>
-                <th>score</th>
-                <th>bonus</th>
-                <th>status_active</th>
-                <th>status_lock</th>
-                <th>create_time</th>
-                <th>action</th>
+                <th>用户ID</th>
+                <th>用户名称</th>
+                <th>等级</th>
+                <th>手机号码</th>
+                <th>钱包余额</th>
+                <th>数字货币</th>
+                <th>积分</th>
+                <th>奖金</th>
+                <th>激活状态</th>
+                <th>锁定状态</th>
+                <th>创建时间</th>
+                <th>操作</th>
             </tr>
             </thead>
             <tbody>
@@ -95,7 +95,7 @@
                 <td>{{ bonus.amount | default('0') }}</td>
                 <td>{{ user.status_active | status_active }}</td>
                 <td>{{ user.status_lock | status_lock }}</td>
-                <td>{{ user.create_time }}</td>
+                <td>{{ moment(user.create_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
                 <td>
                     <a href="{{ url_for('user.profile', user_id=user.id, next=request.path) }}" rel="tooltip" title="编辑"><span class="glyphicon glyphicon-pencil"></span></a>
                     {% if user.status_lock == STATUS_LOCK_OK | int %}

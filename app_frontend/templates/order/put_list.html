@@ -9,20 +9,24 @@
     <div class="container">
     <!-- header -->
     <nav class="sub-header row container-fluid">
-        <h2>Order Put List!</h2>
+        <ol class="breadcrumb">
+            <li><a href="/">首页</a></li>
+            <li class="active">投资中心</li>
+            <li class="active">投资订单</li>
+        </ol>
         <div class="btn-group pull-right" role="group" aria-label="...">
             {% if request.query_string == 'status_pay=2' %}
-            <a type="button" class="btn btn-default" href="{{ url_for('order.lists_put') }}">Holding</a>
-            <a type="button" class="btn btn-default" href="{{ url_for('order.lists_put', status_pay=1) }}">Success</a>
-            <a type="button" class="btn btn-default active">Failure</a>
+            <a type="button" class="btn btn-default" href="{{ url_for('order.lists_put') }}">等待支付</a>
+            <a type="button" class="btn btn-default" href="{{ url_for('order.lists_put', status_pay=1) }}">支付成功</a>
+            <a type="button" class="btn btn-default active">支付失败</a>
             {% elif request.query_string == 'status_pay=1' %}
-            <a type="button" class="btn btn-default" href="{{ url_for('order.lists_put') }}">Holding</a>
-            <a type="button" class="btn btn-default active">Success</a>
-            <a type="button" class="btn btn-default" href="{{ url_for('order.lists_put', status_pay=2) }}">Failure</a>
+            <a type="button" class="btn btn-default" href="{{ url_for('order.lists_put') }}">等待支付</a>
+            <a type="button" class="btn btn-default active">支付成功</a>
+            <a type="button" class="btn btn-default" href="{{ url_for('order.lists_put', status_pay=2) }}">支付失败</a>
             {% else %}
-            <a type="button" class="btn btn-default active">Holding</a>
-            <a type="button" class="btn btn-default" href="{{ url_for('order.lists_put', status_pay=1) }}">Success</a>
-            <a type="button" class="btn btn-default" href="{{ url_for('order.lists_put', status_pay=2) }}">Failure</a>
+            <a type="button" class="btn btn-default active">等待支付</a>
+            <a type="button" class="btn btn-default" href="{{ url_for('order.lists_put', status_pay=1) }}">支付成功</a>
+            <a type="button" class="btn btn-default" href="{{ url_for('order.lists_put', status_pay=2) }}">支付失败</a>
             {% endif %}
         </div>
     </nav>
@@ -34,26 +38,24 @@
         <table class="table table-hover">
             <thead>
             <tr>
-                <th>id</th>
-                <th>apply_put_id</th>
-                <th>apply_get_id</th>
-                <th>apply_put_uid</th>
-                <th>apply_get_uid</th>
-                <th>status_audit</th>
-                <th>status_pay</th>
-                <th>status_rec</th>
-                <th>create_time</th>
-                <th>action</th>
+                <th>订单ID</th>
+                <th>投资ID</th>
+                <th>提现ID</th>
+                <th>提现用户</th>
+                <th>认证状态</th>
+                <th>支付状态</th>
+                <th>确认状态</th>
+                <th>匹配时间</th>
+                <th>操作</th>
             </tr>
             </thead>
             <tbody>
-            {% for order in pagination.items %}
+            {% for order, user_profile in pagination.items %}
             <tr class="text-muted">
                 <td>{{ order.id }}</td>
                 <td>{{ order.apply_put_id }}</td>
                 <td>{{ order.apply_get_id }}</td>
-                <td>{{ order.apply_put_uid }}</td>
-                <td>{{ order.apply_get_uid }}</td>
+                <td>{{ user_profile.nickname }} [{{ order.apply_get_uid }}]</td>
                 <td>{{ order.status_audit | status_audit }}</td>
                 <td>{{ order.status_pay | status_pay }}</td>
                 <td>{{ order.status_rec | status_rec }}</td>

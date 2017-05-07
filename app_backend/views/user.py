@@ -329,7 +329,6 @@ def setting():
             form.birthday.data = user_info.birthday
             form.create_time.data = user_info.create_time
             form.update_time.data = user_info.update_time
-            form.login_ip.data = user_info.last_ip
     if request.method == 'POST':
         if form.validate_on_submit():
             # todo 判断邮箱是否重复
