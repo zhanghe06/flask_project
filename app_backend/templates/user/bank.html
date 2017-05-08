@@ -15,9 +15,9 @@
         {{ form.user_id() }}
         {# 标签导航 #}
         <ul class="nav nav-tabs">  {# 填充整个导航条：nav-justified #}
-            <li role="presentation"><a href="{{ url_for('user.auth', user_id=form.user_id.data) }}">Auth</a></li>
-            <li role="presentation" class="active"><a href="{{ url_for('user.bank', user_id=form.user_id.data) }}">Bank</a></li>
-            <li role="presentation"><a href="{{ url_for('user.profile', user_id=form.user_id.data) }}">Profile</a></li>
+            <li role="presentation"><a href="{{ url_for('user.auth', user_id=form.user_id.data) }}">登录信息</a></li>
+            <li role="presentation" class="active"><a href="{{ url_for('user.bank', user_id=form.user_id.data) }}">银行信息</a></li>
+            <li role="presentation"><a href="{{ url_for('user.profile', user_id=form.user_id.data) }}">基本信息</a></li>
         </ul>
         <p></p>
         <div class="form-group{% if form.account_name.errors %} has-error{% endif %}">

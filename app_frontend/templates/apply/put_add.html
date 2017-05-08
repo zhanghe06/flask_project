@@ -33,66 +33,33 @@
         <!-- 用户概要 -->
         <div class="col-lg-4 col-md-12">
             <!-- 推广链接 -->
-            <section id="user_profile">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <strong class="panel-title">User Profile
-                            <span class="glyphicon glyphicon-list-alt pull-right"></span>
-                        </strong>
-                    </div>
-                    <div class="panel-body">
-
-                        <label for="invite_link">Invite Link</label>
-                        <div class="input-group">
-                            <!-- Target -->
-                            <input class="form-control input-copy" rel="tooltip" title="invite link" id="invite_link" value="{{ url_for('index', _external=True, i=g.user.id | user_invite_link) }}">
-                            <!-- Trigger -->
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="button" rel="tooltip" title="Copy to clipboard" data-clipboard-action="copy" data-clipboard-target="#invite_link">
-                                    <span class="glyphicon glyphicon-duplicate"></span>
-                                </button>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            {% include('user/_invite_link.html') %}
             <!-- 账户信息 -->
-            <section id="first_options">
-                <div class="panel panel-default">
-                <div class="panel-heading">
-                    <strong class="panel-title">账户信息
-                    <span class="glyphicon glyphicon-bookmark pull-right"></span>
-                    </strong>
-                </div>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>账户名称</th>
-                            <th>当前余额</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><a href="#">钱包余额</a></td>
-                            <td>{{ g.user.id | user_wallet }}</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">数字货币</a></td>
-                            <td>{{ g.user.id | user_bit_coin }}</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">积分余额</a></td>
-                            <td>{{ g.user.id | user_score }}</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">奖金余额</a></td>
-                            <td>{{ g.user.id | user_bonus }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                </div>
-            </section>
+            {% include('user/_account_info.html') %}
         </div>
     </div>
     </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='plugin/clipboard.js-1.6.1/dist/clipboard.min.js') }}"></script>
+
+<script>
+    //推广链接复制
+    var clipboard = new Clipboard('.btn');
+
+    clipboard.on('success', function(e) {
+        // console.info('Action:', e.action);
+        // console.info('Text:', e.text);
+        // console.info('Trigger:', e.trigger);
+        e.clearSelection();
+        alert('复制成功，粘贴使用推广链接');
+    });
+
+    clipboard.on('error', function(e) {
+        // console.error('Action:', e.action);
+        // console.error('Trigger:', e.trigger);
+        alert('操作失败，重新复制推广链接');
+    });
+</script>
 {% endblock %}

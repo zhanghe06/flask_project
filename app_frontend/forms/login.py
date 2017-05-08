@@ -21,9 +21,9 @@ class LoginForm(Form):
     """
     账号登陆表单
     """
-    account = StringField('Account', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    remember = BooleanField('Remember Me', default=False)
+    account = StringField(u'登陆账号', validators=[DataRequired()])
+    password = PasswordField(u'登陆密码', validators=[DataRequired()])
+    remember = BooleanField(u'记住登录状态', default=False)
 
 
 class LoginPhoneForm(Form):
@@ -34,16 +34,16 @@ class LoginPhoneForm(Form):
     for m, n in enumerate(area_code_list):
         area_code_choices.append((m, n))
 
-    area_id = SelectAreaCode('Area Id', default='0', choices=area_code_choices, validators=[DataRequired()])
-    phone = StringField('Phone', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    remember = BooleanField('Remember Me', default=False)
+    area_id = SelectAreaCode(u'手机区号', default='0', choices=area_code_choices, validators=[DataRequired()])
+    phone = StringField(u'登录手机', validators=[DataRequired()])
+    password = PasswordField(u'登陆密码', validators=[DataRequired()])
+    remember = BooleanField(u'记住登录状态', default=False)
 
 
 class LoginEmailForm(Form):
     """
     邮箱登陆表单
     """
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    remember = BooleanField('Remember Me', default=False)
+    email = StringField(u'登陆邮箱', validators=[DataRequired(), Email()])
+    password = PasswordField(u'登陆密码', validators=[DataRequired()])
+    remember = BooleanField(u'记住登录状态', default=False)

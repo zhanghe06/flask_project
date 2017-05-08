@@ -56,10 +56,10 @@ def index():
             }
             user_auth_info = get_user_auth_row(**condition)
             if user_auth_info is None:
-                flash(u'%s, You were logged failed' % form.account.data, 'warning')
+                flash(u'%s, 登陆失败，请检查内容后重新登陆' % form.account.data, 'warning')
                 return render_template('auth/index.html', title='login', form=form)
             if user_auth_info.status_verified == 0:
-                flash(u'%s, Please verify account' % form.account.data, 'warning')
+                flash(u'%s, 登陆账号尚未验证，请先验证账号' % form.account.data, 'warning')
                 return render_template('auth/index.html', title='login', form=form)
             # session['logged_in'] = True
 
@@ -73,7 +73,7 @@ def index():
             # 用 login_user 函数来登入他们
 
             login_user(get_user_row_by_id(user_auth_info.user_id), remember=form.remember)
-            flash(u'%s, You were logged in' % form.account.data, 'success')
+            flash(u'%s, 恭喜，您已成功登陆' % form.account.data, 'success')
             return redirect(request.args.get('next') or url_for('index'))
         flash(form.errors, 'warning')  # 调试打开
     return render_template('auth/index.html', title='login', form=form)
@@ -104,10 +104,10 @@ def phone():
             }
             user_auth_info = get_user_auth_row(**condition)
             if not user_auth_info:
-                flash(u'%s, You were logged failed' % form.phone.data, 'warning')
+                flash(u'%s, 登陆失败，请检查内容后重新登陆' % form.phone.data, 'warning')
                 return render_template('auth/phone.html', title='login', form=form)
             if user_auth_info.status_verified == 0:
-                flash(u'%s, Please verify phone' % form.phone.data, 'warning')
+                flash(u'%s, 登陆手机尚未验证，请先验证手机' % form.phone.data, 'warning')
                 return render_template('auth/phone.html', title='login', form=form)
             # session['logged_in'] = True
 
@@ -120,7 +120,7 @@ def phone():
 
             # 用 login_user 函数来登入他们
             login_user(get_user_row_by_id(user_auth_info.user_id), remember=form.remember)
-            flash(u'%s, You were logged in' % form.phone.data, 'success')
+            flash(u'%s, 恭喜，您已成功登陆' % form.phone.data, 'success')
             return redirect(request.args.get('next') or url_for('index'))
         flash(form.errors, 'warning')  # 调试打开
     return render_template('auth/phone.html', title='login', form=form)
@@ -148,10 +148,10 @@ def email():
             }
             user_auth_info = get_user_auth_row(**condition)
             if user_auth_info is None:
-                flash(u'%s, You were logged failed' % form.email.data, 'warning')
+                flash(u'%s, 登陆失败，请检查内容后重新登陆' % form.email.data, 'warning')
                 return render_template('auth/email.html', title='login', form=form)
             if user_auth_info.status_verified == 0:
-                flash(u'%s, Please verify email address in mailbox' % form.email.data, 'warning')
+                flash(u'%s, 登陆邮箱尚未验证，请先验证邮箱' % form.email.data, 'warning')
                 return render_template('auth/email.html', title='login', form=form)
             # session['logged_in'] = True
 
@@ -164,7 +164,7 @@ def email():
             # 用 login_user 函数来登入他们
 
             login_user(get_user_row_by_id(user_auth_info.user_id), remember=form.remember)
-            flash(u'%s, You were logged in' % form.email.data, 'success')
+            flash(u'%s, 恭喜，您已成功登陆' % form.email.data, 'success')
             return redirect(request.args.get('next') or url_for('index'))
         flash(form.errors, 'warning')  # 调试打开
     return render_template('auth/email.html', title='login', form=form)
@@ -186,7 +186,7 @@ def logout():
     session.pop('qq_token', None)
     session.pop('weibo_token', None)
     session.pop('github_token', None)
-    flash(u'You were logged out', 'info')
+    flash(u'您已成功退出登陆', 'info')
     return redirect(url_for('index'))
 
 
@@ -364,12 +364,12 @@ def admin_login():
     }
     user_auth_info = get_user_auth_row(**condition)
     if user_auth_info is None:
-        flash(u'%s, You were logged failed' % user_auth_info.auth_key, 'warning')
+        flash(u'%s, 登陆失败，请检查内容后重新登陆' % user_auth_info.auth_key, 'warning')
         return redirect(request.args.get('next') or url_for('index'))
     if user_auth_info.status_verified == 0:
-        flash(u'%s, Please verify account' % user_auth_info.auth_key, 'warning')
+        flash(u'%s, 登陆账号尚未验证，请先验证账号' % user_auth_info.auth_key, 'warning')
         return redirect(request.args.get('next') or url_for('index'))
 
     login_user(get_user_row_by_id(uid))
-    flash(u'%s, You were logged in' % user_auth_info.auth_key, 'success')
+    flash(u'%s, 恭喜，您已成功登陆' % user_auth_info.auth_key, 'success')
     return redirect(request.args.get('next') or url_for('index'))

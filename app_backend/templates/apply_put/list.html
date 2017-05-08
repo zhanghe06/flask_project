@@ -17,14 +17,14 @@
     <form class="form-inline">
         <div class="form-group{% if form.apply_put_id.errors %} has-error{% endif %}">
             {{ form.apply_put_id.label(class="sr-only") }}
-            {{ form.apply_put_id(class="form-control", placeholder="Apply Put Id") }}
+            {{ form.apply_put_id(class="form-control", placeholder="投资申请ID") }}
             {% for error in form.apply_put_id.errors %}
                 <span class="help-block">{{ error }}</span>
             {% endfor %}
         </div>
         <div class="form-group{% if form.user_id.errors %} has-error{% endif %}">
             {{ form.user_id.label(class="sr-only") }}
-            {{ form.user_id(class="form-control", placeholder="User Id") }}
+            {{ form.user_id(class="form-control", placeholder="用户ID") }}
             {% for error in form.user_id.errors %}
                 <span class="help-block">{{ error }}</span>
             {% endfor %}

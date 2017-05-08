@@ -16,9 +16,9 @@
         {{ form.user_id() }}
         {# 标签导航 #}
         <ul class="nav nav-tabs">  {# 填充整个导航条：nav-justified #}
-            <li role="presentation" class="active"><a href="{{ url_for('user.auth', user_id=form.user_id.data) }}">Auth</a></li>
-            <li role="presentation"><a href="{{ url_for('user.bank', user_id=form.user_id.data) }}">Bank</a></li>
-            <li role="presentation"><a href="{{ url_for('user.profile', user_id=form.user_id.data) }}">Profile</a></li>
+            <li role="presentation" class="active"><a href="{{ url_for('user.auth', user_id=form.user_id.data) }}">登录信息</a></li>
+            <li role="presentation"><a href="{{ url_for('user.bank', user_id=form.user_id.data) }}">银行信息</a></li>
+            <li role="presentation"><a href="{{ url_for('user.profile', user_id=form.user_id.data) }}">基本信息</a></li>
         </ul>
         <p></p>
 
@@ -34,7 +34,7 @@
         <div class="form-group{% if form.auth_secret.errors %} has-error{% endif %}">
             {{ form.auth_secret.label(class="col-sm-2 control-label") }}
             <div class="col-sm-10">
-                {{ form.auth_secret(class="form-control", placeholder="Auth Secret") }}
+                {{ form.auth_secret(class="form-control", placeholder="登录密码[6-20位]") }}
                 {% for error in form.auth_secret.errors %}
                     <span class="help-block">{{ error }}</span>
                 {% endfor %}

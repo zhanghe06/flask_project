@@ -1,0 +1,24 @@
+
+<section id="user_profile">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong class="panel-title">推广链接
+                <span class="glyphicon glyphicon-list-alt pull-right"></span>
+            </strong>
+        </div>
+        <div class="panel-body">
+
+            <label for="invite_link">复制链接</label>
+            <div class="input-group">
+                <!-- Target -->
+                <input class="form-control input-copy" rel="tooltip" title="推广链接地址" id="invite_link" value="{{ url_for('index', _external=True, i=g.user.id | user_invite_link) }}">
+                <!-- Trigger -->
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" rel="tooltip" title="点击复制" data-clipboard-action="copy" data-clipboard-target="#invite_link">
+                        <span class="glyphicon glyphicon-duplicate"></span>
+                    </button>
+                </span>
+            </div>
+        </div>
+    </div>
+</section>

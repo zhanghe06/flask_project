@@ -1,0 +1,32 @@
+
+<section id="first_options">
+    <div class="panel panel-default">
+    <div class="panel-heading">
+        <strong class="panel-title">账户信息
+        <span class="glyphicon glyphicon-bookmark pull-right"></span>
+        </strong>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>账户名称</th>
+                <th>当前余额</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><a href="#">钱包余额</a></td>
+                <td>{{ g.user.id | user_wallet }}</td>
+            </tr>
+            <tr>
+                <td><a href="#">积分余额</a></td>
+                <td>{{ g.user.id | user_score }}</td>
+            </tr>
+            <tr>
+                <td><a href="#">奖金余额</a></td>
+                <td>{{ g.user.id | user_bonus }}</td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+</section>

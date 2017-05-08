@@ -35,20 +35,20 @@ class UserProfileForm(Form):
     """
     用户基本信息表单
     """
-    user_pid = StringField('User Pid', validators=[DataRequired()])
-    nickname = StringField('Nick Name')
-    avatar_url = StringField('Avatar Url')
-    email = StringField('Email')
+    user_pid = StringField(u'推荐人ID', validators=[DataRequired()])
+    nickname = StringField(u'用户名称')
+    avatar_url = StringField(u'用户头像')
+    email = StringField(u'电子邮箱')
     area_code_choices = []
     for m, n in enumerate(area_code_list):
         area_code_choices.append((m, n))
-    area_id = SelectAreaCode('Area Id', default='0', choices=area_code_choices, validators=[DataRequired()])
+    area_id = SelectAreaCode(u'手机区号', default='0', choices=area_code_choices, validators=[DataRequired()])
     area_code = StringField('Area Code')
-    phone = StringField('Phone')
-    birthday = DateField('Birthday')
-    id_card = StringField('ID Card')
-    create_time = DateTimeField('Create Time')
-    update_time = DateTimeField('Update Time')
+    phone = StringField(u'手机号码')
+    birthday = DateField(u'出生日期')
+    id_card = StringField(u'身份证号')
+    create_time = DateTimeField(u'创建时间')
+    update_time = DateTimeField(u'修改时间')
 
 
 class UserAuthForm(Form):
@@ -56,26 +56,26 @@ class UserAuthForm(Form):
     用户登录认证信息表单
     """
     id = HiddenField('Id', validators=[DataRequired()])
-    type_auth = StringField('Auth Type')
-    auth_key = StringField('Auth Key')
-    auth_secret = StringField('Auth Secret')
-    status_verified = CheckBoxBS('Status Verified')
-    create_time = DateTimeField('Create Time')
-    update_time = DateTimeField('Update Time')
+    type_auth = StringField(u'账号类型')
+    auth_key = StringField(u'登录账号')
+    auth_secret = StringField(u'登录密码')
+    status_verified = CheckBoxBS(u'认证状态')
+    create_time = DateTimeField(u'创建时间')
+    update_time = DateTimeField(u'更新时间')
 
 
 class UserBankForm(Form):
     """
     用户基本银行信息表单
     """
-    account_name = StringField('Account Name')
-    bank_name = StringField('Bank Name')
-    bank_address = StringField('Bank Address')
-    bank_account = StringField('Bank Account')
-    status_verified = CheckBoxBS('Status Verified')
-    status_delete = StringField('Status Delete')
-    create_time = DateTimeField('Create Time')
-    update_time = DateTimeField('Update Time')
+    account_name = StringField(u'账户姓名')
+    bank_name = StringField(u'银行名称')
+    bank_address = StringField(u'支行名称')
+    bank_account = StringField(u'银行卡号')
+    status_verified = CheckBoxBS(u'认证状态')
+    status_delete = StringField(u'删除状态')
+    create_time = DateTimeField(u'创建时间')
+    update_time = DateTimeField(u'更新时间')
 
 
 class EditPassword(Form):

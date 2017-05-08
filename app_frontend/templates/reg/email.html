@@ -2,24 +2,24 @@
 
 {% block content %}
     <div class="container">
-    <h1>Sign Up</h1>
+    <h2>邮箱注册</h2>
 
     {# 表单 #}
     <form class="form-horizontal" method="post" action="{{ url_for('reg.email') }}">
         {{ form.csrf_token }}
         {# 标签导航 #}
-        <div class="form-group">
-            <ul class="nav nav-tabs">  {# 填充整个导航条：nav-justified #}
-                <li role="presentation"><a href="{{ url_for('reg.index') }}">Index</a></li>
-                <li role="presentation"><a href="{{ url_for('reg.phone') }}">Phone</a></li>
-                <li role="presentation" class="active"><a href="{{ url_for('reg.email') }}">Email</a></li>
-            </ul>
-        </div>
+
+        <ul class="nav nav-tabs">  {# 填充整个导航条：nav-justified #}
+            <li role="presentation"><a href="{{ url_for('reg.index') }}">账号注册</a></li>
+            <li role="presentation"><a href="{{ url_for('reg.phone') }}">手机注册</a></li>
+            <li role="presentation" class="active"><a href="{{ url_for('reg.email') }}">邮箱注册</a></li>
+        </ul>
+        <div class="form-group"></div>
 
         <div class="form-group{% if form.email.errors %} has-error{% endif %}">
             {{ form.email.label(class="col-sm-2 control-label") }}
             <div class="col-sm-10">
-                {{ form.email(class="form-control", placeholder="Email") }}
+                {{ form.email(class="form-control", placeholder="登陆邮箱") }}
                 {% for error in form.email.errors %}
                     <span class="help-block">{{ error }}</span>
                 {% endfor %}
@@ -28,7 +28,7 @@
         <div class="form-group{% if form.password.errors %} has-error{% endif %}">
             {{ form.password.label(class="col-sm-2 control-label") }}
             <div class="col-sm-10">
-                {{ form.password(class="form-control", placeholder="Password") }}
+                {{ form.password(class="form-control", placeholder="登陆密码[6-20位]") }}
                 {% for error in form.password.errors %}
                     <span class="help-block">{{ error }}</span>
                 {% endfor %}
@@ -37,7 +37,7 @@
         <div class="form-group{% if form.confirm.errors %} has-error{% endif %}">
             {{ form.confirm.label(class="col-sm-2 control-label") }}
             <div class="col-sm-10">
-                {{ form.confirm(class="form-control", placeholder="Password") }}
+                {{ form.confirm(class="form-control", placeholder="登陆密码[6-20位]") }}
                 {% for error in form.confirm.errors %}
                     <span class="help-block">{{ error }}</span>
                 {% endfor %}
@@ -47,7 +47,7 @@
             <div class="col-sm-offset-2 col-sm-10">
                 <div class="checkbox">
                     <label>
-                        {{ form.accept_agreement }} I accept the <a href="#" data-toggle="modal" data-target="#agreement">agreement</a>
+                        {{ form.accept_agreement }} 我已阅读并同意 <a href="#" data-toggle="modal" data-target="#agreement">《注册协议》</a>
                     </label>
                     {% for error in form.accept_agreement.errors %}
                     <span class="help-block">{{ error }}</span>
@@ -57,54 +57,15 @@
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-default btn-load" data-loading-text="Sign up...">Sign up</button>
+                <button type="submit" class="btn btn-default btn-load" data-loading-text="注册中">注册</button>
             </div>
         </div>
     </form>
     </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="agreement" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Agreement</h4>
-                </div>
-                <div class="modal-body">
-                    <h4>Tooltips in a modal</h4>
-                    <p><a href="#" class="tooltip-test" title="" data-original-title="Tooltip">This link</a> and <a
-                            href="#" class="tooltip-test" title="" data-original-title="Tooltip">that link</a> should
-                        have tooltips on hover.</p>
-                    <hr>
-                    <h4>Overflowing text to show scroll behavior</h4>
-                    <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
-                        egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                    <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel
-                        augue laoreet rutrum faucibus dolor auctor.</p>
-                    <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque
-                        nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                    <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
-                        egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                    <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel
-                        augue laoreet rutrum faucibus dolor auctor.</p>
-                    <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque
-                        nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                    <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in,
-                        egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                    <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel
-                        augue laoreet rutrum faucibus dolor auctor.</p>
-                    <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque
-                        nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">I Known</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- 注册协议 -->
+    {% include('reg/_agreement.html') %}
+
 {% endblock %}
 
 {% block extra_js %}

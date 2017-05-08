@@ -138,18 +138,20 @@ class RegForm(Form):
     """
     注册表单
     """
-    account = StringField('Account', validators=[DataRequired(), RegAccountRepeatValidate()])
-    password = PasswordField('New Password', validators=[
-        DataRequired(),
-        Length(min=6, max=20),
-        EqualTo('confirm', message='Passwords must match')
+    account = StringField(u'登陆账号', validators=[DataRequired(), RegAccountRepeatValidate()])
+    password = PasswordField(u'登录密码', validators=[
+        DataRequired(message=u'密码不能为空'),
+        Length(min=6, max=20, message=u'密码长度不符'),
+        EqualTo('confirm', message=u'两次输入的密码不一致')
     ])
-    confirm = PasswordField('Confirmation Password', validators=[
-        DataRequired(),
-        Length(min=6, max=20)
+    confirm = PasswordField(u'确认密码', validators=[
+        DataRequired(message=u'密码不能为空'),
+        Length(min=6, max=20, message=u'密码长度不符'),
     ])
     user_pid = HiddenField('User Pid', default='0')
-    accept_agreement = BooleanField('I accept the agreement', validators=[DataRequired()], default=False)
+    accept_agreement = BooleanField('I accept the agreement', validators=[
+        DataRequired(message=u'请阅读并同意注册协议')
+    ], default=True)
 
 
 class RegPhoneForm(Form):
@@ -160,43 +162,50 @@ class RegPhoneForm(Form):
     for m, n in enumerate(area_code_list):
         area_code_choices.append((m, n))
 
-    area_id = SelectAreaCode('Area Id', default='0', choices=area_code_choices, validators=[DataRequired()])
-    phone = StringField('Phone', validators=[DataRequired(u'手机号码不能为空'), RegPhoneRepeatValidate()])
-    captcha = StringField('Captcha', validators=[
+    area_id = SelectAreaCode(u'手机区号', default='0', choices=area_code_choices, validators=[DataRequired()])
+    phone = StringField(u'手机号码', validators=[
+        DataRequired(u'手机号码不能为空'),
+        RegPhoneRepeatValidate(u'手机已被注册')
+    ])
+    captcha = StringField(u'图形验证码', validators=[
         DataRequired(),
         Length(min=4, max=4, message=u'图形验证码长度不符')
     ])
-    sms = StringField('Sms', validators=[
+    sms = StringField(u'短信验证码', validators=[
         DataRequired(u'短信验证码不能为空'),
         Length(min=6, max=6, message=u'短信验证码长度不符'),
         SmsCodeValidate()
     ])
-    password = PasswordField('New Password', validators=[
+    password = PasswordField(u'登陆密码', validators=[
         DataRequired(u'密码不能为空'),
         Length(min=6, max=20, message=u'密码长度不符'),
-        EqualTo('confirm', message=u'密码不一致')
+        EqualTo('confirm', message=u'两次输入的密码不一致')
     ])
-    confirm = PasswordField('Confirmation Password', validators=[
+    confirm = PasswordField(u'确认密码', validators=[
         DataRequired(u'密码不能为空'),
         Length(min=6, max=20, message=u'密码长度不符')
     ])
     user_pid = HiddenField('User Pid', default='0')
-    accept_agreement = BooleanField(u'我已阅读并同意注册协议', validators=[DataRequired(u'敬请同意注册协议')], default=True)
+    accept_agreement = BooleanField(u'我已阅读并同意注册协议', validators=[DataRequired(u'请阅读并同意注册协议')], default=True)
 
 
 class RegEmailForm(Form):
     """
     邮箱注册表单
     """
-    email = StringField('Email', validators=[DataRequired(), Email(), RegEmailRepeatValidate()])
-    password = PasswordField('New Password', validators=[
-        DataRequired(),
-        Length(min=6, max=20),
-        EqualTo('confirm', message='Passwords must match')
+    email = StringField(u'登陆邮箱', validators=[
+        DataRequired(u'登陆邮箱不能为空'),
+        Email(u'邮箱格式不对'),
+        RegEmailRepeatValidate(u'邮箱已被注册')
     ])
-    confirm = PasswordField('Confirmation Password', validators=[
-        DataRequired(),
-        Length(min=6, max=20)
+    password = PasswordField(u'登陆密码', validators=[
+        DataRequired(u'密码不能为空'),
+        Length(min=6, max=20, message=u'密码长度不符'),
+        EqualTo('confirm', message=u'两次输入的密码不一致')
+    ])
+    confirm = PasswordField(u'确认密码', validators=[
+        DataRequired(u'密码不能为空'),
+        Length(min=6, max=20, message=u'密码长度不符')
     ])
     user_pid = HiddenField('User Pid', default='0')
-    accept_agreement = BooleanField('I accept the agreement', validators=[DataRequired()], default=False)
+    accept_agreement = BooleanField(u'我已阅读并同意注册协议', validators=[DataRequired(u'请阅读并同意注册协议')], default=True)
