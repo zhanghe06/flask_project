@@ -1,85 +1,23 @@
 ## Flask 项目模拟
 
 
-依赖 redis
-
-部署模式下，同时依赖 nginx
-
 ### 项目演示步骤
+
+虚拟环境 部署方式
 ```
 $ cd flask_project                  # 进入项目目录
 $ virtualenv flask.env              # 新建虚拟环境
 $ source flask.env/bin/activate     # 进入虚拟环境
 $ pip install -r requirements.txt   # 安装环境依赖
-$ chmod a+x ./etc/db_init.sh        # 添加执行权限
-$ ./etc/db_init.sh                  # 数据库初始化
+$ python run_frontend.py            # 开启前台服务
+$ python run_backend.py             # 开启后台服务
 ```
 
-服务启动方式:
-
-1. 普通模式
+也可以 docker 方式部署
 ```
-$ ./run.py
-```
-
-2. 部署模式
-```
-$ supervisord -c etc/supervisord.conf
-$ supervisorctl -c etc/supervisord.conf reload
-$ supervisorctl -c etc/supervisord.conf restart all
-```
-
-页面结构：
-
-前台展示
-```
-index.html
-blog.html
-    /blog/new.html
-    /blog/hot.html
-    /blog/01.html
-    /blog/02.html
-about.html
-contact.html
-```
-
-用户中心
-````
-user/
-    reg.html
-    login.html
-    index.html
-    blog/
-        list.html
-        add.html
-        edit.html
-````
-
-后台管理
-```
-admin/
-    login.html
-    index.html
-    blog.html
-    post.html
-    site.html
-```
-
-项目结构：
-```
-flask_project/
-    app/
-        __init__.py
-        forms.py
-        models.py
-        views.py
-        static/
-            css/
-            fonts/
-            js/
-        templates/
-    config.py
-    run.py
+$ cd flask_project/docker           # 进入Docker脚本目录
+$ sh docker/docker_build.sh         # 创建本地Docker镜像
+$ sh docker/docker_run.sh           # 运行本地Docker容器
 ```
 
 
@@ -91,7 +29,17 @@ $ virtualenv flask.env
 $ source flask.env/bin/activate
 ```
 
-初始模块及扩展安装
+项目服务依赖
+```
+Nginx
+Redis
+MariaDB
+RabbitMQ
+MongoDB
+```
+
+
+项目扩展依赖
 ```
 $ pip install Flask
 $ pip install Flask-Login
@@ -447,6 +395,13 @@ NoneOf          验证输入不是一组可能值中的一个
 参考：[http://flask.pocoo.org/docs/0.10/patterns/flashing/#flashing-with-categories](http://flask.pocoo.org/docs/0.10/patterns/flashing/#flashing-with-categories)
 
 
+如果需要自动关闭
+```
+$("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
+    $("#success-alert").slideUp(500);
+});
+```
+
 ### 关于时间
 
 python 中：
@@ -611,6 +566,18 @@ https://pythonhosted.org/Flask-Uploads/
 Gunicorn 官网：[http://gunicorn.org/](http://gunicorn.org/)
 
 参考：[virtualenv 环境下 Flask + Nginx + Gunicorn+ Supervisor 搭建 Python Web](http://www.ituring.com.cn/article/201045?utm_source=tuicool)
+
+Supervisor 重启 Gunicorn 时，有时会碰到 Gunicorn 起不来的情况
+查看端口占用情况
+```
+# netstat -tulpn
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+tcp        0      0 0.0.0.0:8000            0.0.0.0:*               LISTEN      1722/python
+tcp        0      0 127.0.0.1:9001          0.0.0.0:*               LISTEN      1/python
+tcp        0      0 0.0.0.0:8010            0.0.0.0:*               LISTEN      647/python
+# kill -9 PID
+```
 
 安装
 ```
@@ -1091,7 +1058,7 @@ flask.ext.mail | flask_mail
 ```
 from flask.ext.wtf import Form
 替换为
-from flask_wtf import FlaskForm as Form
+from flask_wtf import FlaskForm
 ```
 
 
