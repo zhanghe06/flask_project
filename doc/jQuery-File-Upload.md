@@ -104,3 +104,12 @@ $('#fileupload').fileupload({
     });
 </script>
 ```
+
+
+python html页面变量替换
+
+```
+thumbnailUrl    thumbnail_url
+deleteUrl       delete_url
+deleteType      delete_type
+```
