@@ -15,8 +15,8 @@ APPLY_PUT_MAX_EACH = 20000       # 最大值
 APPLY_PUT_STEP = 1000       # 投资金额步长（基数）
 
 # 单次提现金额范围
-APPLY_GET_MIN_EACH = 1000        # 最小值
-APPLY_GET_MAX_EACH = 10000       # 最大值
+APPLY_GET_MIN_EACH = 2000        # 最小值
+APPLY_GET_MAX_EACH = 50000       # 最大值
 APPLY_GET_STEP = 500       # 提现金额步长（基数）
 
 # 每日投资限额
