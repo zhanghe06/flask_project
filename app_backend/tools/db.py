@@ -82,12 +82,12 @@ def get_lists(model_name, *args, **kwargs):
     获取列表信息
     Usage:
         # 方式一
-        get_row(User, User.id > 1)
+        get_lists(User, User.id > 1)
         # 方式二
         test_condition = {
             'name': "Larry"
         }
-        get_row(User, **test_condition)
+        get_lists(User, **test_condition)
     :param model_name:
     :param args:
     :param kwargs:

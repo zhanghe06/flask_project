@@ -78,6 +78,7 @@ CREATE TABLE `apply_put` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `user_id` INT NOT NULL COMMENT '用户Id',
   `type_apply` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '申请类型:0:自主添加，1:后台添加',
+  `type_pay` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '支付方式:0:不限，1:银行转账，2:数字货币，3:支付宝，4:微信',
   `money_apply` DECIMAL(8, 2) NOT NULL DEFAULT '0.00' COMMENT '申请金额',
   `money_order` DECIMAL(8, 2) NOT NULL DEFAULT '0.00' COMMENT '订单金额',
   `status_apply` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '申请状态:0:待生效，1:已生效，2:取消',
@@ -96,6 +97,8 @@ CREATE TABLE `apply_get` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `user_id` INT NOT NULL COMMENT '用户Id',
   `type_apply` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '申请类型:0:自主添加，1:后台生成',
+  `type_pay` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '收款方式:0:不限，1:银行转账，2:数字货币，3:支付宝，4:微信',
+  `type_withdraw` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '提现类型:0:钱包余额，1:数字货币',
   `money_apply` DECIMAL(8, 2) NOT NULL DEFAULT '0.00' COMMENT '申请金额',
   `money_order` DECIMAL(8, 2) NOT NULL DEFAULT '0.00' COMMENT '订单金额',
   `status_apply` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '申请状态:0:待生效，1:生效，2:取消',
@@ -125,7 +128,7 @@ CREATE TABLE `order` (
   `status_delete` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '删除状态:0:未删除，1:已删除',
   `audit_time` TIMESTAMP NULL COMMENT '审核时间（通过、失败）',
   `pay_time` TIMESTAMP NULL COMMENT '支付时间（成功、失败）',
-  `receipt_time` TIMESTAMP NULL COMMENT '收款时间（成功、失败）',
+  `rec_time` TIMESTAMP NULL COMMENT '收款时间（成功、失败）',
   `delete_time` TIMESTAMP NULL COMMENT '删除时间',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -135,6 +138,22 @@ CREATE TABLE `order` (
   KEY `ind_apply_put_uid` (`apply_put_uid`),
   KEY `ind_apply_get_uid` (`apply_get_uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单总表';
+
+
+DROP TABLE IF EXISTS `order_bill`;
+CREATE TABLE `order_bill` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `order_id` INT NOT NULL COMMENT '订单Id',
+  `bill_img` VARCHAR(255) COMMENT '付款凭证',
+  `status_audit` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '审核状态:0:待审核，1:审核通过，2:审核失败',
+  `status_delete` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '删除状态:0:未删除，1:已删除',
+  `audit_time` TIMESTAMP NULL COMMENT '审核时间（通过、失败）',
+  `delete_time` TIMESTAMP NULL COMMENT '删除时间',
+  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `ind_order_id` (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单支付凭证';
 
 
 DROP TABLE IF EXISTS `order_flow`;
@@ -176,7 +195,10 @@ CREATE TABLE `wallet_item` (
   `money` DECIMAL(8, 2) NOT NULL DEFAULT '0.00' COMMENT '金额',
   `sc_id` INT NOT NULL DEFAULT '0' COMMENT '关联id',
   `note` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '备注',
-  `status` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '状态:0:待生效，1:已生效，2:作废',
+  `status_audit` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '审核状态:0:待审核，1:审核通过，2:审核失败',
+  `status_delete` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '删除状态:0:未删除，1:已删除',
+  `audit_time` TIMESTAMP NULL COMMENT '审核时间（通过、失败）',
+  `delete_time` TIMESTAMP NULL COMMENT '删除时间',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
@@ -201,12 +223,17 @@ CREATE TABLE `score_item` (
   `user_id` INT NOT NULL COMMENT '用户Id',
   `type` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '积分类型（1：加、2：减）',
   `amount` DECIMAL(8, 0) NOT NULL DEFAULT '0' COMMENT '积分分值',
+  `sc_id` INT NOT NULL DEFAULT '0' COMMENT '关联id',
   `note` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '备注',
-  `status` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '状态:0:待生效，1:已生效，2:作废',
+  `status_audit` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '审核状态:0:待审核，1:审核通过，2:审核失败',
+  `status_delete` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '删除状态:0:未删除，1:已删除',
+  `audit_time` TIMESTAMP NULL COMMENT '审核时间（通过、失败）',
+  `delete_time` TIMESTAMP NULL COMMENT '删除时间',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
-  KEY `ind_user_id` (`user_id`)
+  KEY `ind_user_id` (`user_id`),
+  KEY `ind_sc_id` (`sc_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='积分明细表';
 
 
@@ -226,12 +253,17 @@ CREATE TABLE `bonus_item` (
   `user_id` INT NOT NULL COMMENT '用户Id',
   `type` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '奖金类型（1：加、2：减）',
   `amount` DECIMAL(8, 0) NOT NULL DEFAULT '0' COMMENT '奖金金额',
+  `sc_id` INT NOT NULL DEFAULT '0' COMMENT '关联id',
   `note` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '备注',
-  `status` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '状态:0:待生效，1:已生效，2:作废',
+  `status_audit` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '审核状态:0:待审核，1:审核通过，2:审核失败',
+  `status_delete` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '删除状态:0:未删除，1:已删除',
+  `audit_time` TIMESTAMP NULL COMMENT '审核时间（通过、失败）',
+  `delete_time` TIMESTAMP NULL COMMENT '删除时间',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
-  KEY `ind_user_id` (`user_id`)
+  KEY `ind_user_id` (`user_id`),
+  KEY `ind_sc_id` (`sc_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='奖金明细表';
 
 
@@ -251,13 +283,48 @@ CREATE TABLE `bit_coin_item` (
   `user_id` INT NOT NULL COMMENT '用户Id',
   `type` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '数字货币类型（1：加、2：减）',
   `amount` DECIMAL(8, 0) NOT NULL DEFAULT '0' COMMENT '数字货币金额',
+  `sc_id` INT NOT NULL DEFAULT '0' COMMENT '关联id',
   `note` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '备注',
-  `status` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '状态:0:待生效，1:已生效，2:作废',
+  `status_audit` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '审核状态:0:待审核，1:审核通过，2:审核失败',
+  `status_delete` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '删除状态:0:未删除，1:已删除',
+  `audit_time` TIMESTAMP NULL COMMENT '审核时间（通过、失败）',
+  `delete_time` TIMESTAMP NULL COMMENT '删除时间',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
-  KEY `ind_user_id` (`user_id`)
+  KEY `ind_user_id` (`user_id`),
+  KEY `ind_sc_id` (`sc_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='数字货币明细表';
+
+
+DROP TABLE IF EXISTS `active`;
+CREATE TABLE `active` (
+  `user_id` INT NOT NULL COMMENT '用户Id',
+  `amount` DECIMAL(10, 0) NOT NULL DEFAULT '0' COMMENT '激活总次数',
+  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='激活总表';
+
+
+DROP TABLE IF EXISTS `active_item`;
+CREATE TABLE `active_item` (
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT '激活明细id',
+  `user_id` INT NOT NULL COMMENT '用户Id',
+  `type` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '激活类型（1：加、2：减）',
+  `amount` DECIMAL(8, 0) NOT NULL DEFAULT '0' COMMENT '数字货币金额',
+  `sc_id` INT NOT NULL DEFAULT '0' COMMENT '关联id(被激活的uid)',
+  `note` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '备注',
+  `status_audit` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '审核状态:0:待审核，1:审核通过，2:审核失败',
+  `status_delete` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '删除状态:0:未删除，1:已删除',
+  `audit_time` TIMESTAMP NULL COMMENT '审核时间（通过、失败）',
+  `delete_time` TIMESTAMP NULL COMMENT '删除时间',
+  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `ind_user_id` (`user_id`),
+  KEY `ind_sc_id` (`sc_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='激活明细表';
 
 
 DROP TABLE IF EXISTS `admin`;

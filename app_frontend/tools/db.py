@@ -77,6 +77,26 @@ def get_row(model_name, *args, **kwargs):
     return row
 
 
+def get_lists(model_name, *args, **kwargs):
+    """
+    获取列表信息
+    Usage:
+        # 方式一
+        get_lists(User, User.id > 1)
+        # 方式二
+        test_condition = {
+            'name': "Larry"
+        }
+        get_lists(User, **test_condition)
+    :param model_name:
+    :param args:
+    :param kwargs:
+    :return: None/list
+    """
+    lists = db.session.query(model_name).filter(*args).filter_by(**kwargs).all()
+    return lists
+
+
 def count(model_name, *args, **kwargs):
     """
     计数

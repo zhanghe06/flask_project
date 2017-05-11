@@ -17,6 +17,32 @@ def to_dict(self):
 Base.to_dict = to_dict
 
 
+class Active(Base):
+    __tablename__ = 'active'
+
+    user_id = Column(Integer, primary_key=True)
+    amount = Column(Numeric(10, 0), nullable=False, server_default=text("'0'"))
+    create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
+    update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+
+
+class ActiveItem(Base):
+    __tablename__ = 'active_item'
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, nullable=False, index=True)
+    type = Column(Integer, nullable=False, server_default=text("'0'"))
+    amount = Column(Numeric(8, 0), nullable=False, server_default=text("'0'"))
+    sc_id = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
+    note = Column(String(256), nullable=False, server_default=text("''"))
+    status_audit = Column(Integer, nullable=False, server_default=text("'0'"))
+    status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
+    audit_time = Column(DateTime)
+    delete_time = Column(DateTime)
+    create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
+    update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+
+
 class Admin(Base):
     __tablename__ = 'admin'
 
@@ -41,6 +67,8 @@ class ApplyGet(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, nullable=False, index=True)
     type_apply = Column(Integer, nullable=False, server_default=text("'0'"))
+    type_pay = Column(Integer, nullable=False, server_default=text("'0'"))
+    type_withdraw = Column(Integer, nullable=False, server_default=text("'0'"))
     money_apply = Column(Numeric(8, 2), nullable=False, server_default=text("'0.00'"))
     money_order = Column(Numeric(8, 2), nullable=False, server_default=text("'0.00'"))
     status_apply = Column(Integer, nullable=False, server_default=text("'0'"))
@@ -57,6 +85,7 @@ class ApplyPut(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, nullable=False, index=True)
     type_apply = Column(Integer, nullable=False, server_default=text("'0'"))
+    type_pay = Column(Integer, nullable=False, server_default=text("'0'"))
     money_apply = Column(Numeric(8, 2), nullable=False, server_default=text("'0.00'"))
     money_order = Column(Numeric(8, 2), nullable=False, server_default=text("'0.00'"))
     status_apply = Column(Integer, nullable=False, server_default=text("'0'"))
@@ -97,8 +126,12 @@ class BitCoinItem(Base):
     user_id = Column(Integer, nullable=False, index=True)
     type = Column(Integer, nullable=False, server_default=text("'0'"))
     amount = Column(Numeric(8, 0), nullable=False, server_default=text("'0'"))
+    sc_id = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
     note = Column(String(256), nullable=False, server_default=text("''"))
-    status = Column(Integer, nullable=False, server_default=text("'0'"))
+    status_audit = Column(Integer, nullable=False, server_default=text("'0'"))
+    status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
+    audit_time = Column(DateTime)
+    delete_time = Column(DateTime)
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
@@ -119,8 +152,12 @@ class BonusItem(Base):
     user_id = Column(Integer, nullable=False, index=True)
     type = Column(Integer, nullable=False, server_default=text("'0'"))
     amount = Column(Numeric(8, 0), nullable=False, server_default=text("'0'"))
+    sc_id = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
     note = Column(String(256), nullable=False, server_default=text("''"))
-    status = Column(Integer, nullable=False, server_default=text("'0'"))
+    status_audit = Column(Integer, nullable=False, server_default=text("'0'"))
+    status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
+    audit_time = Column(DateTime)
+    delete_time = Column(DateTime)
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
@@ -185,7 +222,21 @@ class Order(Base):
     status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
     audit_time = Column(DateTime)
     pay_time = Column(DateTime)
-    receipt_time = Column(DateTime)
+    rec_time = Column(DateTime)
+    delete_time = Column(DateTime)
+    create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
+    update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+
+
+class OrderBill(Base):
+    __tablename__ = 'order_bill'
+
+    id = Column(Integer, primary_key=True)
+    order_id = Column(Integer, nullable=False, index=True)
+    bill_img = Column(String(255))
+    status_audit = Column(Integer, nullable=False, server_default=text("'0'"))
+    status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
+    audit_time = Column(DateTime)
     delete_time = Column(DateTime)
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
@@ -220,8 +271,12 @@ class ScoreItem(Base):
     user_id = Column(Integer, nullable=False, index=True)
     type = Column(Integer, nullable=False, server_default=text("'0'"))
     amount = Column(Numeric(8, 0), nullable=False, server_default=text("'0'"))
+    sc_id = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
     note = Column(String(256), nullable=False, server_default=text("''"))
-    status = Column(Integer, nullable=False, server_default=text("'0'"))
+    status_audit = Column(Integer, nullable=False, server_default=text("'0'"))
+    status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
+    audit_time = Column(DateTime)
+    delete_time = Column(DateTime)
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
@@ -311,6 +366,9 @@ class WalletItem(Base):
     money = Column(Numeric(8, 2), nullable=False, server_default=text("'0.00'"))
     sc_id = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
     note = Column(String(256), nullable=False, server_default=text("''"))
-    status = Column(Integer, nullable=False, server_default=text("'0'"))
+    status_audit = Column(Integer, nullable=False, server_default=text("'0'"))
+    status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
+    audit_time = Column(DateTime)
+    delete_time = Column(DateTime)
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
