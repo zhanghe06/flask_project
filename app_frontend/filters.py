@@ -8,7 +8,10 @@
 @time: 2017/4/13 下午2:33
 @desc: 自定义过滤器
 """
+
+
 from itsdangerous import URLSafeSerializer
+from datetime import timedelta
 
 from app_common.maps.status_active import STATUS_ACTIVE_DICT
 from app_common.maps.status_lock import STATUS_LOCK_DICT
@@ -97,6 +100,18 @@ def time_diff_pretty_filter(delta_s):
     return result
 
 
+@app.template_filter('time_delta')
+def filter_time_delta(last_time, delta=0):
+    """
+    获取偏移后的时间
+    :param last_time:
+    :param delta:
+    :return:
+    """
+    current_time = last_time + timedelta(seconds=delta)
+    return current_time
+
+
 @app.template_filter('user_name_level')
 def filter_user_name_level(user_id):
     """
@@ -106,6 +121,17 @@ def filter_user_name_level(user_id):
     """
     row = get_user_profile_row_by_id(user_id)
     return u'%s(%s)' % (row.nickname, TYPE_LEVEL_DICT.get(row.type_level, u'普通')) if row else u'游客'
+
+
+@app.template_filter('nickname')
+def filter_nickname(user_id):
+    """
+    显示用户名称
+    :param user_id:
+    :return:
+    """
+    user_info = get_user_profile_row_by_id(user_id)
+    return user_info.nickname if user_info else u'系统用户'
 
 
 @app.template_filter('user_wallet')

@@ -81,7 +81,8 @@ def filter_nickname(user_id):
     :param user_id:
     :return:
     """
-    return get_user_profile_row_by_id(user_id).nickname
+    user_info = get_user_profile_row_by_id(user_id)
+    return user_info.nickname if user_info else u'系统用户'
 
 
 @app.template_filter('role_admin')
