@@ -23,7 +23,9 @@
                 <div class="form-group{% if form.user_pid.errors %} has-error{% endif %}">
                     {{ form.user_pid.label(class="col-sm-2 control-label") }}
                     <div class="col-sm-10">
-                        {{ form.user_pid(class="form-control", placeholder="Pid") }}
+{#                        {{ form.user_pid(class="form-control", placeholder="推荐会员") }}#}
+                        <div class="form-control">{{ form.user_pid.data | nickname }}</div>
+
                         {% for error in form.user_pid.errors %}
                             <span class="help-block">{{ error }}</span>
                         {% endfor %}
@@ -32,7 +34,7 @@
                 <div class="form-group{% if form.nickname.errors %} has-error{% endif %}">
                     {{ form.nickname.label(class="col-sm-2 control-label") }}
                     <div class="col-sm-10">
-                        {{ form.nickname(class="form-control", placeholder="Nickname", disabled="disabled") }}
+                        {{ form.nickname(class="form-control", placeholder="用户名称", disabled="disabled") }}
                         {% for error in form.nickname.errors %}
                             <span class="help-block">{{ error }}</span>
                         {% endfor %}
@@ -41,7 +43,7 @@
                 <div class="form-group{% if form.email.errors %} has-error{% endif %}">
                     {{ form.email.label(class="col-sm-2 control-label") }}
                     <div class="col-sm-10">
-                        {{ form.email(class="form-control", placeholder="Email") }}
+                        {{ form.email(class="form-control", placeholder="电子邮箱") }}
                         {% for error in form.email.errors %}
                             <span class="help-block">{{ error }}</span>
                         {% endfor %}
@@ -59,7 +61,7 @@
                 <div class="form-group{% if form.phone.errors %} has-error{% endif %}">
                     {{ form.phone.label(class="col-sm-2 control-label") }}
                     <div class="col-sm-10">
-                        {{ form.phone(class="form-control", placeholder="Phone", type="tel", maxlength=11) }}
+                        {{ form.phone(class="form-control", placeholder="手机号码", type="tel", maxlength=11) }}
                         {% for error in form.phone.errors %}
                             <span class="help-block">{{ error }}</span>
                         {% endfor %}
@@ -77,7 +79,7 @@
                 <div class="form-group{% if form.id_card.errors %} has-error{% endif %}">
                     {{ form.id_card.label(class="col-sm-2 control-label") }}
                     <div class="col-sm-10">
-                        {{ form.id_card(class="form-control", placeholder="ID Card", maxlength=18) }}
+                        {{ form.id_card(class="form-control", placeholder="身份证号", maxlength=18) }}
                         {% for error in form.id_card.errors %}
                             <span class="help-block">{{ error }}</span>
                         {% endfor %}
@@ -107,8 +109,8 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-default btn-load" data-loading-text="Editing...">Edit</button>
-                        <button type="reset" class="btn btn-default">Reset</button>
+                        <button type="submit" class="btn btn-success btn-load" data-loading-text="保存中">保存</button>
+                        <button type="reset" class="btn btn-default">重新填写</button>
                     </div>
                 </div>
             </form>

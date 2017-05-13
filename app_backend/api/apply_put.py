@@ -10,7 +10,7 @@
 
 
 from datetime import datetime
-
+import traceback
 
 from app_backend.models import ApplyGet, Order, ApplyPut
 from app_backend.tools.db import get_row, get_rows_by_ids, get_lists, get_rows, get_row_by_id, add, edit, delete
@@ -185,5 +185,6 @@ def apply_put_match(apply_put_id, apply_get_ids, accept_split=0):
         db.session.commit()
         return result
     except Exception as e:
+        print traceback.print_exc()
         db.session.rollback()
         raise e

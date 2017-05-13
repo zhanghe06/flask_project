@@ -15,5 +15,5 @@ from flask_login import UserMixin
 
 class LoginUser(User, UserMixin):
     """
-    用户登陆类
+    用户登录类
     """

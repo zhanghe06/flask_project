@@ -42,6 +42,7 @@
                 <th>投资ID</th>
                 <th>提现ID</th>
                 <th>提现用户</th>
+                <th>订单金额</th>
                 <th>认证状态</th>
                 <th>支付状态</th>
                 <th>确认状态</th>
@@ -56,13 +57,14 @@
                 <td>{{ order.apply_put_id }}</td>
                 <td>{{ order.apply_get_id }}</td>
                 <td>{{ user_profile.nickname }} [{{ order.apply_get_uid }}]</td>
+                <td>{{ order.money }}</td>
                 <td>{{ order.status_audit | status_audit }}</td>
                 <td>{{ order.status_pay | status_pay }}</td>
                 <td>{{ order.status_rec | status_rec }}</td>
                 <td>{{ moment(order.create_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
                 <td>
-                    <a href="{{ url_for('order.pay', order_id=order.id) }}" rel="tooltip" title="数字支付"><span class="glyphicon glyphicon-bitcoin"></span></a>
-                    <a href="javascript:void(0);" onclick="order_delete({{ order.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
+                    <a class="btn btn-default" href="{{ url_for('order.info_put', order_id=order.id) }}" rel="tooltip" title="订单详情"><span class="glyphicon glyphicon-list-alt"></span> 订单详情</a>
+{#                    <a href="javascript:void(0);" onclick="order_delete({{ order.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>#}
                 </td>
             </tr>
             {% endfor %}

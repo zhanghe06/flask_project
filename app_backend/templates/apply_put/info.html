@@ -50,7 +50,7 @@
                     <td>{{ apply_put_info.status_apply | status_apply }}</td>
                     <td>{{ apply_put_info.status_order | status_order }}</td>
                     <td>{{ apply_put_info.status_delete | status_delete }}</td>
-                    <td>{{ apply_put_info.create_time }}</td>
+                    <td>{{ moment(apply_put_info.create_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
                     <td>
                         <label><input title="选择" type="checkbox" id="apply_put_accept_split" value="1" /> 允许拆分</label>
                     </td>
@@ -94,7 +94,7 @@
                     <td>{{ order_info.status_pay | status_pay }}</td>
                     <td>{{ order_info.status_rec | status_rec }}</td>
                     <td>{{ order_info.status_delete | status_delete }}</td>
-                    <td>{{ order_info.create_time }}</td>
+                    <td>{{ moment(order_info.create_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -107,7 +107,7 @@
     <section id="apply_get_list">
         <div class="panel panel-default">
         <div class="panel-heading">
-            <strong class="panel-title">匹配订单列表
+            <strong class="panel-title">提现申请列表
             <span class="glyphicon glyphicon-cog pull-right"></span>
             </strong>
         </div>
@@ -206,7 +206,7 @@
                     <td>{{ apply_get.status_apply | status_apply }}</td>
                     <td>{{ apply_get.status_order | status_order }}</td>
                     <td>{{ apply_get.status_delete | status_delete }}</td>
-                    <td>{{ apply_get.create_time }}</td>
+                    <td>{{ moment(apply_get.create_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
                     <td>
                         <label><input title="选择" type="checkbox" class="apply_get_check" name="apply_get_id" id="{{ apply_get.money_apply }}" value="{{ apply_get.id }}" /> 选择</label>
                     </td>

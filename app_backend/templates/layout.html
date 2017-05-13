@@ -55,10 +55,10 @@
                         <i class="fa fa-user fa-fw"></i> {{ g.user.username }} [{{ g.user.role | role_admin }}] <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="{{ url_for('admin.profile') }}"><i class="fa fa-user fa-fw"></i> Profile</a>
+                        <li><a href="{{ url_for('admin.profile') }}"><i class="fa fa-user fa-fw"></i> 个人中心</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="{{ url_for('logout') }}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        <li><a href="{{ url_for('logout') }}"><i class="fa fa-sign-out fa-fw"></i> 退出登录</a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
@@ -84,19 +84,8 @@
                         <li>
                             <a href="/"><i class="fa fa-dashboard fa-fw"></i> 后台首页</a>
                         </li>
-                        <li>
-                            <a id="menu-admin" href="#"><i class="fa fa-files-o fa-fw"></i> 运营管理<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="{{ url_for('admin.lists') }}">运营列表</a>
-                                </li>
-                                <li>
-                                    <a href="{{ url_for('admin.add') }}">添加运营</a>
-                                </li>
-                            </ul>
-                            <!-- /.nav-second-level -->
-                        </li>
-                        <li>
+
+                        <li class="active">
                             <a id="menu-user" href="#"><i class="fa fa-table fa-fw"></i> 会员管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
@@ -183,6 +172,18 @@
                                         </li>
                                     </ul>
                                     <!-- /.nav-third-level -->
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a id="menu-admin" href="#"><i class="fa fa-files-o fa-fw"></i> 运营管理<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="{{ url_for('admin.lists') }}">运营列表</a>
+                                </li>
+                                <li>
+                                    <a href="{{ url_for('admin.add') }}">添加运营</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->

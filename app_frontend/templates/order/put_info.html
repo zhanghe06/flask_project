@@ -1,403 +1,412 @@
 {% extends "layout.html" %}
 
-{% block content %}
-    <div class="container">
-    <h2 class="sub-header">Setting</h2>
-
-    <div class="row">
-        <div class="col-lg-8 col-md-12">
-            <section id="chart_line_graphs">
-                <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="btn-group pull-right" role="group" aria-label="...">
-                        <button type="button" class="btn btn-default btn-time-bar">Day</button>
-                        <button type="button" class="btn btn-default btn-time-bar">Week</button>
-                        <button type="button" class="btn btn-default btn-time-bar">Month</button>
-                    </div>
-                    <strong class="panel-title">
-                        <span class="glyphicon glyphicon-picture"></span> Chart Line Graphs
-                    </strong>
-                </div>
-                <canvas id="chart_line_canvas"></canvas>
-                </div>
-            </section>
-            <section id="chart_bar_graphs">
-                <div class="panel panel-default">
-                <div class="panel-heading">
-                    <strong class="panel-title">Chart Bar Graphs
-                    <span class="glyphicon glyphicon-picture pull-right"></span>
-                    </strong>
-                </div>
-                <div class="panel-body text-center row">
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <canvas id="chart_bar_canvas_01"></canvas>
-                        <span class="text-muted">Chart Bar Graphs Example 01</span>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <canvas id="chart_bar_canvas_02"></canvas>
-                        <span class="text-muted">Chart Bar Graphs Example 02</span>
-                    </div>
-                </div>
-                <div class="panel-footer text-center text-muted">
-                    Chart Bar Graphs Example
-                </div>
-                </div>
-            </section>
-            <section id="user_profile">
-                <div class="panel panel-default">
-                <div class="panel-heading">
-                    <strong class="panel-title">User profile
-                    <span class="glyphicon glyphicon-cog pull-right"></span>
-                    </strong>
-                </div>
-                <div class="panel-body">
-
-                </div>
-            </div>
-            </section>
-            <section id="first_options">
-                <div class="panel panel-default">
-                <div class="panel-heading">
-                    <strong class="panel-title">First server management options
-                    <span class="glyphicon glyphicon-cog pull-right"></span>
-                    </strong>
-                </div>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Permission Item</th>
-                            <th>Community Edition</th>
-                            <th><b>Enterprise Edition</b></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><a href="#">Create and remove admins based on an LDAP group</a></td>
-                            <td><span class="glyphicon glyphicon-remove"></span></td>
-                            <td><span class="glyphicon glyphicon-ok"></span></td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">Groups consisting of multiple people with a shared namespace</a></td>
-                            <td><span class="glyphicon glyphicon-ok"></span></td>
-                            <td><span class="glyphicon glyphicon-remove"></span></td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">Close JIRA issues with GitLab commits</a></td>
-                            <td><span class="glyphicon glyphicon-ok"></span></td>
-                            <td><span class="glyphicon glyphicon-remove"></span></td>
-                        </tr>
-                    </tbody>
-                </table>
-                </div>
-            </section>
-            <section id="user_permissions">
-                <div class="panel panel-default">
-                <div class="panel-heading">
-                    <strong class="panel-title">User permissions
-                    <span class="glyphicon glyphicon-cog pull-right"></span>
-                    </strong>
-                </div>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Permission Item</th>
-                            <th>Community Edition</th>
-                            <th><b>Enterprise Edition</b></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><a href="#">Create and remove admins based on an LDAP group</a></td>
-                            <td><span class="glyphicon glyphicon-remove"></span></td>
-                            <td><span class="glyphicon glyphicon-ok"></span></td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">Groups consisting of multiple people with a shared namespace</a></td>
-                            <td><span class="glyphicon glyphicon-ok"></span></td>
-                            <td><span class="glyphicon glyphicon-remove"></span></td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">Close JIRA issues with GitLab commits</a></td>
-                            <td><span class="glyphicon glyphicon-ok"></span></td>
-                            <td><span class="glyphicon glyphicon-remove"></span></td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">Groups consisting of multiple people with a shared namespace</a></td>
-                            <td><span class="glyphicon glyphicon-ok"></span></td>
-                            <td><span class="glyphicon glyphicon-remove"></span></td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">Close JIRA issues with GitLab commits</a></td>
-                            <td><span class="glyphicon glyphicon-ok"></span></td>
-                            <td><span class="glyphicon glyphicon-remove"></span></td>
-                        </tr>
-                    </tbody>
-                </table>
-                </div>
-            </section>
-            <section id="additional_options">
-                <div class="panel panel-default">
-                <div class="panel-heading">
-                    <strong class="panel-title">Additional server management options
-                    <span class="glyphicon glyphicon-cog pull-right"></span>
-                    </strong>
-                </div>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Permission Item</th>
-                            <th>Community Edition</th>
-                            <th><b>Enterprise Edition</b></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><a href="#">Create and remove admins based on an LDAP group</a></td>
-                            <td><span class="glyphicon glyphicon-remove"></span></td>
-                            <td><span class="glyphicon glyphicon-ok"></span></td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">Groups consisting of multiple people with a shared namespace</a></td>
-                            <td><span class="glyphicon glyphicon-ok"></span></td>
-                            <td><span class="glyphicon glyphicon-remove"></span></td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">Close JIRA issues with GitLab commits</a></td>
-                            <td><span class="glyphicon glyphicon-ok"></span></td>
-                            <td><span class="glyphicon glyphicon-remove"></span></td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">Create and remove admins based on an LDAP group</a></td>
-                            <td><span class="glyphicon glyphicon-remove"></span></td>
-                            <td><span class="glyphicon glyphicon-ok"></span></td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">Groups consisting of multiple people with a shared namespace</a></td>
-                            <td><span class="glyphicon glyphicon-ok"></span></td>
-                            <td><span class="glyphicon glyphicon-remove"></span></td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">Close JIRA issues with GitLab commits</a></td>
-                            <td><span class="glyphicon glyphicon-ok"></span></td>
-                            <td><span class="glyphicon glyphicon-remove"></span></td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">Create and remove admins based on an LDAP group</a></td>
-                            <td><span class="glyphicon glyphicon-remove"></span></td>
-                            <td><span class="glyphicon glyphicon-ok"></span></td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">Groups consisting of multiple people with a shared namespace</a></td>
-                            <td><span class="glyphicon glyphicon-ok"></span></td>
-                            <td><span class="glyphicon glyphicon-remove"></span></td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">Close JIRA issues with GitLab commits</a></td>
-                            <td><span class="glyphicon glyphicon-ok"></span></td>
-                            <td><span class="glyphicon glyphicon-remove"></span></td>
-                        </tr>
-                    </tbody>
-                </table>
-                </div>
-            </section>
-            <section id="last_options">
-                <div class="panel panel-default">
-                <div class="panel-heading">
-                    <strong class="panel-title">Last server management options
-                    <span class="glyphicon glyphicon-cog pull-right"></span>
-                    </strong>
-                </div>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Permission Item</th>
-                            <th>Community Edition</th>
-                            <th><b>Enterprise Edition</b></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><a href="#">Create and remove admins based on an LDAP group</a></td>
-                            <td><span class="glyphicon glyphicon-remove"></span></td>
-                            <td><span class="glyphicon glyphicon-ok"></span></td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">Groups consisting of multiple people with a shared namespace</a></td>
-                            <td><span class="glyphicon glyphicon-ok"></span></td>
-                            <td><span class="glyphicon glyphicon-remove"></span></td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">Close JIRA issues with GitLab commits</a></td>
-                            <td><span class="glyphicon glyphicon-ok"></span></td>
-                            <td><span class="glyphicon glyphicon-remove"></span></td>
-                        </tr>
-                    </tbody>
-                </table>
-                </div>
-            </section>
-            <section id="contributions">
-                <div class="panel panel-default">
-                <div class="panel-heading">
-                    <strong class="panel-title">Contributions
-                    <span class="glyphicon glyphicon-stats pull-right"></span>
-                    </strong>
-                </div>
-                <table class="table table-bordered text-center">
-                    <tr>
-                        <td class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                            <span class="text-muted center-block">Contributions in the last year</span>
-                            <h2 class="center-block">432 total</h2>
-                            <span class="text-muted center-block">Feb 20, 2015 – Feb 20, 2016</span>
-                        </td>
-                        <td class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                            <span class="text-muted center-block">Longest streak</span>
-                            <h2 class="center-block">48 days</h2>
-                            <span class="text-muted center-block">October 23 – December 9</span>
-                        </td>
-                        <td class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                            <span class="text-muted center-block">Current streak</span>
-                            <h2 class="center-block">4 days</h2>
-                            <span class="text-muted center-block">February 17 – February 20</span>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            </section>
-            <section id="nothing">
-                <div class="well well-large text-center">
-                    Nothing yet.
-                </div>
-            </section>
-        </div>
-
-        <nav class="col-lg-4 col-md-12" id="affix_nav">
-            <ul class="nav nav-pills nav-stacked" data-spy="affix" data-offset-top="10" id="affix_nav_ul">
-                <li class="active">
-                    <a href="#chart_line_graphs" class="list-group-item">
-                        <span class="glyphicon glyphicon-chevron-right"></span> Chart Line Graphs
-                    </a>
-                </li>
-                <li>
-                    <a href="#chart_bar_graphs" class="list-group-item">
-                        <span class="glyphicon glyphicon-chevron-right"></span> Chart Bar Graphs
-                    </a>
-                </li>
-                <li>
-                    <a href="#user_profile" class="list-group-item">
-                        <span class="glyphicon glyphicon-chevron-right"></span> User profile
-                    </a>
-                </li>
-                <li>
-                    <a href="#first_options" class="list-group-item">
-                        <span class="glyphicon glyphicon-chevron-right"></span> First server management options
-                    </a>
-                </li>
-                <li>
-                    <a href="#user_permissions" class="list-group-item">
-                        <span class="glyphicon glyphicon-chevron-right"></span> User permissions
-                    </a>
-                </li>
-                <li>
-                    <a href="#additional_options" class="list-group-item">
-                        <span class="glyphicon glyphicon-chevron-right"></span> Additional server management options
-                    </a>
-                </li>
-                <li>
-                    <a href="#last_options" class="list-group-item">
-                        <span class="glyphicon glyphicon-chevron-right"></span> Last server management options
-                    </a>
-                </li>
-                <li>
-                    <a href="#contributions" class="list-group-item">
-                        <span class="glyphicon glyphicon-chevron-right"></span> Contributions
-                    </a>
-                </li>
-                <li>
-                    <a href="#nothing" class="list-group-item">
-                        <span class="glyphicon glyphicon-chevron-right"></span> Nothing
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
-    </div>
+{% block extra_css %}
+    <!-- blueimp Gallery styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='plugin/Gallery-2.25.0/css/blueimp-gallery.min.css') }}">
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='plugin/jQuery-File-Upload-9.18.0/css/jquery.fileupload.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='plugin/jQuery-File-Upload-9.18.0/css/jquery.fileupload-ui.css') }}">
+    <!-- CSS adjustments for browsers with JavaScript disabled -->
+    <noscript><link rel="stylesheet" href="{{ url_for('static', filename='plugin/jQuery-File-Upload-9.18.0/css/jquery.fileupload-noscript.css') }}"></noscript>
+    <noscript><link rel="stylesheet" href="{{ url_for('static', filename='plugin/jQuery-File-Upload-9.18.0/css/jquery.fileupload-ui-noscript.css') }}"></noscript>
 {% endblock %}
 
-{% block extra_js %}
-<script>
-    /* 创建Line图表 */
-    var lineChartData = {
-        labels : ["January","February","March","April","May","June","July"],
-        datasets : [
-            {
-                fillColor : "rgba(220,220,220,0.5)",
-                strokeColor : "rgba(220,220,220,1)",
-                pointColor : "rgba(220,220,220,1)",
-                pointStrokeColor : "#fff",
-                data : [65,59,90,81,56,55,40]
-            },
-            {
-                fillColor : "rgba(151,187,205,0.5)",
-                strokeColor : "rgba(151,187,205,1)",
-                pointColor : "rgba(151,187,205,1)",
-                pointStrokeColor : "#fff",
-                data : [28,48,40,19,96,27,100]
-            }
-        ]
-    };
+{% block content %}
+<div class="container">
+    <h2 class="lead">
+    {% if order_info.pay_time %}
+        <p class="text-warning">
+        付款时间：[{{ moment(order_info.pay_time).format('YYYY-MM-DD HH:mm:ss') }}]
+        </p>
+    {% else %}
+        <p class="text-warning">
+        剩余付款时间：[{{ moment(order_info.create_time | time_delta(3600*24*2)).fromNow(refresh=True) }}]
+        </p>
+    {% endif %}
+    {% if order_info.rec_time %}
+        <p class="text-warning">
+        确认收款时间：[{{ moment(order_info.rec_time).format('YYYY-MM-DD HH:mm:ss') }}]
+        </p>
+    {% elif order_info.pay_time %}
+        <p class="text-warning">
+        等待对方确认，剩余确认时间：[{{ moment(order_info.pay_time | time_delta(3600*24*2)).fromNow(refresh=True) }}]
+        </p>
+    {% endif %}
+    </h2>
+    <br>
+    <blockquote>
+        <p class="text-muted">奖励规则：提前（1小时内）打款，奖励利息（2%）</p>
+        <p class="text-muted">惩罚规则：延迟（超过24小时）打款，扣除罚息（2%）；上传虚假凭证，永久封号</p>
+        <footer>规则最终解释 <cite title="Source Title">运营团队</cite></footer>
+    </blockquote>
+    <section id="order_info">
+        <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong class="panel-title">订单信息
+            <span class="glyphicon glyphicon-cog pull-right"></span>
+            </strong>
+        </div>
+        <table class="table table-hover table-responsive">
+            <thead>
+                <tr>
+                    <th>订单ID</th>
+                    <th>用户ID</th>
+                    <th>用户名称</th>
+                    <th>订单类型</th>
+                    <th>订单金额</th>
+                    <th>审核状态</th>
+                    <th>支付状态</th>
+                    <th>收款状态</th>
+                    <th>删除状态</th>
+                    <th>订单时间</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ order_info.id }}</td>
+                    <td>{{ order_info.apply_get_uid }}</td>
+                    <td>{{ order_info.apply_get_uid | nickname }}</td>
+                    <td>{{ order_info.type | type_order }}</td>
+                    <td>{{ order_info.money }}</td>
+                    <td>{{ order_info.status_audit | status_audit }}</td>
+                    <td>{{ order_info.status_pay | status_pay }}</td>
+                    <td>{{ order_info.status_rec | status_rec }}</td>
+                    <td>{{ order_info.status_delete | status_delete }}</td>
+                    <td>{{ moment(order_info.create_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+    </section>
+    <section id="bank_info">
+        <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong class="panel-title">收款信息
+            <span class="glyphicon glyphicon-cog pull-right"></span>
+            </strong>
+        </div>
+        <table class="table table-hover table-responsive">
+            <thead>
+                <tr>
+                    <th>类型名称</th>
+                    <th>账号名称</th>
+                    <th>是否支持</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>账户名称</td>
+                    <td>{{ bank_info.account_name }}</td>
+                    <td><span class="glyphicon glyphicon-ok"></span></td>
+                </tr>
+                <tr>
+                    <td>银行名称</td>
+                    <td>{{ bank_info.bank_name }}</td>
+                    <td><span class="glyphicon glyphicon-ok"></span></td>
+                </tr>
+                <tr>
+                    <td>支行名称</td>
+                    <td>{{ bank_info.bank_address }}</td>
+                    <td><span class="glyphicon glyphicon-ok"></span></td>
+                </tr>
+                <tr>
+                    <td>银行卡号</td>
+                    <td>{{ bank_info.bank_account }}</td>
+                    <td><span class="glyphicon glyphicon-ok"></span></td>
+                </tr>
+                <tr>
+                    <td>支付宝</td>
+                    <td></td>
+                    <td><span class="glyphicon glyphicon-remove"></span></td>
+                </tr>
+                <tr>
+                    <td>微信支付</td>
+                    <td></td>
+                    <td><span class="glyphicon glyphicon-remove"></span></td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+    </section>
 
-    $(function() {
-        var ctx = $("#chart_line_canvas").get(0).getContext("2d");
-        new Chart(ctx).Line(lineChartData, {responsive: true});
-    });
+{% if order_bill_lists %}
+    <section id="bank_info">
+        <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong class="panel-title">付款凭证
+            <span class="glyphicon glyphicon-cog pull-right"></span>
+            </strong>
+        </div>
+        <table class="table table-hover table-responsive">
+            <thead>
+                <tr>
+                    <th>凭证预览</th>
+                    <th>凭证名称</th>
+                    <th>状态</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order_bill in order_bill_lists %}
+                <tr>
+                    <td>
+                        <span class="preview">
+                            <a href="/static/uploads/{{ order_bill.bill_img }}" title="{{ order_bill.bill_img }}" download="{{ order_bill.bill_img }}" data-gallery="">
+                                <img src="/static/uploads/{{ order_bill.bill_img }}" height="80">
+                            </a>
+                        </span>
+                    </td>
+                    <td>
+                        <p class="name">
+                            <a href="/static/uploads/{{ order_bill.bill_img }}" title="{{ order_bill.bill_img }}" download="{{ order_bill.bill_img }}" data-gallery="">
+                                {{ order_bill.bill_img }}
+                            </a>
+                        </p>
+                    </td>
+                    <td><span class="glyphicon glyphicon-ok"></span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </section>
+{% endif %}
+    <br>
+{% if order_info.status_pay == 0 %}
+    <!-- The file upload form used as target for the file upload widget -->
+    <form id="fileupload" action="{{ url_for('order.pay_bill_uploads', order_id=order_info.id) }}" method="POST" enctype="multipart/form-data">
+        <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+        <div class="row fileupload-buttonbar">
+            <div class="col-lg-7">
+                <!-- The fileinput-button span is used to style the file input field as button -->
+                <span class="btn btn-success fileinput-button">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>添加凭证</span>
+                    <input type="file" name="files[]" multiple>
+                </span>
+                <button type="submit" class="btn btn-primary start">
+                    <i class="glyphicon glyphicon-upload"></i>
+                    <span>开始上传</span>
+                </button>
+                <button type="reset" class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>取消上传</span>
+                </button>
+                <button type="button" class="btn btn-danger delete">
+                    <i class="glyphicon glyphicon-trash"></i>
+                    <span>删除凭证</span>
+                </button>
+                <input type="checkbox" class="toggle">
+                <!-- The global file processing state -->
+                <span class="fileupload-process"></span>
+            </div>
+            <!-- The global progress state -->
+            <div class="col-lg-5 fileupload-progress fade">
+                <!-- The global progress bar -->
+                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                </div>
+                <!-- The extended global progress state -->
+                <div class="progress-extended">&nbsp;</div>
+            </div>
+        </div>
+        <!-- The table listing the files available for upload/download -->
+        <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+    </form>
+{% endif %}
+    <br>
+{% if order_info.status_pay == 0 %}
+    <div class="btn-group pull-right" role="group" aria-label="...">
+        <a type="button" class="btn btn-success" href="javascript:void(0);" onclick="order_pay({{ order_info.id }}, 1);">
+            <span class="glyphicon glyphicon-ok"></span> 支付成功
+        </a>
+        <a type="button" class="btn btn-warning" href="javascript:void(0);" onclick="order_pay({{ order_info.id }}, 2);">
+            <span class="glyphicon glyphicon-remove"></span> 支付失败
+        </a>
+    </div>
+{% endif %}
 
-    /* 创建Bar图表 */
-    var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
-	var barChartData01 = {
-		labels : ["January","February","March","April","May","June","July"],
-		datasets : [
-			{
-				fillColor : "rgba(220,220,220,0.5)",
-				strokeColor : "rgba(220,220,220,0.8)",
-				highlightFill: "rgba(220,220,220,0.75)",
-				highlightStroke: "rgba(220,220,220,1)",
-				data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
-			},
-			{
-				fillColor : "rgba(151,187,205,0.5)",
-				strokeColor : "rgba(151,187,205,0.8)",
-				highlightFill : "rgba(151,187,205,0.75)",
-				highlightStroke : "rgba(151,187,205,1)",
-				data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
-			}
-		]
-	};
-    $(function() {
-        var ctx = $("#chart_bar_canvas_01").get(0).getContext("2d");
-        new Chart(ctx).Bar(barChartData01, {responsive: true});
-    });
-    var barChartData02 = {
-		labels : ["January","February","March","April","May","June","July"],
-		datasets : [
-			{
-				fillColor : "rgba(220,220,220,0.5)",
-				strokeColor : "rgba(220,220,220,0.8)",
-				highlightFill: "rgba(220,220,220,0.75)",
-				highlightStroke: "rgba(220,220,220,1)",
-				data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
-			},
-			{
-				fillColor : "rgba(151,187,205,0.5)",
-				strokeColor : "rgba(151,187,205,0.8)",
-				highlightFill : "rgba(151,187,205,0.75)",
-				highlightStroke : "rgba(151,187,205,1)",
-				data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
-			}
-		]
-	};
-    $(function() {
-        var ctx = $("#chart_bar_canvas_02").get(0).getContext("2d");
-        new Chart(ctx).Bar(barChartData02, {responsive: true});
-    });
+</div>
+<!-- The blueimp Gallery widget -->
+<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-filter=":even">
+    <div class="slides"></div>
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+</div>
+
+{% raw %}
+<!-- The template to display files available for upload -->
+<script id="template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-upload fade">
+        <td>
+            <span class="preview"></span>
+        </td>
+        <td>
+            <p class="name">{%=file.name%}</p>
+            <strong class="error text-danger"></strong>
+        </td>
+        <td>
+            <p class="size">上传中...</p>
+            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+        </td>
+        <td>
+            {% if (!i && !o.options.autoUpload) { %}
+                <button class="btn btn-primary start" disabled>
+                    <i class="glyphicon glyphicon-upload"></i>
+                    <span>上传</span>
+                </button>
+            {% } %}
+            {% if (!i) { %}
+                <button class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>取消</span>
+                </button>
+            {% } %}
+        </td>
+    </tr>
+{% } %}
 </script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade">
+        <td>
+            <span class="preview">
+                {% if (file.thumbnail_url) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnail_url%}" height="80"></a>
+                {% } %}
+            </span>
+        </td>
+        <td>
+            <p class="name">
+                {% if (file.url) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnail_url?'data-gallery':''%}>{%=file.name%}</a>
+                {% } else { %}
+                    <span>{%=file.name%}</span>
+                {% } %}
+            </p>
+            {% if (file.error) { %}
+                <div><span class="label label-danger">上传错误</span> {%=file.error%}</div>
+            {% } %}
+        </td>
+        <td>
+            <span class="size">{%=o.formatFileSize(file.size)%}</span>
+        </td>
+        <td>
+            {% if (file.delete_url) { %}
+                <button class="btn btn-danger delete" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+                    <i class="glyphicon glyphicon-trash"></i>
+                    <span>删除</span>
+                </button>
+                <input type="checkbox" name="delete" value="1" class="toggle">
+            {% } else { %}
+                <button class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>取消</span>
+                </button>
+            {% } %}
+        </td>
+    </tr>
+{% } %}
+</script>
+{% endraw %}
+
+{% endblock %}
+
+<!-- The XDomainRequest Transport is included for cross-domain file deletion for IE 8 and IE 9 -->
+<!--[if (gte IE 8)&(lt IE 10)]>
+<script src="js/cors/jquery.xdr-transport.js"></script>
+<![endif]-->
+
+
+{% block extra_js %}
+    <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+    <script src="{{ url_for('static', filename='plugin/jQuery-File-Upload-9.18.0/js/vendor/jquery.ui.widget.js') }}"></script>
+    <!-- The Templates plugin is included to render the upload/download listings -->
+    <script src="{{ url_for('static', filename='plugin/JavaScript-Templates-3.8.0/js/tmpl.min.js') }}"></script>
+    <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+    <script src="{{ url_for('static', filename='plugin/JavaScript-Load-Image-2.12.2/js/load-image.all.min.js') }}"></script>
+    <!-- The Canvas to Blob plugin is included for image resizing functionality -->
+    <script src="{{ url_for('static', filename='plugin/JavaScript-Canvas-to-Blob-3.7.0/js/canvas-to-blob.min.js') }}"></script>
+    <!-- blueimp Gallery script -->
+    <script src="{{ url_for('static', filename='plugin/Gallery-2.25.0/js/jquery.blueimp-gallery.min.js') }}"></script>
+    <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+    <script src="{{ url_for('static', filename='plugin/jQuery-File-Upload-9.18.0/js/jquery.iframe-transport.js') }}"></script>
+    <!-- The basic File Upload plugin -->
+    <script src="{{ url_for('static', filename='plugin/jQuery-File-Upload-9.18.0/js/jquery.fileupload.js') }}"></script>
+    <!-- The File Upload processing plugin -->
+    <script src="{{ url_for('static', filename='plugin/jQuery-File-Upload-9.18.0/js/jquery.fileupload-process.js') }}"></script>
+    <!-- The File Upload image preview & resize plugin -->
+    <script src="{{ url_for('static', filename='plugin/jQuery-File-Upload-9.18.0/js/jquery.fileupload-image.js') }}"></script>
+    <!-- The File Upload audio preview plugin -->
+    <script src="{{ url_for('static', filename='plugin/jQuery-File-Upload-9.18.0/js/jquery.fileupload-audio.js') }}"></script>
+    <!-- The File Upload video preview plugin -->
+    <script src="{{ url_for('static', filename='plugin/jQuery-File-Upload-9.18.0/js/jquery.fileupload-video.js') }}"></script>
+    <!-- The File Upload validation plugin -->
+    <script src="{{ url_for('static', filename='plugin/jQuery-File-Upload-9.18.0/js/jquery.fileupload-validate.js') }}"></script>
+    <!-- The File Upload user interface plugin -->
+    <script src="{{ url_for('static', filename='plugin/jQuery-File-Upload-9.18.0/js/jquery.fileupload-ui.js') }}"></script>
+
+    <!-- The XDomainRequest Transport is included for cross-domain file deletion for IE 8 and IE 9 -->
+    <!--[if (gte IE 8)&(lt IE 10)]>
+    <script src="{{ url_for('static', filename='plugin/jQuery-File-Upload-9.18.0/js/cors/jquery.xdr-transport.js') }}"></script>
+    <![endif]-->
+    <script>
+    $(function () {
+        //初始化，主要是设置上传参数，以及事件处理方法(回调函数)
+        $('#fileupload').fileupload({
+            change: function(e, data) {
+                if(data.files.length > 2){
+                    alert("最多允许上传2张图片");
+                    return false;
+                }
+            },
+            drop: function(e, data) {
+                if(data.files.length > 2){
+                    alert("最多允许上传2张图片");
+                    return false;
+                }
+            }
+        });
+
+        // Load existing files:
+        $('#fileupload').addClass('fileupload-processing');
+        $.ajax({
+            // Uncomment the following to send cross-domain cookies:
+            //xhrFields: {withCredentials: true},
+            url: $('#fileupload').fileupload('option', 'url'),
+            dataType: 'json',
+            context: $('#fileupload')[0]
+        }).always(function () {
+            $(this).removeClass('fileupload-processing');
+        }).done(function (result) {
+            $(this).fileupload('option', 'done')
+                .call(this, $.Event('done'), {result: result});
+        });
+    });
+    // 支付状态确认
+    function order_pay(order_id, status_pay) {
+        //console.log($(form).serialize());
+        $.ajax({
+            url: "{{ url_for('order.ajax_pay') }}",
+            type: 'POST',
+            data: {order_id: order_id, status_pay: status_pay},
+            dataType: 'json',
+            success: function (result) {
+                console.log(result);
+                if(result.hasOwnProperty('error')){
+                    alert(result.error);
+                }else {
+                    alert(result.success);
+                    document.location.reload();
+                }
+            }
+        });
+        return false;
+    }
+    </script>
 {% endblock %}

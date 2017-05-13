@@ -12,7 +12,7 @@
 import os
 
 from flask import render_template, request, redirect
-from flask import send_from_directory, g, flash, url_for
+from flask import send_from_directory, g, flash, url_for, session
 from flask_login import current_user
 from itsdangerous import URLSafeSerializer, BadSignature
 
@@ -63,12 +63,14 @@ def index():
         try:
             s = URLSafeSerializer(app.config.get('USER_INVITE_LINK_SIGN_KEY', ''))
             link_param = s.loads(i)
-            # 如果未登陆，或登陆用户打开的不是自己的推广链接
+            # 如果未登录，或登录用户打开的不是自己的推广链接
             if not current_user.get_id() or current_user.get_id() != link_param.get('user_id'):
                 # 跳转注册页面
-                return redirect(url_for('auth.phone'))
+                session['user_pid'] = link_param.get('user_id')
+                return redirect(url_for('reg.index'))
         except BadSignature as e:
-            flash(u'Invite Link Failed, %s' % e.message, 'warning')
+            # flash(u'Invite Link Failed, %s' % e.message, 'warning')
+            flash(u'邀请注册链接错误，请重新索取链接', 'warning')
         except Exception as e:
             flash(e.message, 'warning')
     return render_template('index.html', title='home')
@@ -111,3 +113,7 @@ def internal_error(error):
     db.session.rollback()
     return render_template('500.html'), 500
 
+
+@app.errorhandler(413)
+def request_entity_too_large(error):
+    return '文件超出大小限制', 413

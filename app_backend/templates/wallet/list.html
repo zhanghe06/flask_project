@@ -78,7 +78,7 @@
                 <td>{{ apply_get.status_apply }}</td>
                 <td>{{ apply_get.status_order }}</td>
                 <td>{{ apply_get.status_delete }}</td>
-                <td>{{ apply_get.create_time }}</td>
+                <td>{{ moment(apply_get.create_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
                 <td>
                     <a href="javascript:void(0);" onclick="apply_get_delete({{ apply_get.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
                 </td>

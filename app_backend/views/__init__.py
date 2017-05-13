@@ -81,6 +81,8 @@ def login():
     """
     后台登录页面
     """
+    # print current_user.__dict__
+    # return json.dumps(current_user.__dict__)
     if g.user is not None and g.user.is_authenticated:
         return redirect(url_for('index'))
     from app_backend.forms.login import LoginForm
@@ -94,10 +96,10 @@ def login():
             }
             admin_info = get_admin_row(**condition)
             if admin_info is None:
-                flash(u'%s, You were logged failed' % form.account.data, 'warning')
+                flash(u'%s, 登录失败，账号不存在' % form.account.data, 'warning')
                 return render_template('login.html', title='login', form=form)
             if admin_info.status_delete == 1:
-                flash(u'%s, Your account is deleted' % form.account.data, 'warning')
+                flash(u'%s, 登录失败，账号已被删除' % form.account.data, 'warning')
                 return render_template('login.html', title='login', form=form)
             # session['logged_in'] = True
             # 用户通过验证后，记录登入IP
@@ -110,7 +112,7 @@ def login():
             # 用 login_user 函数来登入他们
             from app_backend.api.admin import get_admin_row_by_id
             login_user(get_admin_row_by_id(admin_info.id), remember=form.remember)
-            flash(u'%s, You were logged in' % form.account.data, 'success')
+            flash(u'%s, 恭喜，登录成功' % form.account.data, 'success')
             return redirect(request.args.get('next') or url_for('index'))
         flash(form.errors, 'warning')  # 调试打开
     return render_template('login.html', title='login', form=form)

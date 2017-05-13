@@ -14,6 +14,7 @@ import logging
 from datetime import datetime
 
 from flask import request, render_template, redirect, url_for, g, abort, flash, jsonify
+from flask import send_from_directory
 from flask_login import current_user, login_required
 
 from app_frontend import app
@@ -32,6 +33,18 @@ def allowed_file(filename):
     校验文件类型
     """
     return '.' in filename and filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
+
+
+def get_extend_type(filename):
+    """
+    获取文件扩展
+    :param filename:
+    :return:
+    """
+    if allowed_file(filename):
+        return filename.rsplit('.', 1)[1]
+    else:
+        return
 
 
 def get_file_size(file_obj):
@@ -69,13 +82,23 @@ def uploads():
         from werkzeug.utils import secure_filename
         file_list = request.files.getlist('files[]')
         for file_item in file_list:
+            # file_name = secure_filename(file_item.filename)
+            extend_type = get_extend_type(file_item.filename)
+            file_name = datetime.utcnow().strftime('%Y%m%d%H%M%S%f')
+            file_name = '%s.%s' % (file_name, extend_type) if extend_type else file_item.filename
             file_info = {
-                'name': secure_filename(file_item.filename),
+                'name': file_name,
                 'content_type': file_item.content_type,
                 'size': get_file_size(file_item),
-                'delete_url': url_for('uploads_del'),
+                'url': url_for('static', filename='uploads/%s' % file_name),
+                'thumbnail_url': url_for('static', filename='uploads/%s' % file_name),
+                'delete_url': url_for('file.delete'),
                 'delete_type': 'POST'
             }
+            if not extend_type:
+                file_info['thumbnail_url'] = url_for('static', filename='img/lazy-pic.png')
+                file_info.pop('url')
+                file_info.pop('delete_url')
             if not file_item or not allowed_file(file_item.filename):
                 file_info['error'] = u'文件类型暂不支持'
             file_item.save(app.config['UPLOAD_FOLDER'] + file_info['name'])
@@ -83,10 +106,28 @@ def uploads():
         return json.dumps({'files': files})
 
 
+@bp_file.route('/preview/<filename>', methods=['GET'])
+def preview(filename):
+    """
+    预览图
+    :return:
+    """
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename=filename)
+
+
+@bp_file.route('/thumbnail/<filename>', methods=['GET'])
+def thumbnail(filename):
+    """
+    缩略图
+    :return:
+    """
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename=filename)
+
+
 @bp_file.route('/del', methods=['GET', 'POST'])
 def delete():
     """
-    多文件上传
+    删除文件
     """
     if request.method == 'POST':
         # todo

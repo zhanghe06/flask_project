@@ -10,11 +10,11 @@
 
 
 from datetime import datetime
+import traceback
 
-
+from app_backend.database import db
 from app_backend.models import ApplyGet, Order, ApplyPut
 from app_backend.tools.db import get_row, get_rows_by_ids, get_lists, get_rows, get_row_by_id, add, edit, delete
-from app_backend.database import db
 from app_common.maps.status_audit import STATUS_AUDIT_SUCCESS
 from app_common.maps.status_order import STATUS_ORDER_COMPLETED, STATUS_ORDER_PROCESSING
 
@@ -184,5 +184,6 @@ def apply_get_match(apply_get_id, apply_put_ids, accept_split=0):
         db.session.commit()
         return result
     except Exception as e:
+        print traceback.print_exc()
         db.session.rollback()
         raise e

@@ -18,6 +18,7 @@ from app_frontend import app
 
 from flask import Blueprint
 
+from app_frontend.lib.rabbit_mq import RabbitDelayQueue
 from app_frontend.lib.sms_chuanglan_iso import SmsChuangLanIsoApi
 from app_common.maps import area_code_map
 from app_common.maps.type_auth import *
@@ -44,6 +45,8 @@ def index():
     # return "Hello, World!\nReg!"
     from app_frontend.forms.reg import RegForm
     form = RegForm()
+    # 推荐人赋值
+    form.user_pid.data = session.get('user_pid', 0)
     if request.method == 'POST':
         if form.validate_on_submit():
             current_time = datetime.utcnow()
@@ -79,6 +82,14 @@ def index():
             }
             add_user_profile(user_profile_data)
             if user_id:
+                # 加入用户注册自动监测锁定队列
+                from app_common.settings.user import LOCK_REG_NOT_ACTIVE_TTL
+                q = RabbitDelayQueue(
+                    exchange=app.config['EXCHANGE_NAME'],
+                    queue_name='lock_reg_not_active',
+                    ttl=LOCK_REG_NOT_ACTIVE_TTL
+                )
+                q.put({'user_id': user_id, 'reg_time': current_time.strftime('%Y-%m-%d %H:%M:%S')})
                 flash(u'%s, 恭喜您注册成功' % form.account.data, 'success')
             else:
                 flash(u'%s, 很遗憾注册失败' % form.account.data, 'warning')
@@ -96,6 +107,8 @@ def phone():
     # return "Hello, World!\nReg!"
     from app_frontend.forms.reg import RegPhoneForm
     form = RegPhoneForm()
+    # 推荐人赋值
+    form.user_pid.data = session.get('user_pid', 0)
     if request.method == 'POST':
         if form.validate_on_submit():
             current_time = datetime.utcnow()
@@ -154,6 +167,8 @@ def email():
     # return "Hello, World!\nReg!"
     from app_frontend.forms.reg import RegEmailForm
     form = RegEmailForm()
+    # 推荐人赋值
+    form.user_pid.data = session.get('user_pid', 0)
     if request.method == 'POST':
         if form.validate_on_submit():
             # 添加用户注册信息
@@ -207,7 +222,7 @@ def email():
                 flash(u'%s, Sorry, register error' % form.email.data, 'warning')
             return redirect(url_for('auth.index'))
         # 闪现消息 success info warning danger
-        flash(form.errors, 'warning')  # 调试打开
+        # flash(form.errors, 'warning')  # 调试打开
     return render_template('reg/email.html', title='reg', form=form)
 
 

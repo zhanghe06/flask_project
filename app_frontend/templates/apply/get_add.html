@@ -12,6 +12,30 @@
         <div class="table-responsive col-lg-8 col-md-12">
             <form class="form-horizontal" method="post" action="">
                 {{ form.csrf_token }}
+                <div class="form-group{% if form.type_pay.errors %} has-error{% endif %}">
+                    {{ form.type_pay.label(class="col-sm-2 control-label") }}
+                    <div class="col-sm-10">
+                        {{ form.type_pay(default=form.type_pay.data | int) }}
+                        {% for error in form.type_pay.errors %}
+                            <span class="help-block">{{ error }}</span>
+                        {% endfor %}
+                        <span class="help-block">
+                            <a target="_blank" href="https://cshall.alipay.com/lab/help_detail.htm?help_id=212269">《支付宝限额说明》</a>
+                            <br/>
+                            <a target="_blank" href="http://kf.qq.com/touch/faq/151210NZzmuY151210ZRj2y2.html">《微信支付限额说明》</a>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group{% if form.type_withdraw.errors %} has-error{% endif %}">
+                    {{ form.type_withdraw.label(class="col-sm-2 control-label") }}
+                    <div class="col-sm-10">
+                        {{ form.type_withdraw(default=form.type_withdraw.data | int) }}
+                        {% for error in form.type_withdraw.errors %}
+                            <span class="help-block">{{ error }}</span>
+                        {% endfor %}
+                        <span class="help-block">当前余额，钱包余额:{{ g.user.id | user_wallet }}，数字货币:{{ g.user.id | user_bit_coin }}</span>
+                    </div>
+                </div>
                 <div class="form-group{% if form.money_apply.errors %} has-error{% endif %}">
                     {{ form.money_apply.label(class="col-sm-2 control-label") }}
                     <div class="col-sm-10">
@@ -19,6 +43,7 @@
                         {% for error in form.money_apply.errors %}
                             <span class="help-block">{{ error }}</span>
                         {% endfor %}
+                        <span class="help-block">申请金额 必须为100的倍数，最小金额100，最大金额100000</span>
                     </div>
                 </div>
                 <div class="form-group">

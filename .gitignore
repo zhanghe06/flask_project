@@ -5,8 +5,12 @@
 *.pyc
 #*.log
 .idea/
+*.DS_Store
+
 data/db_*
 config/zhanghe.py
 config/docker.py
 config/online.py
-logs/
+logs/*.log
+app_frontend/static/uploads/*
+

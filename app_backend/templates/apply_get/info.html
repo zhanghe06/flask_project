@@ -50,7 +50,7 @@
                     <td>{{ apply_get_info.status_apply | status_apply }}</td>
                     <td>{{ apply_get_info.status_order | status_order }}</td>
                     <td>{{ apply_get_info.status_delete | status_delete }}</td>
-                    <td>{{ apply_get_info.create_time }}</td>
+                    <td>{{ moment(apply_get_info.create_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
                     <td>
                         <label><input title="选择" type="checkbox" id="apply_get_accept_split" value="1" /> 允许拆分</label>
                     </td>
@@ -67,7 +67,7 @@
             <span class="glyphicon glyphicon-cog pull-right"></span>
             </strong>
         </div>
-        <table class="table">
+        <table class="table table-hover table-responsive">
             <thead>
                 <tr>
                     <th>订单ID</th>
@@ -94,7 +94,7 @@
                     <td>{{ order_info.status_pay | status_pay }}</td>
                     <td>{{ order_info.status_rec | status_rec }}</td>
                     <td>{{ order_info.status_delete | status_delete }}</td>
-                    <td>{{ order_info.create_time }}</td>
+                    <td>{{ moment(order_info.create_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -206,7 +206,7 @@
                     <td>{{ apply_put.status_apply | status_apply }}</td>
                     <td>{{ apply_put.status_order | status_order }}</td>
                     <td>{{ apply_put.status_delete | status_delete }}</td>
-                    <td>{{ apply_put.create_time }}</td>
+                    <td>{{ moment(apply_put.create_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
                     <td>
                         <label><input title="选择" type="checkbox" class="apply_put_check" name="apply_put_id" id="{{ apply_put.money_apply }}" value="{{ apply_put.id }}" /> 选择</label>
                     </td>
@@ -288,7 +288,7 @@
         //选中状态变化同步更新选中金额
         $('.apply_put_check').change(function () {
             var sum=0;
-            $("input:checkbox:checked").each(function(){
+            $("input.apply_put_check:checkbox:checked").each(function(){
                 sum+= parseInt(this.id);
             });
             $('#amount-money').html(sum);

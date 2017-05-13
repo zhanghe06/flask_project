@@ -49,7 +49,7 @@
             <div class="col-md-4 col-md-offset-4">
                 <div class="login-panel panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Please Sign In</h3>
+                        <h3 class="panel-title">后台登录</h3>
                     </div>
                     <div class="panel-body">
                         <form class="form-horizontal" method="post" action="">
@@ -57,7 +57,7 @@
 
                             <div class="form-group{% if form.account.errors %} has-error{% endif %}">
                                 <div class="col-sm-12">
-                                    {{ form.account(class="form-control", placeholder="Account", value="") }}
+                                    {{ form.account(class="form-control", placeholder="登录账号", value="") }}
                                     {% for error in form.account.errors %}
                                         <span class="help-block">{{ error }}</span>
                                     {% endfor %}
@@ -65,7 +65,7 @@
                             </div>
                             <div class="form-group{% if form.password.errors %} has-error{% endif %}">
                                 <div class="col-sm-12">
-                                    {{ form.password(class="form-control", placeholder="Password", value="123456") }}
+                                    {{ form.password(class="form-control", placeholder="登录密码", value="") }}
                                     {% for error in form.password.errors %}
                                         <span class="help-block">{{ error }}</span>
                                     {% endfor %}
@@ -74,7 +74,7 @@
                             <div class="form-group{% if form.sms.errors %} has-error{% endif %}">
                                 <div class="col-sm-12">
                                     <div class="input-group">
-                                        {{ form.sms(class="form-control", placeholder="Sms", maxlength=6) }}
+                                        {{ form.sms(class="form-control", placeholder="短信验证码", maxlength=6) }}
                                         <span class="input-group-btn">
                                             <button id="get_sms_btn" class="btn btn-default" type="button">
                                                 <span class="glyphicon glyphicon-envelope"></span> <i>发送短信</i>
@@ -90,14 +90,14 @@
                                 <div class="col-sm-12">
                                     <div class="checkbox">
                                         <label>
-                                            {{ form.remember }} Remember Me
+                                            {{ form.remember }} 记住登录状态
                                         </label>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-12">
-                                    <button type="submit" class="btn btn-success btn-load btn-block" data-loading-text="Sign in..." autocomplete="off">Sign in</button>
+                                    <button type="submit" class="btn btn-success btn-load btn-block" data-loading-text="登录中" autocomplete="off">登录</button>
                                 </div>
                             </div>
                         </form>

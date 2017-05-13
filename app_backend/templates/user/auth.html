@@ -25,7 +25,7 @@
         <div class="form-group{% if form.auth_key.errors %} has-error{% endif %}">
             {{ form.auth_key.label(class="col-sm-2 control-label") }}
             <div class="col-sm-10">
-                {{ form.auth_key(class="form-control", placeholder="Auth Key") }}
+                {{ form.auth_key(class="form-control", placeholder="登录账号[2-20位]") }}
                 {% for error in form.auth_key.errors %}
                     <span class="help-block">{{ error }}</span>
                 {% endfor %}
@@ -73,8 +73,8 @@
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-default btn-load" data-loading-text="Editing...">Edit</button>
-                <button type="reset" class="btn btn-default">Reset</button>
+                <button type="submit" class="btn btn-success btn-load" data-loading-text="保存中">保存</button>
+                <button type="reset" class="btn btn-default">重新填写</button>
             </div>
         </div>
     </form>

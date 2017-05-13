@@ -17,7 +17,7 @@ from flask_login import current_user, login_required
 
 from app_frontend import app
 from app_frontend.models import User
-from app_frontend.api.apply_get import get_apply_get_rows, get_apply_get_row, add_apply_get
+from app_frontend.api.apply_get import get_apply_get_rows, get_apply_get_row, add_apply_get, user_apply_get
 from app_frontend.api.apply_put import get_apply_put_rows, get_apply_put_row, add_apply_put
 from app_common.maps.status_order import *
 from app_common.maps.type_apply import *
@@ -89,6 +89,7 @@ def add_put():
             apply_put_info = {
                 'user_id': current_user.id,
                 'type_apply': TYPE_APPLY_USER,
+                'type_pay': form.type_pay.data,
                 'money_apply': form.money_apply.data,
                 'status_apply': STATUS_APPLY_SUCCESS,
                 'status_order': STATUS_ORDER_HANDING,
@@ -98,9 +99,9 @@ def add_put():
             }
             result = add_apply_put(apply_put_info)
             if result:
-                flash(u'Add Success', 'success')
+                flash(u'申请成功', 'success')
             else:
-                flash(u'Add Failed', 'warning')
+                flash(u'申请失败', 'warning')
             return redirect(url_for('apply.lists_put'))
     return render_template('apply/put_add.html', title='apply_put_add', form=form)
 
@@ -115,23 +116,17 @@ def add_get():
     form = ApplyGetAddForm(request.form)
     if request.method == 'POST':
         if form.validate_on_submit():
-            current_time = datetime.utcnow()
-            apply_get_info = {
-                'user_id': current_user.id,
-                'type_apply': TYPE_APPLY_USER,
-                'money_apply': form.money_apply.data,
-                'status_apply': STATUS_APPLY_SUCCESS,
-                'status_order': STATUS_ORDER_HANDING,
-                'status_delete': STATUS_DEL_NO,
-                'create_time': current_time,
-                'update_time': current_time,
-            }
-            result = add_apply_get(apply_get_info)
-            if result:
-                flash(u'Add Success', 'success')
-            else:
-                flash(u'Add Failed', 'warning')
-            return redirect(url_for('apply.lists_get'))
+            user_id = current_user.id
+            type_pay = form.type_pay.data
+            type_withdraw = form.type_withdraw.data
+            money_apply = form.money_apply.data
+            try:
+                result = user_apply_get(user_id, type_pay, type_withdraw, money_apply)
+                if result:
+                    flash(u'申请成功', 'success')
+                    return redirect(url_for('apply.lists_get'))
+            except Exception as e:
+                flash(u'申请失败, 原因：%s' % e.message, 'warning')
     return render_template('apply/get_add.html', title='apply_get_add', form=form)
 
 
