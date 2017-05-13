@@ -47,18 +47,18 @@ class AdminProfileForm(Form):
     管理员基本信息表单
     """
     id = HiddenField('Id')
-    username = StringField('User Name', validators=[DataRequired(), Length(min=2, max=20)])
-    password = StringField('Password', validators=[password_edit_validator])
+    username = StringField(u'管理账号', validators=[DataRequired(), Length(min=2, max=20)])
+    password = StringField(u'登录密码', validators=[password_edit_validator])
     area_code_choices = []
     for m, n in enumerate(area_code_list):
         area_code_choices.append((m, n))
-    area_id = SelectAreaCode('Area Id', default='0', choices=area_code_choices, validators=[DataRequired()])
-    phone = StringField('Phone')
-    role = SelectBS('Role', default='', choices=role_admin_list, validators=[DataRequired()])
-    login_ip = StringField('Login Ip')
-    login_time = DateTimeField('Login Time')
-    create_time = DateTimeField('Create Time')
-    update_time = DateTimeField('Update Time')
+    area_id = SelectAreaCode(u'手机区号', default='0', choices=area_code_choices, validators=[DataRequired()])
+    phone = StringField(u'手机号码')
+    role = SelectBS(u'管理角色', default='', choices=role_admin_list, validators=[DataRequired()])
+    login_ip = StringField(u'登录IP')
+    login_time = DateTimeField(u'登录时间')
+    create_time = DateTimeField(u'创建时间')
+    update_time = DateTimeField(u'更新时间')
 
 
 class AdminAddForm(Form):

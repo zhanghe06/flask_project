@@ -9,7 +9,7 @@
 """
 
 
-from flask_wtf import FlaskForm as Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
 from app_backend.api.user_auth import get_user_auth_row
@@ -19,7 +19,7 @@ from app_common.maps import status_pay_list
 from app_common.maps import status_rec_list
 
 
-class OrderSearchForm(Form):
+class OrderSearchForm(FlaskForm):
     """
     订单搜索表单
     """

@@ -10,7 +10,7 @@
 
 
 from flask import session
-from flask_wtf import FlaskForm as Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField, SelectField, HiddenField
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress, Regexp, AnyOf
 from app_frontend.forms import SelectAreaCode
@@ -134,11 +134,34 @@ class RegPhoneRepeatValidate(object):
             raise ValidationError(self.message or u'注册手机重复')
 
 
-class RegForm(Form):
+class PhoneFormatValidate(object):
+    """
+    手机号码格式校验
+    """
+    def __init__(self, message=None):
+        self.message = message
+
+    def __call__(self, form, field):
+        phone_len = len(field.data)
+        if phone_len < 6 or phone_len > 11:
+            raise ValidationError(u'手机号码长度不符')
+        # 中国手机号码格式校验
+        if form.area_id.data == '0' and phone_len != 11:
+            raise ValidationError(u'手机号码长度不符')
+        if field.data.startswith('0'):
+            raise ValidationError(u'手机号码格式不符')
+
+
+class RegForm(FlaskForm):
     """
     注册表单
     """
-    account = StringField(u'登陆账号', validators=[DataRequired(), RegAccountRepeatValidate()])
+    user_pid = HiddenField(u'推荐人')
+    account = StringField(u'登录账号', validators=[
+        DataRequired(u'登录账号不能为空'),
+        Length(min=2, max=20, message=u'登录账号长度不符'),
+        RegAccountRepeatValidate()
+    ])
     password = PasswordField(u'登录密码', validators=[
         DataRequired(message=u'密码不能为空'),
         Length(min=6, max=20, message=u'密码长度不符'),
@@ -148,16 +171,16 @@ class RegForm(Form):
         DataRequired(message=u'密码不能为空'),
         Length(min=6, max=20, message=u'密码长度不符'),
     ])
-    user_pid = HiddenField('User Pid', default='0')
     accept_agreement = BooleanField('I accept the agreement', validators=[
         DataRequired(message=u'请阅读并同意注册协议')
     ], default=True)
 
 
-class RegPhoneForm(Form):
+class RegPhoneForm(FlaskForm):
     """
     手机注册表单
     """
+    user_pid = HiddenField(u'推荐人')
     area_code_choices = []
     for m, n in enumerate(area_code_list):
         area_code_choices.append((m, n))
@@ -165,10 +188,11 @@ class RegPhoneForm(Form):
     area_id = SelectAreaCode(u'手机区号', default='0', choices=area_code_choices, validators=[DataRequired()])
     phone = StringField(u'手机号码', validators=[
         DataRequired(u'手机号码不能为空'),
-        RegPhoneRepeatValidate(u'手机已被注册')
+        RegPhoneRepeatValidate(u'手机已被注册'),
+        PhoneFormatValidate()
     ])
     captcha = StringField(u'图形验证码', validators=[
-        DataRequired(),
+        DataRequired(u'图形验证码不能为空'),
         Length(min=4, max=4, message=u'图形验证码长度不符')
     ])
     sms = StringField(u'短信验证码', validators=[
@@ -176,7 +200,7 @@ class RegPhoneForm(Form):
         Length(min=6, max=6, message=u'短信验证码长度不符'),
         SmsCodeValidate()
     ])
-    password = PasswordField(u'登陆密码', validators=[
+    password = PasswordField(u'登录密码', validators=[
         DataRequired(u'密码不能为空'),
         Length(min=6, max=20, message=u'密码长度不符'),
         EqualTo('confirm', message=u'两次输入的密码不一致')
@@ -185,20 +209,20 @@ class RegPhoneForm(Form):
         DataRequired(u'密码不能为空'),
         Length(min=6, max=20, message=u'密码长度不符')
     ])
-    user_pid = HiddenField('User Pid', default='0')
     accept_agreement = BooleanField(u'我已阅读并同意注册协议', validators=[DataRequired(u'请阅读并同意注册协议')], default=True)
 
 
-class RegEmailForm(Form):
+class RegEmailForm(FlaskForm):
     """
     邮箱注册表单
     """
-    email = StringField(u'登陆邮箱', validators=[
-        DataRequired(u'登陆邮箱不能为空'),
+    user_pid = HiddenField(u'推荐人')
+    email = StringField(u'登录邮箱', validators=[
+        DataRequired(u'登录邮箱不能为空'),
         Email(u'邮箱格式不对'),
         RegEmailRepeatValidate(u'邮箱已被注册')
     ])
-    password = PasswordField(u'登陆密码', validators=[
+    password = PasswordField(u'登录密码', validators=[
         DataRequired(u'密码不能为空'),
         Length(min=6, max=20, message=u'密码长度不符'),
         EqualTo('confirm', message=u'两次输入的密码不一致')
@@ -207,5 +231,4 @@ class RegEmailForm(Form):
         DataRequired(u'密码不能为空'),
         Length(min=6, max=20, message=u'密码长度不符')
     ])
-    user_pid = HiddenField('User Pid', default='0')
     accept_agreement = BooleanField(u'我已阅读并同意注册协议', validators=[DataRequired(u'请阅读并同意注册协议')], default=True)

@@ -9,12 +9,12 @@
 """
 
 
-from flask_wtf import FlaskForm as Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
 
 
-class BlogAddForm(Form):
+class BlogAddForm(FlaskForm):
     """
     Blog 添加表单
     """
@@ -23,7 +23,7 @@ class BlogAddForm(Form):
     pub_date = DateField('Pub Date', validators=[DataRequired()])
 
 
-class BlogEditForm(Form):
+class BlogEditForm(FlaskForm):
     """
     Blog 编辑表单
     """

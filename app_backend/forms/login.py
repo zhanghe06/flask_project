@@ -9,15 +9,15 @@
 """
 
 
-from flask_wtf import FlaskForm as Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
 from app_backend.api.user_auth import get_user_auth_row
 
 
-class LoginForm(Form):
+class LoginForm(FlaskForm):
     """
-    账号登陆表单
+    账号登录表单
     """
     account = StringField('Account', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])

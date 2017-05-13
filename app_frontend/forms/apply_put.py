@@ -9,25 +9,30 @@
 """
 
 
-from flask_wtf import FlaskForm as Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField, DecimalField, IntegerField
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
 from app_frontend.api.user_auth import get_user_auth_row
-from app_frontend.forms import SelectBS
-from app_common.maps import type_apply_list
+from app_frontend.forms import SelectBS, RadioInlineBS
+from app_common.maps import type_apply_list, type_pay_list
 
 
-class ApplyPutAddForm(Form):
+class ApplyPutAddForm(FlaskForm):
     """
     投资申请添加表单
     """
+    type_pay_list.pop(0)
+    type_pay = RadioInlineBS(u'支付方式',
+                             choices=type_pay_list,
+                             validators=[DataRequired(message=u'支付方式不能为空')]
+                             )
     money_apply = IntegerField(u'申请金额', validators=[
         DataRequired(message=u'金额必须为整数'),
         NumberRange(min=0, message=u'金额必须为整数')
     ])
 
 
-class ApplyPutEditForm(Form):
+class ApplyPutEditForm(FlaskForm):
     """
     投资申请编辑表单
     """

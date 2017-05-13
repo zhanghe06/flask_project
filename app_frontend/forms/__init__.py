@@ -8,7 +8,7 @@
 @time: 2017/3/10 下午10:48
 """
 
-from wtforms import SelectField, BooleanField
+from wtforms import SelectField, BooleanField, RadioField
 from wtforms.widgets import HTMLString
 from wtforms.compat import text_type, iteritems
 from wtforms.widgets import html_params
@@ -151,3 +151,44 @@ class SelectAreaCode(SelectField):
         else:
             raise ValueError(self.gettext('Not a valid choice'))
 
+
+class RadioInlineWidget(object):
+    """
+    自定义内联单选框组件
+    """
+    input_type = 'radio'
+
+    def __call__(self, field, **kwargs):
+
+        html = []
+        default = kwargs.pop('default', None)
+        for k, v in field.choices:
+            params = {
+                'type': self.input_type,
+                'id': '%s_%s' % (field.id, k),
+                'name': field.id,
+                'value': k,
+            }
+            if default == k:
+                params['checked'] = True
+
+            html.append('<label class="radio-inline">')
+            html.append('<input %s> %s' % (html_params(**params), v))
+            html.append('</label>')
+        return HTMLString('\n'.join(html))
+
+
+class RadioInlineBS(RadioField):
+    """
+    自定义内联单选框控件
+    """
+
+    widget = RadioInlineWidget()
+
+    def pre_validate(self, form):
+        """
+        校验表单传值是否合法
+        """
+        if self.data not in [str(i) for i in dict(self.choices).keys()]:
+            # raise ValueError(self.gettext('Not a valid choice'))
+            raise ValueError(u'选择不能为空')
