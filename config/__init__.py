@@ -42,6 +42,8 @@ elif config_env == 'zhanghe':
     from zhanghe import *
 elif config_env == 'docker':
     from docker import *
+elif config_env == 'docker_compose':
+    from docker_compose import *
 else:
     from local import *
 

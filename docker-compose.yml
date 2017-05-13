@@ -1,0 +1,21 @@
+
+version: '3'
+services:
+  web:
+    build: .
+    depends_on:
+      - nginx
+      - redis
+      - mariadb
+      - rabbitmq
+      - mongo
+  nginx:
+    image: nginx:1.13.0
+  redis:
+    image: redis:3.0.7
+  mariadb:
+    image: mariadb:10.1.23
+  rabbitmq:
+    image: rabbitmq:3.6.9
+  mongo:
+    image: mongo:3.0.14

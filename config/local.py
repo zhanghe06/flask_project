@@ -82,6 +82,8 @@ RABBIT_MQ = {
     'port': 5672
 }
 
+EXCHANGE_NAME = 'flask'
+
 # 验证码类型
 CAPTCHA_ENTITY = [
     'reg',      # 注册
@@ -130,9 +132,11 @@ ADMIN_TO_USER_LOGIN_SIGN_KEY = '1b106105da7e88e54d42e3f4356e41d8'
 USER_INVITE_LINK_SIGN_KEY = 'ff99bae31b7bd480deee291dd55d6864'
 
 # 文件上传配置
-UPLOAD_FOLDER = os.path.join(BASE_DIR, 'app/static/uploads/')
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-MAX_CONTENT_LENGTH = 2.6 * 1024 * 1024  # 2.6M
+UPLOAD_FOLDER = os.path.join(BASE_DIR, 'app_frontend/static/uploads/')
+# ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+MAX_CONTENT_LENGTH = 2.6 * 1024 * 1024  # 2.6Mb
+MIN_CONTENT_LENGTH = 2.0 * 1024         # 2.0Kb
 
 # Celery 配置 （异步任务队列/基于分布式消息传递的作业队列）
 CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
