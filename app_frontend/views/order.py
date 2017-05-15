@@ -115,7 +115,7 @@ def info_put(order_id):
     if not order_info:
         flash(u'订单查询失败', 'warning')
         return redirect(url_for('order.lists_put'))
-    if order_info.status_delete == STATUS_DEL_OK:
+    if order_info.status_delete == int(STATUS_DEL_OK):
         flash(u'订单已被删除', 'warning')
         return redirect(url_for('order.lists_put'))
 
@@ -155,7 +155,7 @@ def info_get(order_id):
     if not order_info:
         flash(u'订单查询失败', 'warning')
         return redirect(url_for('order.lists_get'))
-    if order_info.status_delete == STATUS_DEL_OK:
+    if order_info.status_delete == int(STATUS_DEL_OK):
         flash(u'订单已被删除', 'warning')
         return redirect(url_for('order.lists_get'))
 
@@ -195,7 +195,7 @@ def pay(order_id):
     if not order_info:
         flash(u'订单查询失败', 'warning')
         return redirect(url_for('order.lists_put'))
-    if order_info.status_delete == STATUS_DEL_OK:
+    if order_info.status_delete == int(STATUS_DEL_OK):
         flash(u'订单已被删除', 'warning')
         return redirect(url_for('order.lists_put'))
     if request.method == 'POST':
@@ -244,7 +244,7 @@ def pay_bill_uploads(order_id):
         if not order_info:
             flash(u'订单查询失败', 'warning')
             return redirect(url_for('order.lists_put'))
-        if order_info.status_delete == STATUS_DEL_OK:
+        if order_info.status_delete == int(STATUS_DEL_OK):
             flash(u'订单已被删除', 'warning')
             return redirect(url_for('order.lists_put'))
 
@@ -327,7 +327,7 @@ def ajax_pay():
                 raise Exception(u'异常操作，此订单不存在')
             if order_info.apply_put_uid != current_user.id:
                 raise Exception(u'异常操作，此订单无权限')
-            if order_info.status_delete == STATUS_DEL_OK:
+            if order_info.status_delete == int(STATUS_DEL_OK):
                 raise Exception(u'异常操作，此订单已删除')
             if order_info.status_pay == status_pay:
                 raise Exception(u'异常操作，不能重复操作')
@@ -375,9 +375,9 @@ def ajax_rec():
                 raise Exception(u'异常操作，此订单不存在')
             if order_info.apply_get_uid != current_user.id:
                 raise Exception(u'异常操作，此订单无权限')
-            if order_info.status_delete == STATUS_DEL_OK:
+            if order_info.status_delete == int(STATUS_DEL_OK):
                 raise Exception(u'异常操作，此订单已删除')
-            if order_info.status_pay != STATUS_PAY_SUCCESS:
+            if order_info.status_pay != int(STATUS_PAY_SUCCESS):
                 raise Exception(u'异常操作，此订单未支付')
             if order_info.status_rec == status_rec:
                 raise Exception(u'异常操作，不能重复操作')

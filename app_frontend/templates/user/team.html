@@ -57,7 +57,9 @@
                 <td>{{ user.status_lock | status_lock }}</td>
                 <td>{{ user.status_delete | status_delete }}</td>
                 <td>
-                    <a href="javascript:void(0);" rel="tooltip" title="激活"><span class="glyphicon glyphicon-star-empty"></span></a>
+                    <a type="button" class="btn-sm btn-success" href="javascript:void(0);" onclick="user_active({{ user.id }});">
+                        <span class="glyphicon glyphicon-star-empty"></span> 用户激活
+                    </a>
                 </td>
             </tr>
             {% endfor %}
@@ -71,5 +73,26 @@
 {% endblock %}
 
 {% block extra_js %}
-
+<script>
+// 用户激活
+function user_active(user_id) {
+    //console.log($(form).serialize());
+    $.ajax({
+        url: "{{ url_for('user.ajax_active') }}",
+        type: 'POST',
+        data: {user_id: user_id},
+        dataType: 'json',
+        success: function (result) {
+            console.log(result);
+            if(result.hasOwnProperty('error')){
+                alert(result.error);
+            }else {
+                alert(result.success);
+                document.location.reload();
+            }
+        }
+    });
+    return false;
+}
+</script>
 {% endblock %}

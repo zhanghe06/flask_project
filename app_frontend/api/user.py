@@ -120,7 +120,7 @@ def get_user_team_rows(page=1, per_page=10, **kwargs):
 
     pagination = UserProfile.query. \
         filter(*condition_user_profile). \
-        outerjoin(User, User.id == UserProfile.user_pid). \
+        outerjoin(User, User.id == UserProfile.user_id). \
         filter(*condition_user). \
         add_entity(User). \
         paginate(page, per_page, False)

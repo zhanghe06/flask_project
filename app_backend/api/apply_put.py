@@ -119,7 +119,7 @@ def apply_put_match(apply_put_id, apply_get_ids, accept_split=0):
     apply_put_info = get_apply_put_row_by_id(apply_put_id)
 
     # 判断是否已经匹配
-    if apply_put_info.status_order == STATUS_ORDER_COMPLETED:
+    if apply_put_info.status_order == int(STATUS_ORDER_COMPLETED):
         raise Exception(u'不能重复匹配')
     apply_get_list = get_apply_get_rows_by_ids(apply_get_ids)
 
