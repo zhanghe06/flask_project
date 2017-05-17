@@ -14,3 +14,11 @@ config/online.py
 logs/*.log
 app_frontend/static/uploads/*
 
+# 数据
+docker/marriadb/data/*
+docker/mongodb/data/*
+docker/rabbitmq/data/*
+docker/redis/data/*
+
+# 日志
+docker/nginx/log/*

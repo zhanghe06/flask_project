@@ -65,8 +65,9 @@ $ sudo docker pull rabbitmq:3.6.9
 MongoDB
 https://hub.docker.com/_/mongo/
 ```
-$ sudo docker pull mongo:3.0.14
+$ sudo docker pull mongo:3.4.4
 ```
+
 
 ## 查看容器信息
 
