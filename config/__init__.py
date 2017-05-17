@@ -9,13 +9,11 @@
 """
 
 
-import os
-
-
 def get_env():
     """
     获取运行环境
     """
+    import os
     file_name = '/'.join((os.path.dirname(os.path.abspath(__file__)), 'config.env'))
     with open(file_name) as f:
         env = f.read()
@@ -34,18 +32,10 @@ config_env = get_env()
 
 if config_env == 'online':
     from online import *
-elif config_env == 'test':
-    from test import *
 elif config_env == 'dev':
     from dev import *
-elif config_env == 'zhanghe':
-    from zhanghe import *
-elif config_env == 'docker':
-    from docker import *
-elif config_env == 'docker_compose':
-    from docker_compose import *
 else:
-    from local import *
+    from dev import *
 
 
 """
