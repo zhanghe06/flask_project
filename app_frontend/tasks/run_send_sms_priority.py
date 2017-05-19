@@ -14,17 +14,29 @@ import traceback
 
 from app_frontend.lib.rabbit_mq import RabbitPriorityQueue
 from config import EXCHANGE_NAME
+from app_frontend import sms_client
 
 
 def on_send_sms_priority(ch, method, properties, body):
     """
-    回调处理 - 发送短信(带优先级)
+    回调处理 - 发送短信(带优先级) 一般是带验证码短信，时效性要求高
     :return:
     """
     try:
         print " [x]  Get %r" % (body,)
         msg = json.loads(body)
-        # todo
+        user_id = msg['user_id']
+        mobile = msg['mobile']
+        sms_content = msg['sms_content']
+
+        result = sms_client.send_international(mobile, sms_content)
+        print result
+        # 发送成功
+        if result.get('success'):
+            print u'发送成功 uid:%s, mobile:%s, content: %s' % (user_id, mobile, sms_content)
+        # 发送失败
+        else:
+            print u'发送失败 uid:%s, mobile:%s, content: %s' % (user_id, mobile, sms_content)
         ch.basic_ack(delivery_tag=method.delivery_tag)
     except Exception as e:
         print traceback.print_exc()
@@ -43,9 +55,9 @@ def test_put():
     :return:
     """
     q = RabbitPriorityQueue(exchange=EXCHANGE_NAME, queue_name='send_sms_p')
-    q.put({'user_id': 1, 'reg_time': '1900-01-01 00:00:00'}, 20)
-    q.put({'user_id': 2, 'reg_time': '1900-01-01 00:00:00'}, 30)
-    q.put({'user_id': 3, 'reg_time': '1900-01-01 00:00:00'}, 10)
+    q.put({'user_id': 1, 'mobile': '8613800001111', 'sms_content': '1111'}, 20)
+    q.put({'user_id': 2, 'mobile': '8613800002222', 'sms_content': '2222'}, 30)
+    q.put({'user_id': 3, 'mobile': '8613800003333', 'sms_content': '3333'}, 10)
 
 
 if __name__ == '__main__':

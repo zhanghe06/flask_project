@@ -208,7 +208,6 @@ def setting():
                 'phone': form.phone.data,
                 'birthday': form.birthday.data,
                 'update_time': datetime.utcnow(),
-                # 'last_ip': request.headers.get('X-Forwarded-For', request.remote_addr),
             }
             result = edit_user(current_user.id, user_info)
             if result == 1:

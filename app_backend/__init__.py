@@ -8,16 +8,17 @@
 @time: 2017/4/9 上午10:11
 """
 
+from logging.config import dictConfig
 
 from flask import Flask
-from logging.config import dictConfig
 from flask_login import LoginManager
 from flask_moment import Moment
 from flask_oauthlib.client import OAuth
-from app_backend.lib.sendcloud import SendCloudClient
+
 from app_backend.lib.qiniu_store import QiNiuClient
 from app_backend.lib.redis_session import RedisSessionInterface
-
+from app_backend.lib.sendcloud import SendCloudClient
+from app_backend.lib.sms_chuanglan_iso import SmsChuangLanIsoApi
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -32,6 +33,9 @@ login_manager.login_message_category = 'info'  # 设置消息分类
 
 # Moment 时间插件
 moment = Moment(app)
+
+# 短信通道
+sms_client = SmsChuangLanIsoApi(app.config['SMS']['UN'], app.config['SMS']['PW'])
 
 # SendCloud 邮件
 send_cloud_client = SendCloudClient(app)

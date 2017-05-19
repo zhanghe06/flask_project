@@ -34,6 +34,7 @@ from app_backend.api.admin import get_admin_row
 from app_backend.lib.sms_chuanglan_iso import SmsChuangLanIsoApi
 from app_common.tools import md5
 from app_backend.tools.send_sms import UN, PW
+from app_common.tools.ip import get_real_ip
 
 
 @login_manager.user_loader
@@ -105,7 +106,7 @@ def login():
             # 用户通过验证后，记录登入IP
             from app_backend.api.admin import edit_admin
             ip_data = {
-                'login_ip': request.headers.get('X-Forwarded-For', request.remote_addr),
+                'login_ip': get_real_ip(),
                 'login_time': datetime.utcnow()
             }
             edit_admin(admin_info.id, ip_data)

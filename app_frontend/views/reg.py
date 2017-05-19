@@ -14,12 +14,13 @@ from flask import request, render_template, redirect, url_for, flash, session
 
 from app_common.settings.sms_msg import SMS_CODE_REG
 from app_common.tools import md5, get_randint
+from app_common.tools.ip import get_real_ip
 from app_frontend import app
 
 from flask import Blueprint
 
-from app_frontend.lib.rabbit_mq import RabbitDelayQueue
-from app_frontend.lib.sms_chuanglan_iso import SmsChuangLanIsoApi
+from app_frontend.lib.rabbit_mq import RabbitDelayQueue, RabbitPriorityQueue
+# from app_frontend.lib.sms_chuanglan_iso import SmsChuangLanIsoApi
 from app_common.maps import area_code_map
 from app_common.maps.type_auth import *
 
@@ -29,6 +30,7 @@ from app_frontend.api.user_profile import add_user_profile
 
 import json
 
+from config import EXCHANGE_NAME
 
 bp_reg = Blueprint('reg', __name__, url_prefix='/reg')
 
@@ -54,7 +56,7 @@ def index():
             user_data = {
                 'create_time': current_time,
                 'update_time': current_time,
-                'reg_ip': request.headers.get('X-Forwarded-For', request.remote_addr)
+                'reg_ip': get_real_ip()
             }
             from app_frontend.api.user import add_user
             user_id = add_user(user_data)
@@ -114,7 +116,7 @@ def phone():
             current_time = datetime.utcnow()
             # 添加用户注册信息
             user_data = {
-                'reg_ip': request.headers.get('X-Forwarded-For', request.remote_addr),
+                'reg_ip': get_real_ip(),
                 'create_time': current_time,
                 'update_time': current_time,
             }
@@ -176,7 +178,7 @@ def email():
             user_data = {
                 'create_time': current_time,
                 'update_time': current_time,
-                'reg_ip': request.headers.get('X-Forwarded-For', request.remote_addr)
+                'reg_ip': get_real_ip()
             }
             from app_frontend.api.user import add_user
             user_id = add_user(user_data)
@@ -300,12 +302,14 @@ def ajax_get_sms_code():
     mobile = request.args.get('phone', '', type=str)
     mobile_iso = '%s%s' % (area_code, mobile)
 
-    sms_client = SmsChuangLanIsoApi(UN, PW)
+    # sms_client = SmsChuangLanIsoApi(UN, PW)
     sms_code = str(get_randint())
     code_key = '%s:%s' % ('sms_code', 'reg')
     session[code_key] = sms_code
 
-    msg = SMS_CODE_REG % sms_code
-    result = sms_client.send_international(mobile_iso, msg)
+    sms_content = SMS_CODE_REG % sms_code
+    # result = sms_client.send_international(mobile_iso, sms_content)
     # todo 优先级队列
+    q = RabbitPriorityQueue(exchange=EXCHANGE_NAME, queue_name='send_sms_p')
+    q.put({'mobile': mobile_iso, 'sms_content': sms_content}, 20)
     return json.dumps({'result': True})

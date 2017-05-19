@@ -39,6 +39,7 @@ from app_backend.models import BitCoin
 from app_common.maps.status_lock import *
 from app_common.maps.status_delete import *
 from app_common.settings import SWITCH_EXPORT, PER_PAGE_BACKEND
+from app_common.tools.ip import get_real_ip
 
 bp_user = Blueprint('user', __name__, url_prefix='/user')
 
@@ -341,7 +342,7 @@ def setting():
                 'phone': form.phone.data,
                 'birthday': form.birthday.data,
                 'update_time': datetime.utcnow(),
-                'last_ip': request.headers.get('X-Forwarded-For', request.remote_addr),
+                'last_ip': get_real_ip(),
             }
             result = edit_user(current_user.id, user_info)
             if result == 1:

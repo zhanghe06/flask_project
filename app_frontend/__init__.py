@@ -18,6 +18,7 @@ from flask_oauthlib.client import OAuth
 from app_frontend.lib.qiniu_store import QiNiuClient
 from app_frontend.lib.redis_session import RedisSessionInterface
 from app_frontend.lib.sendcloud import SendCloudClient
+from app_frontend.lib.sms_chuanglan_iso import SmsChuangLanIsoApi
 from app_frontend.middlewares import HTTPMethodOverrideMiddleware
 
 
@@ -34,6 +35,9 @@ login_manager.login_message_category = 'info'  # 设置消息分类
 
 # Moment 时间插件
 moment = Moment(app)
+
+# 短信通道
+sms_client = SmsChuangLanIsoApi(app.config['SMS']['UN'], app.config['SMS']['PW'])
 
 # SendCloud 邮件
 send_cloud_client = SendCloudClient(app)
@@ -113,6 +117,7 @@ from app_frontend.views.score import bp_score
 from app_frontend.views.wallet import bp_wallet
 from app_frontend.views.complaint import bp_complaint
 from app_frontend.views.message import bp_message
+from app_frontend.views.penetration import bp_penetration
 
 # 注册蓝图
 app.register_blueprint(bp_captcha)
@@ -128,6 +133,7 @@ app.register_blueprint(bp_score)
 app.register_blueprint(bp_wallet)
 app.register_blueprint(bp_complaint)
 app.register_blueprint(bp_message)
+app.register_blueprint(bp_penetration)
 
 # 导入自定义过滤器
 from app_frontend import filters

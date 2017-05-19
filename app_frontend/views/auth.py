@@ -21,6 +21,7 @@ from itsdangerous import TimestampSigner, SignatureExpired, BadTimeSignature
 from app_common.maps import area_code_map
 from app_common.maps.type_auth import *
 from app_common.tools import md5
+from app_common.tools.ip import get_real_ip
 from app_frontend import app, oauth_github, oauth_qq, oauth_weibo
 from app_frontend.api.user import edit_user
 from app_frontend.api.user import get_user_row_by_id
@@ -65,7 +66,7 @@ def index():
 
             # 用户通过验证后，记录登入IP
             login_info = {
-                'login_ip': request.headers.get('X-Forwarded-For', request.remote_addr),
+                'login_ip': get_real_ip(),
                 'login_time': datetime.utcnow()
             }
             edit_user(user_auth_info.user_id, login_info)
@@ -113,7 +114,7 @@ def phone():
 
             # 用户通过验证后，记录登入IP
             login_info = {
-                'login_ip': request.headers.get('X-Forwarded-For', request.remote_addr),
+                'login_ip': get_real_ip(),
                 'login_time': datetime.utcnow()
             }
             edit_user(user_auth_info.user_id, login_info)
@@ -157,7 +158,7 @@ def email():
 
             # 用户通过验证后，记录登入IP
             login_info = {
-                'login_ip': request.headers.get('X-Forwarded-For', request.remote_addr),
+                'login_ip': get_real_ip(),
                 'login_time': datetime.utcnow()
             }
             edit_user(user_auth_info.user_id, login_info)

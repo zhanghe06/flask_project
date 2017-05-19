@@ -10,7 +10,8 @@
 
 
 from app_frontend.models import ApplyPut
-from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
+from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete, count
+from app_common.maps.status_delete import *
 
 
 def get_apply_put_row_by_id(apply_put_id):
@@ -80,3 +81,15 @@ def get_apply_put_rows(page=1, per_page=10, *args, **kwargs):
     rows = get_rows(ApplyPut, page, per_page, *args, **kwargs)
     return rows
 
+
+def is_put(user_id):
+    """
+    是否投资
+    :param user_id:
+    :return:
+    """
+    condition = {
+        'user_id': user_id,
+        'status_delete': STATUS_DEL_NO
+    }
+    return bool(count(ApplyPut, **condition))

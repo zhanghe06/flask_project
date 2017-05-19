@@ -156,3 +156,12 @@ def unlock(user_id):
     }
     result = edit_user(user_id, user_data)
     return result
+
+
+def is_active(user_id):
+    """
+    是否激活
+    :param user_id:
+    :return:
+    """
+    return get_row_by_id(LoginUser, user_id).status_active
