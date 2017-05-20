@@ -44,3 +44,21 @@ a#top-link:hover {
 {
     padding: 6px 10px;
 }
+
+/*活动标签顶部色条*/
+.nav-tabs>li.active>a.selected,.nav-tabs>li.active>a.selected:focus,.nav-tabs>li.active>a.selected:hover {
+    color: #555;
+    cursor: default;
+    background-color: #fff;
+    border: solid;
+    border-width: 3px 1px 0 1px;
+    border-radius: 3px 3px 0 0;
+    border-color: #e36209 #e1e4e8 transparent;
+}
+
+/*闪现消息顶部固定*/
+.alert-fixed-top {
+    position: fixed;
+    top: 50px;
+    z-index: 1040;
+}

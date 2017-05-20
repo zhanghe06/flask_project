@@ -22,6 +22,7 @@ from app_frontend.api.wallet import get_wallet_row_by_id
 from app_frontend.api.bit_coin import get_bit_coin_row_by_id
 from app_frontend.api.score import get_score_row_by_id
 from app_frontend.api.bonus import get_bonus_row_by_id
+from app_frontend.api.active import get_active_row_by_id
 from app_common.maps.type_level import TYPE_LEVEL_DICT
 from app_common.maps.type_apply import TYPE_APPLY_DICT
 from app_common.maps.type_auth import TYPE_AUTH_DICT
@@ -175,6 +176,17 @@ def filter_user_bonus(user_id):
     :return:
     """
     row = get_bonus_row_by_id(user_id)
+    return row.amount if row else 0
+
+
+@app.template_filter('user_active')
+def filter_user_active(user_id):
+    """
+    用户激活码量
+    :param user_id:
+    :return:
+    """
+    row = get_active_row_by_id(user_id)
     return row.amount if row else 0
 
 

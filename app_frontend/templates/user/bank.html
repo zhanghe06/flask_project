@@ -16,7 +16,7 @@
                 {# 标签导航 #}
                 <ul class="nav nav-tabs">  {# 填充整个导航条：nav-justified #}
                     <li role="presentation"><a href="{{ url_for('user.auth') }}">登录信息</a></li>
-                    <li role="presentation" class="active"><a href="{{ url_for('user.bank') }}">银行信息</a></li>
+                    <li role="presentation" class="active"><a class="selected" href="{{ url_for('user.bank') }}">银行信息</a></li>
                     <li role="presentation"><a href="{{ url_for('user.profile') }}">基本信息</a></li>
                 </ul>
                 <div class="form-group"></div>

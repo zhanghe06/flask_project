@@ -63,7 +63,7 @@
                 <td>{{ order.status_rec | status_rec }}</td>
                 <td>{{ moment(order.create_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
                 <td>
-                    <a class="btn btn-default" href="{{ url_for('order.info_put', order_id=order.id) }}" rel="tooltip" title="订单详情"><span class="glyphicon glyphicon-list-alt"></span> 订单详情</a>
+                    <a class="btn-sm btn-default" href="{{ url_for('order.info_put', order_id=order.id) }}" rel="tooltip" title="订单详情"><span class="glyphicon glyphicon-list-alt"></span> 订单详情</a>
 {#                    <a href="javascript:void(0);" onclick="order_delete({{ order.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>#}
                 </td>
             </tr>

@@ -300,7 +300,7 @@ CREATE TABLE `bit_coin_item` (
 DROP TABLE IF EXISTS `active`;
 CREATE TABLE `active` (
   `user_id` INT NOT NULL COMMENT '用户Id',
-  `amount` DECIMAL(10, 0) NOT NULL DEFAULT '0' COMMENT '激活总次数',
+  `amount` DECIMAL(10, 0) NOT NULL DEFAULT '0' COMMENT '剩余激活码数',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`user_id`)
@@ -312,7 +312,7 @@ CREATE TABLE `active_item` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '激活明细id',
   `user_id` INT NOT NULL COMMENT '用户Id',
   `type` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '激活类型（1：加、2：减）',
-  `amount` DECIMAL(8, 0) NOT NULL DEFAULT '0' COMMENT '数字货币金额',
+  `amount` DECIMAL(8, 0) NOT NULL DEFAULT '0' COMMENT '消耗激活码数',
   `sc_id` INT NOT NULL DEFAULT '0' COMMENT '关联id(被激活的uid)',
   `note` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '备注',
   `status_audit` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '审核状态:0:待审核，1:审核通过，2:审核失败',

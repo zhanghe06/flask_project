@@ -28,6 +28,7 @@ from app_frontend.api.user_profile import get_user_profile_row_by_id, edit_user_
 from app_frontend.api.user_bank import get_user_bank_row_by_id, add_user_bank, edit_user_bank
 from app_frontend.api.user_auth import get_user_auth_row_by_id, get_user_auth_row, edit_user_auth
 from app_frontend.api.user import edit_user, get_user_team_rows, get_user_row_by_id
+from app_frontend.api.active import get_active_row_by_id, user_active
 from app_common.maps.type_auth import *
 from datetime import datetime
 from flask import Blueprint
@@ -273,7 +274,7 @@ def ajax_active():
             if user_info.status_delete == int(STATUS_DEL_OK):
                 raise Exception(u'异常操作，此用户已删除')
             if user_info.status_active == int(STATUS_ACTIVE_OK):
-                raise Exception(u'异常操作，不能重复操作')
+                raise Exception(u'异常操作，用户已经激活')
 
             user_profile_info = get_user_profile_row_by_id(user_id)
             if not user_profile_info:
@@ -282,19 +283,10 @@ def ajax_active():
                 raise Exception(u'异常操作，无此用户权限')
 
             # 更新激活状态
-            current_time = datetime.utcnow()
-            user_data = {
-                'status_active': STATUS_ACTIVE_OK,
-                'active_time': current_time,
-                'update_time': current_time,
-            }
-            result = edit_user(user_id, user_data)
-            # todo 扣除激活码的数量
-            # 添加激活码消费明细
-            add_active_item()
-            # 扣除激活码数量
+            result = user_active(current_user.id, user_id)
 
-            if result == 1:
+            if result:
+                current_time = datetime.utcnow()
                 # 加入用户激活自动监测锁定队列
                 q = RabbitDelayQueue(
                     # exchange=app.config['EXCHANGE_NAME'],
@@ -306,7 +298,7 @@ def ajax_active():
                 q.close_conn()
 
                 return json.dumps({'success': u'用户激活操作成功'})
-            if result == 0:
+            else:
                 return json.dumps({'error': u'用户激活操作失败'})
         except Exception as e:
             print traceback.print_exc()

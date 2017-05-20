@@ -21,7 +21,7 @@
     <link href="{{ url_for('static', filename='css/slideout.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/bootstrap-select.min.css') }}" rel="stylesheet">
     <!-- Custom -->
-    <link href="{{ url_for('static', filename='css/custom.css', v='1.4.75') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/custom.css', v='1.4.90') }}" rel="stylesheet">
     {% block extra_css %}{% endblock %}
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -42,7 +42,7 @@
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
     {% for category, message in messages %}
-        <div class="alert alert-{{ category }}" role="alert">
+        <div class="container alert alert-{{ category }} alert-fixed-top" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             {{ message }}
         </div>

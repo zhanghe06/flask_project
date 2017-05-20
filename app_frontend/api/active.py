@@ -9,8 +9,13 @@
 """
 
 
-from app_frontend.models import Active
+from datetime import datetime
+from app_backend.database import db
+from app_frontend.models import Active, ActiveItem, User
 from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
+from app_common.maps.status_audit import *
+from app_common.maps.type_payment import *
+from app_common.maps.status_active import *
 
 
 def get_active_row_by_id(active_id):
@@ -81,3 +86,56 @@ def get_active_rows(page=1, per_page=10, *args, **kwargs):
     return rows
 
 
+def user_active(user_id, user_id_active, amount=1):
+    """
+    用户激活
+    :param user_id:
+    :param user_id_active:
+    :param amount:
+    :return:
+    """
+    try:
+        active_obj = db.session.query(Active).filter(Active.user_id == user_id)
+        active_info = active_obj.first()
+
+        # 检查剩余激活次数
+        if not active_info or active_info.amount < amount:
+            raise Exception(u'剩余激活次数不够')
+
+        current_time = datetime.utcnow()
+
+        # 扣除激活码剩余数量
+        active_data = {
+            'user_id': user_id,
+            'amount': active_info.amount - amount,
+            'update_time': current_time,
+        }
+        active_obj.update(active_data)
+
+        # 添加激活码消费明细
+        active_item_data = {
+            'user_id': user_id,
+            'type': user_id,
+            'amount': amount,
+            'sc_id': user_id_active,
+            'status_audit': STATUS_AUDIT_SUCCESS,
+            'audit_time': current_time,
+            'create_time': current_time,
+            'update_time': current_time,
+        }
+        db.session.add(ActiveItem(**active_item_data))
+
+        # 更新激活
+        user_data = {
+            'status_active': STATUS_ACTIVE_OK,
+            'active_time': current_time,
+            'update_time': current_time,
+        }
+        active_obj = db.session.query(User).filter(User.id == user_id_active)
+        active_obj.update(user_data)
+
+        db.session.commit()
+        return True
+    except Exception as e:
+        db.session.rollback()
+        raise e
