@@ -32,16 +32,16 @@ def get_active_row(*args, **kwargs):
     return get_row(Active, *args, **kwargs)
 
 
-def add_order(active_data):
+def add_active(active_data):
     """
     添加激活信息
     :param active_data:
-    :return: None/Value of order.id
+    :return: None/Value of active.id
     """
     return add(Active, active_data)
 
 
-def edit_order(active_id, active_data):
+def edit_active(active_id, active_data):
     """
     修改激活信息
     :param active_id:
@@ -51,7 +51,7 @@ def edit_order(active_id, active_data):
     return edit(Active, active_id, active_data)
 
 
-def delete_order(active_id):
+def delete_active(active_id):
     """
     删除激活信息
     :param active_id:

@@ -28,9 +28,10 @@ from app_frontend.api.user import get_user_row_by_id
 from app_frontend.api.user_auth import get_user_auth_row
 from app_frontend.forms.login import LoginPhoneForm
 
-from app_common.settings import SWITCH_LOGIN_ACCOUNT
-from app_common.settings import SWITCH_LOGIN_PHONE
-from app_common.settings import SWITCH_LOGIN_EMAIL
+
+SWITCH_LOGIN_ACCOUNT = app.config['SWITCH_LOGIN_ACCOUNT']
+SWITCH_LOGIN_PHONE = app.config['SWITCH_LOGIN_PHONE']
+SWITCH_LOGIN_EMAIL = app.config['SWITCH_LOGIN_EMAIL']
 
 bp_auth = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -73,7 +74,7 @@ def index():
 
             # 用 login_user 函数来登入他们
 
-            login_user(get_user_row_by_id(user_auth_info.user_id), remember=form.remember)
+            login_user(get_user_row_by_id(user_auth_info.user_id), remember=form.remember.data)
             flash(u'%s, 恭喜，您已成功登录' % form.account.data, 'success')
             return redirect(request.args.get('next') or url_for('index'))
         # flash(form.errors, 'warning')  # 调试打开
@@ -120,7 +121,7 @@ def phone():
             edit_user(user_auth_info.user_id, login_info)
 
             # 用 login_user 函数来登入他们
-            login_user(get_user_row_by_id(user_auth_info.user_id), remember=form.remember)
+            login_user(get_user_row_by_id(user_auth_info.user_id), remember=form.remember.data)
             flash(u'%s, 恭喜，您已成功登录' % form.phone.data, 'success')
             return redirect(request.args.get('next') or url_for('index'))
         # flash(form.errors, 'warning')  # 调试打开
@@ -164,7 +165,7 @@ def email():
             edit_user(user_auth_info.user_id, login_info)
             # 用 login_user 函数来登入他们
 
-            login_user(get_user_row_by_id(user_auth_info.user_id), remember=form.remember)
+            login_user(get_user_row_by_id(user_auth_info.user_id), remember=form.remember.data)
             flash(u'%s, 恭喜，您已成功登录' % form.email.data, 'success')
             return redirect(request.args.get('next') or url_for('index'))
         # flash(form.errors, 'warning')  # 调试打开

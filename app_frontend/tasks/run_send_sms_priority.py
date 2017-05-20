@@ -13,8 +13,9 @@ import json
 import traceback
 
 from app_frontend.lib.rabbit_mq import RabbitPriorityQueue
-from config import EXCHANGE_NAME
 from app_frontend import sms_client
+from app_frontend import app
+EXCHANGE_NAME = app.config['EXCHANGE_NAME']
 
 
 def on_send_sms_priority(ch, method, properties, body):

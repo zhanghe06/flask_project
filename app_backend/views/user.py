@@ -38,8 +38,10 @@ from app_backend.models import BitCoin
 
 from app_common.maps.status_lock import *
 from app_common.maps.status_delete import *
-from app_common.settings import SWITCH_EXPORT, PER_PAGE_BACKEND
 from app_common.tools.ip import get_real_ip
+
+SWITCH_EXPORT = app.config['SWITCH_EXPORT']
+PER_PAGE_BACKEND = app.config['PER_PAGE_BACKEND']
 
 bp_user = Blueprint('user', __name__, url_prefix='/user')
 

@@ -20,15 +20,17 @@ from app_backend.lib.redis_session import RedisSessionInterface
 from app_backend.lib.sendcloud import SendCloudClient
 from app_backend.lib.sms_chuanglan_iso import SmsChuangLanIsoApi
 
+
 app = Flask(__name__)
 app.config.from_object('config')
-app.session_cookie_name = 'session-admin'
-app.session_interface = RedisSessionInterface(prefix='session:admin:', **app.config['REDIS'])
+app.config['REMEMBER_COOKIE_NAME'] = 'r_a'
+app.session_cookie_name = 's_a'
+app.session_interface = RedisSessionInterface(prefix='s:a:', **app.config['REDIS'])
 
 login_manager = LoginManager()
 login_manager.init_app(app)  # setup_app 方法已淘汰
 login_manager.login_view = 'login'
-# login_manager.login_message = 'Please log in to access this page.'  # 设置登录提示消息
+login_manager.login_message = u'请登录后操作'  # 设置登录提示消息
 login_manager.login_message_category = 'info'  # 设置消息分类
 
 # Moment 时间插件

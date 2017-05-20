@@ -24,8 +24,11 @@ from app_frontend.middlewares import HTTPMethodOverrideMiddleware
 
 app = Flask(__name__)
 app.config.from_object('config')
+app.config['REMEMBER_COOKIE_NAME'] = 'r_u'
+app.session_cookie_name = 's_u'
+app.session_interface = RedisSessionInterface(prefix='s:u:', **app.config['REDIS'])
+
 app.wsgi_app = HTTPMethodOverrideMiddleware(app.wsgi_app)
-app.session_interface = RedisSessionInterface(prefix='session:user:', **app.config['REDIS'])
 
 login_manager = LoginManager()
 login_manager.init_app(app)  # setup_app 方法已淘汰

@@ -18,6 +18,7 @@ docker run \
         --cap-add SYS_PTRACE \
         --restart=always \
         -e TZ=Asia/Shanghai \
+        -e PYTHONPATH=/flask_project \
         -v ${PROJECT_PATH}:/flask_project \
         -d \
         -p 8000:8000 \

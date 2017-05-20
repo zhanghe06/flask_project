@@ -20,7 +20,6 @@ from flask import url_for
 from flask_login import current_user, login_required
 import flask_excel as excel
 
-from app_common.settings import PER_PAGE_FRONTEND
 from app_frontend import app
 from app_frontend.models import User, UserProfile, Order
 from app_frontend.api.order import get_order_rows, get_order_row, get_order_row_by_id, edit_order
@@ -32,6 +31,8 @@ from app_common.maps.status_delete import *
 from app_common.maps.status_audit import *
 
 from flask import Blueprint
+
+PER_PAGE_FRONTEND = app.config['PER_PAGE_FRONTEND']
 
 
 bp_order = Blueprint('order', __name__, url_prefix='/order')

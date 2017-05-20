@@ -15,14 +15,16 @@ import traceback
 
 
 from app_frontend.lib.rabbit_mq import RabbitDelayQueue
-from config import EXCHANGE_NAME
-from app_common.settings.user import LOCK_PAY_NOT_REC_TTL
+
 from app_frontend.api.order import get_order_row
 from app_frontend.api.user import lock
 from app_common.maps.status_pay import *
 from app_common.maps.status_rec import *
 from app_common.maps.status_audit import *
 from app_common.maps.status_delete import *
+from app_frontend import app
+EXCHANGE_NAME = app.config['EXCHANGE_NAME']
+LOCK_PAY_NOT_REC_TTL = app.config['LOCK_PAY_NOT_REC_TTL']
 
 
 def on_lock_pay_not_rec(ch, method, properties, body):

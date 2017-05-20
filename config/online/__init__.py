@@ -4,8 +4,8 @@
 """
 @author: zhanghe
 @software: PyCharm
-@file: dev.py
-@time: 16-3-10 下午5:10
+@file: __init__.py.py
+@time: 2017/5/19 下午11:25
 """
 
 
@@ -13,20 +13,28 @@ import os
 import socket
 from datetime import timedelta
 
-DEBUG = True
+# 网站运营配置
+from settings import *
+from settings.apply import *
+from settings.order import *
+from settings.sms import *
+from settings.user import *
 
-PROJECT_NAME = u'网站名称'
 
-ICP_CODE = U'沪ICP备12024750号'
+DEBUG = False
 
-BASE_DIR = os.path.abspath(os.path.dirname(__file__)+'/../')
+PROJECT_NAME = u'九重天'
+
+ICP_CODE = U'粤ICP备16047585号'
+
+BASE_DIR = os.path.abspath(os.path.dirname(__file__)+'/../../')
 
 # 获取服务器名称
 HOST_NAME = socket.getfqdn(socket.gethostname())
 # 获取服务器内网ip
-# HOST_IP = socket.gethostbyname(HOST_NAME)
+HOST_IP = socket.gethostbyname(HOST_NAME)
 
-HOST_IP = '192.168.4.1'
+# HOST_IP = '192.168.4.1'
 
 # requests 超时设置
 REQUESTS_TIME_OUT = (30, 30)
@@ -35,8 +43,8 @@ REQUESTS_TIME_OUT = (30, 30)
 # 数据库 MySQL
 DB_MYSQL = {
     'host': HOST_IP,
-    'user': 'root',
-    'passwd': '123456',
+    'user': 'www',
+    'passwd': '@9xJkaU*JWsa',
     'port': 3306,
     'db': 'flask',
     'charset': 'utf8'
@@ -69,7 +77,7 @@ SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI_MYSQL
 # SQLALCHEMY_COMMIT_ON_TEARDOWN = True  # 打开自动提交 官方已经移除(http://flask-sqlalchemy.pocoo.org/2.1/changelog/#version-2-0)
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_POOL_SIZE = 5  # 默认 pool_size=5
-SQLALCHEMY_ECHO = True
+SQLALCHEMY_ECHO = False
 
 
 REDIS = {
@@ -92,7 +100,7 @@ RABBIT_MQ = {
     'port': 5672
 }
 
-EXCHANGE_NAME = 'flask'
+EXCHANGE_NAME = 'amq.direct'
 
 # 验证码类型
 CAPTCHA_ENTITY = [
@@ -132,7 +140,7 @@ SECRET_KEY = '\x03\xabjR\xbbg\x82\x0b{\x96f\xca\xa8\xbdM\xb0x\xdbK%\xf2\x07\r\x8
 # 会话配置
 PERMANENT_SESSION_LIFETIME = timedelta(minutes=20)             # 登录状态保持，默认31天
 REMEMBER_COOKIE_DURATION = timedelta(days=14)   # 记住登录状态，默认365天
-LOGIN_MESSAGE = u'Please log in to access this page.'
+LOGIN_MESSAGE = u'请登录后操作'
 LOGIN_MESSAGE_CATEGORY = 'warning'  # 默认'message'
 
 

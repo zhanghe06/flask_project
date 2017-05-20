@@ -7,16 +7,17 @@
 @file: user.py
 @time: 17-4-21 下午10:42
 """
+
+
 from datetime import datetime
 
+from app_backend import app
 from app_backend.models import User
-from app_backend.models import UserProfile
 from app_backend.models import UserBank
+from app_backend.models import UserProfile
 from app_backend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
-
 from app_common.maps.status_lock import *
-
-from app_common.settings import PER_PAGE_BACKEND
+PER_PAGE_BACKEND = app.config['PER_PAGE_BACKEND']
 
 
 def get_user_row_by_id(user_id):

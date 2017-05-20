@@ -15,10 +15,12 @@ import traceback
 
 
 from app_frontend.lib.rabbit_mq import RabbitDelayQueue
-from config import EXCHANGE_NAME
-from app_common.settings.user import LOCK_ACTIVE_NOT_PUT_TTL
+
 from app_frontend.api.apply_put import is_put
 from app_frontend.api.user import lock
+from app_frontend import app
+EXCHANGE_NAME = app.config['EXCHANGE_NAME']
+LOCK_ACTIVE_NOT_PUT_TTL = app.config['LOCK_ACTIVE_NOT_PUT_TTL']
 
 
 def on_lock_active_not_put(ch, method, properties, body):
@@ -40,7 +42,11 @@ def on_lock_active_not_put(ch, method, properties, body):
 
 
 def run():
-    q = RabbitDelayQueue(exchange=EXCHANGE_NAME, queue_name='lock_active_not_put', ttl=LOCK_ACTIVE_NOT_PUT_TTL)
+    q = RabbitDelayQueue(
+        exchange=EXCHANGE_NAME,
+        queue_name='lock_active_not_put',
+        ttl=LOCK_ACTIVE_NOT_PUT_TTL
+    )
     q.consume(on_lock_active_not_put)
 
 
@@ -49,7 +55,11 @@ def test_put():
     测试数据推入队列
     :return:
     """
-    q = RabbitDelayQueue(exchange=EXCHANGE_NAME, queue_name='lock_active_not_put', ttl=LOCK_ACTIVE_NOT_PUT_TTL)
+    q = RabbitDelayQueue(
+        exchange=EXCHANGE_NAME,
+        queue_name='lock_active_not_put',
+        ttl=LOCK_ACTIVE_NOT_PUT_TTL
+    )
     q.put({'user_id': 0, 'active_time': time.strftime('%Y-%m-%d %H:%M:%S')})
 
 

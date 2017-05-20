@@ -22,19 +22,23 @@ from flask_login import login_user
 from flask_login import logout_user
 from flask_login import current_user, login_required
 
+from app_backend.lib.rabbit_mq import RabbitPriorityQueue
 from app_common.maps import area_code_map
 from app_backend import app, oauth_github, oauth_qq, oauth_weibo
 from app_common.maps.type_auth import *
-from app_common.settings.sms_msg import SMS_CODE_REG
+from app_common.maps.status_delete import *
 
 from app_backend import app, login_manager
 
 # cache = SimpleCache()  # 默认最大支持500个key, 超时时间5分钟, 参数可配置
 from app_backend.api.admin import get_admin_row
-from app_backend.lib.sms_chuanglan_iso import SmsChuangLanIsoApi
-from app_common.tools import md5
+# from app_backend.lib.sms_chuanglan_iso import SmsChuangLanIsoApi
+from app_common.tools import md5, get_randint
 from app_backend.tools.send_sms import UN, PW
 from app_common.tools.ip import get_real_ip
+
+SMS_CODE_LOGIN = app.config['SMS_CODE_LOGIN']
+EXCHANGE_NAME = app.config['EXCHANGE_NAME']
 
 
 @login_manager.user_loader
@@ -99,7 +103,7 @@ def login():
             if admin_info is None:
                 flash(u'%s, 登录失败，账号不存在' % form.account.data, 'warning')
                 return render_template('login.html', title='login', form=form)
-            if admin_info.status_delete == 1:
+            if admin_info.status_delete == STATUS_DEL_OK:
                 flash(u'%s, 登录失败，账号已被删除' % form.account.data, 'warning')
                 return render_template('login.html', title='login', form=form)
             # session['logged_in'] = True
@@ -112,7 +116,7 @@ def login():
             edit_admin(admin_info.id, ip_data)
             # 用 login_user 函数来登入他们
             from app_backend.api.admin import get_admin_row_by_id
-            login_user(get_admin_row_by_id(admin_info.id), remember=form.remember)
+            login_user(get_admin_row_by_id(admin_info.id), remember=form.remember.data)
             flash(u'%s, 恭喜，登录成功' % form.account.data, 'success')
             return redirect(request.args.get('next') or url_for('index'))
         flash(form.errors, 'warning')  # 调试打开
@@ -128,7 +132,7 @@ def logout():
     session.pop('qq_token', None)
     session.pop('weibo_token', None)
     session.pop('github_token', None)
-    flash(u'You were logged out', 'info')
+    flash(u'成功退出登录', 'info')
     return redirect(url_for('index'))
 
 
@@ -146,16 +150,25 @@ def ajax_get_sms_code():
     admin_info = get_admin_row(username=account)
     if not admin_info:
         return json.dumps({'result': False, 'msg': u'账号不存在，请填写正确'})
-    area_code = admin_info.get('area_code')
-    mobile = admin_info.get('phone')
+    area_code = admin_info.area_code
+    mobile = admin_info.phone
     if not area_code or not mobile:
         return json.dumps({'result': False, 'msg': u'手机号码错误，请在后台更新'})
     mobile_iso = '%s%s' % (area_code, mobile)
 
-    sms_client = SmsChuangLanIsoApi(UN, PW)
-    msg = SMS_CODE_REG % 1234
-    result = sms_client.send_international(mobile_iso, msg)
-    # todo 优先级队列
+    sms_code = str(get_randint())
+    code_key = '%s:%s' % ('sms_code', 'login')
+    session[code_key] = sms_code
+
+    sms_content = SMS_CODE_LOGIN % sms_code
+
+    # sms_client = SmsChuangLanIsoApi(UN, PW)
+    # result = sms_client.send_international(mobile_iso, msg)
+
+    # 推送短信优先级队列
+    q = RabbitPriorityQueue(exchange=EXCHANGE_NAME, queue_name='send_sms_p')
+    q.put({'mobile': mobile_iso, 'sms_content': sms_content}, 20)
+
     return json.dumps({'result': True})
 
 

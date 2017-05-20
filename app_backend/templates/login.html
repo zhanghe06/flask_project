@@ -127,6 +127,24 @@
     <script src="{{ url_for('static', filename='js/sb-admin-2.js') }}"></script>
 
     <script>
+        // 倒计时
+        var countdown=60;
+        function set_time(val) {
+            if (countdown == 0) {
+                val.removeAttr("disabled");
+                val.find("i").first().html("发送短信");
+                countdown = 60;
+                return;
+            } else {
+                val.attr("disabled", true);
+                val.find("i").first().html("重新发送(" + countdown + ")");
+                countdown--;
+            }
+            setTimeout(function () {
+                set_time(val)
+            }, 1000)
+        }
+
         // 当前时间同步刷新
         var update_time;
         (update_time = function () {

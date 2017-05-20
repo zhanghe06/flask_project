@@ -15,13 +15,15 @@ import traceback
 
 
 from app_frontend.lib.rabbit_mq import RabbitDelayQueue
-from config import EXCHANGE_NAME
-from app_common.settings.user import LOCK_ORDER_NOT_PAY_TTL
+
 from app_frontend.api.order import get_order_row
 from app_frontend.api.user import lock
 from app_common.maps.status_pay import *
 from app_common.maps.status_audit import *
 from app_common.maps.status_delete import *
+from app_frontend import app
+EXCHANGE_NAME = app.config['EXCHANGE_NAME']
+LOCK_ORDER_NOT_PAY_TTL = app.config['LOCK_ORDER_NOT_PAY_TTL']
 
 
 def on_lock_order_not_pay(ch, method, properties, body):

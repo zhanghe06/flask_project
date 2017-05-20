@@ -12,7 +12,6 @@ from datetime import datetime
 
 from flask import request, render_template, redirect, url_for, flash, session
 
-from app_common.settings.sms_msg import SMS_CODE_REG
 from app_common.tools import md5, get_randint
 from app_common.tools.ip import get_real_ip
 from app_frontend import app
@@ -30,7 +29,10 @@ from app_frontend.api.user_profile import add_user_profile
 
 import json
 
-from config import EXCHANGE_NAME
+SMS_CODE_REG = app.config['SMS_CODE_REG']
+EXCHANGE_NAME = app.config['EXCHANGE_NAME']
+LOCK_REG_NOT_ACTIVE_TTL = app.config['LOCK_REG_NOT_ACTIVE_TTL']
+
 
 bp_reg = Blueprint('reg', __name__, url_prefix='/reg')
 
@@ -64,7 +66,7 @@ def index():
             # 添加用户认证信息
             user_auth_data = {
                 'user_id': user_id,
-                'type_auth': 'account',
+                'type_auth': TYPE_AUTH_ACCOUNT,
                 'auth_key': form.account.data,
                 'auth_secret': md5(form.password.data),
                 'status_verified': 1,
@@ -85,13 +87,14 @@ def index():
             add_user_profile(user_profile_data)
             if user_id:
                 # 加入用户注册自动监测锁定队列
-                from app_common.settings.user import LOCK_REG_NOT_ACTIVE_TTL
                 q = RabbitDelayQueue(
-                    exchange=app.config['EXCHANGE_NAME'],
+                    exchange=EXCHANGE_NAME,
                     queue_name='lock_reg_not_active',
                     ttl=LOCK_REG_NOT_ACTIVE_TTL
                 )
                 q.put({'user_id': user_id, 'reg_time': current_time.strftime('%Y-%m-%d %H:%M:%S')})
+                q.close_conn()
+
                 flash(u'%s, 恭喜您注册成功' % form.account.data, 'success')
             else:
                 flash(u'%s, 很遗憾注册失败' % form.account.data, 'warning')
@@ -266,7 +269,7 @@ def email_check():
         # return email
         # 校验通过，更新邮箱验证状态
         from app_frontend.api.user_auth import update_user_auth_rows
-        result = update_user_auth_rows({'verified': 1}, **{'type_auth': 'email', 'auth_key': email})
+        result = update_user_auth_rows({'verified': 1}, **{'type_auth': TYPE_AUTH_EMAIL, 'auth_key': email})
         if result == 1:
             flash(u'%s, Your mailbox has been verified' % email, 'success')
             return redirect(url_for('auth.index'))
@@ -302,14 +305,16 @@ def ajax_get_sms_code():
     mobile = request.args.get('phone', '', type=str)
     mobile_iso = '%s%s' % (area_code, mobile)
 
-    # sms_client = SmsChuangLanIsoApi(UN, PW)
     sms_code = str(get_randint())
     code_key = '%s:%s' % ('sms_code', 'reg')
     session[code_key] = sms_code
 
     sms_content = SMS_CODE_REG % sms_code
+    # sms_client = SmsChuangLanIsoApi(UN, PW)
     # result = sms_client.send_international(mobile_iso, sms_content)
-    # todo 优先级队列
+
+    # 推送短信优先级队列
     q = RabbitPriorityQueue(exchange=EXCHANGE_NAME, queue_name='send_sms_p')
     q.put({'mobile': mobile_iso, 'sms_content': sms_content}, 20)
+
     return json.dumps({'result': True})

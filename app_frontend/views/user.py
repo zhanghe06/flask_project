@@ -7,6 +7,8 @@
 @file: user.py
 @time: 2017/3/17 下午11:47
 """
+
+
 import json
 import traceback
 
@@ -14,10 +16,11 @@ from flask import abort
 from flask import render_template, request, flash, redirect, url_for
 from flask_login import current_user, login_required
 
+from app_frontend.lib.rabbit_mq import RabbitDelayQueue, RabbitPriorityQueue
+
 from app_common.maps import area_code_map
 from app_common.maps.status_delete import *
 from app_common.maps.status_active import *
-from app_common.settings import PER_PAGE_FRONTEND
 from app_common.tools import md5
 from app_frontend import app
 from app_frontend.forms.user import UserProfileForm, UserAuthForm, UserBankForm
@@ -29,6 +32,7 @@ from app_common.maps.type_auth import *
 from datetime import datetime
 from flask import Blueprint
 
+PER_PAGE_FRONTEND = app.config['PER_PAGE_FRONTEND']
 
 bp_user = Blueprint('user', __name__, url_prefix='/user')
 
@@ -286,7 +290,21 @@ def ajax_active():
             }
             result = edit_user(user_id, user_data)
             # todo 扣除激活码的数量
+            # 添加激活码消费明细
+            add_active_item()
+            # 扣除激活码数量
+
             if result == 1:
+                # 加入用户激活自动监测锁定队列
+                q = RabbitDelayQueue(
+                    # exchange=app.config['EXCHANGE_NAME'],
+                    exchange='amq.direct',
+                    queue_name='lock_active_not_put',
+                    ttl=app.config['LOCK_ACTIVE_NOT_PUT_TTL']
+                )
+                q.put({'user_id': user_id, 'active_time': current_time.strftime('%Y-%m-%d %H:%M:%S')})
+                q.close_conn()
+
                 return json.dumps({'success': u'用户激活操作成功'})
             if result == 0:
                 return json.dumps({'error': u'用户激活操作失败'})
