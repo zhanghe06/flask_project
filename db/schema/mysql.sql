@@ -54,7 +54,9 @@ CREATE TABLE `user_profile` (
   `id_card` VARCHAR(32) NOT NULL DEFAULT '' COMMENT '身份证号',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  PRIMARY KEY (`user_id`)
+  PRIMARY KEY (`user_id`),
+  KEY `ind_phone` (`area_id`, `phone`),
+  KEY `ind_id_card` (`area_id`, `id_card`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户基本信息表';
 
 
