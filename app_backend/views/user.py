@@ -198,7 +198,7 @@ def auth(user_id):
             }
             op_right = get_user_auth_row(**condition)
             if not op_right:
-                flash(u'Edit Failed', 'warning')
+                flash(u'修改失败', 'warning')
                 return redirect(url_for('index'))
 
             current_time = datetime.utcnow()
@@ -212,9 +212,9 @@ def auth(user_id):
                 user_auth_data['auth_secret'] = md5(form.auth_secret.data)
             result = edit_user_auth(form.id.data, user_auth_data)
             if result == 1:
-                flash(u'Edit Success', 'success')
+                flash(u'修改成功', 'success')
             if result == 0:
-                flash(u'Edit Failed', 'warning')
+                flash(u'修改失败', 'warning')
         # flash(form.errors, 'warning')  # 调试打开
 
     # flash(u'Hello, %s' % current_user.id, 'info')  # 测试打开
@@ -257,9 +257,9 @@ def bank(user_id):
                 bank_data['create_time'] = current_time
                 result = add_user_bank(bank_data)
             if result:
-                flash(u'Edit Success', 'success')
+                flash(u'修改成功', 'success')
             if not result:
-                flash(u'Edit Failed', 'warning')
+                flash(u'修改失败', 'warning')
         # flash(form.errors, 'warning')  # 调试打开
 
     # flash(u'Hello, %s' % current_user.id, 'info')  # 测试打开
@@ -304,9 +304,9 @@ def profile(user_id):
             }
             result = edit_user_profile(user_id, user_info)
             if result == 1:
-                flash(u'Edit Success', 'success')
+                flash(u'修改成功', 'success')
             if result == 0:
-                flash(u'Edit Failed', 'warning')
+                flash(u'修改失败', 'warning')
     # flash(form.errors, 'warning')  # 调试打开
 
     # flash(u'Hello, %s' % current_user.id, 'info')  # 测试打开
@@ -348,9 +348,9 @@ def setting():
             }
             result = edit_user(current_user.id, user_info)
             if result == 1:
-                flash(u'Edit Success', 'success')
+                flash(u'修改成功', 'success')
             if result == 0:
-                flash(u'Edit Failed', 'warning')
+                flash(u'修改失败', 'warning')
         flash(form.errors, 'warning')  # 调试打开
     flash(u'Hello, %s' % current_user.email, 'info')  # 测试打开
     return render_template('./setting.html', title='setting', form=form)

@@ -143,7 +143,7 @@
 
     // 用户锁定
     function user_lock(user_id){
-        if(confirm("Are you sure?"))
+        if(confirm("用户锁定操作，是否确认?"))
         {
             // console.log(user_id);
             $.getJSON('{{ url_for('user.ajax_lock') }}',
@@ -163,7 +163,7 @@
 
     // 用户解锁
     function user_unlock(user_id){
-        if(confirm("Are you sure?"))
+        if(confirm("用户解锁操作，是否确认?"))
         {
             // console.log(user_id);
             $.getJSON('{{ url_for('user.ajax_unlock') }}',
@@ -183,7 +183,7 @@
 
     // 用户删除
     function user_delete(user_id){
-        if(confirm("Are you sure?"))
+        if(confirm("删除数据不能恢复，是否确认删除?"))
         {
             // console.log(user_id);
             $.getJSON('{{ url_for('user.ajax_delete') }}',

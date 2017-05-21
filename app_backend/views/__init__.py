@@ -119,7 +119,7 @@ def login():
             login_user(get_admin_row_by_id(admin_info.id), remember=form.remember.data)
             flash(u'%s, 恭喜，登录成功' % form.account.data, 'success')
             return redirect(request.args.get('next') or url_for('index'))
-        flash(form.errors, 'warning')  # 调试打开
+        # flash(form.errors, 'warning')  # 调试打开
     return render_template('login.html', title='login', form=form)
 
 

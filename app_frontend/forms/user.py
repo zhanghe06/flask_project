@@ -12,7 +12,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField, HiddenField
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
-
+from flask_login import current_user
+from app_frontend.models import UserProfile
 from app_common.maps import area_code_list
 from app_frontend.api.user_auth import get_user_auth_row
 from app_frontend.api.user_profile import get_user_profile_row
@@ -53,19 +54,41 @@ class PhoneFormatValidate(object):
 class PhoneRepeatValidate(object):
     """
     手机重复校验
+    (编辑重复校验排除当前用户)
     """
     def __init__(self, message=None):
         self.message = message
 
     def __call__(self, form, field):
-        condition = {
-            'area_id': form.area_id.data,
-            'phone': field.data
-        }
-        row = get_user_profile_row(**condition)
+        condition = [
+            UserProfile.area_id == form.area_id.data,
+            UserProfile.phone == field.data,
+            UserProfile.user_id != current_user.get_id()
+        ]
+        row = get_user_profile_row(*condition)
 
         if row:
             raise ValidationError(self.message or u'手机号码重复')
+
+
+class IdCardRepeatValidate(object):
+    """
+    身份证号重复校验
+    (编辑重复校验排除当前用户)
+    """
+    def __init__(self, message=None):
+        self.message = message
+
+    def __call__(self, form, field):
+        condition = [
+            UserProfile.area_id == form.area_id.data,
+            UserProfile.id_card == field.data,
+            UserProfile.user_id != current_user.get_id()
+        ]
+        row = get_user_profile_row(*condition)
+
+        if row:
+            raise ValidationError(self.message or u'身份证号重复')
 
 
 class UserProfileForm(FlaskForm):
@@ -89,7 +112,8 @@ class UserProfileForm(FlaskForm):
     birthday = DateField(u'出生日期')
     id_card = StringField(u'身份证号', validators=[
         DataRequired(u'身份证号不能为空'),
-        Length(min=18, max=18, message=u'身份证号长度不符')
+        Length(min=18, max=18, message=u'身份证号长度不符'),
+        IdCardRepeatValidate()
     ])
     create_time = DateTimeField(u'创建时间')
     update_time = DateTimeField(u'修改时间')

@@ -74,10 +74,10 @@ def profile():
 
             result = edit_admin(admin_id, admin_info)
             if result == 1:
-                flash(u'Edit Success', 'success')
+                flash(u'修改成功', 'success')
                 return redirect(url_for('admin.lists'))
             else:
-                flash(u'Edit Failed', 'warning')
+                flash(u'修改失败', 'warning')
                 # flash(form.errors, 'warning')  # 调试打开
 
     return render_template('admin/profile.html', title='admin_profile', form=form)
@@ -167,10 +167,10 @@ def edit(admin_id):
 
             result = edit_admin(admin_id, admin_info)
             if result == 1:
-                flash(u'Edit Success', 'success')
+                flash(u'修改成功', 'success')
                 return redirect(url_for('admin.lists'))
             else:
-                flash(u'Edit Failed', 'warning')
+                flash(u'修改失败', 'warning')
         # flash(form.errors, 'warning')  # 调试打开
 
     return render_template('admin/edit.html', title='admin_edit', form=form)

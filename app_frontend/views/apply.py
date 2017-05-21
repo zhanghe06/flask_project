@@ -19,6 +19,8 @@ from app_frontend import app
 from app_frontend.models import User
 from app_frontend.api.apply_get import get_apply_get_rows, get_apply_get_row, add_apply_get, user_apply_get
 from app_frontend.api.apply_put import get_apply_put_rows, get_apply_put_row, add_apply_put
+from app_frontend.api.user_bank import user_bank_is_complete
+from app_frontend.api.user_profile import user_profile_is_complete
 from app_common.maps.status_order import *
 from app_common.maps.type_apply import *
 from app_common.maps.status_apply import *
@@ -82,12 +84,20 @@ def add_put():
     创建投资申请
     :return:
     """
+    user_id = current_user.id
+    # 判断基本信息和银行信息是否完整
+    if not user_profile_is_complete(user_id):
+        flash(u'请先完善基本信息', 'warning')
+        return redirect(url_for('user.profile'))
+    if not user_profile_is_complete(user_id):
+        flash(u'请先完善银行信息', 'warning')
+        return redirect(url_for('user.bank'))
     form = ApplyPutAddForm(request.form)
     if request.method == 'POST':
         if form.validate_on_submit():
             current_time = datetime.utcnow()
             apply_put_info = {
-                'user_id': current_user.id,
+                'user_id': user_id,
                 'type_apply': TYPE_APPLY_USER,
                 'type_pay': form.type_pay.data,
                 'money_apply': form.money_apply.data,
@@ -113,10 +123,17 @@ def add_get():
     创建提现申请
     :return:
     """
+    user_id = current_user.id
+    # 判断基本信息和银行信息是否完整
+    if not user_profile_is_complete(user_id):
+        flash(u'请先完善基本信息', 'warning')
+        return redirect(url_for('user.profile'))
+    if not user_profile_is_complete(user_id):
+        flash(u'请先完善银行信息', 'warning')
+        return redirect(url_for('user.bank'))
     form = ApplyGetAddForm(request.form)
     if request.method == 'POST':
         if form.validate_on_submit():
-            user_id = current_user.id
             type_pay = form.type_pay.data
             type_withdraw = form.type_withdraw.data
             money_apply = form.money_apply.data

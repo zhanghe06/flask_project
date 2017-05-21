@@ -86,3 +86,20 @@ def update_user_bank_rows(data, *args, **kwargs):
     批量更新用户银行信息
     """
     return update_rows(UserBank, data, *args, **kwargs)
+
+
+def user_bank_is_complete(user_id):
+    """
+    用户银行信息是否完整
+    :param user_id:
+    :return:
+    """
+    user_bank_info = get_row_by_id(UserBank, user_id)
+    if not user_bank_info:
+        return False
+    if user_bank_info.account_name \
+            and user_bank_info.bank_name \
+            and user_bank_info.bank_address \
+            and user_bank_info.bank_account:
+        return True
+    return False

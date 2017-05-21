@@ -80,3 +80,16 @@ def get_user_profile_rows(page=1, per_page=10, *args, **kwargs):
     rows = get_rows(UserProfile, page, per_page, *args, **kwargs)
     return rows
 
+
+def user_profile_is_complete(user_id):
+    """
+    用户基本信息是否完整
+    :param user_id:
+    :return:
+    """
+    user_profile_info = get_row_by_id(UserProfile, user_id)
+    if not user_profile_info:
+        return False
+    if user_profile_info.nickname and user_profile_info.phone and user_profile_info.id_card:
+        return True
+    return False

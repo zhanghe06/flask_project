@@ -12,13 +12,17 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField, HiddenField
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
-from app_backend.api.user_auth import get_user_auth_row
+from flask_login import current_user
+from app_frontend.models import UserProfile
 from app_backend.forms import SelectBS, CheckBoxBS
 from app_common.maps import status_lock_list
 from app_common.maps import status_active_list
 from app_common.maps import area_code_list
 from app_backend.api.user_auth import get_user_auth_row
 from app_backend.forms import SelectAreaCode
+
+from app_frontend.api.user_profile import get_user_profile_row
+from app_frontend.forms import SelectAreaCode, CheckBoxBS
 
 
 def reg_email_repeat(form, field):
@@ -32,6 +36,64 @@ def reg_email_repeat(form, field):
     row = get_user_auth_row(**condition)
     if row:
         raise ValidationError(u'注册邮箱重复')
+
+
+class PhoneFormatValidate(object):
+    """
+    手机号码格式校验
+    """
+    def __init__(self, message=None):
+        self.message = message
+
+    def __call__(self, form, field):
+        phone_len = len(field.data)
+        if phone_len < 6 or phone_len > 11:
+            raise ValidationError(u'手机号码长度不符')
+        # 中国手机号码格式校验
+        if form.area_id.data == '0' and phone_len != 11:
+            raise ValidationError(u'手机号码长度不符')
+        if field.data.startswith('0'):
+            raise ValidationError(u'手机号码格式不符')
+
+
+class PhoneRepeatValidate(object):
+    """
+    手机重复校验
+    (编辑重复校验排除当前用户)
+    """
+    def __init__(self, message=None):
+        self.message = message
+
+    def __call__(self, form, field):
+        condition = [
+            UserProfile.area_id == form.area_id.data,
+            UserProfile.phone == field.data,
+            UserProfile.user_id != form.user_id.data
+        ]
+        row = get_user_profile_row(*condition)
+
+        if row:
+            raise ValidationError(self.message or u'手机号码重复')
+
+
+class IdCardRepeatValidate(object):
+    """
+    身份证号重复校验
+    (编辑重复校验排除当前用户)
+    """
+    def __init__(self, message=None):
+        self.message = message
+
+    def __call__(self, form, field):
+        condition = [
+            UserProfile.area_id == form.area_id.data,
+            UserProfile.id_card == field.data,
+            UserProfile.user_id != form.user_id.data
+        ]
+        row = get_user_profile_row(*condition)
+
+        if row:
+            raise ValidationError(self.message or u'身份证号重复')
 
 
 class UserProfileForm(FlaskForm):
@@ -48,9 +110,17 @@ class UserProfileForm(FlaskForm):
         area_code_choices.append((m, n))
     area_id = SelectAreaCode(u'手机区号', default='0', choices=area_code_choices, validators=[DataRequired()])
     area_code = StringField('Area Code')
-    phone = StringField(u'手机号码')
+    phone = StringField(u'手机号码', validators=[
+        DataRequired(u'手机号码不能为空'),
+        PhoneFormatValidate(),
+        PhoneRepeatValidate()
+    ])
     birthday = DateField(u'出生日期')
-    id_card = StringField(u'身份证号')
+    id_card = StringField(u'身份证号', validators=[
+        DataRequired(u'身份证号不能为空'),
+        Length(min=18, max=18, message=u'身份证号长度不符'),
+        IdCardRepeatValidate()
+    ])
     create_time = DateTimeField(u'创建时间')
     update_time = DateTimeField(u'修改时间')
 

@@ -107,7 +107,7 @@
         // console.log(oldValue);
     });
     function apply_get_delete(apply_get_id){
-        if(confirm("Are you sure?"))
+        if(confirm("删除数据不能恢复，是否确认删除?"))
         {
             // console.log(user_id);
             $.getJSON('{{ url_for('apply_get.delete') }}',
