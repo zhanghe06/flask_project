@@ -56,10 +56,11 @@
             </div>
         </div>
     </form>
-    <hr/>
-    <a type="button" href="{{ url_for('auth.login_qq') }}">QQ</a>
-    <a type="button" href="{{ url_for('auth.login_weibo') }}">WeiBo</a>
-    <a type="button" href="{{ url_for('auth.login_github') }}">GitHub</a>
+
+    {% if SWITCH_LOGIN_THREE_PART %}
+    {% include('auth/_login_three_part.html') %}
+    {% endif %}
+
     </div>
 {% endblock %}
 

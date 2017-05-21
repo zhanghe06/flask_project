@@ -33,6 +33,8 @@ SWITCH_LOGIN_ACCOUNT = app.config['SWITCH_LOGIN_ACCOUNT']
 SWITCH_LOGIN_PHONE = app.config['SWITCH_LOGIN_PHONE']
 SWITCH_LOGIN_EMAIL = app.config['SWITCH_LOGIN_EMAIL']
 
+SWITCH_LOGIN_THREE_PART = app.config['SWITCH_LOGIN_THREE_PART']
+
 bp_auth = Blueprint('auth', __name__, url_prefix='/auth')
 
 
@@ -78,7 +80,7 @@ def index():
             flash(u'%s, 恭喜，您已成功登录' % form.account.data, 'success')
             return redirect(request.args.get('next') or url_for('index'))
         # flash(form.errors, 'warning')  # 调试打开
-    return render_template('auth/index.html', title='login', form=form)
+    return render_template('auth/index.html', title='login', form=form, SWITCH_LOGIN_THREE_PART=SWITCH_LOGIN_THREE_PART)
 
 
 @bp_auth.route('/phone/', methods=['GET', 'POST'])
@@ -125,7 +127,7 @@ def phone():
             flash(u'%s, 恭喜，您已成功登录' % form.phone.data, 'success')
             return redirect(request.args.get('next') or url_for('index'))
         # flash(form.errors, 'warning')  # 调试打开
-    return render_template('auth/phone.html', title='login', form=form)
+    return render_template('auth/phone.html', title='login', form=form, SWITCH_LOGIN_THREE_PART=SWITCH_LOGIN_THREE_PART)
 
 
 @bp_auth.route('/email/', methods=['GET', 'POST'])
@@ -169,7 +171,7 @@ def email():
             flash(u'%s, 恭喜，您已成功登录' % form.email.data, 'success')
             return redirect(request.args.get('next') or url_for('index'))
         # flash(form.errors, 'warning')  # 调试打开
-    return render_template('auth/email.html', title='login', form=form)
+    return render_template('auth/email.html', title='login', form=form, SWITCH_LOGIN_THREE_PART=SWITCH_LOGIN_THREE_PART)
 
 
 # @app.route('/logout')
