@@ -100,8 +100,8 @@
                 <th>订单ID</th>
                 <th>投资ID</th>
                 <th>提现ID</th>
-                <th>投资UID</th>
-                <th>提现UID</th>
+                <th>投资用户</th>
+                <th>提现用户</th>
                 <th>认证状态</th>
                 <th>支付状态</th>
                 <th>确认状态</th>
@@ -110,13 +110,13 @@
             </tr>
             </thead>
             <tbody>
-            {% for order in pagination.items %}
+            {% for order, user_profile_put, user_profile_get in pagination.items %}
             <tr class="text-muted">
                 <td>{{ order.id }}</td>
                 <td>{{ order.apply_put_id }}</td>
                 <td>{{ order.apply_get_id }}</td>
-                <td>{{ order.apply_put_uid }}</td>
-                <td>{{ order.apply_get_uid }}</td>
+                <td>{{ user_profile_put.nickname }} [{{ order.apply_put_uid }}]</td>
+                <td>{{ user_profile_get.nickname }} [{{ order.apply_get_uid }}]</td>
                 <td>{{ order.status_audit | status_audit }}</td>
                 <td>{{ order.status_pay | status_pay }}</td>
                 <td>{{ order.status_rec | status_rec }}</td>
@@ -173,7 +173,7 @@
 
 
     function order_delete(order_id){
-        if(confirm("Are you sure?"))
+        if(confirm("删除数据不能恢复，是否确认删除?"))
         {
             // console.log(user_id);
             $.getJSON('{{ url_for('order.delete') }}',

@@ -9,6 +9,7 @@
 """
 
 
+from sqlalchemy.orm import aliased
 from datetime import datetime
 from flask import redirect
 from flask import render_template, request, flash, g
@@ -18,12 +19,14 @@ import flask_excel as excel
 
 from app_backend import app
 from app_backend.forms.admin import AdminProfileForm
-from app_backend.models import User, UserProfile
+from app_backend.models import User, UserProfile, Order
 from app_backend.api.order import get_order_rows, get_order_row
 from app_backend.forms.order import OrderSearchForm
 
 from flask import Blueprint
 
+from app_common.maps.status_delete import STATUS_DEL_NO
+from config import PER_PAGE_BACKEND
 
 bp_order = Blueprint('order', __name__, url_prefix='/order')
 
@@ -61,27 +64,40 @@ def lists(page=1):
     form.end_time.data = end_time
 
     # 搜索条件
-    condition = {
-        'status_delete': 0
-    }
-    if order_id:
-        condition['id'] = order_id
-    if apply_put_id:
-        condition['apply_put_id'] = apply_put_id
-    if apply_get_id:
-        condition['apply_get_id'] = apply_get_id
-    if apply_put_uid:
-        condition['apply_put_uid'] = apply_put_uid
-    if apply_get_uid:
-        condition['apply_get_uid'] = apply_get_uid
-    if status_audit:
-        condition['status_audit'] = status_audit
-    if status_pay:
-        condition['status_pay'] = status_pay
-    if status_rec:
-        condition['status_rec'] = status_rec
+    search_condition_order = [
+        Order.status_delete == STATUS_DEL_NO,
+    ]
 
-    pagination = get_order_rows(page, **condition)
+    if order_id:
+        search_condition_order.append(Order.id == order_id)
+    if apply_put_id:
+        search_condition_order.append(Order.apply_put_id == apply_put_id)
+    if apply_get_id:
+        search_condition_order.append(Order.apply_get_id == apply_get_id)
+    if apply_put_uid:
+        search_condition_order.append(Order.apply_put_uid == apply_put_uid)
+    if apply_get_uid:
+        search_condition_order.append(Order.apply_get_uid == apply_get_uid)
+    if status_audit:
+        search_condition_order.append(Order.status_audit == status_audit)
+    if status_pay:
+        search_condition_order.append(Order.status_pay == status_pay)
+    if status_rec:
+        search_condition_order.append(Order.status_rec == status_rec)
+
+    # 多次连接同一张表，需要别名
+    user_profile_put = aliased(UserProfile)
+    user_profile_get = aliased(UserProfile)
+
+    pagination = Order.query. \
+        filter(*search_condition_order). \
+        outerjoin(user_profile_put, Order.apply_put_uid == user_profile_put.user_id). \
+        add_entity(user_profile_put). \
+        outerjoin(user_profile_get, Order.apply_get_uid == user_profile_get.user_id). \
+        add_entity(user_profile_get). \
+        order_by(Order.id.desc()). \
+        paginate(page, PER_PAGE_BACKEND, False)
+
     return render_template('order/list.html', title='order_list', pagination=pagination, form=form)
 
 
