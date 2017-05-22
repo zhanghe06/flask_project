@@ -47,3 +47,4 @@ APPLY_GET_TIME_END = '59:00:00'         # 每天提现申请结束时间
 APPLY_PUT_MAX_AMOUNT = 10000            # 投资总额
 APPLY_PUT_MAX_COUNT = 100               # 投资总数
 
+APPLY_PUT_INTEREST_ON_PRINCIPAL_TTL = 3600*24*15     # 投资申请后15天完成的订单执行回收本息

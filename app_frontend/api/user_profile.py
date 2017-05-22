@@ -93,3 +93,35 @@ def user_profile_is_complete(user_id):
     if user_profile_info.nickname and user_profile_info.phone and user_profile_info.id_card:
         return True
     return False
+
+
+def get_p_uid_list(user_id):
+    """
+    获取父级用户id列表
+    :param user_id:
+    :return:
+    """
+    result = []
+    # 一级
+    user_profile_info = get_row_by_id(UserProfile, user_id)
+    if not (user_profile_info and user_profile_info.user_pid):
+        return result
+
+    result.append(user_profile_info.user_pid)
+    user_id = user_profile_info.user_pid
+
+    # 二级
+    user_profile_info = get_row_by_id(UserProfile, user_id)
+    if not (user_profile_info and user_profile_info.user_pid):
+        return result
+
+    result.append(user_profile_info.user_pid)
+    user_id = user_profile_info.user_pid
+
+    # 三级
+    user_profile_info = get_row_by_id(UserProfile, user_id)
+    if not (user_profile_info and user_profile_info.user_pid):
+        return result
+
+    result.append(user_profile_info.user_pid)
+    return result

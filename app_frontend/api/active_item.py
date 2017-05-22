@@ -32,7 +32,7 @@ def get_active_item_row(*args, **kwargs):
     return get_row(ActiveItem, *args, **kwargs)
 
 
-def add_active(active_item_data):
+def add_active_item(active_item_data):
     """
     添加激活信息
     :param active_item_data:
@@ -41,7 +41,7 @@ def add_active(active_item_data):
     return add(ActiveItem, active_item_data)
 
 
-def edit_active(active_item_id, active_item_data):
+def edit_active_item(active_item_id, active_item_data):
     """
     修改激活信息
     :param active_item_id:
@@ -51,7 +51,7 @@ def edit_active(active_item_id, active_item_data):
     return edit(ActiveItem, active_item_id, active_item_data)
 
 
-def delete_active(active_item_id):
+def delete_active_item(active_item_id):
     """
     删除激活信息
     :param active_item_id:

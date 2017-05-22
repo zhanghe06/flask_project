@@ -12,7 +12,10 @@
 import os
 from datetime import datetime
 import json
+import traceback
 
+from sqlalchemy.exc import OperationalError
+from pika.exceptions import ConnectionClosed
 from flask import send_from_directory
 from flask_login import current_user
 
@@ -142,34 +145,44 @@ def ajax_get_sms_code():
     获取短信验证码
     :return:
     """
-    # 获取短信验证码
-    account = request.args.get('account', '', type=str)
-    if not account:
-        return json.dumps({'result': False, 'msg': u'账号为空，请重新填写'})
-    account = request.args.get('account', '', type=str)
-    admin_info = get_admin_row(username=account)
-    if not admin_info:
-        return json.dumps({'result': False, 'msg': u'账号不存在，请填写正确'})
-    area_code = admin_info.area_code
-    mobile = admin_info.phone
-    if not area_code or not mobile:
-        return json.dumps({'result': False, 'msg': u'手机号码错误，请在后台更新'})
-    mobile_iso = '%s%s' % (area_code, mobile)
+    try:
+        # 获取短信验证码
+        account = request.args.get('account', '', type=str)
+        if not account:
+            return json.dumps({'result': False, 'msg': u'账号为空，请重新填写'})
+        account = request.args.get('account', '', type=str)
+        admin_info = get_admin_row(username=account)
+        if not admin_info:
+            return json.dumps({'result': False, 'msg': u'账号不存在，请填写正确'})
+        area_code = admin_info.area_code
+        mobile = admin_info.phone
+        if not area_code or not mobile:
+            return json.dumps({'result': False, 'msg': u'手机号码错误，请在后台更新'})
+        mobile_iso = '%s%s' % (area_code, mobile)
 
-    sms_code = str(get_randint())
-    code_key = '%s:%s' % ('sms_code', 'login')
-    session[code_key] = sms_code
+        sms_code = str(get_randint())
+        code_key = '%s:%s' % ('sms_code', 'login')
+        session[code_key] = sms_code
 
-    sms_content = SMS_CODE_LOGIN % sms_code
+        sms_content = SMS_CODE_LOGIN % sms_code
 
-    # sms_client = SmsChuangLanIsoApi(UN, PW)
-    # result = sms_client.send_international(mobile_iso, msg)
+        # sms_client = SmsChuangLanIsoApi(UN, PW)
+        # result = sms_client.send_international(mobile_iso, msg)
 
-    # 推送短信优先级队列
-    q = RabbitPriorityQueue(exchange=EXCHANGE_NAME, queue_name='send_sms_p')
-    q.put({'mobile': mobile_iso, 'sms_content': sms_content}, 20)
+        # 推送短信优先级队列
+        q = RabbitPriorityQueue(exchange=EXCHANGE_NAME, queue_name='send_sms_p')
+        q.put({'mobile': mobile_iso, 'sms_content': sms_content}, 20)
 
-    return json.dumps({'result': True})
+        return json.dumps({'result': True})
+    except OperationalError:
+        print traceback.print_exc()
+        return json.dumps({'result': False, 'msg': u'数据库连接失败'})
+    except ConnectionClosed:
+        print traceback.print_exc()
+        return json.dumps({'result': False, 'msg': u'短信队列连接失败'})
+    except Exception as e:
+        print traceback.print_exc()
+        return json.dumps({'result': False, 'msg': u'服务器异常，短信获取失败；%s' % e.message})
 
 
 @app.errorhandler(404)

@@ -17,7 +17,7 @@
         <div class="form-group{% if form.account.errors %} has-error{% endif %}">
             {{ form.account.label(class="col-sm-2 control-label") }}
             <div class="col-sm-10">
-                {{ form.account(class="form-control", placeholder="Account", value="") }}
+                {{ form.account(class="form-control", placeholder="Account") }}
                 {% for error in form.account.errors %}
                     <span class="help-block">{{ error }}</span>
                 {% endfor %}

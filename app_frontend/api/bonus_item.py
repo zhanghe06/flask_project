@@ -4,65 +4,65 @@
 """
 @author: zhanghe
 @software: PyCharm
-@file: wallet_item.py
-@time: 2017/5/13 上午9:00
+@file: bonus_item.py
+@time: 2017/5/22 下午10:58
 """
 
 
-from app_frontend.models import WalletItem
+from app_frontend.models import BonusItem
 from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
 
 
-def get_wallet_item_row_by_id(wallet_item_id):
+def get_bonus_item_row_by_id(bonus_item_id):
     """
-    通过 id 获取钱包信息
-    :param wallet_item_id:
+    通过 id 获取奖金信息
+    :param bonus_item_id:
     :return: None/object
     """
-    return get_row_by_id(WalletItem, wallet_item_id)
+    return get_row_by_id(BonusItem, bonus_item_id)
 
 
-def get_wallet_item_row(*args, **kwargs):
+def get_bonus_item_row(*args, **kwargs):
     """
-    获取钱包信息
+    获取奖金信息
     :param args:
     :param kwargs:
     :return: None/object
     """
-    return get_row(WalletItem, *args, **kwargs)
+    return get_row(BonusItem, *args, **kwargs)
 
 
-def add_wallet_item(wallet_item_data):
+def add_bonus_item(bonus_item_data):
     """
-    添加钱包信息
-    :param wallet_item_data:
+    添加奖金信息
+    :param bonus_item_data:
     :return: None/Value of wallet.id
     """
-    return add(WalletItem, wallet_item_data)
+    return add(BonusItem, bonus_item_data)
 
 
-def edit_wallet_item(wallet_item_id, wallet_item_data):
+def edit_bonus_item(bonus_item_id, bonus_item_data):
     """
-    修改钱包信息
-    :param wallet_item_id:
-    :param wallet_item_data:
+    修改奖金信息
+    :param bonus_item_id:
+    :param bonus_item_data:
     :return: Number of affected rows (Example: 0/1)
     """
-    return edit(WalletItem, wallet_item_id, wallet_item_data)
+    return edit(BonusItem, bonus_item_id, bonus_item_data)
 
 
-def delete_wallet_item(wallet_item_id):
+def delete_bonus_item(bonus_item_id):
     """
-    删除钱包信息
-    :param wallet_item_id:
+    删除奖金信息
+    :param bonus_item_id:
     :return: Number of affected rows (Example: 0/1)
     """
-    return delete(WalletItem, wallet_item_id)
+    return delete(BonusItem, bonus_item_id)
 
 
-def get_wallet_item_rows(page=1, per_page=10, *args, **kwargs):
+def get_bonus_item_rows(page=1, per_page=10, *args, **kwargs):
     """
-    获取钱包列表（分页）
+    获取奖金列表（分页）
     Usage:
         items: 信息列表
         has_next: 如果本页之后还有超过一个分页，则返回True
@@ -77,5 +77,6 @@ def get_wallet_item_rows(page=1, per_page=10, *args, **kwargs):
     :param kwargs:
     :return:
     """
-    rows = get_rows(WalletItem, page, per_page, *args, **kwargs)
+    rows = get_rows(BonusItem, page, per_page, *args, **kwargs)
     return rows
+

@@ -25,7 +25,7 @@ DEBUG = False
 
 PROJECT_NAME = u'九重天'
 
-ICP_CODE = U'粤ICP备16047585号'
+ICP_CODE = u'粤ICP备16047585号'
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__)+'/../../')
 

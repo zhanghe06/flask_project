@@ -16,7 +16,7 @@
         <div class="form-group{% if form.email.errors %} has-error{% endif %}">
             {{ form.email.label(class="col-sm-2 control-label") }}
             <div class="col-sm-10">
-                {{ form.email(class="form-control", placeholder="登录邮箱", value="") }}
+                {{ form.email(class="form-control", placeholder="登录邮箱[2-20位]") }}
                 {% for error in form.email.errors %}
                     <span class="help-block">{{ error }}</span>
                 {% endfor %}
@@ -25,7 +25,7 @@
         <div class="form-group{% if form.password.errors %} has-error{% endif %}">
             {{ form.password.label(class="col-sm-2 control-label") }}
             <div class="col-sm-10">
-                {{ form.password(class="form-control", placeholder="登录密码[6-20位]", value="") }}
+                {{ form.password(class="form-control", placeholder="登录密码[6-20位]") }}
                 {% for error in form.password.errors %}
                     <span class="help-block">{{ error }}</span>
                 {% endfor %}

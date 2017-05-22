@@ -25,7 +25,7 @@ DEBUG = True
 
 PROJECT_NAME = u'网站名称'
 
-ICP_CODE = U'沪ICP备12024750号'
+ICP_CODE = u'沪ICP备12024750号'
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__)+'/../../')
 

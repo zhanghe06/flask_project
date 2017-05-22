@@ -337,7 +337,7 @@
     function order_rec(order_id, status_rec) {
         //console.log($(form).serialize());
         $.ajax({
-            url: "{{ url_for('order.ajax_pay') }}",
+            url: "{{ url_for('order.ajax_rec') }}",
             type: 'POST',
             data: {order_id: order_id, status_rec: status_rec},
             dataType: 'json',

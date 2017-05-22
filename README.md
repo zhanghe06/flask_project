@@ -1198,6 +1198,26 @@ IOError: [Errno 32] Broken pipe
 ```
 
 
+## 事务一致性
+
+分布式架构下，无法做到跨服务事务，只能通过逻辑事务，回滚采用补偿方案处理
+
+
+## ajax 前后端规范
+
+后端返回结构
+```
+json.dumps({'result': True})
+json.dumps({'result': False, 'msg': u'错误消息'})
+json.dumps({'result': False, 'msg': u'错误消息', 'location': 'http://www.baidu.com'})
+```
+
+前端处理逻辑
+```
+
+```
+
+
 ## Todo：
 
 - 第三方登陆

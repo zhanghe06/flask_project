@@ -12,6 +12,7 @@
 import json
 from datetime import datetime
 import traceback
+from decimal import Decimal
 
 from flask import abort
 from flask import redirect
@@ -21,19 +22,34 @@ from flask_login import current_user, login_required
 import flask_excel as excel
 
 from app_frontend import app
+from app_frontend.api.user_profile import get_p_uid_list
 from app_frontend.models import User, UserProfile, Order
 from app_frontend.api.order import get_order_rows, get_order_row, get_order_row_by_id, edit_order
 from app_frontend.api.user_bank import get_user_bank_row_by_id
 from app_frontend.api.order_bill import get_order_bill_lists, add_order_bill, get_order_bill_count
+from app_frontend.api.wallet_item import add_wallet_item
+from app_frontend.api.wallet import get_wallet_row_by_id, add_wallet, edit_wallet
+from app_frontend.api.bonus_item import add_bonus_item
+from app_frontend.api.bonus import get_bonus_row_by_id, add_bonus, edit_bonus
 from app_common.maps.status_pay import *
 from app_common.maps.status_rec import *
 from app_common.maps.status_delete import *
 from app_common.maps.status_audit import *
+from app_common.maps.type_payment import *
 
 from flask import Blueprint
 
 PER_PAGE_FRONTEND = app.config['PER_PAGE_FRONTEND']
 
+INTEREST_PUT = app.config['INTEREST_PUT']               # 投资利息（日息）
+INTEREST_PAY_AHEAD = app.config['INTEREST_PAY_AHEAD']   # 提前支付奖金比例
+INTEREST_PAY_DELAY = app.config['INTEREST_PAY_DELAY']   # 延迟支付罚金比例
+
+DIFF_TIME_PAY_AHEAD = app.config['DIFF_TIME_PAY_AHEAD']   # 提前支付奖金时间差
+DIFF_TIME_PAY_DELAY = app.config['DIFF_TIME_PAY_DELAY']   # 延迟支付罚金时间差
+
+BONUS_DIRECT = app.config['BONUS_DIRECT']     # 直接推荐奖励
+BONUS_LEVEL = app.config['BONUS_LEVEL']     # 奖金等级
 
 bp_order = Blueprint('order', __name__, url_prefix='/order')
 
@@ -282,14 +298,14 @@ def pay_bill_uploads(order_id):
                 file_info['error'] = e.message
 
             files.append(file_info)
-        # 更新订单付款凭证
-        current_time = datetime.utcnow()
-        order_data = {
-            'status_pay': STATUS_PAY_SUCCESS,
-            'pay_time': current_time,
-            'update_time': current_time
-        }
-        edit_order(order_id, order_data)
+        # # 更新订单付款凭证
+        # current_time = datetime.utcnow()
+        # order_data = {
+        #     'status_pay': STATUS_PAY_SUCCESS,
+        #     'pay_time': current_time,
+        #     'update_time': current_time
+        # }
+        # edit_order(order_id, order_data)
         return json.dumps({'files': files})
         # return redirect(url_for('order.info_put', order_id=order_id))
 
@@ -331,7 +347,7 @@ def ajax_pay():
             if order_info.status_delete == int(STATUS_DEL_OK):
                 raise Exception(u'异常操作，此订单已删除')
             if order_info.status_pay == status_pay:
-                raise Exception(u'异常操作，不能重复操作')
+                raise Exception(u'异常操作，此订单已支付')
 
             # 更新支付状态
             current_time = datetime.utcnow()
@@ -363,6 +379,8 @@ def ajax_rec():
         order_id = form.get('order_id', 0, type=int)
         status_rec = form.get('status_rec', 0, type=int)
 
+        user_id = current_user.id
+
         try:
             # 参数校验
             if not order_id:
@@ -374,23 +392,143 @@ def ajax_rec():
             order_info = get_order_row_by_id(order_id)
             if not order_info:
                 raise Exception(u'异常操作，此订单不存在')
-            if order_info.apply_get_uid != current_user.id:
+            if order_info.apply_get_uid != user_id:
                 raise Exception(u'异常操作，此订单无权限')
             if order_info.status_delete == int(STATUS_DEL_OK):
                 raise Exception(u'异常操作，此订单已删除')
             if order_info.status_pay != int(STATUS_PAY_SUCCESS):
                 raise Exception(u'异常操作，此订单未支付')
             if order_info.status_rec == status_rec:
-                raise Exception(u'异常操作，不能重复操作')
+                raise Exception(u'异常操作，此订单已完成')
+
+            # TODO 事务 用户订单确认
+
+            order_time = order_info.create_time
+            current_time = datetime.utcnow()
+            diff_time = (current_time - order_time).seconds
+            # 判断是否满足奖励规则
+            print diff_time, DIFF_TIME_PAY_AHEAD
+            print type(diff_time), type(DIFF_TIME_PAY_AHEAD)
+
+            print '-'*300
+            if diff_time < DIFF_TIME_PAY_AHEAD:
+                interest = order_info.money * Decimal(INTEREST_PAY_AHEAD)
+                # 添加奖励明细
+                wallet_item_data = {
+                    'type': TYPE_PAYMENT_INCOME,
+                    'sc_id': order_id,
+                    'money': interest,
+                    'status_audit': STATUS_AUDIT_SUCCESS,
+                    'audit_time': current_time,
+                    'create_time': current_time,
+                    'update_time': current_time
+                }
+                add_wallet_item(wallet_item_data)
+
+                wallet_info = get_wallet_row_by_id(user_id)
+                # 新增钱包记录，更新钱包余额
+                if not wallet_info:
+                    wallet_data = {
+                        'user_id': user_id,
+                        'amount_initial': 0,
+                        'amount_current': interest,
+                        'amount_lock': 0,
+                        'create_time': current_time,
+                        'update_time': current_time,
+                    }
+                    add_wallet(wallet_data)
+                # 更新钱包余额
+                else:
+                    wallet_data = {
+                        'user_id': user_id,
+                        'amount_current': wallet_info.amount_current + interest,
+                        'update_time': current_time,
+                    }
+                    edit_wallet(user_id, wallet_data)
+
+            # 判断是否满足惩罚规则
+            print diff_time, DIFF_TIME_PAY_DELAY, type(diff_time), type(DIFF_TIME_PAY_DELAY)
+
+            if diff_time > DIFF_TIME_PAY_DELAY:
+                interest = order_info.money * INTEREST_PAY_DELAY
+                # 添加惩罚明细
+                wallet_item_data = {
+                    'type': TYPE_PAYMENT_EXPENSE,
+                    'sc_id': order_id,
+                    'money': interest,
+                    'status_audit': STATUS_AUDIT_SUCCESS,
+                    'audit_time': current_time,
+                    'create_time': current_time,
+                    'update_time': current_time
+                }
+                add_wallet_item(wallet_item_data)
+
+                wallet_info = get_wallet_row_by_id(user_id)
+                # 新增钱包记录，更新钱包余额
+                if not wallet_info:
+                    wallet_data = {
+                        'user_id': user_id,
+                        'amount_initial': 0,
+                        'amount_current': interest,
+                        'amount_lock': 0,
+                        'create_time': current_time,
+                        'update_time': current_time,
+                    }
+                    add_wallet(wallet_data)
+                # 更新钱包余额
+                else:
+                    wallet_data = {
+                        'user_id': user_id,
+                        'amount_current': wallet_info.amount_current + interest,
+                        'update_time': current_time,
+                    }
+                    edit_wallet(user_id, wallet_data)
+
+            # 投资方计算上级推广利息（三级）
+            p_uid_list = get_p_uid_list(user_id)
+            for uid, bonus_rate in zip(p_uid_list, BONUS_LEVEL):
+
+                bonus = order_info.money * Decimal(bonus_rate)
+                # 添加奖金明细
+                bonus_item_data = {
+                    'user_id': uid,
+                    'type': TYPE_PAYMENT_INCOME,
+                    'sc_id': order_id,
+                    'amount': bonus,
+                    'status_audit': STATUS_AUDIT_SUCCESS,
+                    'audit_time': current_time,
+                    'create_time': current_time,
+                    'update_time': current_time
+                }
+                add_bonus_item(bonus_item_data)
+
+                bonus_info = get_bonus_row_by_id(uid)
+                # 新增钱包记录，更新钱包余额
+                if not bonus_info:
+                    bonus_data = {
+                        'user_id': uid,
+                        'amount': bonus,
+                        'create_time': current_time,
+                        'update_time': current_time,
+                    }
+                    add_bonus(bonus_data)
+                # 更新钱包余额
+                else:
+                    bonus_data = {
+                        'user_id': uid,
+                        'amount': bonus,
+                        'update_time': current_time,
+                    }
+                    edit_bonus(uid, bonus_data)
 
             # 更新确认状态
-            current_time = datetime.utcnow()
             order_data = {
                 'status_rec': status_rec,
                 'rec_time': current_time,
                 'update_time': current_time,
             }
             result = edit_order(order_id, order_data)
+
             if result == 1:
                 return json.dumps({'success': u'收款确认操作成功'})
             if result == 0:
