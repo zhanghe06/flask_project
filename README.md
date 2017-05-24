@@ -530,7 +530,7 @@ Flask-Login 扩展需要在我们 model 的 User 类里实现一些方法。：
 
 ### LightBox 插件
 
-参考: [LightBox.md](LightBox.md)
+参考: [LightBox.md](doc/LightBox.md)
 
 
 ### Chart.js 图表插件
@@ -709,7 +709,7 @@ location ~ ^/static/ {
 
 Nginx https 部署
 
-参考: [https.md](https.md)
+参考: [https.md](doc/https.md)
 
 
 ## 上传目录权限设置

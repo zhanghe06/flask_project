@@ -1,5 +1,10 @@
 ## 生成证书
 
+证书生成工具：
+
+https://certificatetools.com/
+
+
 可以通过以下步骤生成一个简单的证书：
 
 首先，进入你想创建证书和私钥的目录，例如：
@@ -9,23 +14,23 @@ $ cd ssl
 
 创建服务器私钥，命令会让你输入一个口令(为了简便：123456, 强烈不推荐)：
 ```
-$ openssl genrsa -des3 -out server.key 1024
+$ openssl genrsa -des3 -out ca.key 1024
 ```
 ```
 Generating RSA private key, 1024 bit long modulus
 .............................++++++
 ......++++++
 e is 65537 (0x10001)
-Enter pass phrase for server.key:
-Verifying - Enter pass phrase for server.key:
+Enter pass phrase for ca.key:
+Verifying - Enter pass phrase for ca.key:
 ```
 
 创建签名请求的证书（CSR）：
 ```
-$ openssl req -new -key server.key -out server.csr
+$ openssl req -new -key ca.key -out server.csr
 ```
 ```
-Enter pass phrase for server.key:
+Enter pass phrase for ca.key:
 You are about to be asked to enter information that will be incorporated
 into your certificate request.
 What you are about to enter is what is called a Distinguished Name or a DN.
@@ -35,37 +40,34 @@ If you enter '.', the field will be left blank.
 -----
 Country Name (2 letter code) [AU]:CN
 State or Province Name (full name) [Some-State]:Shanghai
-Locality Name (eg, city) []:Shanghai
+Locality Name (eg, city) []:HuangPu
 Organization Name (eg, company) [Internet Widgits Pty Ltd]:Shanghai Flask Project Ltd
-Organizational Unit Name (eg, section) []:flask
-Common Name (e.g. server FQDN or YOUR name) []:*.flask-app.com
-Email Address []:admin@flask-app.com
+Organizational Unit Name (eg, section) []:Flask Organization
+Common Name (e.g. server FQDN or YOUR name) []:*.app.com
+Email Address []:admin@app.com
 
 Please enter the following 'extra' attributes
 to be sent with your certificate request
 A challenge password []:
-An optional company name []:
+An optional company name []:Shanghai Flask App Ltd
 ```
 
 在加载SSL支持的Nginx并使用上述私钥时除去必须的口令：
 ```
-$ cp server.key server.key.org
+$ openssl rsa -in ca.key -out server.key
 ```
 ```
-$ openssl rsa -in server.key.org -out server.key
-```
-```
-Enter pass phrase for server.key.org:
+Enter pass phrase for ca.key:
 writing RSA key
 ```
 
 最后标记证书使用上述私钥和CSR：
 ```
-$ openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+$ openssl x509 -req -days 365 -in server.csr -signkey server.key -extfile v3.ext -out server.crt
 ```
 ```
 Signature ok
-subject=/C=CN/ST=Shanghai/L=Shanghai/O=Shanghai Flask Project Ltd./OU=flask/CN=*.flask-app.com/emailAddress=admin@flask-app.com
+subject=/C=CN/ST=Shanghai/L=HuangPu/O=Shanghai Flask Project Ltd/OU=Flask Organization/CN=*.app.com/emailAddress=admin@app.com
 Getting Private key
 ```
 
@@ -74,7 +76,7 @@ Getting Private key
 修改Nginx配置文件，让其包含新标记的证书和私钥：
 ```
 server {
-    server_name www.flask-app.com;
+    server_name www.app.com;
     listen 443;
     ssl on;
     ssl_certificate /home/zhanghe/code/flask_project/ssl/server.crt;
@@ -84,13 +86,13 @@ server {
 重启 nginx。
 
 这样就可以通过以下方式访问：
-[https://www.flask-app.com](https://www.flask-app.com)
+[https://www.app.com](https://www.app.com)
 
 另外还可以加入如下代码实现80端口重定向到443
 ```
 server {
     listen 80;
-    server_name www.flask-app.com;
+    server_name www.app.com;
     rewrite ^(.*) https://$server_name$1 permanent;
 }
 ```
