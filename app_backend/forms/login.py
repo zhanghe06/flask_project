@@ -15,6 +15,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
 from app_backend.api.user_auth import get_user_auth_row
+from app_backend import app
 
 
 class SmsCodeValidate(object):
@@ -33,7 +34,8 @@ class SmsCodeValidate(object):
 
         code_key = '%s:%s' % ('sms_code', 'login')
         # print session.get(code_key), type(session.get(code_key)), data, type(data)
-        if session.get(code_key) != data:
+        # 测试模式下，跳过验证
+        if not app.config.get('TEST') and session.get(code_key) != data:
             raise ValidationError(self.message or u"短信验证码校验错误")
 
 

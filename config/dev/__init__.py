@@ -20,6 +20,11 @@ from settings.order import *
 from settings.sms import *
 from settings.user import *
 
+# 测试模式开关
+TEST = True
+
+# 前端地址
+FRONTEND_URL = 'http://0.0.0.0:8000'
 
 DEBUG = True
 

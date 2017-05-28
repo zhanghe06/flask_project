@@ -20,6 +20,11 @@ from settings.order import *
 from settings.sms import *
 from settings.user import *
 
+# 测试模式开关
+TEST = True
+
+# 前端地址
+FRONTEND_URL = 'http://120.77.59.26:8000'
 
 DEBUG = False
 
@@ -32,9 +37,9 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__)+'/../../')
 # 获取服务器名称
 HOST_NAME = socket.getfqdn(socket.gethostname())
 # 获取服务器内网ip
-HOST_IP = socket.gethostbyname(HOST_NAME)
+# HOST_IP = socket.gethostbyname(HOST_NAME)
 
-# HOST_IP = '192.168.4.1'
+HOST_IP = '10.27.186.18'
 
 # requests 超时设置
 REQUESTS_TIME_OUT = (30, 30)
