@@ -24,11 +24,11 @@ from app_common.maps.status_active import *
 from app_common.tools import md5
 from app_frontend import app
 from app_frontend.forms.user import UserProfileForm, UserAuthForm, UserBankForm
-from app_frontend.api.user_profile import get_user_profile_row_by_id, edit_user_profile
+from app_frontend.api.user_profile import get_user_profile_row_by_id, edit_user_profile, get_team_tree
 from app_frontend.api.user_bank import get_user_bank_row_by_id, add_user_bank, edit_user_bank
 from app_frontend.api.user_auth import get_user_auth_row_by_id, get_user_auth_row, edit_user_auth
 from app_frontend.api.user import edit_user, get_user_team_rows, get_user_row_by_id
-from app_frontend.api.active import get_active_row_by_id, user_active
+from app_frontend.api.active import get_active_row_by_id, user_active, give_active
 from app_common.maps.type_auth import *
 from datetime import datetime
 from flask import Blueprint
@@ -44,6 +44,9 @@ def auth():
     """
     用户登录认证信息
     """
+    # 获取团队成员三级树形结构
+    team_tree = get_team_tree(current_user.id)
+
     form = UserAuthForm(request.form)
     if request.method == 'GET':
         condition = {
@@ -89,7 +92,7 @@ def auth():
         # flash(form.errors, 'warning')  # 调试打开
 
     # flash(u'Hello, %s' % current_user.id, 'info')  # 测试打开
-    return render_template('user/auth.html', title='auth', form=form)
+    return render_template('user/auth.html', title='auth', form=form, team_tree=team_tree)
 
 
 @bp_user.route('/bank/', methods=['GET', 'POST'])
@@ -99,6 +102,9 @@ def bank():
     银行信息
     :return:
     """
+    # 获取团队成员三级树形结构
+    team_tree = get_team_tree(current_user.id)
+
     form = UserBankForm(request.form)
     if request.method == 'GET':
         bank_info = get_user_bank_row_by_id(current_user.id)
@@ -132,7 +138,7 @@ def bank():
         # flash(form.errors, 'warning')  # 调试打开
 
     # flash(u'Hello, %s' % current_user.id, 'info')  # 测试打开
-    return render_template('user/bank.html', title='bank', form=form)
+    return render_template('user/bank.html', title='bank', form=form, team_tree=team_tree)
 
 
 @bp_user.route('/profile/', methods=['GET', 'POST'])
@@ -141,6 +147,9 @@ def profile():
     """
     用户基本信息
     """
+    # 获取团队成员三级树形结构
+    team_tree = get_team_tree(current_user.id)
+
     form = UserProfileForm(request.form)
     if request.method == 'GET':
         user_info = get_user_profile_row_by_id(current_user.id)
@@ -179,7 +188,7 @@ def profile():
         # flash(form.errors, 'warning')  # 调试打开
 
     # flash(u'Hello, %s' % current_user.id, 'info')  # 测试打开
-    return render_template('user/profile.html', title='profile', form=form)
+    return render_template('user/profile.html', title='profile', form=form, team_tree=team_tree)
 
 
 @bp_user.route('/setting/', methods=['GET', 'POST'])
@@ -251,9 +260,9 @@ def team(page=1):
     return render_template('user/team.html', title='team', pagination=pagination)
 
 
-@bp_user.route('/ajax_active/', methods=['GET', 'POST'])
+@bp_user.route('/ajax_user_active/', methods=['GET', 'POST'])
 @login_required
-def ajax_active():
+def ajax_user_active():
     """
     用户激活
     :return:
@@ -285,6 +294,96 @@ def ajax_active():
 
             # 更新激活状态
             result = user_active(current_user.id, user_id)
+
+            if result:
+                current_time = datetime.utcnow()
+                # 加入用户激活自动监测锁定队列
+                q = RabbitDelayQueue(
+                    # exchange=app.config['EXCHANGE_NAME'],
+                    exchange='amq.direct',
+                    queue_name='lock_active_not_put',
+                    ttl=app.config['LOCK_ACTIVE_NOT_PUT_TTL']
+                )
+                q.put({'user_id': user_id, 'active_time': current_time.strftime('%Y-%m-%d %H:%M:%S')})
+                q.close_conn()
+
+                return json.dumps({'success': u'用户激活操作成功'})
+            else:
+                return json.dumps({'error': u'用户激活操作失败'})
+        except Exception as e:
+            print traceback.print_exc()
+            return json.dumps({'error': e.message})
+    abort(404)
+
+
+@bp_user.route('/ajax_add_active/', methods=['GET', 'POST'])
+@login_required
+def ajax_add_active():
+    """
+    赠送激活
+    :return:
+    """
+    if request.method == 'POST' and request.is_xhr:
+        form = request.form
+        user_id = form.get('user_id', 0, type=int)
+        amount = form.get('amount', 1, type=int)
+
+        try:
+            # 参数校验
+            if not user_id:
+                raise Exception(u'参数错误，赠送激活数量操作失败')
+
+            if amount <=0:
+                raise Exception(u'参数错误，赠送激活数量操作失败')
+
+            # 用户异常处理
+            user_info = get_user_row_by_id(user_id)
+
+            if not user_info:
+                raise Exception(u'异常操作，此用户不存在')
+            if user_info.status_delete == int(STATUS_DEL_OK):
+                raise Exception(u'异常操作，此用户已删除')
+
+            user_profile_info = get_user_profile_row_by_id(user_id)
+            if not user_profile_info:
+                raise Exception(u'异常操作，此用户不存在')
+            if user_profile_info.user_pid != current_user.id:
+                raise Exception(u'异常操作，无此用户权限')
+
+            # 赠送激活数量
+            result = give_active(current_user.id, user_id, amount)
+
+            if result:
+                return json.dumps({'success': u'赠送激活数量操作成功'})
+            else:
+                return json.dumps({'error': u'赠送激活数量操作失败'})
+        except Exception as e:
+            print traceback.print_exc()
+            return json.dumps({'error': e.message})
+    abort(404)
+
+
+@bp_user.route('/ajax_self_active/', methods=['GET', 'POST'])
+@login_required
+def ajax_self_active():
+    """
+    自己激活
+    :return:
+    """
+    if request.method == 'GET' and request.is_xhr:
+        # form = request.form
+        # user_id = form.get('user_id', 0, type=int)
+        user_id = current_user.id
+
+        try:
+            # 用户异常处理
+            if current_user.status_delete == int(STATUS_DEL_OK):
+                raise Exception(u'异常操作，此用户已删除')
+            if current_user.status_active == int(STATUS_ACTIVE_OK):
+                raise Exception(u'异常操作，用户已经激活')
+
+            # 更新激活状态
+            result = user_active(user_id, user_id)
 
             if result:
                 current_time = datetime.utcnow()
