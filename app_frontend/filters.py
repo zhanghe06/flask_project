@@ -26,6 +26,7 @@ from app_frontend.api.active import get_active_row_by_id
 from app_common.maps.type_level import TYPE_LEVEL_DICT
 from app_common.maps.type_apply import TYPE_APPLY_DICT
 from app_common.maps.type_auth import TYPE_AUTH_DICT
+from app_common.maps.type_active import TYPE_ACTIVE_DICT
 from app_common.maps.status_audit import STATUS_AUDIT_DICT
 from app_common.maps.status_apply import STATUS_APPLY_DICT
 from app_common.maps.status_order import STATUS_ORDER_DICT
@@ -240,6 +241,16 @@ def filter_type_auth(type_auth_id):
     :return:
     """
     return TYPE_AUTH_DICT.get(type_auth_id, u'')
+
+
+@app.template_filter('type_active')
+def filter_type_active(type_active_id):
+    """
+    激活类型
+    :param type_active_id:
+    :return:
+    """
+    return TYPE_ACTIVE_DICT.get(type_active_id, u'')
 
 
 @app.template_filter('status_apply')

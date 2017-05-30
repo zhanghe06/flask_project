@@ -121,6 +121,7 @@ from app_frontend.views.wallet import bp_wallet
 from app_frontend.views.complaint import bp_complaint
 from app_frontend.views.message import bp_message
 from app_frontend.views.penetration import bp_penetration
+from app_frontend.views.active import bp_active
 
 # 注册蓝图
 app.register_blueprint(bp_captcha)
@@ -137,6 +138,7 @@ app.register_blueprint(bp_wallet)
 app.register_blueprint(bp_complaint)
 app.register_blueprint(bp_message)
 app.register_blueprint(bp_penetration)
+app.register_blueprint(bp_active)
 
 # 导入自定义过滤器
 from app_frontend import filters
