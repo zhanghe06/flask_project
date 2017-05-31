@@ -50,7 +50,7 @@ class RabbitQueue(object):
         self.exchange_type = exchange_type
         self.durable = durable
         self.arguments = arguments
-        print u'实例化附加参数:', arguments
+        # print u'实例化附加参数:', arguments
         self.conn = get_conn()
         self.channel = self.conn.channel()
         self.declare()
@@ -145,7 +145,7 @@ class RabbitPubSub(object):
         self.exchange_type = exchange_type
         self.durable = durable
         self.arguments = arguments
-        print u'实例化附加参数:', arguments
+        # print u'实例化附加参数:', arguments
         self.conn = get_conn()
         self.channel = self.conn.channel()
         self.channel.exchange_declare(exchange=self.exchange, exchange_type=self.exchange_type, durable=self.durable)
@@ -212,7 +212,7 @@ class RabbitDelayQueue(object):
         self.exchange_type = exchange_type
         self.durable = durable
         self.arguments = arguments
-        print u'实例化附加参数:', arguments
+        # print u'实例化附加参数:', arguments
         self.conn = get_conn()
 
         self.channel = self.conn.channel()
