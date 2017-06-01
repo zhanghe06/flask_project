@@ -287,6 +287,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     status_active = Column(Integer, nullable=False, server_default=text("'0'"))
     status_lock = Column(Integer, nullable=False, server_default=text("'0'"))
+    status_real_name = Column(Integer, nullable=False, server_default=text("'0'"))
     status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
     active_time = Column(DateTime)
     lock_time = Column(DateTime)
@@ -330,6 +331,10 @@ class UserBank(Base):
 
 class UserProfile(Base):
     __tablename__ = 'user_profile'
+    __table_args__ = (
+        Index('ind_phone', 'area_id', 'phone'),
+        Index('ind_id_card', 'area_id', 'id_card')
+    )
 
     user_id = Column(Integer, primary_key=True)
     user_pid = Column(Integer, nullable=False, server_default=text("'0'"))
