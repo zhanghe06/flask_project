@@ -13,6 +13,7 @@ config/docker.py
 config/online.py
 logs/*.log
 app_frontend/static/uploads/*
+!app_frontend/static/uploads/index.html
 
 # 数据
 docker/marriadb/data/*

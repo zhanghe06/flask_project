@@ -559,6 +559,15 @@ http://flask-excel.readthedocs.io/en/latest/
 https://pythonhosted.org/Flask-Uploads/
 
 
+## Flask-Principal
+
+http://pythonhosted.org/Flask-Principal/
+
+
+## Flask-DebugToolbar
+https://flask-debugtoolbar.readthedocs.io/en/latest/
+
+
 ## 部署方案( Nginx + Gunicorn + Supervisor )
 
 生产环境下，flask 自带的 服务器，无法满足性能要求。我们这里采用 gunicorn 做 wsgi 容器，用来部署 python。
