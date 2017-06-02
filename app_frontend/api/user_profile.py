@@ -9,8 +9,11 @@
 """
 
 
+import json
 from app_frontend.models import UserProfile
-from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
+from app_frontend.tools.db import get_row, get_rows, get_lists, get_row_by_id, add, edit, delete
+
+from app_frontend.tools.tree import tree
 
 
 def get_user_profile_row_by_id(user_id):
@@ -125,3 +128,36 @@ def get_p_uid_list(user_id):
 
     result.append(user_profile_info.user_pid)
     return result
+
+
+def get_child_users(user_id):
+    """
+    获取子节点
+    :param user_id:
+    :return:
+    """
+    condition = {
+        'user_pid': user_id
+    }
+    rows = get_lists(UserProfile, **condition)
+    return [(row.user_id, row.nickname, row.type_level) for row in rows]
+
+
+def get_team_tree(user_id):
+    """
+    获取用户团队3层树形结构
+    :param user_id:
+    :return:
+    """
+    team = tree()
+    child_users = get_child_users(user_id)
+    for user1 in child_users:
+        team[user1] = {}
+        child_users2 = get_child_users(user1[0])
+        for user2 in child_users2:
+            team[user1][user2] = {}
+            child_users3 = get_child_users(user2[0])
+            for user3 in child_users3:
+                team[user1][user2][user3] = {}
+    # print json.dumps(team, indent=4)
+    return team

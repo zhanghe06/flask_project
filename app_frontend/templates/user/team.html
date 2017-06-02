@@ -57,9 +57,16 @@
                 <td>{{ user.status_lock | status_lock }}</td>
                 <td>{{ user.status_delete | status_delete }}</td>
                 <td>
+                    {% if user.status_active == 0 %}
                     <a type="button" class="btn-sm btn-success" href="javascript:void(0);" onclick="user_active({{ user.id }});">
                         <span class="glyphicon glyphicon-star-empty"></span> 用户激活
                     </a>
+                    {% else %}
+{#                    <a type="button" class="btn-sm btn-success" href="javascript:void(0);" onclick="add_active({{ user.id }});">#}
+                    <a type="button" class="btn-sm btn-success" href="{{ url_for('active.add', user_id=user.id) }}">
+                        <span class="glyphicon glyphicon-star-empty"></span> 赠送激活
+                    </a>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}
@@ -77,22 +84,50 @@
 // 用户激活
 function user_active(user_id) {
     //console.log($(form).serialize());
-    $.ajax({
-        url: "{{ url_for('user.ajax_active') }}",
-        type: 'POST',
-        data: {user_id: user_id},
-        dataType: 'json',
-        success: function (result) {
-            console.log(result);
-            if(result.hasOwnProperty('error')){
-                alert(result.error);
-            }else {
-                alert(result.success);
-                document.location.reload();
+
+    if(confirm("为此用户激活账号，是否确认?"))
+    {
+        $.ajax({
+            url: "{{ url_for('user.ajax_user_active') }}",
+            type: 'POST',
+            data: {user_id: user_id},
+            dataType: 'json',
+            success: function (result) {
+                console.log(result);
+                if(result.hasOwnProperty('error')){
+                    alert(result.error);
+                }else {
+                    alert(result.success);
+                    document.location.reload();
+                }
             }
-        }
-    });
-    return false;
+        });
+        return false;
+    }
+}
+
+// 赠送激活
+function add_active(user_id) {
+    //console.log($(form).serialize());
+    if(confirm("为此用户赠送激活码，是否确认?"))
+    {
+        $.ajax({
+            url: "{{ url_for('user.ajax_add_active') }}",
+            type: 'POST',
+            data: {user_id: user_id},
+            dataType: 'json',
+            success: function (result) {
+                console.log(result);
+                if(result.hasOwnProperty('error')){
+                    alert(result.error);
+                }else {
+                    alert(result.success);
+                    document.location.reload();
+                }
+            }
+        });
+        return false;
+    }
 }
 </script>
 {% endblock %}
