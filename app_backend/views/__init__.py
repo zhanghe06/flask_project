@@ -104,7 +104,7 @@ def login():
             }
             admin_info = get_admin_row(**condition)
             if admin_info is None:
-                flash(u'%s, 登录失败，账号不存在' % form.account.data, 'warning')
+                flash(u'%s, 登录失败，账号密码错误' % form.account.data, 'warning')
                 return render_template('login.html', title='login', form=form)
             if admin_info.status_delete == STATUS_DEL_OK:
                 flash(u'%s, 登录失败，账号已被删除' % form.account.data, 'warning')

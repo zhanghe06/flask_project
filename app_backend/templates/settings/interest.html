@@ -7,8 +7,112 @@
         <li><a href="javascript:void(0);" onclick="$('#menu-settings').trigger('click');">系统配置</a></li>
         <li class="active"><a href="#" onclick="$('#menu-settings-interest').trigger('click');">利息配置</a></li>
     </ol>
-    <h2 class="sub-header">Interest Setting!</h2>
+{#    <h2 class="sub-header">Interest Setting!</h2>#}
+    {# 表单 #}
+    <form class="form-horizontal" method="post" action="">
+        {{ form.csrf_token }}
+        <p></p>
 
+        <blockquote>
+            <p class="text-muted">利息配置</p>
+        </blockquote>
+        <div class="form-group{% if form.INTEREST_PUT.errors %} has-error{% endif %}">
+            {{ form.INTEREST_PUT.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.INTEREST_PUT(class="form-control", placeholder="投资利息（日息） [范围：0-1]") }}
+                {% for error in form.INTEREST_PUT.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <hr>
+        <blockquote>
+            <p class="text-muted">支付奖惩配置</p>
+        </blockquote>
+        <div class="form-group{% if form.INTEREST_PAY_AHEAD.errors %} has-error{% endif %}">
+            {{ form.INTEREST_PAY_AHEAD.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.INTEREST_PAY_AHEAD(class="form-control", placeholder="提前支付奖金比例 [范围：0-1]") }}
+                {% for error in form.INTEREST_PAY_AHEAD.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.INTEREST_PAY_DELAY.errors %} has-error{% endif %}">
+            {{ form.INTEREST_PAY_DELAY.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.INTEREST_PAY_DELAY(class="form-control", placeholder="延迟支付罚金比例 [范围：0-1]") }}
+                {% for error in form.INTEREST_PAY_DELAY.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.DIFF_TIME_PAY_AHEAD.errors %} has-error{% endif %}">
+            {{ form.DIFF_TIME_PAY_AHEAD.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.DIFF_TIME_PAY_AHEAD(class="form-control", placeholder="提前支付奖金时间 [单位：秒]", type="number") }}
+                {% for error in form.DIFF_TIME_PAY_AHEAD.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.DIFF_TIME_PAY_DELAY.errors %} has-error{% endif %}">
+            {{ form.DIFF_TIME_PAY_DELAY.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.DIFF_TIME_PAY_DELAY(class="form-control", placeholder="延迟支付罚金时间 [单位：秒]", type="number") }}
+                {% for error in form.DIFF_TIME_PAY_DELAY.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <hr>
+        <blockquote>
+            <p class="text-muted">确认奖惩配置</p>
+        </blockquote>
+        <div class="form-group{% if form.INTEREST_REC_AHEAD.errors %} has-error{% endif %}">
+            {{ form.INTEREST_REC_AHEAD.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.INTEREST_REC_AHEAD(class="form-control", placeholder="提前确认奖金比例 [范围：0-1]") }}
+                {% for error in form.INTEREST_REC_AHEAD.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.INTEREST_REC_DELAY.errors %} has-error{% endif %}">
+            {{ form.INTEREST_REC_DELAY.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.INTEREST_REC_DELAY(class="form-control", placeholder="延迟确认罚金比例 [范围：0-1]") }}
+                {% for error in form.INTEREST_REC_DELAY.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.DIFF_TIME_REC_AHEAD.errors %} has-error{% endif %}">
+            {{ form.DIFF_TIME_REC_AHEAD.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.DIFF_TIME_REC_AHEAD(class="form-control", placeholder="提前确认奖金时间 [单位：秒]", type="number") }}
+                {% for error in form.DIFF_TIME_REC_AHEAD.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.DIFF_TIME_REC_DELAY.errors %} has-error{% endif %}">
+            {{ form.DIFF_TIME_REC_DELAY.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.DIFF_TIME_REC_DELAY(class="form-control", placeholder="延迟确认罚金时间 [单位：秒]", type="number") }}
+                {% for error in form.DIFF_TIME_REC_DELAY.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-success btn-load" data-loading-text="保存中">保存</button>
+                <button type="reset" class="btn btn-default">重新填写</button>
+            </div>
+        </div>
+    </form>
 
 </div>
 

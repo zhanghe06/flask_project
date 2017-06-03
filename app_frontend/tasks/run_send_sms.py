@@ -26,7 +26,6 @@ def on_send_sms(ch, method, properties, body):
     try:
         print " [x]  Get %r" % (body,)
         msg = json.loads(body)
-        user_id = msg['user_id']
         mobile = msg['mobile']
         sms_content = msg['sms_content']
 
@@ -34,10 +33,10 @@ def on_send_sms(ch, method, properties, body):
         print result
         # 发送成功
         if result.get('success'):
-            print u'发送成功 uid:%s, mobile:%s, content: %s' % (user_id, mobile, sms_content)
+            print u'发送成功 mobile:%s, content: %s' % (mobile, sms_content)
         # 发送失败
         else:
-            print u'发送失败 uid:%s, mobile:%s, content: %s' % (user_id, mobile, sms_content)
+            print u'发送失败 mobile:%s, content: %s' % (mobile, sms_content)
         ch.basic_ack(delivery_tag=method.delivery_tag)
     except Exception as e:
         print traceback.print_exc()
@@ -55,7 +54,7 @@ def test_put():
     :return:
     """
     q = RabbitQueue(exchange=EXCHANGE_NAME, queue_name='send_sms')
-    q.put({'user_id': 1, 'mobile': '8613800001111', 'sms_content': '1111'})
+    q.put({'mobile': '8613800001111', 'sms_content': '1111'})
 
 
 if __name__ == '__main__':

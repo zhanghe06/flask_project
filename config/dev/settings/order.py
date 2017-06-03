@@ -10,19 +10,11 @@
 
 
 # 订单限制
-ORDER_MAX_AMOUNT = 10000
-ORDER_MAX_COUNT = 100
+ORDER_MAX_AMOUNT = 10000  # 订单最大金额
+ORDER_MAX_COUNT = 100  # 订单最大数量
 
-
-# 利息配置
-INTEREST_PUT = 0.01  # 投资利息（日息）
-INTEREST_PAY_AHEAD = 0.02  # 提前支付奖金比例
-INTEREST_PAY_DELAY = 0.02  # 延迟支付罚金比例
-
-# 时间差
-DIFF_TIME_PAY_AHEAD = 60*60*1   # 提前支付奖金时间差
-DIFF_TIME_PAY_DELAY = 60*60*24  # 延迟支付罚金时间差
-
+# 系统自动确认收款
+PAY_AUTO_REC_TTL = 60*60*48  # 系统在订单支付成功后超过48小时未确认收款，自动确认收款
 
 # 推广奖励
 

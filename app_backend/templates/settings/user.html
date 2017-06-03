@@ -7,8 +7,57 @@
         <li><a href="javascript:void(0);" onclick="$('#menu-settings').trigger('click');">系统配置</a></li>
         <li class="active">会员配置</li>
     </ol>
-    <h2 class="sub-header">User Setting!</h2>
+    <blockquote>
+        <p class="text-muted">会员冻结条件配置</p>
+    </blockquote>
+    {# 表单 #}
+    <form class="form-horizontal" method="post" action="">
+        {{ form.csrf_token }}
+        <p></p>
+        <div class="form-group{% if form.LOCK_REG_NOT_ACTIVE_TTL.errors %} has-error{% endif %}">
+            {{ form.LOCK_REG_NOT_ACTIVE_TTL.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.LOCK_REG_NOT_ACTIVE_TTL(class="form-control", placeholder="注册未激活时间 [单位：秒]") }}
+                {% for error in form.LOCK_REG_NOT_ACTIVE_TTL.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.LOCK_ACTIVE_NOT_PUT_TTL.errors %} has-error{% endif %}">
+            {{ form.LOCK_ACTIVE_NOT_PUT_TTL.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.LOCK_ACTIVE_NOT_PUT_TTL(class="form-control", placeholder="激活未排单时间 [单位：秒]") }}
+                {% for error in form.LOCK_ACTIVE_NOT_PUT_TTL.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.LOCK_ORDER_NOT_PAY_TTL.errors %} has-error{% endif %}">
+            {{ form.LOCK_ORDER_NOT_PAY_TTL.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.LOCK_ORDER_NOT_PAY_TTL(class="form-control", placeholder="匹配未付款时间 [单位：秒]") }}
+                {% for error in form.LOCK_ORDER_NOT_PAY_TTL.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.LOCK_PAY_NOT_REC_TTL.errors %} has-error{% endif %}">
+            {{ form.LOCK_PAY_NOT_REC_TTL.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.LOCK_PAY_NOT_REC_TTL(class="form-control", placeholder="收款未确认时间 [单位：秒]") }}
+                {% for error in form.LOCK_PAY_NOT_REC_TTL.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
 
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-success btn-load" data-loading-text="保存中">保存</button>
+                <button type="reset" class="btn btn-default">重新填写</button>
+            </div>
+        </div>
+    </form>
 
 </div>
 

@@ -368,7 +368,7 @@ def admin_login():
     }
     user_auth_info = get_user_auth_row(**condition)
     if user_auth_info is None:
-        flash(u'%s, 登录失败，请检查内容后重新登录' % user_auth_info.auth_key, 'warning')
+        flash(u'登录失败，请检查内容后重新登录', 'warning')
         return redirect(request.args.get('next') or url_for('index'))
     if user_auth_info.status_verified == 0:
         flash(u'%s, 登录账号尚未验证，请先验证账号' % user_auth_info.auth_key, 'warning')

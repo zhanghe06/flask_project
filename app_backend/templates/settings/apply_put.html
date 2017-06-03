@@ -1,0 +1,147 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <ol class="breadcrumb">
+        <li><a href="/">后台管理</a></li>
+        <li><a href="javascript:void(0);" onclick="$('#menu-settings').trigger('click');">系统配置</a></li>
+        <li class="active">投资配置</li>
+    </ol>
+{#    <h2 class="sub-header">Order Setting!</h2>#}
+    {# 表单 #}
+    <form class="form-horizontal" method="post" action="">
+        {{ form.csrf_token }}
+        <p></p>
+        <blockquote>
+            <p class="text-muted">单次投资限制</p>
+        </blockquote>
+        <div class="form-group{% if form.APPLY_PUT_MIN_EACH.errors %} has-error{% endif %}">
+            {{ form.APPLY_PUT_MIN_EACH.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.APPLY_PUT_MIN_EACH(class="form-control", placeholder="单次投资最小金额 [单位：元]", type="number") }}
+                {% for error in form.APPLY_PUT_MIN_EACH.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.APPLY_PUT_MAX_EACH.errors %} has-error{% endif %}">
+            {{ form.APPLY_PUT_MAX_EACH.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.APPLY_PUT_MAX_EACH(class="form-control", placeholder="单次投资最大金额 [单位：元]", type="number") }}
+                {% for error in form.APPLY_PUT_MAX_EACH.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.APPLY_PUT_STEP.errors %} has-error{% endif %}">
+            {{ form.APPLY_PUT_STEP.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.APPLY_PUT_STEP(class="form-control", placeholder="投资金额调整基数 [单位：元]", type="number") }}
+                {% for error in form.APPLY_PUT_STEP.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <hr>
+        <blockquote>
+            <p class="text-muted">单个用户投资限制</p>
+        </blockquote>
+        <div class="form-group{% if form.APPLY_PUT_USER_MAX_AMOUNT.errors %} has-error{% endif %}">
+            {{ form.APPLY_PUT_USER_MAX_AMOUNT.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.APPLY_PUT_USER_MAX_AMOUNT(class="form-control", placeholder="单个用户投资最大金额 [单位：元]", type="number") }}
+                {% for error in form.APPLY_PUT_USER_MAX_AMOUNT.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.APPLY_PUT_USER_MAX_COUNT.errors %} has-error{% endif %}">
+            {{ form.APPLY_PUT_USER_MAX_COUNT.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.APPLY_PUT_USER_MAX_COUNT(class="form-control", placeholder="单个用户投资最大单数", type="number") }}
+                {% for error in form.APPLY_PUT_USER_MAX_COUNT.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <hr>
+        <blockquote>
+            <p class="text-muted">每日投资限制</p>
+        </blockquote>
+
+        <div class="form-group{% if form.APPLY_PUT_MAX_AMOUNT_DAILY.errors %} has-error{% endif %}">
+            {{ form.APPLY_PUT_MAX_AMOUNT_DAILY.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.APPLY_PUT_MAX_AMOUNT_DAILY(class="form-control", placeholder="每日投资最大金额 [单位：元]", type="number") }}
+                {% for error in form.APPLY_PUT_MAX_AMOUNT_DAILY.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.APPLY_PUT_MAX_COUNT_DAILY.errors %} has-error{% endif %}">
+            {{ form.APPLY_PUT_MAX_COUNT_DAILY.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.APPLY_PUT_MAX_COUNT_DAILY(class="form-control", placeholder="每日投资最大单数", type="number") }}
+                {% for error in form.APPLY_PUT_MAX_COUNT_DAILY.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <hr>
+        <blockquote>
+            <p class="text-muted">每月投资限制</p>
+        </blockquote>
+
+        <div class="form-group{% if form.APPLY_PUT_MAX_AMOUNT_MONTHLY.errors %} has-error{% endif %}">
+            {{ form.APPLY_PUT_MAX_AMOUNT_MONTHLY.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.APPLY_PUT_MAX_AMOUNT_MONTHLY(class="form-control", placeholder="每月投资最大金额 [单位：元]", type="number") }}
+                {% for error in form.APPLY_PUT_MAX_AMOUNT_MONTHLY.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.APPLY_PUT_MAX_COUNT_MONTHLY.errors %} has-error{% endif %}">
+            {{ form.APPLY_PUT_MAX_COUNT_MONTHLY.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.APPLY_PUT_MAX_COUNT_MONTHLY(class="form-control", placeholder="每月投资最大单数", type="number") }}
+                {% for error in form.APPLY_PUT_MAX_COUNT_MONTHLY.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <hr>
+        <blockquote>
+            <p class="text-muted">投资时间配置</p>
+        </blockquote>
+
+        <div class="form-group{% if form.APPLY_PUT_TIME_START.errors %} has-error{% endif %}">
+            {{ form.APPLY_PUT_TIME_START.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.APPLY_PUT_TIME_START(class="form-control", placeholder="每天投资申请开始时间 [00:00:00-23:59:59]") }}
+                {% for error in form.APPLY_PUT_TIME_START.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.APPLY_PUT_TIME_END.errors %} has-error{% endif %}">
+            {{ form.APPLY_PUT_TIME_END.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.APPLY_PUT_TIME_END(class="form-control", placeholder="每天投资申请结束时间 [00:00:00-23:59:59]") }}
+                {% for error in form.APPLY_PUT_TIME_END.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-success btn-load" data-loading-text="保存中">保存</button>
+                <button type="reset" class="btn btn-default">重新填写</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+{% endblock %}

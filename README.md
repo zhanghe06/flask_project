@@ -387,6 +387,8 @@ NoneOf          验证输入不是一组可能值中的一个
 
 参考官方文档：[http://wtforms.readthedocs.org/en/latest/validators.html#custom-validators](http://wtforms.readthedocs.org/en/latest/validators.html#custom-validators)
 
+注意事项：
+NumberRange 校验只对数值类型（IntegerField，FloadField，DecimalField）生效；字符串类型（StringField）不生效
 
 ### Message Flashing
 

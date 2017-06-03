@@ -7,8 +7,82 @@
         <li><a href="javascript:void(0);" onclick="$('#menu-settings').trigger('click');">系统配置</a></li>
         <li class="active">订单配置</li>
     </ol>
-    <h2 class="sub-header">Order Setting!</h2>
+{#    <h2 class="sub-header">Order Setting!</h2>#}
+    {# 表单 #}
+    <form class="form-horizontal" method="post" action="">
+        {{ form.csrf_token }}
+        <p></p>
 
+        <blockquote>
+            <p class="text-muted">订单限制</p>
+        </blockquote>
+        <div class="form-group{% if form.ORDER_MAX_AMOUNT.errors %} has-error{% endif %}">
+            {{ form.ORDER_MAX_AMOUNT.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.ORDER_MAX_AMOUNT(class="form-control", placeholder="订单最大金额 [单位：元]", type="number") }}
+                {% for error in form.ORDER_MAX_AMOUNT.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.ORDER_MAX_COUNT.errors %} has-error{% endif %}">
+            {{ form.ORDER_MAX_COUNT.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.ORDER_MAX_COUNT(class="form-control", placeholder="订单最大数量 [单位：个]", type="number") }}
+                {% for error in form.ORDER_MAX_COUNT.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <hr>
+        <blockquote>
+            <p class="text-muted">推广奖励</p>
+        </blockquote>
+
+        <div class="form-group{% if form.BONUS_DIRECT.errors %} has-error{% endif %}">
+            {{ form.BONUS_DIRECT.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.BONUS_DIRECT(class="form-control", placeholder="直接推荐奖励 [范围：0-1]") }}
+                {% for error in form.BONUS_DIRECT.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.BONUS_LEVEL_FIRST.errors %} has-error{% endif %}">
+            {{ form.BONUS_LEVEL_FIRST.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.BONUS_LEVEL_FIRST(class="form-control", placeholder="一级推荐奖励 [范围：0-1]") }}
+                {% for error in form.BONUS_LEVEL_FIRST.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.BONUS_LEVEL_SECOND.errors %} has-error{% endif %}">
+            {{ form.BONUS_LEVEL_SECOND.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.BONUS_LEVEL_SECOND(class="form-control", placeholder="二级推荐奖励 [范围：0-1]") }}
+                {% for error in form.BONUS_LEVEL_SECOND.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.BONUS_LEVEL_THIRD.errors %} has-error{% endif %}">
+            {{ form.BONUS_LEVEL_THIRD.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.BONUS_LEVEL_THIRD(class="form-control", placeholder="三级推荐奖励 [范围：0-1]") }}
+                {% for error in form.BONUS_LEVEL_THIRD.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-success btn-load" data-loading-text="保存中">保存</button>
+                <button type="reset" class="btn btn-default">重新填写</button>
+            </div>
+        </div>
+    </form>
 
 </div>
 

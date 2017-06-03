@@ -16,6 +16,7 @@ from datetime import timedelta
 # 网站运营配置
 from settings import *
 from settings.apply import *
+from settings.interest import *
 from settings.order import *
 from settings.sms import *
 from settings.user import *
