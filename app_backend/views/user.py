@@ -450,4 +450,4 @@ def admin_login(user_id):
     """
     s = TimestampSigner(app.config.get('ADMIN_TO_USER_LOGIN_SIGN_KEY'))
     user_id_sign = s.sign(str(user_id))
-    return redirect('http://0.0.0.0:8000/auth/admin_login/?uid_sign=%s' % user_id_sign)
+    return redirect('%s/auth/admin_login/?uid_sign=%s' % (app.config.get('FRONTEND_URL', ''), user_id_sign))

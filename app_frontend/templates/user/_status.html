@@ -1,0 +1,33 @@
+
+<section id="section_active">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong class="panel-title">状态信息
+                <span class="glyphicon glyphicon-camera pull-right"></span>
+            </strong>
+        </div>
+        <div class="panel-body row center-block">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                {% if current_user.status_active == 0 %}
+                <button class="btn btn-default" onclick="self_active()" rel="tooltip" title="立即激活">还未激活</button>
+                {% else %}
+                <button class="btn btn-success" onclick="" rel="tooltip" title="已经激活">已经激活</button>
+                {% endif %}
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                {% if current_user.status_real_name == 0 %}
+                <button class="btn btn-default" onclick="" rel="tooltip" title="实名验证">还未实名</button>
+                {% else %}
+                <button class="btn btn-success" onclick="" rel="tooltip" title="已经实名">已经实名</button>
+                {% endif %}
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                {% if current_user.status_lock == 0 %}
+                <button class="btn btn-success" onclick="" rel="tooltip" title="正常状态">正常状态</button>
+                {% else %}
+                <button class="btn btn-warning" onclick="" rel="tooltip" title="已被锁定">已被锁定</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>

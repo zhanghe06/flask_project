@@ -117,6 +117,8 @@
         </div>
         <!-- 用户概要 -->
         <div class="col-lg-4 col-md-12">
+            <!-- 状态信息 -->
+            {% include('user/_status.html') %}
             <!-- 推广链接 -->
             {% include('user/_invite_link.html') %}
             <!-- 账户信息 -->
@@ -164,5 +166,26 @@
         // console.log(newValue);
         // console.log(oldValue);
     });
+</script>
+<script>
+// 用户自己激活
+function self_active() {
+    //console.log($(form).serialize());
+    $.ajax({
+        url: "{{ url_for('user.ajax_self_active') }}",
+        type: 'GET',
+        dataType: 'json',
+        success: function (result) {
+            console.log(result);
+            if(result.hasOwnProperty('error')){
+                alert(result.error);
+            }else {
+                alert(result.success);
+                document.location.reload();
+            }
+        }
+    });
+    return false;
+}
 </script>
 {% endblock %}

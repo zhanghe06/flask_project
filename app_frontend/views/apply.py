@@ -25,6 +25,7 @@ from app_common.maps.status_order import *
 from app_common.maps.type_apply import *
 from app_common.maps.status_apply import *
 from app_common.maps.status_delete import *
+from app_common.maps.status_active import *
 from app_frontend.forms.apply_get import ApplyGetAddForm
 from app_frontend.forms.apply_put import ApplyPutAddForm
 from flask import Blueprint
@@ -85,6 +86,10 @@ def add_put():
     :return:
     """
     user_id = current_user.id
+    # 判断是否激活
+    if current_user.status_active == int(STATUS_ACTIVE_NO):
+        flash(u'请先激活当前账号', 'warning')
+        return redirect(url_for('user.profile'))
     # 判断基本信息和银行信息是否完整
     if not user_profile_is_complete(user_id):
         flash(u'请先完善基本信息', 'warning')
