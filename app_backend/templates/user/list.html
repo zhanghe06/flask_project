@@ -72,6 +72,7 @@
                 <th>用户名称</th>
                 <th>等级</th>
                 <th>手机号码</th>
+                <th>推荐人</th>
                 <th>钱包余额</th>
                 <th>数字货币</th>
                 <th>积分</th>
@@ -83,12 +84,17 @@
             </tr>
             </thead>
             <tbody>
-            {% for (user, user_profile, wallet, bit_coin, score, bonus) in pagination.items %}
+            {% for (user, user_profile_c, user_profile_p, wallet, bit_coin, score, bonus) in pagination.items %}
             <tr class="text-muted">
                 <td>{{ user.id }}</td>
-                <td><a href="{{ url_for('user.admin_login', user_id=user.id) }}" rel="tooltip" title="登录" target="_blank">{{ user_profile.nickname }}</a></td>
-                <td>{{ user_profile.type_level | type_level }}</td>
-                <td>{{ user_profile.phone }}</td>
+                <td><a href="{{ url_for('user.admin_login', user_id=user.id) }}" rel="tooltip" title="登录" target="_blank">{{ user_profile_c.nickname }}</a></td>
+                <td>{{ user_profile_c.type_level | type_level }}</td>
+                <td>{{ user_profile_c.phone }}</td>
+                {% if user_profile_p %}
+                <td><a href="{{ url_for('user.admin_login', user_id=user_profile_p.user_id) }}" rel="tooltip" title="登录" target="_blank">{{ user_profile_p.nickname }}</a></td>
+                {% else %}
+                <td></td>
+                {% endif %}
                 <td>{{ wallet.amount_current | default('0') }}</td>
                 <td>{{ bit_coin.amount | default('0') }}</td>
                 <td>{{ score.amount | default('0') }}</td>

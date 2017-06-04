@@ -18,6 +18,7 @@ from flask import render_template, request, flash
 from flask import url_for
 from flask_login import current_user, login_required
 from itsdangerous import TimestampSigner
+from sqlalchemy.orm import aliased
 
 from app_common.maps import area_code_map
 from app_common.maps.type_auth import *
@@ -72,6 +73,11 @@ def lists(page=1):
 
     search_condition_user = [User.status_delete == STATUS_DEL_NO]
     search_condition_user_profile = []
+
+    # 多次连接同一张表，需要别名
+    user_profile_c = aliased(UserProfile)  # 子
+    user_profile_p = aliased(UserProfile)  # 父
+
     if user_id:
         search_condition_user.append(User.id == user_id)
     if start_time:
@@ -83,7 +89,7 @@ def lists(page=1):
     if status_lock:
         search_condition_user.append(User.status_lock == status_lock)
     if user_name:
-        search_condition_user_profile.append(UserProfile.nickname == user_name)
+        search_condition_user_profile.append(user_profile_c.nickname == user_name)
     # 处理导出
     if op == 1:
         if not SWITCH_EXPORT:
@@ -101,13 +107,15 @@ def lists(page=1):
         #     all()
         query_sets = User.query. \
             filter(*search_condition_user). \
-            outerjoin(UserProfile, User.id == UserProfile.user_id). \
+            outerjoin(user_profile_c, User.id == user_profile_c.user_id). \
             filter(*search_condition_user_profile). \
+            outerjoin(user_profile_p, user_profile_c.user_pid == user_profile_p.user_id). \
             outerjoin(Wallet, User.id == Wallet.user_id). \
             outerjoin(BitCoin, User.id == BitCoin.user_id). \
             outerjoin(Score, User.id == Score.user_id). \
             outerjoin(Bonus, User.id == Bonus.user_id). \
-            add_entity(UserProfile). \
+            add_entity(user_profile_c). \
+            add_entity(user_profile_p). \
             add_entity(Wallet). \
             add_entity(BitCoin). \
             add_entity(Score). \
@@ -131,13 +139,15 @@ def lists(page=1):
     # 处理查询
     pagination = User.query. \
         filter(*search_condition_user). \
-        outerjoin(UserProfile, User.id == UserProfile.user_id). \
+        outerjoin(user_profile_c, User.id == user_profile_c.user_id). \
         filter(*search_condition_user_profile). \
+        outerjoin(user_profile_p, user_profile_c.user_pid == user_profile_p.user_id). \
         outerjoin(Wallet, User.id == Wallet.user_id). \
         outerjoin(BitCoin, User.id == BitCoin.user_id). \
         outerjoin(Score, User.id == Score.user_id). \
         outerjoin(Bonus, User.id == Bonus.user_id). \
-        add_entity(UserProfile). \
+        add_entity(user_profile_c). \
+        add_entity(user_profile_p). \
         add_entity(Wallet). \
         add_entity(BitCoin). \
         add_entity(Score). \
