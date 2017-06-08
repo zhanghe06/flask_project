@@ -18,6 +18,7 @@ docker run \
         --cap-add SYS_PTRACE \
         --restart=always \
         -e TZ=Asia/Shanghai \
+        -e PYTHONIOENCODING=utf-8 \
         -e PYTHONPATH=/flask_project \
         -v ${PROJECT_PATH}:/flask_project \
         -d \

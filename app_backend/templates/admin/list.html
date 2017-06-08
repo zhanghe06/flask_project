@@ -36,7 +36,7 @@
 {#                <td>{{ admin.area_id }}</td>#}
                 <td>{{ admin.area_code }}</td>
                 <td>{{ admin.phone }}</td>
-                <td>{{ admin.role | role_admin }}</td>
+                <td>{{ admin.role_id | role_admin }}</td>
                 <td>{{ admin.status_delete | status_delete }}</td>
                 <td>{% if admin.login_time %}{{ moment(admin.login_time).format('YYYY-MM-DD HH:mm:ss') }}{% endif %}</td>
                 <td>{% if admin.login_ip %}{{ admin.login_ip }}{% endif %}</td>

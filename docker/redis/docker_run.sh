@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+[ -d ${PWD}/data ] || mkdir -p ${PWD}/data
+
 docker run \
     -h redis \
     --name redis \

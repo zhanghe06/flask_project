@@ -16,6 +16,7 @@ Flask-Login==0.3.2
 Flask-Mail==0.9.1
 Flask-Moment==0.5.1
 Flask-OAuthlib==0.9.3
+Flask-Principal==0.4.0
 Flask-SQLAlchemy==2.1
 Flask-WTF==0.13.1
 flower==0.9.1

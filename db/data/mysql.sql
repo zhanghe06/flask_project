@@ -1,4 +1,4 @@
-USE flask;
+USE flask_project;
 
 -- 插入用户全局注册信息
 TRUNCATE TABLE `user`;
@@ -65,7 +65,17 @@ INSERT INTO `user_bank` VALUES (2, 'Guest', '农行', '上海分行', '123456789
 
 -- 插入管理员基本信息
 TRUNCATE TABLE `admin`;
-INSERT INTO `admin` VALUES (1, 'admin', 'e10adc3949ba59abbe56e057f20f883e', 0, '86', '13800002222', '0', '0', NULL, NULL, NULL, '2016-01-12 12:25:34', '2016-01-12 12:25:34');
+INSERT INTO `admin` VALUES (1, 'admin', 'e10adc3949ba59abbe56e057f20f883e', 0, '86', '13800002222', 1, '0', NULL, NULL, NULL, '2016-01-12 12:25:34', '2016-01-12 12:25:34');
+
+-- 插入管理权限信息
+TRUNCATE TABLE `admin_role`;
+INSERT INTO `admin_role` VALUES (1, '系统', '系统权限', '2016-01-12 12:25:34', '2016-01-12 12:25:34');
+INSERT INTO `admin_role` VALUES (2, '客服', '客服权限', '2016-01-12 12:25:34', '2016-01-12 12:25:34');
+INSERT INTO `admin_role` VALUES (3, '运营', '运营权限', '2016-01-12 12:25:34', '2016-01-12 12:25:34');
+INSERT INTO `admin_role` VALUES (4, '市场', '市场权限', '2016-01-12 12:25:34', '2016-01-12 12:25:34');
+INSERT INTO `admin_role` VALUES (5, '销售', '销售权限', '2016-01-12 12:25:34', '2016-01-12 12:25:34');
+INSERT INTO `admin_role` VALUES (6, '普通', '普通权限', '2016-01-12 12:25:34', '2016-01-12 12:25:34');
+INSERT INTO `admin_role` VALUES (7, '高级', '高级权限', '2016-01-12 12:25:34', '2016-01-12 12:25:34');
 
 -- 插入用户声望
 TRUNCATE TABLE `credit`;

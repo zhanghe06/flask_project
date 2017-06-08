@@ -52,11 +52,32 @@ class Admin(Base):
     area_id = Column(Integer, nullable=False, server_default=text("'0'"))
     area_code = Column(String(4), nullable=False, server_default=text("''"))
     phone = Column(String(20), nullable=False, server_default=text("''"))
-    role = Column(Integer, nullable=False, server_default=text("'0'"))
+    role_id = Column(Integer, nullable=False, server_default=text("'1'"))
     status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
     delete_time = Column(DateTime)
     login_time = Column(DateTime)
     login_ip = Column(String(20))
+    create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
+    update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+
+
+class AdminPermission(Base):
+    __tablename__ = 'admin_permission'
+
+    id = Column(Integer, primary_key=True)
+    role_id = Column(Integer, nullable=False, server_default=text("'0'"))
+    module = Column(String(20), nullable=False, unique=True, server_default=text("''"))
+    note = Column(String(256), nullable=False, server_default=text("''"))
+    create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
+    update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+
+
+class AdminRole(Base):
+    __tablename__ = 'admin_role'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(20), nullable=False, unique=True, server_default=text("''"))
+    note = Column(String(256), nullable=False, server_default=text("''"))
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 

@@ -52,7 +52,7 @@ DB_MYSQL = {
     'user': 'root',
     'passwd': '123456',
     'port': 3306,
-    'db': 'flask',
+    'db': 'flask_project',
     'charset': 'utf8'
 }
 

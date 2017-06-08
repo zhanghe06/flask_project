@@ -14,10 +14,13 @@ from datetime import datetime
 import json
 import traceback
 
+from flask import current_app, Response
 from sqlalchemy.exc import OperationalError
 from pika.exceptions import ConnectionClosed
 from flask import send_from_directory
 from flask_login import current_user
+from flask_principal import identity_changed, Identity, AnonymousIdentity
+from flask_principal import identity_loaded, RoleNeed, UserNeed
 
 from flask import g, request, render_template, jsonify
 from flask import session, redirect, url_for, flash
@@ -40,6 +43,8 @@ from app_common.tools import md5, get_randint
 from app_backend.tools.send_sms import UN, PW
 from app_common.tools.ip import get_real_ip
 
+from app_backend.permissions import admin_permission
+
 SMS_CODE_LOGIN = app.config['SMS_CODE_LOGIN']
 EXCHANGE_NAME = app.config['EXCHANGE_NAME']
 
@@ -61,6 +66,22 @@ def before_request():
     当前用户信息
     """
     g.user = current_user
+
+
+@identity_loaded.connect_via(app)
+def on_identity_loaded(sender, identity):
+    # Set the identity user object
+    identity.user = current_user
+
+    # Add the UserNeed to the identity
+    if hasattr(current_user, 'id'):
+        identity.provides.add(UserNeed(current_user.id))
+
+    # Assuming the User model has a list of roles, update the
+    # identity with the roles that the user provides
+    if hasattr(current_user, 'roles'):
+        for role in current_user.roles:
+            identity.provides.add(RoleNeed(role.name))
 
 
 @app.route('/favicon.ico')
@@ -120,6 +141,11 @@ def login():
             # 用 login_user 函数来登入他们
             from app_backend.api.admin import get_admin_row_by_id
             login_user(get_admin_row_by_id(admin_info.id), remember=form.remember.data)
+
+            # 加载权限
+            # Tell Flask-Principal the identity changed
+            identity_changed.send(app, identity=Identity(admin_info.id, admin_info.role))
+
             flash(u'%s, 恭喜，登录成功' % form.account.data, 'success')
             return redirect(request.args.get('next') or url_for('index'))
         # flash(form.errors, 'warning')  # 调试打开
@@ -135,6 +161,15 @@ def logout():
     session.pop('qq_token', None)
     session.pop('weibo_token', None)
     session.pop('github_token', None)
+
+    # 退出权限
+    # Remove session keys set by Flask-Principal
+    for key in ('identity.name', 'identity.auth_type'):
+        session.pop(key, None)
+
+    # Tell Flask-Principal the user is anonymous
+    identity_changed.send(app, identity=AnonymousIdentity())
+
     flash(u'成功退出登录', 'info')
     return redirect(url_for('index'))
 
@@ -185,6 +220,12 @@ def ajax_get_sms_code():
         return json.dumps({'result': False, 'msg': u'服务器异常，短信获取失败；%s' % e.message})
 
 
+@app.errorhandler(403)
+def page_permission_denied(error):
+    session['redirected_from'] = request.url
+    return redirect(url_for('index'))
+
+
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html'), 404
@@ -195,4 +236,14 @@ def internal_error(error):
     from app_backend.database import db
     db.session.rollback()
     return render_template('500.html'), 500
+
+
+@app.route('/admin_permission/')
+@admin_permission.require(http_exception=403)
+def test_admin_permission():
+    """
+    管理员权限测试
+    :return:
+    """
+    return Response('Only if you are admin')
 

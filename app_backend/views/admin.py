@@ -51,7 +51,7 @@ def profile():
             form.password.data = ''
             form.area_id.data = admin_info.area_id
             form.phone.data = admin_info.phone
-            form.role.data = admin_info.role
+            form.role_id.data = admin_info.role_id
             form.create_time.data = admin_info.create_time
             form.update_time.data = admin_info.update_time
     if request.method == 'POST':
@@ -65,8 +65,7 @@ def profile():
                 'area_id': area_id,
                 'area_code': area_code,
                 'phone': form.phone.data,
-                'role': form.role.data,
-                'create_time': current_time,
+                'role_id': form.role_id.data,
                 'update_time': current_time,
             }
             if form.password.data:
@@ -79,6 +78,12 @@ def profile():
             else:
                 flash(u'修改失败', 'warning')
                 # flash(form.errors, 'warning')  # 调试打开
+        else:
+            # 表单校验失败，创建时间、更新时间 由于表单没有传值，需要重新填充
+            admin_info = get_admin_row_by_id(admin_id)
+            if admin_info:
+                form.create_time.data = admin_info.create_time
+                form.update_time.data = admin_info.update_time
 
     return render_template('admin/profile.html', title='admin_profile', form=form)
 
@@ -115,7 +120,7 @@ def add():
                 'area_id': area_id,
                 'area_code': area_code,
                 'phone': form.phone.data,
-                'role': form.role.data,
+                'role_id': form.role_id.data,
                 'create_time': current_time,
                 'update_time': current_time,
             }
@@ -144,7 +149,7 @@ def edit(admin_id):
             form.password.data = ''
             form.area_id.data = admin_info.area_id
             form.phone.data = admin_info.phone
-            form.role.data = admin_info.role
+            form.role_id.data = admin_info.role_id
             form.create_time.data = admin_info.create_time
             form.update_time.data = admin_info.update_time
     if request.method == 'POST':
@@ -158,7 +163,7 @@ def edit(admin_id):
                 'area_id': area_id,
                 'area_code': area_code,
                 'phone': form.phone.data,
-                'role': form.role.data,
+                'role_id': form.role_id.data,
                 'create_time': current_time,
                 'update_time': current_time,
             }

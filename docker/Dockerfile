@@ -34,6 +34,7 @@ RUN pip install --no-cache-dir -r /requirements.txt && rm -f /requirements.txt
 #    Flask-Excel \
 #    Flask-Moment \
 #    Flask-Uploads \
+#    Flask-Principal \
 #    sqlacodegen \
 #    gunicorn \
 #    schedule \

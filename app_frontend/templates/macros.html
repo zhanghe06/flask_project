@@ -143,6 +143,28 @@
                         {% endif %}
                         </ul>
                     </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false"><span class="glyphicon glyphicon-shopping-cart"></span> 积分中心 <span
+                                class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                        {% if request.path == url_for('active.lists') %}
+                            <li class="dropdown-header"><span class="glyphicon glyphicon-list-alt"></span> 慈善积分</li>
+                        {% else %}
+                            <li><a href="{{ url_for('active.lists') }}"><span class="glyphicon glyphicon-list-alt"></span> 慈善积分</a></li>
+                        {% endif %}
+                        {% if request.path == url_for('active.add') %}
+                            <li class="dropdown-header"><span class="glyphicon glyphicon-plus"></span> 数字积分</li>
+                        {% else %}
+                            <li><a href="{{ url_for('active.add') }}"><span class="glyphicon glyphicon-list-alt"></span> 数字积分</a></li>
+                        {% endif %}
+                        {% if request.path == url_for('active.add') %}
+                            <li class="dropdown-header"><span class="glyphicon glyphicon-plus"></span> 消费积分</li>
+                        {% else %}
+                            <li><a href="{{ url_for('active.add') }}"><span class="glyphicon glyphicon-list-alt"></span> 消费积分</a></li>
+                        {% endif %}
+                        </ul>
+                    </li>
                     <li{% if request.path == url_for('user.team') %} class="active"{% endif %}><a href="{{ url_for('user.team') }}"><span
                             class="glyphicon glyphicon-king"></span> 我的团队</a></li>
                 {% endif %}

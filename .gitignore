@@ -16,7 +16,8 @@ app_frontend/static/uploads/*
 !app_frontend/static/uploads/index.html
 
 # 数据
-docker/marriadb/data/*
+docker/mariadb/data/*
+docker/mariadb/backup/*
 docker/mongodb/data/*
 docker/rabbitmq/data/*
 docker/redis/data/*

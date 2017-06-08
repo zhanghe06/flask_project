@@ -50,6 +50,7 @@ $ pip install Flask-OAuthlib
 $ pip install Flask-Excel
 $ pip install Flask-Moment
 $ pip install Flask-Uploads
+$ pip install Flask-Principal
 $ pip install sqlacodegen
 $ pip install gunicorn
 $ pip install schedule
@@ -564,6 +565,8 @@ https://pythonhosted.org/Flask-Uploads/
 ## Flask-Principal
 
 http://pythonhosted.org/Flask-Principal/
+http://flask-principal-cn.readthedocs.io/zh_CN/latest/
+
 
 
 ## Flask-DebugToolbar

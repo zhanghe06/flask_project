@@ -164,4 +164,5 @@ def is_active(user_id):
     :param user_id:
     :return:
     """
-    return get_row_by_id(LoginUser, user_id).status_active
+    user_info = get_row_by_id(LoginUser, user_id)
+    return user_info.status_active if user_info else 0

@@ -1,8 +1,8 @@
-DROP DATABASE IF EXISTS `flask`;
-CREATE DATABASE `flask` /*!40100 DEFAULT CHARACTER SET utf8 */;
+DROP DATABASE IF EXISTS `flask_project`;
+CREATE DATABASE `flask_project` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
 
-use flask;
+use flask_project;
 
 
 DROP TABLE IF EXISTS `user`;
@@ -240,6 +240,96 @@ CREATE TABLE `score_item` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='积分明细表';
 
 
+DROP TABLE IF EXISTS `score_charity`;
+CREATE TABLE `score_charity` (
+  `user_id` INT NOT NULL COMMENT '用户Id',
+  `amount` DECIMAL(10, 0) NOT NULL DEFAULT '0' COMMENT '总积分',
+  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='慈善积分总表';
+
+
+DROP TABLE IF EXISTS `score_charity_item`;
+CREATE TABLE `score_charity_item` (
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT '积分明细id',
+  `user_id` INT NOT NULL COMMENT '用户Id',
+  `type` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '积分类型（1：加、2：减）',
+  `amount` DECIMAL(8, 0) NOT NULL DEFAULT '0' COMMENT '积分分值',
+  `sc_id` INT NOT NULL DEFAULT '0' COMMENT '关联id',
+  `note` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '备注',
+  `status_audit` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '审核状态:0:待审核，1:审核通过，2:审核失败',
+  `status_delete` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '删除状态:0:未删除，1:已删除',
+  `audit_time` TIMESTAMP NULL COMMENT '审核时间（通过、失败）',
+  `delete_time` TIMESTAMP NULL COMMENT '删除时间',
+  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `ind_user_id` (`user_id`),
+  KEY `ind_sc_id` (`sc_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='慈善积分明细表';
+
+
+DROP TABLE IF EXISTS `score_digital`;
+CREATE TABLE `score_digital` (
+  `user_id` INT NOT NULL COMMENT '用户Id',
+  `amount` DECIMAL(10, 0) NOT NULL DEFAULT '0' COMMENT '总积分',
+  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='数字积分总表';
+
+
+DROP TABLE IF EXISTS `score_digital_item`;
+CREATE TABLE `score_charity_item` (
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT '积分明细id',
+  `user_id` INT NOT NULL COMMENT '用户Id',
+  `type` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '积分类型（1：加、2：减）',
+  `amount` DECIMAL(8, 0) NOT NULL DEFAULT '0' COMMENT '积分分值',
+  `sc_id` INT NOT NULL DEFAULT '0' COMMENT '关联id',
+  `note` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '备注',
+  `status_audit` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '审核状态:0:待审核，1:审核通过，2:审核失败',
+  `status_delete` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '删除状态:0:未删除，1:已删除',
+  `audit_time` TIMESTAMP NULL COMMENT '审核时间（通过、失败）',
+  `delete_time` TIMESTAMP NULL COMMENT '删除时间',
+  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `ind_user_id` (`user_id`),
+  KEY `ind_sc_id` (`sc_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='慈善积分明细表';
+
+
+DROP TABLE IF EXISTS `score_expense`;
+CREATE TABLE `score_expense` (
+  `user_id` INT NOT NULL COMMENT '用户Id',
+  `amount` DECIMAL(10, 0) NOT NULL DEFAULT '0' COMMENT '总积分',
+  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='消费积分总表';
+
+
+DROP TABLE IF EXISTS `score_expense_item`;
+CREATE TABLE `score_expense_item` (
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT '积分明细id',
+  `user_id` INT NOT NULL COMMENT '用户Id',
+  `type` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '积分类型（1：加、2：减）',
+  `amount` DECIMAL(8, 0) NOT NULL DEFAULT '0' COMMENT '积分分值',
+  `sc_id` INT NOT NULL DEFAULT '0' COMMENT '关联id',
+  `note` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '备注',
+  `status_audit` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '审核状态:0:待审核，1:审核通过，2:审核失败',
+  `status_delete` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '删除状态:0:未删除，1:已删除',
+  `audit_time` TIMESTAMP NULL COMMENT '审核时间（通过、失败）',
+  `delete_time` TIMESTAMP NULL COMMENT '删除时间',
+  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `ind_user_id` (`user_id`),
+  KEY `ind_sc_id` (`sc_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='消费积分明细表';
+
+
 DROP TABLE IF EXISTS `bonus`;
 CREATE TABLE `bonus` (
   `user_id` INT NOT NULL COMMENT '用户Id',
@@ -338,7 +428,7 @@ CREATE TABLE `admin` (
   `area_id` INT(4) NOT NULL DEFAULT '0' COMMENT '国家区号id',
   `area_code` VARCHAR(4) NOT NULL DEFAULT '' COMMENT '国家区号',
   `phone` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '手机号码',
-  `role` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '角色:0:普通，1:高级，2:系统',
+  `role_id` TINYINT(1) NOT NULL DEFAULT '1' COMMENT '角色（1:系统,2:客服,3:运营,4:市场,5:销售,6:普通,7:高级）',
   `status_delete` TINYINT NOT NULL DEFAULT '0' COMMENT '删除状态（0未删除，1已删除）',
   `delete_time` TIMESTAMP NULL COMMENT '删除时间',
   `login_time` TIMESTAMP NULL COMMENT '最后一次登录时间',
@@ -348,6 +438,31 @@ CREATE TABLE `admin` (
   PRIMARY KEY (`id`),
   UNIQUE (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='后台用户信息表';
+
+
+DROP TABLE IF EXISTS `admin_role`;
+CREATE TABLE `admin_role` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '角色名称',
+  `note` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '权限备注',
+  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='管理权限表';
+
+
+DROP TABLE IF EXISTS `admin_permission`;
+CREATE TABLE `admin_permission` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `role_id` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '角色（1:系统,2:客服,3:运营,4:市场,5:销售,6:普通,7:高级）',
+  `module` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '模块权限',
+  `note` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '权限备注',
+  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE (`module`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='管理权限表';
 
 
 DROP TABLE IF EXISTS `area_code`;
