@@ -281,7 +281,7 @@ CREATE TABLE `score_digital` (
 
 
 DROP TABLE IF EXISTS `score_digital_item`;
-CREATE TABLE `score_charity_item` (
+CREATE TABLE `score_digital_item` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '积分明细id',
   `user_id` INT NOT NULL COMMENT '用户Id',
   `type` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '积分类型（1：加、2：减）',
@@ -297,7 +297,7 @@ CREATE TABLE `score_charity_item` (
   PRIMARY KEY (`id`),
   KEY `ind_user_id` (`user_id`),
   KEY `ind_sc_id` (`sc_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='慈善积分明细表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='数字积分明细表';
 
 
 DROP TABLE IF EXISTS `score_expense`;

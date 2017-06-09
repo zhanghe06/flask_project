@@ -24,9 +24,6 @@ $ sh cli.sh
 建库建表
 ```
 $ sh db_init.sh
-或者
-$ sh cli.sh < ../../db/schema/mysql.sql
-$ sh cli.sh < ../../db/data/mysql.sql
 ```
 
 备份数据

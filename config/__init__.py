@@ -30,19 +30,19 @@ config_env = get_env()
 # print module.db
 
 
-if config_env == 'online':
-    from online import *
-elif config_env == 'dev':
-    from dev import *
+if config_env == 'product':
+    from product import *
+elif config_env == 'develop':
+    from develop import *
 else:
-    from dev import *
+    from develop import *
 
 
 """
 环境切换
 进入项目目录
-$ echo 'dev' > config/config.env
-$ echo 'online' > config/config.env
+$ echo 'product' > config/config.env
+$ echo 'develop' > config/config.env
 
 使用配置
 from config import *

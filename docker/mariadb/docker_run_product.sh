@@ -8,10 +8,11 @@ docker run \
     --name mariadb \
     -v ${PWD}/data:/var/lib/mysql \
     -v ${PWD}/backup:/backup \
-    -e MYSQL_ROOT_PASSWORD='123456' \
+    -e MYSQL_ROOT_PASSWORD='2qFG#E!SYxrw' \
     -e MYSQL_DATABASE='flask_project' \
     -e MYSQL_USER='www' \
-    -e MYSQL_PASSWORD='123456' \
+    -e MYSQL_PASSWORD='@9xJkaU*JWsa' \
     -p 3306:3306 \
     -d \
     mariadb:10.1.23 --log-bin --binlog-format=MIXED
+

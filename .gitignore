@@ -7,10 +7,6 @@
 .idea/
 *.DS_Store
 
-data/db_*
-config/zhanghe.py
-config/docker.py
-config/online.py
 logs/*.log
 app_frontend/static/uploads/*
 !app_frontend/static/uploads/index.html
