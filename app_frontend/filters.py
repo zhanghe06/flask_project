@@ -27,6 +27,7 @@ from app_common.maps.type_level import TYPE_LEVEL_DICT
 from app_common.maps.type_apply import TYPE_APPLY_DICT
 from app_common.maps.type_auth import TYPE_AUTH_DICT
 from app_common.maps.type_active import TYPE_ACTIVE_DICT
+from app_common.maps.type_score import TYPE_SCORE_DICT
 from app_common.maps.status_audit import STATUS_AUDIT_DICT
 from app_common.maps.status_apply import STATUS_APPLY_DICT
 from app_common.maps.status_order import STATUS_ORDER_DICT
@@ -251,6 +252,16 @@ def filter_type_active(type_active_id):
     :return:
     """
     return TYPE_ACTIVE_DICT.get(type_active_id, u'')
+
+
+@app.template_filter('type_score')
+def filter_type_score(type_score_id):
+    """
+    积分类型
+    :param type_score_id:
+    :return:
+    """
+    return TYPE_SCORE_DICT.get(type_score_id, u'')
 
 
 @app.template_filter('status_apply')

@@ -82,7 +82,7 @@
 {#                        </ul>#}
 {#                    </li>#}
                 {% if g.user != None and g.user.is_authenticated %}
-                    <li class="dropdown">
+                    <li class="dropdown{% if 'put' in request.path %} active{% endif %}">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false"><span class="glyphicon glyphicon-paste"></span> 投资中心 <span
                                 class="caret"></span></a>
@@ -104,7 +104,7 @@
                         {% endif %}
                         </ul>
                     </li>
-                    <li class="dropdown">
+                    <li class="dropdown{% if 'get' in request.path %} active{% endif %}">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false"><span class="glyphicon glyphicon-copy"></span> 提现中心 <span
                                 class="caret"></span></a>
@@ -126,7 +126,7 @@
                         {% endif %}
                         </ul>
                     </li>
-                    <li class="dropdown">
+                    <li class="dropdown{% if 'active' in request.path %} active{% endif %}">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false"><span class="glyphicon glyphicon-flag"></span> 激活中心 <span
                                 class="caret"></span></a>
@@ -143,30 +143,28 @@
                         {% endif %}
                         </ul>
                     </li>
-                    <li class="dropdown">
+                    <li class="dropdown{% if 'score' in request.path %} active{% endif %}">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false"><span class="glyphicon glyphicon-shopping-cart"></span> 积分中心 <span
                                 class="caret"></span></a>
                         <ul class="dropdown-menu">
-                        {% if request.path == url_for('active.lists') %}
+                        {% if request.path == url_for('score.charity_lists') %}
                             <li class="dropdown-header"><span class="glyphicon glyphicon-list-alt"></span> 慈善积分</li>
                         {% else %}
-                            <li><a href="{{ url_for('active.lists') }}"><span class="glyphicon glyphicon-list-alt"></span> 慈善积分</a></li>
+                            <li><a href="{{ url_for('score.charity_lists') }}"><span class="glyphicon glyphicon-list-alt"></span> 慈善积分</a></li>
                         {% endif %}
-                        {% if request.path == url_for('active.add') %}
+                        {% if request.path == url_for('score.digital_lists') %}
                             <li class="dropdown-header"><span class="glyphicon glyphicon-plus"></span> 数字积分</li>
                         {% else %}
-                            <li><a href="{{ url_for('active.add') }}"><span class="glyphicon glyphicon-list-alt"></span> 数字积分</a></li>
+                            <li><a href="{{ url_for('score.digital_lists') }}"><span class="glyphicon glyphicon-list-alt"></span> 数字积分</a></li>
                         {% endif %}
-                        {% if request.path == url_for('active.add') %}
+                        {% if request.path == url_for('score.expense_lists') %}
                             <li class="dropdown-header"><span class="glyphicon glyphicon-plus"></span> 消费积分</li>
                         {% else %}
-                            <li><a href="{{ url_for('active.add') }}"><span class="glyphicon glyphicon-list-alt"></span> 消费积分</a></li>
+                            <li><a href="{{ url_for('score.expense_lists') }}"><span class="glyphicon glyphicon-list-alt"></span> 消费积分</a></li>
                         {% endif %}
                         </ul>
                     </li>
-                    <li{% if request.path == url_for('user.team') %} class="active"{% endif %}><a href="{{ url_for('user.team') }}"><span
-                            class="glyphicon glyphicon-king"></span> 我的团队</a></li>
                 {% endif %}
                 </ul>
                 {% if 1 == 2 %}
@@ -213,16 +211,21 @@
                     </li>
                 {% endif %}
                 {% if g.user != None and g.user.is_authenticated %}
-                    <li class="dropdown">
+                    <li class="dropdown{% if 'user' in request.path %} active{% endif %}">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                            aria-haspopup="true"
                            aria-expanded="false"><span
                                 class="glyphicon glyphicon-user"></span> {{ g.user.id | user_name_level }}<span
                                 class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li>
+                            <li{% if request.path == url_for('user.profile') %} class="active"{% endif %}>
                                 <a href="{{ url_for('user.profile') }}">
                                     <span class="glyphicon glyphicon-folder-open"></span> 用户中心
+                                </a>
+                            </li>
+                            <li{% if request.path == url_for('user.team') %} class="active"{% endif %}>
+                                <a href="{{ url_for('user.team') }}">
+                                    <span class="glyphicon glyphicon-king"></span> 我的团队
                                 </a>
                             </li>
 {#                            <li><a href="{{ url_for('user.setting') }}"><span class="glyphicon glyphicon-cog"></span>#}

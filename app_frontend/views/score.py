@@ -18,6 +18,10 @@ from flask_login import current_user, login_required
 from app_frontend import app
 from app_frontend.api.score import get_score_rows
 
+from app_frontend.api.score_charity_item import get_score_charity_item_rows
+from app_frontend.api.score_digital_item import get_score_digital_item_rows
+from app_frontend.api.score_expense_item import get_score_expense_item_rows
+
 from flask import Blueprint
 
 
@@ -64,3 +68,63 @@ def stats():
     :return:
     """
     pass
+
+
+@bp_score.route('/charity/list/', methods=['GET', 'POST'])
+@bp_score.route('/charity/list/<int:page>/')
+@login_required
+def charity_lists(page=1):
+    """
+    慈善积分
+    :return:
+    """
+    condition = {'user_id': current_user.id}
+
+    # 积分类型:（1：获得、2：消费）
+    score_type = request.args.get('score_type', 0, type=int)
+
+    if score_type:
+        condition['type'] = score_type
+
+    pagination = get_score_charity_item_rows(page, **condition)
+    return render_template('score/charity_list.html', title='score_charity_list', pagination=pagination)
+
+
+@bp_score.route('/digital/list/', methods=['GET', 'POST'])
+@bp_score.route('/digital/list/<int:page>/')
+@login_required
+def digital_lists(page=1):
+    """
+    数字积分
+    :return:
+    """
+    condition = {'user_id': current_user.id}
+
+    # 积分类型:（1：获得、2：消费）
+    score_type = request.args.get('score_type', 0, type=int)
+
+    if score_type:
+        condition['type'] = score_type
+
+    pagination = get_score_digital_item_rows(page, **condition)
+    return render_template('score/digital_list.html', title='score_digital_list', pagination=pagination)
+
+
+@bp_score.route('/expense/list/', methods=['GET', 'POST'])
+@bp_score.route('/expense/list/<int:page>/')
+@login_required
+def expense_lists(page=1):
+    """
+    消费积分
+    :return:
+    """
+    condition = {'user_id': current_user.id}
+
+    # 积分类型:（1：获得、2：消费）
+    score_type = request.args.get('score_type', 0, type=int)
+
+    if score_type:
+        condition['type'] = score_type
+
+    pagination = get_score_expense_item_rows(page, **condition)
+    return render_template('score/expense_list.html', title='score_expense_list', pagination=pagination)

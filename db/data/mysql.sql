@@ -130,6 +130,14 @@ INSERT INTO `score` VALUES (1, '0.00', '2016-01-12 12:25:34', '2016-01-12 12:25:
 -- 插入积分明细
 TRUNCATE TABLE `score_item`;
 
+-- 插入慈善积分总表
+TRUNCATE TABLE `score_charity`;
+
+-- 插入慈善积分明细
+TRUNCATE TABLE `score_charity_item`;
+INSERT INTO `score_charity_item` VALUES (1, 1, 1, '10.00', 0, '测试获得积分', 1, 0, '2016-01-12 12:25:34', NULL, '2016-01-12 12:25:34', '2016-01-12 12:25:34');
+INSERT INTO `score_charity_item` VALUES (2, 1, 2, '5.00', 0, '测试消费积分', 1, 0, '2016-01-12 12:25:34', NULL, '2016-01-12 12:25:34', '2016-01-12 12:25:34');
+
 -- 插入奖金总表
 TRUNCATE TABLE `bonus`;
 INSERT INTO `bonus` VALUES (1, '0.00', '2016-01-12 12:25:34', '2016-01-12 12:25:34');

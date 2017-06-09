@@ -5,9 +5,9 @@
 echo develop > config/config.env
 ```
 
-marriadb
+开启 mariadb 服务
 ```
-cd docker/marriadb
+cd docker/mariadb
 
 sh docker_run_develop.sh
 
@@ -15,16 +15,23 @@ sh docker_run_develop.sh
 sh db_init.sh
 ```
 
-redis
+开启 redis 服务
 ```
 cd docker/redis
 
 sh docker_run_rdb.sh
 ```
 
-rabbitmq
+开启 rabbitmq 服务
 ```
 cd docker/rabbitmq
+
+sh docker_run.sh
+```
+
+启动项目
+```
+cd docker
 
 sh docker_run.sh
 ```

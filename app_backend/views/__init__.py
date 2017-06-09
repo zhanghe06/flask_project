@@ -29,6 +29,7 @@ from flask_login import logout_user
 from flask_login import current_user, login_required
 
 from app_backend.lib.rabbit_mq import RabbitPriorityQueue
+from app_backend.tools.db import get_row_by_id
 from app_common.maps import area_code_map
 from app_backend import app, oauth_github, oauth_qq, oauth_weibo
 from app_common.maps.type_auth import *
@@ -57,7 +58,8 @@ def load_user(user_id):
     :return:
     """
     from app_backend.login import LoginUser
-    return LoginUser.query.get(int(user_id))
+    return get_row_by_id(LoginUser, int(user_id))
+    # return LoginUser.query.get(int(user_id))
 
 
 @app.before_request
@@ -144,7 +146,7 @@ def login():
 
             # 加载权限
             # Tell Flask-Principal the identity changed
-            identity_changed.send(app, identity=Identity(admin_info.id, admin_info.role))
+            identity_changed.send(app, identity=Identity(admin_info.id, admin_info.role_id))
 
             flash(u'%s, 恭喜，登录成功' % form.account.data, 'success')
             return redirect(request.args.get('next') or url_for('index'))

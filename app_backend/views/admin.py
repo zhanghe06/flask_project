@@ -44,16 +44,14 @@ def profile():
 
     form = AdminProfileForm(request.form)
     if request.method == 'GET':
-        admin_info = get_admin_row_by_id(admin_id)
-        if admin_info:
-            form.id.data = admin_info.id
-            form.username.data = admin_info.username
-            form.password.data = ''
-            form.area_id.data = admin_info.area_id
-            form.phone.data = admin_info.phone
-            form.role_id.data = admin_info.role_id
-            form.create_time.data = admin_info.create_time
-            form.update_time.data = admin_info.update_time
+        form.id.data = current_user.id
+        form.username.data = current_user.username
+        form.password.data = ''
+        form.area_id.data = current_user.area_id
+        form.phone.data = current_user.phone
+        form.role_id.data = current_user.role_id
+        form.create_time.data = current_user.create_time
+        form.update_time.data = current_user.update_time
     if request.method == 'POST':
         if form.validate_on_submit():
             current_time = datetime.utcnow()
