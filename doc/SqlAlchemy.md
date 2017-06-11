@@ -38,6 +38,8 @@ from sqlalchemy.sql import func
 - func.concat('x', 'y')
 - func.substr(User.nickname, 2).label('nickname_new')  # SqLite
 - func.left(User.nickname, 2).label('nickname_new')  # MySql
+- func.date(User.create_time).label('date')
+- func.count(User.id)
 
 
 ### Transtraction

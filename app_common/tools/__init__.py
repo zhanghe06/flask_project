@@ -11,7 +11,7 @@
 
 import json
 import hashlib
-from datetime import date, datetime
+import datetime
 from decimal import Decimal
 from random import randint
 
@@ -32,9 +32,9 @@ def json_default(obj):
     :param obj:
     :return:
     """
-    if isinstance(obj, datetime):
+    if isinstance(obj, datetime.datetime):
         return obj.strftime('%Y-%m-%d %H:%M:%S')
-    elif isinstance(obj, date):
+    elif isinstance(obj, datetime.date):
         return obj.strftime('%Y-%m-%d')
     elif isinstance(obj, Decimal):
         return str(obj)

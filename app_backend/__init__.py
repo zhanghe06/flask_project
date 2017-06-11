@@ -121,6 +121,7 @@ from app_backend.views.user import bp_user
 from app_backend.views.settings import bp_settings
 from app_backend.views.complaint import bp_complaint
 from app_backend.views.message import bp_message
+from app_backend.views.stats import bp_stats
 
 
 # 注册蓝图
@@ -137,6 +138,7 @@ app.register_blueprint(bp_user)
 app.register_blueprint(bp_settings)
 app.register_blueprint(bp_complaint)
 app.register_blueprint(bp_message)
+app.register_blueprint(bp_stats)
 
 # 导入自定义过滤器
 from app_backend import filters

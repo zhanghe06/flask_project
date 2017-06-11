@@ -26,6 +26,7 @@ from app_backend.forms.order import OrderSearchForm
 from flask import Blueprint
 
 from app_common.maps.status_delete import STATUS_DEL_NO
+from app_common.tools.date_time import time_local_to_utc
 from config import PER_PAGE_BACKEND
 
 bp_order = Blueprint('order', __name__, url_prefix='/order')
@@ -84,6 +85,10 @@ def lists(page=1):
         search_condition_order.append(Order.status_pay == status_pay)
     if status_rec:
         search_condition_order.append(Order.status_rec == status_rec)
+    if start_time:
+        search_condition_order.append(Order.create_time >= time_local_to_utc(start_time))
+    if end_time:
+        search_condition_order.append(Order.create_time <= time_local_to_utc(end_time))
 
     # 多次连接同一张表，需要别名
     user_profile_put = aliased(UserProfile)

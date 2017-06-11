@@ -1,0 +1,40 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
+"""
+@author: zhanghe
+@software: PyCharm
+@file: stats.py
+@time: 2017/6/10 下午1:29
+"""
+
+
+
+import json
+from datetime import datetime
+
+from flask import Blueprint
+from flask import abort
+from flask import redirect
+from flask import render_template, request, flash
+from flask import url_for
+from flask_login import current_user, login_required
+
+from app_common.tools import json_default
+
+bp_stats = Blueprint('stats', __name__, url_prefix='/stats')
+
+
+@bp_stats.route('/user/', methods=['GET', 'POST'])
+@login_required
+def user():
+    """
+    用户统计
+    按日、周、月统计注册量
+    :return:
+    """
+    time_based = request.args.get('time_based', 'hour')
+    if time_based not in ['hour', 'date', 'month']:
+        time_based = 'hour'
+    # 获取注册量，获取激活量
+    return render_template('stats/user.html', title='user_stats', time_based=time_based)

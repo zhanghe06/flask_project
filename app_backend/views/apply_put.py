@@ -33,6 +33,7 @@ from app_common.maps.status_order import *
 from app_common.maps.status_pay import *
 from app_common.maps.status_rec import *
 from app_common.maps.status_audit import *
+from app_common.tools.date_time import time_local_to_utc
 
 PER_PAGE_BACKEND = app.config['PER_PAGE_BACKEND']
 
@@ -86,9 +87,9 @@ def lists(page=1):
     if status_delete:
         search_condition_apply_put.append(ApplyPut.status_delete == status_delete)
     if start_time:
-        search_condition_apply_put.append(ApplyPut.create_time >= start_time)
+        search_condition_apply_put.append(ApplyPut.create_time >= time_local_to_utc(start_time))
     if end_time:
-        search_condition_apply_put.append(ApplyPut.create_time <= end_time)
+        search_condition_apply_put.append(ApplyPut.create_time <= time_local_to_utc(end_time))
 
     # pagination = get_apply_put_rows(page)
     pagination = ApplyPut.query. \
