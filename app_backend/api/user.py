@@ -19,6 +19,7 @@ from app_backend.models import UserBank
 from app_backend.models import UserProfile
 from app_backend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
 from app_common.maps.status_lock import *
+from app_common.maps.status_active import *
 from app_common.tools.date_time import get_hours, get_days, get_months, time_local_to_utc
 from app_common.tools.date_time import get_current_day_time_ends
 from app_common.tools.date_time import get_current_month_time_ends
@@ -161,7 +162,6 @@ def user_reg_stats(time_based='hour'):
     用户注册统计
     :return:
     """
-    result, rows = {}, {}
     # 按小时统计
     if time_based == 'hour':
         start_time, end_time = get_current_day_time_ends()
@@ -178,26 +178,78 @@ def user_reg_stats(time_based='hour'):
     # 按日期统计
     if time_based == 'date':
         start_time, end_time = get_current_month_time_ends()
-        days = get_days()
-        result = dict(zip(days, [0] * len(days)))
+        today = datetime.today()
+        days = get_days(year=today.year, month=today.month)
+        days_full = get_days(year=today.year, month=today.month, full=True)
+        result = dict(zip(days_full, [0] * len(days_full)))
         rows = db.session \
-            .query(func.hour(User.create_time).label('date'), func.count(User.id)) \
+            .query(func.date(User.create_time).label('date'), func.count(User.id)) \
             .filter(User.create_time >= time_local_to_utc(start_time), User.create_time <= time_local_to_utc(end_time)) \
             .group_by('date') \
-            .limit(len(days)) \
+            .limit(len(days_full)) \
             .all()
         result.update(dict(rows))
-        return result
+        return [(days[i], result[day]) for i, day in enumerate(days_full)]
     # 按月份统计
     if time_based == 'month':
         start_time, end_time = get_current_year_time_ends()
-        months = get_months()
+        months = get_months(False)
+        months_zerofill = get_months()
         result = dict(zip(months, [0] * len(months)))
         rows = db.session \
-            .query(func.hour(User.create_time).label('month'), func.count(User.id)) \
+            .query(func.month(User.create_time).label('month'), func.count(User.id)) \
             .filter(User.create_time >= time_local_to_utc(start_time), User.create_time <= time_local_to_utc(end_time)) \
             .group_by('month') \
             .limit(len(months)) \
             .all()
-    result.update(dict(rows))
-    return result
+        result.update(dict(rows))
+        return [(months_zerofill[i], result[month]) for i, month in enumerate(months)]
+
+
+def user_active_stats(time_based='hour'):
+    """
+    用户激活统计
+    :return:
+    """
+    # 按小时统计
+    if time_based == 'hour':
+        start_time, end_time = get_current_day_time_ends()
+        hours = get_hours()
+        result = dict(zip(hours, [0] * len(hours)))
+        rows = db.session \
+            .query(func.hour(User.create_time).label('hour'), func.count(User.id)) \
+            .filter(User.create_time >= time_local_to_utc(start_time), User.create_time <= time_local_to_utc(end_time), User.status_active == STATUS_ACTIVE_OK) \
+            .group_by('hour') \
+            .limit(len(hours)) \
+            .all()
+        result.update(dict(rows))
+        return [(hour, result[hour]) for hour in hours]
+    # 按日期统计
+    if time_based == 'date':
+        start_time, end_time = get_current_month_time_ends()
+        today = datetime.today()
+        days = get_days(year=today.year, month=today.month)
+        days_full = get_days(year=today.year, month=today.month, full=True)
+        result = dict(zip(days_full, [0] * len(days_full)))
+        rows = db.session \
+            .query(func.date(User.create_time).label('date'), func.count(User.id)) \
+            .filter(User.create_time >= time_local_to_utc(start_time), User.create_time <= time_local_to_utc(end_time), User.status_active == STATUS_ACTIVE_OK) \
+            .group_by('date') \
+            .limit(len(days_full)) \
+            .all()
+        result.update(dict(rows))
+        return [(days[i], result[day]) for i, day in enumerate(days_full)]
+    # 按月份统计
+    if time_based == 'month':
+        start_time, end_time = get_current_year_time_ends()
+        months = get_months(False)
+        months_zerofill = get_months()
+        result = dict(zip(months, [0] * len(months)))
+        rows = db.session \
+            .query(func.month(User.create_time).label('month'), func.count(User.id)) \
+            .filter(User.create_time >= time_local_to_utc(start_time), User.create_time <= time_local_to_utc(end_time), User.status_active == STATUS_ACTIVE_OK) \
+            .group_by('month') \
+            .limit(len(months)) \
+            .all()
+        result.update(dict(rows))
+        return [(months_zerofill[i], result[month]) for i, month in enumerate(months)]

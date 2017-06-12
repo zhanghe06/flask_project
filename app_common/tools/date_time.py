@@ -81,12 +81,15 @@ def get_weeks():
     return [u'周一', u'周二', u'周三', u'周四', u'周五', u'周六', u'周日']
 
 
-def get_months():
+def get_months(zerofill=True):
     """
     列出1年所有12月份
     :return:
     """
-    return ['%02d' % i for i in range(1, 13)]
+    if zerofill:
+        return ['%02d' % i for i in range(1, 13)]
+    else:
+        return [i for i in range(1, 13)]
 
 
 def time_local_to_utc(local_time):

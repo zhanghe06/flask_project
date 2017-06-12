@@ -22,10 +22,10 @@ from sqlalchemy.orm import aliased
 
 from app_common.maps import area_code_map
 from app_common.maps.type_auth import *
-from app_common.tools import md5
+from app_common.tools import md5, json_default
 from app_common.tools.date_time import time_local_to_utc
 from app_backend import app
-from app_backend.api.user import edit_user, user_reg_stats
+from app_backend.api.user import edit_user, user_reg_stats, user_active_stats
 from app_backend.api.user_auth import get_user_auth_row, edit_user_auth
 from app_backend.api.user_bank import get_user_bank_row_by_id, add_user_bank, edit_user_bank
 from app_backend.api.user_profile import get_user_profile_row_by_id, edit_user_profile
@@ -468,6 +468,7 @@ def ajax_stats():
     # start_time, end_time, time_based = 'hour'
     time_based = request.args.get('time_based', 'hour')
     result_user_reg = user_reg_stats(time_based)
+    result_user_active = user_active_stats(time_based)
 
     line_chart_data = {
         'labels': [label for label, _ in result_user_reg],
@@ -480,33 +481,19 @@ def ajax_stats():
                 'pointBorderColor': '#fff',
                 'pointBorderWidth': 2,
                 'data': [data for _, data in result_user_reg]
+            },
+            {
+                'label': u'激活',
+                'backgroundColor': 'rgba(151,187,205,0.5)',
+                'borderColor': 'rgba(151,187,205,1)',
+                'pointBackgroundColor': 'rgba(151,187,205,1)',
+                'pointBorderColor': '#fff',
+                'pointBorderWidth': 2,
+                'data': [data for _, data in result_user_active]
             }
         ]
     }
-    # line_chart_data = {
-    #     'labels': ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    #     'datasets': [
-    #         {
-    #             'label': u'注册',
-    #             'backgroundColor': 'rgba(220,220,220,0.5)',
-    #             'borderColor': 'rgba(220,220,220,1)',
-    #             'pointBackgroundColor': 'rgba(220,220,220,1)',
-    #             'pointBorderColor': '#fff',
-    #             'pointBorderWidth': 2,
-    #             'data': [65, 59, 90, 81, 56, 55, 40]
-    #         },
-    #         {
-    #             'label': u'激活',
-    #             'backgroundColor': 'rgba(151,187,205,0.5)',
-    #             'borderColor': 'rgba(151,187,205,1)',
-    #             'pointBackgroundColor': 'rgba(151,187,205,1)',
-    #             'pointBorderColor': '#fff',
-    #             'pointBorderWidth': 2,
-    #             'data': [28, 48, 40, 19, 96, 28, 100]
-    #         }
-    #     ]
-    # }
-    return json.dumps(line_chart_data)
+    return json.dumps(line_chart_data, default=json_default)
 
 
 @bp_user.route('/admin_login/<int:user_id>/', methods=['GET', 'POST'])

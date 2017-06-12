@@ -9,11 +9,16 @@
 """
 
 
+from datetime import datetime
+from sqlalchemy import func
+
 from app_backend.models import Order, ApplyGet, ApplyPut
 from app_backend.tools.db import get_row, get_lists, get_rows, get_row_by_id, add, edit, delete
 from app_backend.database import db
 from app_common.maps.status_audit import STATUS_AUDIT_SUCCESS
 from app_common.maps.status_order import STATUS_ORDER_COMPLETED, STATUS_ORDER_PROCESSING
+from app_common.tools.date_time import get_hours, get_current_day_time_ends, time_local_to_utc, \
+    get_current_month_time_ends, get_days, get_current_year_time_ends, get_months
 
 
 def get_order_row_by_id(order_id):
@@ -130,3 +135,52 @@ def flow(order_id, next_uid):
     # 新增匹配订单（流转类型）
     # 修改原始订单（流转状态）
     # 新增订单流转记录
+
+
+def order_stats(time_based='hour'):
+    """
+    订单金额统计
+    :return:
+    """
+    # 按小时统计
+    if time_based == 'hour':
+        start_time, end_time = get_current_day_time_ends()
+        hours = get_hours()
+        result = dict(zip(hours, [0] * len(hours)))
+        rows = db.session \
+            .query(func.hour(Order.create_time).label('hour'), func.sum(Order.money)) \
+            .filter(Order.create_time >= time_local_to_utc(start_time), Order.create_time <= time_local_to_utc(end_time)) \
+            .group_by('hour') \
+            .limit(len(hours)) \
+            .all()
+        result.update(dict(rows))
+        return [(hour, result[hour]) for hour in hours]
+    # 按日期统计
+    if time_based == 'date':
+        start_time, end_time = get_current_month_time_ends()
+        today = datetime.today()
+        days = get_days(year=today.year, month=today.month)
+        days_full = get_days(year=today.year, month=today.month, full=True)
+        result = dict(zip(days_full, [0] * len(days_full)))
+        rows = db.session \
+            .query(func.date(Order.create_time).label('date'), func.sum(Order.money)) \
+            .filter(Order.create_time >= time_local_to_utc(start_time), Order.create_time <= time_local_to_utc(end_time)) \
+            .group_by('date') \
+            .limit(len(days_full)) \
+            .all()
+        result.update(dict(rows))
+        return [(days[i], result[day]) for i, day in enumerate(days_full)]
+    # 按月份统计
+    if time_based == 'month':
+        start_time, end_time = get_current_year_time_ends()
+        months = get_months(False)
+        months_zerofill = get_months()
+        result = dict(zip(months, [0] * len(months)))
+        rows = db.session \
+            .query(func.month(Order.create_time).label('month'), func.sum(Order.money)) \
+            .filter(Order.create_time >= time_local_to_utc(start_time), Order.create_time <= time_local_to_utc(end_time)) \
+            .group_by('month') \
+            .limit(len(months)) \
+            .all()
+        result.update(dict(rows))
+        return [(months_zerofill[i], result[month]) for i, month in enumerate(months)]

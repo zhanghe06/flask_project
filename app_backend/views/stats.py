@@ -36,5 +36,46 @@ def user():
     time_based = request.args.get('time_based', 'hour')
     if time_based not in ['hour', 'date', 'month']:
         time_based = 'hour'
-    # 获取注册量，获取激活量
     return render_template('stats/user.html', title='user_stats', time_based=time_based)
+
+
+@bp_stats.route('/apply_put/', methods=['GET', 'POST'])
+@login_required
+def apply_put():
+    """
+    投资统计
+    按日、周、月统计注册量
+    :return:
+    """
+    time_based = request.args.get('time_based', 'hour')
+    if time_based not in ['hour', 'date', 'month']:
+        time_based = 'hour'
+    return render_template('stats/apply_put.html', title='apply_put_stats', time_based=time_based)
+
+
+@bp_stats.route('/apply_get/', methods=['GET', 'POST'])
+@login_required
+def apply_get():
+    """
+    提现统计
+    按日、周、月统计注册量
+    :return:
+    """
+    time_based = request.args.get('time_based', 'hour')
+    if time_based not in ['hour', 'date', 'month']:
+        time_based = 'hour'
+    return render_template('stats/apply_get.html', title='apply_get_stats', time_based=time_based)
+
+
+@bp_stats.route('/order/', methods=['GET', 'POST'])
+@login_required
+def order():
+    """
+    订单统计
+    按日、周、月统计注册量
+    :return:
+    """
+    time_based = request.args.get('time_based', 'hour')
+    if time_based not in ['hour', 'date', 'month']:
+        time_based = 'hour'
+    return render_template('stats/order.html', title='order_stats', time_based=time_based)

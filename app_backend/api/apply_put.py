@@ -12,11 +12,15 @@
 from datetime import datetime
 import traceback
 
+from sqlalchemy import func
+
 from app_backend.models import ApplyGet, Order, ApplyPut
 from app_backend.tools.db import get_row, get_rows_by_ids, get_lists, get_rows, get_row_by_id, add, edit, delete
 from app_backend.database import db
 from app_common.maps.status_audit import STATUS_AUDIT_SUCCESS
 from app_common.maps.status_order import STATUS_ORDER_COMPLETED, STATUS_ORDER_PROCESSING
+from app_common.tools.date_time import get_current_day_time_ends, get_hours, time_local_to_utc, \
+    get_current_month_time_ends, get_days, get_current_year_time_ends, get_months
 
 
 def get_apply_put_row_by_id(apply_put_id):
@@ -188,3 +192,52 @@ def apply_put_match(apply_put_id, apply_get_ids, accept_split=0):
         print traceback.print_exc()
         db.session.rollback()
         raise e
+
+
+def apply_put_stats(time_based='hour'):
+    """
+    投资申请统计
+    :return:
+    """
+    # 按小时统计
+    if time_based == 'hour':
+        start_time, end_time = get_current_day_time_ends()
+        hours = get_hours()
+        result = dict(zip(hours, [0] * len(hours)))
+        rows = db.session \
+            .query(func.hour(ApplyGet.create_time).label('hour'), func.count(ApplyGet.id)) \
+            .filter(ApplyGet.create_time >= time_local_to_utc(start_time), ApplyGet.create_time <= time_local_to_utc(end_time)) \
+            .group_by('hour') \
+            .limit(len(hours)) \
+            .all()
+        result.update(dict(rows))
+        return [(hour, result[hour]) for hour in hours]
+    # 按日期统计
+    if time_based == 'date':
+        start_time, end_time = get_current_month_time_ends()
+        today = datetime.today()
+        days = get_days(year=today.year, month=today.month)
+        days_full = get_days(year=today.year, month=today.month, full=True)
+        result = dict(zip(days_full, [0] * len(days_full)))
+        rows = db.session \
+            .query(func.date(ApplyGet.create_time).label('date'), func.count(ApplyGet.id)) \
+            .filter(ApplyGet.create_time >= time_local_to_utc(start_time), ApplyGet.create_time <= time_local_to_utc(end_time)) \
+            .group_by('date') \
+            .limit(len(days_full)) \
+            .all()
+        result.update(dict(rows))
+        return [(days[i], result[day]) for i, day in enumerate(days_full)]
+    # 按月份统计
+    if time_based == 'month':
+        start_time, end_time = get_current_year_time_ends()
+        months = get_months(False)
+        months_zerofill = get_months()
+        result = dict(zip(months, [0] * len(months)))
+        rows = db.session \
+            .query(func.month(ApplyGet.create_time).label('month'), func.count(ApplyGet.id)) \
+            .filter(ApplyGet.create_time >= time_local_to_utc(start_time), ApplyGet.create_time <= time_local_to_utc(end_time)) \
+            .group_by('month') \
+            .limit(len(months)) \
+            .all()
+        result.update(dict(rows))
+        return [(months_zerofill[i], result[month]) for i, month in enumerate(months)]

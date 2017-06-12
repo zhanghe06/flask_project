@@ -9,6 +9,7 @@
 """
 
 
+import json
 from sqlalchemy.orm import aliased
 from datetime import datetime
 from flask import redirect
@@ -20,12 +21,13 @@ import flask_excel as excel
 from app_backend import app
 from app_backend.forms.admin import AdminProfileForm
 from app_backend.models import User, UserProfile, Order
-from app_backend.api.order import get_order_rows, get_order_row
+from app_backend.api.order import get_order_rows, get_order_row, order_stats
 from app_backend.forms.order import OrderSearchForm
 
 from flask import Blueprint
 
 from app_common.maps.status_delete import STATUS_DEL_NO
+from app_common.tools import json_default
 from app_common.tools.date_time import time_local_to_utc
 from config import PER_PAGE_BACKEND
 
@@ -134,3 +136,30 @@ def stats():
     :return:
     """
     return render_template('order/stats.html', title='order_stats')
+
+
+@bp_order.route('/ajax_stats/', methods=['GET', 'POST'])
+@login_required
+def ajax_stats():
+    """
+    订单金额统计
+    :return:
+    """
+    time_based = request.args.get('time_based', 'hour')
+    result_order = order_stats(time_based)
+
+    line_chart_data = {
+        'labels': [label for label, _ in result_order],
+        'datasets': [
+            {
+                'label': u'订单金额',
+                'backgroundColor': 'rgba(220,220,220,0.5)',
+                'borderColor': 'rgba(220,220,220,1)',
+                'pointBackgroundColor': 'rgba(220,220,220,1)',
+                'pointBorderColor': '#fff',
+                'pointBorderWidth': 2,
+                'data': [data for _, data in result_order]
+            }
+        ]
+    }
+    return json.dumps(line_chart_data, default=json_default)

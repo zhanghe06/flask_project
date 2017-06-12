@@ -26,7 +26,7 @@ from app_backend.forms.admin import AdminProfileForm
 from app_backend.forms.apply_put import ApplyPutSearchForm
 from app_backend.models import User, ApplyGet, UserProfile, ApplyPut
 from app_backend.api.apply_get import get_apply_get_rows, get_apply_get_row, get_apply_get_row_by_id, \
-    get_apply_get_rows_by_ids, edit_apply_get, apply_get_match
+    get_apply_get_rows_by_ids, edit_apply_get, apply_get_match, apply_get_stats
 from app_backend.forms.apply_get import ApplyGetSearchForm
 
 from app_common.maps.status_delete import *
@@ -34,6 +34,7 @@ from app_common.maps.status_order import *
 from app_common.maps.status_pay import *
 from app_common.maps.status_rec import *
 from app_common.maps.status_audit import *
+from app_common.tools import json_default
 from app_common.tools.date_time import time_local_to_utc
 
 PER_PAGE_BACKEND = app.config['PER_PAGE_BACKEND']
@@ -226,11 +227,38 @@ def delete():
     pass
 
 
-@bp_apply_get.route('/stats/', methods=['GET', 'POST'])
+# @bp_apply_get.route('/stats/', methods=['GET', 'POST'])
+# @login_required
+# def stats():
+#     """
+#     提现申请统计
+#     :return:
+#     """
+#     return render_template('apply_get/stats.html', title='apply_get_stats')
+
+
+@bp_apply_get.route('/ajax_stats/', methods=['GET', 'POST'])
 @login_required
-def stats():
+def ajax_stats():
     """
     提现申请统计
     :return:
     """
-    return render_template('apply_get/stats.html', title='apply_get_stats')
+    time_based = request.args.get('time_based', 'hour')
+    result_apply_get = apply_get_stats(time_based)
+
+    line_chart_data = {
+        'labels': [label for label, _ in result_apply_get],
+        'datasets': [
+            {
+                'label': u'提现申请',
+                'backgroundColor': 'rgba(220,220,220,0.5)',
+                'borderColor': 'rgba(220,220,220,1)',
+                'pointBackgroundColor': 'rgba(220,220,220,1)',
+                'pointBorderColor': '#fff',
+                'pointBorderWidth': 2,
+                'data': [data for _, data in result_apply_get]
+            }
+        ]
+    }
+    return json.dumps(line_chart_data, default=json_default)
