@@ -7,6 +7,8 @@
 @file: settings.py
 @time: 2017/4/30 下午9:11
 """
+
+
 import json
 from decimal import Decimal
 from datetime import datetime
@@ -20,7 +22,7 @@ from flask_login import current_user, login_required
 from app_backend import app
 from app_backend.api.score import get_score_rows
 
-from app_backend.forms.settings import UserForm, OrderForm, ApplyPutForm, ApplyGetForm, InterestForm
+from app_backend.forms.settings import SwitchForm, UserForm, OrderForm, ApplyPutForm, ApplyGetForm, InterestForm
 from app_backend.tools.config_manage import get_conf, set_conf
 
 from app_backend.tools.config_manage import clean_conf
@@ -40,6 +42,70 @@ def ajax_clean():
         else:
             return json.dumps({'error': u'还原配置失败'})
     abort(404)
+
+
+@bp_settings.route('/switch/', methods=['GET', 'POST'])
+@login_required
+def switch():
+    """
+    开关配置
+    SWITCH_EXPORT = OFF         # 导出
+
+    SWITCH_REG_ACCOUNT = ON     # 用户账号注册
+    SWITCH_REG_PHONE = OFF      # 用户手机注册
+    SWITCH_REG_EMAIL = OFF      # 用户邮箱注册
+
+    SWITCH_REG_THREE_PART = OFF     # 第三方平台注册
+
+    SWITCH_LOGIN_ACCOUNT = ON   # 用户账号登录
+    SWITCH_LOGIN_PHONE = ON     # 用户手机登录
+    SWITCH_LOGIN_EMAIL = ON     # 用户邮箱登录
+
+    SWITCH_LOGIN_THREE_PART = OFF     # 第三方平台登录
+    :return:
+    """
+    form = SwitchForm(request.form)
+    if request.method == 'GET':
+        load_dict = {
+            'ON': True,
+            'OFF': False,
+            True: True,
+            False: False
+        }
+        form.SWITCH_EXPORT.data = load_dict.get(get_conf('SWITCH_EXPORT'))
+
+        form.SWITCH_REG_ACCOUNT.data = load_dict.get(get_conf('SWITCH_REG_ACCOUNT'))
+        form.SWITCH_REG_PHONE.data = load_dict.get(get_conf('SWITCH_REG_PHONE'))
+        form.SWITCH_REG_EMAIL.data = load_dict.get(get_conf('SWITCH_REG_EMAIL'))
+        form.SWITCH_REG_THREE_PART.data = load_dict.get(get_conf('SWITCH_REG_THREE_PART'))
+
+        form.SWITCH_LOGIN_ACCOUNT.data = load_dict.get(get_conf('SWITCH_LOGIN_ACCOUNT'))
+        form.SWITCH_LOGIN_PHONE.data = load_dict.get(get_conf('SWITCH_LOGIN_PHONE'))
+        form.SWITCH_LOGIN_EMAIL.data = load_dict.get(get_conf('SWITCH_LOGIN_EMAIL'))
+        form.SWITCH_LOGIN_THREE_PART.data = load_dict.get(get_conf('SWITCH_LOGIN_THREE_PART'))
+
+    if request.method == 'POST':
+        dump_dict = {
+            True: 'ON',
+            False: 'OFF'
+        }
+        if form.validate_on_submit():
+            set_conf('SWITCH_EXPORT', dump_dict.get(form.SWITCH_EXPORT.data))
+
+            set_conf('SWITCH_REG_ACCOUNT', dump_dict.get(form.SWITCH_REG_ACCOUNT.data))
+            set_conf('SWITCH_REG_PHONE', dump_dict.get(form.SWITCH_REG_PHONE.data))
+            set_conf('SWITCH_REG_EMAIL', dump_dict.get(form.SWITCH_REG_EMAIL.data))
+            set_conf('SWITCH_REG_THREE_PART', dump_dict.get(form.SWITCH_REG_THREE_PART.data))
+
+            set_conf('SWITCH_LOGIN_ACCOUNT', dump_dict.get(form.SWITCH_LOGIN_ACCOUNT.data))
+            set_conf('SWITCH_LOGIN_PHONE', dump_dict.get(form.SWITCH_LOGIN_PHONE.data))
+            set_conf('SWITCH_LOGIN_EMAIL', dump_dict.get(form.SWITCH_LOGIN_EMAIL.data))
+            set_conf('SWITCH_LOGIN_THREE_PART', dump_dict.get(form.SWITCH_LOGIN_THREE_PART.data))
+
+            flash(u'修改成功', 'success')
+        else:
+            flash(u'修改失败', 'warning')
+    return render_template('settings/switch.html', title='settings_switch', form=form)
 
 
 @bp_settings.route('/user/', methods=['GET', 'POST'])

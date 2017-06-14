@@ -1,0 +1,118 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <ol class="breadcrumb">
+        <li><a href="/">后台管理</a></li>
+        <li><a href="javascript:void(0);" onclick="$('#menu-settings').trigger('click');">系统配置</a></li>
+        <li class="active">开关配置</li>
+    </ol>
+
+    {# 表单 #}
+    <form class="form-horizontal" method="post" action="">
+        {{ form.csrf_token }}
+        <p></p>
+        <blockquote>
+            <p class="text-muted">导出配置</p>
+        </blockquote>
+        <div class="form-group{% if form.SWITCH_EXPORT.errors %} has-error{% endif %}">
+            {{ form.SWITCH_EXPORT.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.SWITCH_EXPORT() }}
+                {% for error in form.SWITCH_EXPORT.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <hr>
+        <blockquote>
+            <p class="text-muted">注册配置</p>
+        </blockquote>
+        <div class="form-group{% if form.SWITCH_REG_ACCOUNT.errors %} has-error{% endif %}">
+            {{ form.SWITCH_REG_ACCOUNT.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.SWITCH_REG_ACCOUNT() }}
+                {% for error in form.SWITCH_REG_ACCOUNT.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.SWITCH_REG_PHONE.errors %} has-error{% endif %}">
+            {{ form.SWITCH_REG_PHONE.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.SWITCH_REG_PHONE() }}
+                {% for error in form.SWITCH_REG_PHONE.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.SWITCH_REG_EMAIL.errors %} has-error{% endif %}">
+            {{ form.SWITCH_REG_EMAIL.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.SWITCH_REG_EMAIL() }}
+                {% for error in form.SWITCH_REG_EMAIL.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.SWITCH_REG_THREE_PART.errors %} has-error{% endif %}">
+            {{ form.SWITCH_REG_THREE_PART.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.SWITCH_REG_THREE_PART() }}
+                {% for error in form.SWITCH_REG_THREE_PART.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <hr>
+        <blockquote>
+            <p class="text-muted">登录配置</p>
+        </blockquote>
+        <div class="form-group{% if form.SWITCH_LOGIN_ACCOUNT.errors %} has-error{% endif %}">
+            {{ form.SWITCH_LOGIN_ACCOUNT.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.SWITCH_LOGIN_ACCOUNT() }}
+                {% for error in form.SWITCH_LOGIN_ACCOUNT.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.SWITCH_LOGIN_PHONE.errors %} has-error{% endif %}">
+            {{ form.SWITCH_LOGIN_PHONE.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.SWITCH_LOGIN_PHONE() }}
+                {% for error in form.SWITCH_LOGIN_PHONE.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.SWITCH_LOGIN_EMAIL.errors %} has-error{% endif %}">
+            {{ form.SWITCH_LOGIN_EMAIL.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.SWITCH_LOGIN_EMAIL() }}
+                {% for error in form.SWITCH_LOGIN_EMAIL.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.SWITCH_LOGIN_THREE_PART.errors %} has-error{% endif %}">
+            {{ form.SWITCH_LOGIN_THREE_PART.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.SWITCH_LOGIN_THREE_PART() }}
+                {% for error in form.SWITCH_LOGIN_THREE_PART.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-success btn-load" data-loading-text="保存中">保存</button>
+                <button type="reset" class="btn btn-default">重新填写</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+{% endblock %}

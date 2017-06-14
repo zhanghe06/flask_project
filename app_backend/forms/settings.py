@@ -11,7 +11,7 @@
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField, HiddenField, IntegerField, DecimalField
-from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
+from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress, AnyOf
 from flask_login import current_user
 from app_frontend.models import UserProfile
 from app_backend.forms import SelectBS, CheckBoxBS
@@ -23,6 +23,36 @@ from app_backend.forms import SelectAreaCode
 
 from app_frontend.api.user_profile import get_user_profile_row
 from app_frontend.forms import SelectAreaCode, CheckBoxBS
+
+
+class SwitchForm(FlaskForm):
+    """
+    开关配置表单
+    SWITCH_EXPORT = OFF         # 导出
+
+    SWITCH_REG_ACCOUNT = ON     # 用户账号注册
+    SWITCH_REG_PHONE = OFF      # 用户手机注册
+    SWITCH_REG_EMAIL = OFF      # 用户邮箱注册
+
+    SWITCH_REG_THREE_PART = OFF     # 第三方平台注册
+
+    SWITCH_LOGIN_ACCOUNT = ON   # 用户账号登录
+    SWITCH_LOGIN_PHONE = ON     # 用户手机登录
+    SWITCH_LOGIN_EMAIL = ON     # 用户邮箱登录
+
+    SWITCH_LOGIN_THREE_PART = OFF     # 第三方平台登录
+    """
+    SWITCH_EXPORT = CheckBoxBS(u'导出开关')
+
+    SWITCH_REG_ACCOUNT = CheckBoxBS(u'用户账号注册')
+    SWITCH_REG_PHONE = CheckBoxBS(u'用户手机注册')
+    SWITCH_REG_EMAIL = CheckBoxBS(u'用户邮箱注册')
+    SWITCH_REG_THREE_PART = CheckBoxBS(u'第三方平台注册')
+
+    SWITCH_LOGIN_ACCOUNT = CheckBoxBS(u'用户账号登录')
+    SWITCH_LOGIN_PHONE = CheckBoxBS(u'用户手机登录')
+    SWITCH_LOGIN_EMAIL = CheckBoxBS(u'用户邮箱登录')
+    SWITCH_LOGIN_THREE_PART = CheckBoxBS(u'第三方平台登录')
 
 
 class UserForm(FlaskForm):

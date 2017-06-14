@@ -72,6 +72,9 @@
                 <a id="menu-settings" href="#"><i class="fa fa-sitemap fa-fw"></i> 系统配置<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
+                        <a href="{{ url_for('settings.switch') }}">开关配置</a>
+                    </li>
+                    <li>
                         <a href="{{ url_for('settings.user') }}">会员配置</a>
                     </li>
                     <li>
@@ -118,13 +121,13 @@
                 <!-- /.nav-second-level -->
             </li>
             <li>
-                <a id="menu-admin" href="#"><i class="fa fa-files-o fa-fw"></i> 运营管理<span class="fa arrow"></span></a>
+                <a id="menu-admin" href="#"><i class="fa fa-files-o fa-fw"></i> 权限管理<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a href="{{ url_for('admin.lists') }}">运营列表</a>
+                        <a href="{{ url_for('admin.lists') }}">后台成员</a>
                     </li>
                     <li>
-                        <a href="{{ url_for('admin.add') }}">添加运营</a>
+                        <a href="{{ url_for('admin.add') }}">添加成员</a>
                     </li>
                 </ul>
                 <!-- /.nav-second-level -->

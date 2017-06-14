@@ -20,6 +20,7 @@ from flask_login import current_user, login_required
 from itsdangerous import TimestampSigner
 from sqlalchemy.orm import aliased
 
+from app_backend.tools.config_manage import get_conf
 from app_common.maps import area_code_map
 from app_common.maps.type_auth import *
 from app_common.tools import md5, json_default
@@ -42,7 +43,8 @@ from app_common.maps.status_lock import *
 from app_common.maps.status_delete import *
 from app_common.tools.ip import get_real_ip
 
-SWITCH_EXPORT = app.config['SWITCH_EXPORT']
+
+SWITCH_EXPORT = get_conf('SWITCH_EXPORT')
 PER_PAGE_BACKEND = app.config['PER_PAGE_BACKEND']
 
 bp_user = Blueprint('user', __name__, url_prefix='/user')
@@ -93,7 +95,7 @@ def lists(page=1):
         search_condition_user_profile.append(user_profile_c.nickname == user_name)
     # 处理导出
     if op == 1:
-        if not SWITCH_EXPORT:
+        if not SWITCH_EXPORT or SWITCH_EXPORT == 'OFF':
             flash(u'导出功能关闭，暂不支持导出', 'warning')
             return redirect(url_for('user.lists'))
         data_list = []
@@ -122,14 +124,22 @@ def lists(page=1):
             add_entity(Score). \
             add_entity(Bonus). \
             all()
-        column_names = [u'用户编号', u'用户名称', u'银行名称', u'银行地址']
+        column_names = [u'用户编号', u'用户名称', u'等级', u'手机号码', u'推荐人', u'钱包余额', u'数字货币', u'积分', u'奖金', u'激活状态', u'锁定状态', u'创建时间']
         data_list.append(column_names)
-        for (user, user_profile, user_bank) in query_sets:
+        for (user, user_profile_c, user_profile_p, wallet, bit_coin, score, bonus) in query_sets:
             row = [
                 user.id if user else '',
-                user_profile.nickname if user_profile else '',
-                user_bank.bank_name if user_bank else '',
-                user_bank.bank_address if user_bank else ''
+                user_profile_c.nickname if user_profile_c else '',
+                user_profile_c.type_level if user_profile_c else 0,
+                user_profile_c.phone if user_profile_c else '',
+                user_profile_p.nickname if user_profile_p else '',
+                wallet.amount_current if wallet else 0,
+                bit_coin.amount if bit_coin else 0,
+                score.amount if score else 0,
+                bonus.amount if bonus else 0,
+                user.status_active if user else 0,
+                user.status_lock if user else 0,
+                user.create_time if user else ''
             ]
             data_list.append(row)
         return excel.make_response_from_array(
