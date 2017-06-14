@@ -67,35 +67,15 @@ INSERT INTO `user_bank` VALUES (2, 'Guest', '农行', '上海分行', '123456789
 TRUNCATE TABLE `admin`;
 INSERT INTO `admin` VALUES (1, 'admin', 'e10adc3949ba59abbe56e057f20f883e', 0, '86', '13800002222', 1, '0', NULL, NULL, NULL, '2017-01-12 12:25:34', '2017-01-12 12:25:34');
 
--- 插入角色信息
-TRUNCATE TABLE `admin_role`;
-INSERT INTO `admin_role` VALUES (1, '系统', '系统角色', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
-INSERT INTO `admin_role` VALUES (2, '客服', '客服角色', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
-INSERT INTO `admin_role` VALUES (3, '运营', '运营角色', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
-INSERT INTO `admin_role` VALUES (4, '市场', '市场角色', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
-INSERT INTO `admin_role` VALUES (5, '销售', '销售角色', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
-INSERT INTO `admin_role` VALUES (6, '普通', '普通角色', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
-INSERT INTO `admin_role` VALUES (7, '高级', '高级角色', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
-
 -- 插入角色权限信息
-TRUNCATE TABLE `admin_permission`;
-INSERT INTO `admin_permission` VALUES (1, 1, '会员', '会员权限', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
-INSERT INTO `admin_permission` VALUES (2, 1, '订单', '订单权限', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
-INSERT INTO `admin_permission` VALUES (3, 1, '留言', '留言权限', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
-INSERT INTO `admin_permission` VALUES (4, 1, '运营', '运营权限', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
-INSERT INTO `admin_permission` VALUES (5, 1, '统计', '统计权限', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
-INSERT INTO `admin_permission` VALUES (6, 2, '会员', '会员权限', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
-INSERT INTO `admin_permission` VALUES (7, 2, '留言', '留言权限', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
-INSERT INTO `admin_permission` VALUES (8, 3, '会员', '会员权限', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
-INSERT INTO `admin_permission` VALUES (9, 3, '订单', '订单权限', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
-INSERT INTO `admin_permission` VALUES (10, 3, '留言', '留言权限', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
-INSERT INTO `admin_permission` VALUES (11, 3, '统计', '统计权限', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
-INSERT INTO `admin_permission` VALUES (12, 4, '会员', '会员权限', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
-INSERT INTO `admin_permission` VALUES (13, 4, '统计', '统计权限', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
-INSERT INTO `admin_permission` VALUES (14, 7, '会员', '会员权限', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
-INSERT INTO `admin_permission` VALUES (15, 7, '订单', '订单权限', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
-INSERT INTO `admin_permission` VALUES (16, 7, '留言', '留言权限', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
-INSERT INTO `admin_permission` VALUES (17, 7, '统计', '统计权限', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
+TRUNCATE TABLE `admin_role`;
+INSERT INTO `admin_role` VALUES (1, '系统', '系统角色', '会员,订单,留言,运营,统计', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
+INSERT INTO `admin_role` VALUES (2, '客服', '客服角色', '会员,留言,会员', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
+INSERT INTO `admin_role` VALUES (3, '运营', '运营角色', '订单,留言,统计', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
+INSERT INTO `admin_role` VALUES (4, '市场', '市场角色', '会员,统计', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
+INSERT INTO `admin_role` VALUES (5, '销售', '销售角色', '', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
+INSERT INTO `admin_role` VALUES (6, '普通', '普通角色', '', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
+INSERT INTO `admin_role` VALUES (7, '高级', '高级角色', '会员,订单,留言,统计', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
 
 -- 插入用户声望
 TRUNCATE TABLE `credit`;

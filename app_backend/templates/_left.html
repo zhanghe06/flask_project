@@ -89,45 +89,20 @@
                     <li>
                         <a href="{{ url_for('settings.interest') }}">利息配置</a>
                     </li>
-{#                    <li>#}
-{#                        <a href="{{ url_for('settings.wallet') }}">钱包配置</a>#}
-{#                    </li>#}
-{#                    <li>#}
-{#                        <a href="{{ url_for('settings.score') }}">积分配置</a>#}
-{#                    </li>#}
-{#                    <li>#}
-{#                        <a href="{{ url_for('settings.bonus') }}">奖金配置</a>#}
-{#                    </li>#}
-
-{#                    <li>#}
-{#                        <a id="menu-settings-interest" href="#">利息配置 <span class="fa arrow"></span></a>#}
-{#                        <ul class="nav nav-third-level">#}
-{#                            <li>#}
-{#                                <a href="{{ url_for('settings.interest', op='pay_early') }}">利息配置</a>#}
-{#                            </li>#}
-{#                            <li>#}
-{#                                <a href="{{ url_for('settings.interest', op='pay_delay') }}">支付奖惩</a>#}
-{#                            </li>#}
-{#                            <li>#}
-{#                                <a href="{{ url_for('settings.interest', op='rec_early') }}">确认奖惩</a>#}
-{#                            </li>#}
-{#                            <li>#}
-{#                                <a href="{{ url_for('settings.interest', op='rec_delay') }}">延迟收货</a>#}
-{#                            </li>#}
-{#                        </ul>#}
-{#                        <!-- /.nav-third-level -->#}
-{#                    </li>#}
                 </ul>
                 <!-- /.nav-second-level -->
             </li>
-            <li>
+            <li{% if 'admin' in request.path %} class="active"{% endif %}>
                 <a id="menu-admin" href="#"><i class="fa fa-files-o fa-fw"></i> 权限管理<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a href="{{ url_for('admin.lists') }}">后台成员</a>
+                        <a href="{{ url_for('admin.lists') }}"{% if url_for('admin.lists') == request.path %} class="active"{% endif %}>后台成员</a>
                     </li>
                     <li>
-                        <a href="{{ url_for('admin.add') }}">添加成员</a>
+                        <a href="{{ url_for('admin.add') }}"{% if url_for('admin.add') == request.path %} class="active"{% endif %}>添加成员</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('admin.role') }}"{% if url_for('admin.role') == request.path %} class="active"{% endif %}>角色管理</a>
                     </li>
                 </ul>
                 <!-- /.nav-second-level -->

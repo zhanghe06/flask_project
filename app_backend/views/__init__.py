@@ -28,6 +28,7 @@ from flask_login import login_user
 from flask_login import logout_user
 from flask_login import current_user, login_required
 
+from app_backend.api.admin_role import get_admin_role_row_by_id
 from app_backend.lib.rabbit_mq import RabbitPriorityQueue
 from app_backend.tools.db import get_row_by_id
 from app_common.maps import area_code_map
@@ -44,7 +45,8 @@ from app_common.tools import md5, get_randint
 from app_backend.tools.send_sms import UN, PW
 from app_common.tools.ip import get_real_ip
 
-from app_backend.permissions import admin_permission
+from app_backend.permissions import permission_admin
+from app_backend.permissions import permission_other
 
 SMS_CODE_LOGIN = app.config['SMS_CODE_LOGIN']
 EXCHANGE_NAME = app.config['EXCHANGE_NAME']
@@ -81,9 +83,12 @@ def on_identity_loaded(sender, identity):
 
     # Assuming the User model has a list of roles, update the
     # identity with the roles that the user provides
-    if hasattr(current_user, 'roles'):
-        for role in current_user.roles:
-            identity.provides.add(RoleNeed(role.name))
+    if hasattr(current_user, 'role_id'):
+        row = get_admin_role_row_by_id(current_user.role_id)
+        modules = row.module.split(',') if row else []
+        for module in modules:
+            role_need = RoleNeed(module)
+            identity.provides.add(role_need)
 
 
 @app.route('/favicon.ico')
@@ -104,6 +109,7 @@ def index():
     后台首页
     """
     # return "Hello, World!"
+    # return str(current_user.__dict__)
     return render_template('index.html', title='home')
 
 
@@ -224,6 +230,7 @@ def ajax_get_sms_code():
 
 @app.errorhandler(403)
 def page_permission_denied(error):
+    flash(u'暂无权限', 'warning')
     session['redirected_from'] = request.url
     return redirect(url_for('index'))
 
@@ -240,12 +247,24 @@ def internal_error(error):
     return render_template('500.html'), 500
 
 
-@app.route('/admin_permission/')
-@admin_permission.require(http_exception=403)
+@app.route('/permission_admin/')
+@permission_admin.require(http_exception=403)
 def test_admin_permission():
     """
     管理员权限测试
     :return:
     """
     return Response('Only if you are admin')
+
+
+@app.route('/permission_other/')
+@permission_other.require(http_exception=403)
+def test_other_permission():
+    """
+    管理员权限测试
+    :return:
+    """
+    return Response('Only if you are other')
+
+
 

@@ -61,26 +61,13 @@ class Admin(Base):
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
 
-class AdminPermission(Base):
-    __tablename__ = 'admin_permission'
-    __table_args__ = (
-        Index('role_id', 'role_id', 'module', unique=True),
-    )
-
-    id = Column(Integer, primary_key=True)
-    role_id = Column(Integer, nullable=False, server_default=text("'0'"))
-    module = Column(String(20), nullable=False, server_default=text("''"))
-    note = Column(String(256), nullable=False, server_default=text("''"))
-    create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
-    update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
-
-
 class AdminRole(Base):
     __tablename__ = 'admin_role'
 
     id = Column(Integer, primary_key=True)
     name = Column(String(20), nullable=False, unique=True, server_default=text("''"))
     note = Column(String(256), nullable=False, server_default=text("''"))
+    module = Column(String(256), nullable=False, server_default=text("''"))
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
@@ -434,8 +421,8 @@ class UserBank(Base):
 class UserProfile(Base):
     __tablename__ = 'user_profile'
     __table_args__ = (
-        Index('ind_id_card', 'area_id', 'id_card'),
-        Index('ind_phone', 'area_id', 'phone')
+        Index('ind_phone', 'area_id', 'phone'),
+        Index('ind_id_card', 'area_id', 'id_card')
     )
 
     user_id = Column(Integer, primary_key=True)

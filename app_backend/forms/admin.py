@@ -9,7 +9,7 @@
 """
 
 
-from flask_wtf import FlaskForm as Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField, HiddenField
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
 
@@ -42,7 +42,7 @@ def password_edit_validator(form, field):
         raise ValidationError(u'密码长度不符')
 
 
-class AdminProfileForm(Form):
+class AdminProfileForm(FlaskForm):
     """
     管理员基本信息表单
     """
@@ -61,7 +61,7 @@ class AdminProfileForm(Form):
     update_time = DateTimeField(u'更新时间')
 
 
-class AdminAddForm(Form):
+class AdminAddForm(FlaskForm):
     """
     管理员添加表单
     """
@@ -77,7 +77,7 @@ class AdminAddForm(Form):
     login_time = DateTimeField(u'Login Time')
 
 
-class AdminEditForm(Form):
+class AdminEditForm(FlaskForm):
     """
     管理员编辑表单
     """
@@ -96,7 +96,19 @@ class AdminEditForm(Form):
     update_time = DateTimeField(u'更新时间')
 
 
-class EditPassword(Form):
+class AdminRoleForm(FlaskForm):
+    """
+    管理员角色表单
+    """
+    role_id = SelectBS(u'管理角色', default='', choices=role_admin_list, validators=[DataRequired(u'管理角色不能为空')])
+    name = StringField(u'模块权限')
+    note = StringField(u'权限备注')
+    module = StringField(u'模块权限')
+    create_time = DateTimeField(u'创建时间')
+    update_time = DateTimeField(u'更新时间')
+
+
+class EditPassword(FlaskForm):
     """
     修改用户密码
     """

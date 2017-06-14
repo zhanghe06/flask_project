@@ -47,7 +47,7 @@ class SelectBSWidget(object):
             'name': field.id,
             'class': 'selectpicker show-tick',
             # 'data-live-search': 'true',
-            'title': kwargs.pop('placeholder') or 'Choose one of the following...',
+            'title': kwargs.pop('placeholder', 'Choose one of the following...'),
             'data-header': kwargs.pop('data_header', 'Select a condiment'),
             'data-width': kwargs.pop('data_width', 'auto')
         }

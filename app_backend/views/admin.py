@@ -18,12 +18,14 @@ from flask import render_template, request, flash, g
 from flask import url_for
 from flask_login import current_user, login_required
 
+from app_backend.api.admin_role import get_admin_role_lists
 from app_common.maps import area_code_map
 from app_common.tools import md5
 from app_backend import app
 from app_backend.forms.admin import AdminProfileForm, AdminAddForm, AdminEditForm
 from app_backend.models import User
 from app_backend.api.admin import get_admin_rows, get_admin_row, edit_admin, add_admin, get_admin_row_by_id
+from app_backend.api.admin_role import get_admin_role_row_by_id, edit_admin_role
 from app_common.maps.status_delete import *
 
 from flask import Blueprint
@@ -202,3 +204,38 @@ def ajax_delete():
         if result == 0:
             return json.dumps({'error': u'删除失败'})
     abort(404)
+
+
+@bp_admin.route('/role/', methods=['GET', 'POST'])
+@login_required
+def role():
+    """
+    角色管理
+    """
+    from app_backend.forms.admin import AdminRoleForm
+    form = AdminRoleForm(request.form)
+    if request.method == 'GET':
+        role_id = request.args.get('role_id', 1, type=int)
+        admin_role = get_admin_role_row_by_id(role_id)
+        if admin_role:
+            form.role_id.data = admin_role.id
+            form.name.data = admin_role.name
+            form.note.data = admin_role.note
+            form.module.data = admin_role.module
+            form.create_time.data = admin_role.create_time
+            form.update_time.data = admin_role.update_time
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            current_time = datetime.utcnow()
+            admin_role_info = {
+                'note': form.note.data,
+                'module': form.module.data.replace(u'，', u','),
+                'update_time': current_time,
+            }
+            result = edit_admin_role(form.role_id.data, admin_role_info)
+            if result:
+                flash(u'修改成功', 'success')
+                return redirect(url_for('.role', role_id=form.role_id.data))
+            else:
+                flash(u'修改失败', 'warning')
+    return render_template('admin/role.html', title='admin_role', form=form)
