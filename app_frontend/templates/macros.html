@@ -154,12 +154,12 @@
                             <li><a href="{{ url_for('score.charity_lists') }}"><span class="glyphicon glyphicon-list-alt"></span> 慈善积分</a></li>
                         {% endif %}
                         {% if request.path == url_for('score.digital_lists') %}
-                            <li class="dropdown-header"><span class="glyphicon glyphicon-plus"></span> 数字积分</li>
+                            <li class="dropdown-header"><span class="glyphicon glyphicon-list-alt"></span> 数字积分</li>
                         {% else %}
                             <li><a href="{{ url_for('score.digital_lists') }}"><span class="glyphicon glyphicon-list-alt"></span> 数字积分</a></li>
                         {% endif %}
                         {% if request.path == url_for('score.expense_lists') %}
-                            <li class="dropdown-header"><span class="glyphicon glyphicon-plus"></span> 消费积分</li>
+                            <li class="dropdown-header"><span class="glyphicon glyphicon-list-alt"></span> 消费积分</li>
                         {% else %}
                             <li><a href="{{ url_for('score.expense_lists') }}"><span class="glyphicon glyphicon-list-alt"></span> 消费积分</a></li>
                         {% endif %}

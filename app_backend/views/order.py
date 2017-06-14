@@ -31,12 +31,15 @@ from app_common.tools import json_default
 from app_common.tools.date_time import time_local_to_utc
 from config import PER_PAGE_BACKEND
 
+from app_backend.permissions import permission_order
+
 bp_order = Blueprint('order', __name__, url_prefix='/order')
 
 
 @bp_order.route('/list/')
 @bp_order.route('/list/<int:page>/')
 @login_required
+@permission_order.require(http_exception=403)
 def lists(page=1):
     """
     订单列表
@@ -110,6 +113,7 @@ def lists(page=1):
 
 @bp_order.route('/add/', methods=['GET', 'POST'])
 @login_required
+@permission_order.require(http_exception=403)
 def add():
     """
     创建订单
@@ -120,6 +124,7 @@ def add():
 
 @bp_order.route('/del/', methods=['GET', 'POST'])
 @login_required
+@permission_order.require(http_exception=403)
 def delete():
     """
     删除订单
@@ -130,6 +135,7 @@ def delete():
 
 @bp_order.route('/stats/', methods=['GET', 'POST'])
 @login_required
+@permission_order.require(http_exception=403)
 def stats():
     """
     订单统计

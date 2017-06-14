@@ -43,6 +43,8 @@ from app_common.maps.status_lock import *
 from app_common.maps.status_delete import *
 from app_common.tools.ip import get_real_ip
 
+from app_backend.permissions import permission_user
+
 
 SWITCH_EXPORT = get_conf('SWITCH_EXPORT')
 PER_PAGE_BACKEND = app.config['PER_PAGE_BACKEND']
@@ -53,6 +55,7 @@ bp_user = Blueprint('user', __name__, url_prefix='/user')
 @bp_user.route('/list/')
 @bp_user.route('/list/<int:page>/')
 @login_required
+@permission_user.require(http_exception=403)
 def lists(page=1):
     """
     会员列表
@@ -177,18 +180,21 @@ def lists(page=1):
 
 @bp_user.route('/add/')
 @login_required
+@permission_user.require(http_exception=403)
 def add():
     return render_template('user/add.html', title='user_add')
 
 
 @bp_user.route('/relationship/')
 @login_required
+@permission_user.require(http_exception=403)
 def relationship():
     return render_template('user/relationship.html', title='user_relationship')
 
 
 @bp_user.route('/auth/<int:user_id>', methods=['GET', 'POST'])
 @login_required
+@permission_user.require(http_exception=403)
 def auth(user_id):
     """
     用户登录认证信息
@@ -244,6 +250,7 @@ def auth(user_id):
 
 @bp_user.route('/bank/<int:user_id>', methods=['GET', 'POST'])
 @login_required
+@permission_user.require(http_exception=403)
 def bank(user_id):
     """
     银行信息
@@ -289,6 +296,7 @@ def bank(user_id):
 
 @bp_user.route('/profile/<int:user_id>', methods=['GET', 'POST'])
 @login_required
+@permission_user.require(http_exception=403)
 def profile(user_id):
     """
     用户基本信息
@@ -336,6 +344,7 @@ def profile(user_id):
 
 @bp_user.route('/setting/', methods=['GET', 'POST'])
 @login_required
+@permission_user.require(http_exception=403)
 def setting():
     """
     设置
@@ -379,6 +388,7 @@ def setting():
 
 @bp_user.route('/ajax/lock/', methods=['GET', 'POST'])
 @login_required
+@permission_user.require(http_exception=403)
 def ajax_lock():
     """
     锁定用户
@@ -404,6 +414,7 @@ def ajax_lock():
 
 @bp_user.route('/ajax/unlock/', methods=['GET', 'POST'])
 @login_required
+@permission_user.require(http_exception=403)
 def ajax_unlock():
     """
     锁定用户
@@ -428,6 +439,7 @@ def ajax_unlock():
 
 @bp_user.route('/ajax/del/', methods=['GET', 'POST'])
 @login_required
+@permission_user.require(http_exception=403)
 def ajax_delete():
     """
     删除用户
@@ -508,6 +520,7 @@ def ajax_stats():
 
 @bp_user.route('/admin_login/<int:user_id>/', methods=['GET', 'POST'])
 @login_required
+@permission_user.require(http_exception=403)
 def admin_login(user_id):
     """
     后台登录前台用户

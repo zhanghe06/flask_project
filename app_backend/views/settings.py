@@ -28,12 +28,15 @@ from app_backend.tools.config_manage import get_conf, set_conf
 from app_backend.tools.config_manage import clean_conf
 from flask import Blueprint
 
+from app_backend.permissions import permission_sys
+
 
 bp_settings = Blueprint('settings', __name__, url_prefix='/settings')
 
 
 @bp_settings.route('/ajax_clean/', methods=['GET', 'POST'])
 @login_required
+@permission_sys.require(http_exception=403)
 def ajax_clean():
     if request.method == 'GET' and request.is_xhr:
         result = clean_conf()
@@ -46,6 +49,7 @@ def ajax_clean():
 
 @bp_settings.route('/switch/', methods=['GET', 'POST'])
 @login_required
+@permission_sys.require(http_exception=403)
 def switch():
     """
     开关配置
@@ -110,6 +114,7 @@ def switch():
 
 @bp_settings.route('/user/', methods=['GET', 'POST'])
 @login_required
+@permission_sys.require(http_exception=403)
 def user():
     """
     会员配置
@@ -140,6 +145,7 @@ def user():
 
 @bp_settings.route('/order/', methods=['GET', 'POST'])
 @login_required
+@permission_sys.require(http_exception=403)
 def order():
     """
     订单配置
@@ -189,6 +195,7 @@ def order():
 
 @bp_settings.route('/apply_put/', methods=['GET', 'POST'])
 @login_required
+@permission_sys.require(http_exception=403)
 def apply_put():
     """
     投资申请配置
@@ -275,6 +282,7 @@ def apply_put():
 
 @bp_settings.route('/apply_get/', methods=['GET', 'POST'])
 @login_required
+@permission_sys.require(http_exception=403)
 def apply_get():
     """
     提现申请配置
@@ -356,6 +364,7 @@ def apply_get():
 
 @bp_settings.route('/wallet/', methods=['GET', 'POST'])
 @login_required
+@permission_sys.require(http_exception=403)
 def wallet():
     """
     钱包配置
@@ -366,6 +375,7 @@ def wallet():
 
 @bp_settings.route('/score/', methods=['GET', 'POST'])
 @login_required
+@permission_sys.require(http_exception=403)
 def score():
     """
     积分配置
@@ -376,6 +386,7 @@ def score():
 
 @bp_settings.route('/bonus/', methods=['GET', 'POST'])
 @login_required
+@permission_sys.require(http_exception=403)
 def bonus():
     """
     奖金配置
@@ -386,6 +397,7 @@ def bonus():
 
 @bp_settings.route('/interest/', methods=['GET', 'POST'])
 @login_required
+@permission_sys.require(http_exception=403)
 def interest():
     """
     利息配置

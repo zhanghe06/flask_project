@@ -31,11 +31,14 @@ from app_common.maps.status_delete import *
 from flask import Blueprint
 
 
+from app_backend.permissions import permission_admin
+
 bp_admin = Blueprint('admin', __name__, url_prefix='/admin')
 
 
 @bp_admin.route('/profile/', methods=['GET', 'POST'])
 @login_required
+@permission_admin.require(http_exception=403)
 def profile():
     """
     当前登录管理员信息
@@ -91,6 +94,7 @@ def profile():
 @bp_admin.route('/list/')
 @bp_admin.route('/list/<int:page>/')
 @login_required
+@permission_admin.require(http_exception=403)
 def lists(page=1):
     """
     管理列表
@@ -101,6 +105,7 @@ def lists(page=1):
 
 @bp_admin.route('/add/', methods=['GET', 'POST'])
 @login_required
+@permission_admin.require(http_exception=403)
 def add():
     """
     添加管理
@@ -136,6 +141,7 @@ def add():
 
 @bp_admin.route('/edit/<int:admin_id>', methods=['GET', 'POST'])
 @login_required
+@permission_admin.require(http_exception=403)
 def edit(admin_id):
     """
     编辑管理成员
@@ -183,6 +189,7 @@ def edit(admin_id):
 
 @bp_admin.route('/ajax/del/', methods=['GET', 'POST'])
 @login_required
+@permission_admin.require(http_exception=403)
 def ajax_delete():
     """
     删除管理
@@ -208,6 +215,7 @@ def ajax_delete():
 
 @bp_admin.route('/role/', methods=['GET', 'POST'])
 @login_required
+@permission_admin.require(http_exception=403)
 def role():
     """
     角色管理

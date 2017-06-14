@@ -20,13 +20,14 @@ from flask import render_template, request, flash
 from flask import url_for
 from flask_login import current_user, login_required
 
-from app_common.tools import json_default
+from app_backend.permissions import permission_stats
 
 bp_stats = Blueprint('stats', __name__, url_prefix='/stats')
 
 
 @bp_stats.route('/user/', methods=['GET', 'POST'])
 @login_required
+@permission_stats.require(http_exception=403)
 def user():
     """
     用户统计
@@ -41,6 +42,7 @@ def user():
 
 @bp_stats.route('/apply_put/', methods=['GET', 'POST'])
 @login_required
+@permission_stats.require(http_exception=403)
 def apply_put():
     """
     投资统计
@@ -55,6 +57,7 @@ def apply_put():
 
 @bp_stats.route('/apply_get/', methods=['GET', 'POST'])
 @login_required
+@permission_stats.require(http_exception=403)
 def apply_get():
     """
     提现统计
@@ -69,6 +72,7 @@ def apply_get():
 
 @bp_stats.route('/order/', methods=['GET', 'POST'])
 @login_required
+@permission_stats.require(http_exception=403)
 def order():
     """
     订单统计

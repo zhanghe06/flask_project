@@ -12,6 +12,7 @@
 from datetime import datetime
 
 from flask import abort
+from flask import Blueprint
 import json
 from flask import redirect
 from flask import render_template, request, flash, g
@@ -36,11 +37,10 @@ from app_common.maps.status_rec import *
 from app_common.maps.status_audit import *
 from app_common.tools import json_default
 from app_common.tools.date_time import time_local_to_utc
+from app_backend.permissions import permission_order
+
 
 PER_PAGE_BACKEND = app.config['PER_PAGE_BACKEND']
-
-from flask import Blueprint
-
 
 bp_apply_get = Blueprint('apply_get', __name__, url_prefix='/apply_get')
 
@@ -48,6 +48,7 @@ bp_apply_get = Blueprint('apply_get', __name__, url_prefix='/apply_get')
 @bp_apply_get.route('/list/')
 @bp_apply_get.route('/list/<int:page>/')
 @login_required
+@permission_order.require(http_exception=403)
 def lists(page=1):
     """
     提现申请列表
@@ -106,6 +107,7 @@ def lists(page=1):
 @bp_apply_get.route('/info/<int:apply_get_id>/')
 @bp_apply_get.route('/info/<int:apply_get_id>/<int:page>/')
 @login_required
+@permission_order.require(http_exception=403)
 def info(apply_get_id, page=1):
     """
     提现申请信息
@@ -185,6 +187,7 @@ def info(apply_get_id, page=1):
 
 @bp_apply_get.route('/ajax/match/', methods=['GET', 'POST'])
 @login_required
+@permission_order.require(http_exception=403)
 def ajax_match():
     """
     提现申请匹配
@@ -209,6 +212,7 @@ def ajax_match():
 
 @bp_apply_get.route('/add/', methods=['GET', 'POST'])
 @login_required
+@permission_order.require(http_exception=403)
 def add():
     """
     创建提现申请
@@ -219,6 +223,7 @@ def add():
 
 @bp_apply_get.route('/del/', methods=['GET', 'POST'])
 @login_required
+@permission_order.require(http_exception=403)
 def delete():
     """
     删除提现申请

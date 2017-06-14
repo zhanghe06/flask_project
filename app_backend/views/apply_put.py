@@ -11,7 +11,7 @@
 
 from datetime import datetime
 import json
-
+from flask import Blueprint
 from flask import abort
 from flask import redirect
 from flask import render_template, request, flash, g
@@ -37,9 +37,9 @@ from app_common.maps.status_audit import *
 from app_common.tools import json_default
 from app_common.tools.date_time import time_local_to_utc
 
-PER_PAGE_BACKEND = app.config['PER_PAGE_BACKEND']
+from app_backend.permissions import permission_order
 
-from flask import Blueprint
+PER_PAGE_BACKEND = app.config['PER_PAGE_BACKEND']
 
 
 bp_apply_put = Blueprint('apply_put', __name__, url_prefix='/apply_put')
@@ -48,6 +48,7 @@ bp_apply_put = Blueprint('apply_put', __name__, url_prefix='/apply_put')
 @bp_apply_put.route('/list/')
 @bp_apply_put.route('/list/<int:page>/')
 @login_required
+@permission_order.require(http_exception=403)
 def lists(page=1):
     """
     投资申请列表
@@ -106,6 +107,7 @@ def lists(page=1):
 @bp_apply_put.route('/info/<int:apply_put_id>/')
 @bp_apply_put.route('/info/<int:apply_put_id>/<int:page>/')
 @login_required
+@permission_order.require(http_exception=403)
 def info(apply_put_id, page=1):
     """
     投资申请信息
@@ -185,6 +187,7 @@ def info(apply_put_id, page=1):
 
 @bp_apply_put.route('/ajax/match/', methods=['GET', 'POST'])
 @login_required
+@permission_order.require(http_exception=403)
 def ajax_match():
     """
     投资申请匹配
@@ -209,6 +212,7 @@ def ajax_match():
 
 @bp_apply_put.route('/add/', methods=['GET', 'POST'])
 @login_required
+@permission_order.require(http_exception=403)
 def add():
     """
     创建投资申请
@@ -219,6 +223,7 @@ def add():
 
 @bp_apply_put.route('/del/', methods=['GET', 'POST'])
 @login_required
+@permission_order.require(http_exception=403)
 def delete():
     """
     删除投资申请
@@ -229,6 +234,7 @@ def delete():
 
 @bp_apply_put.route('/stats/', methods=['GET', 'POST'])
 @login_required
+@permission_order.require(http_exception=403)
 def stats():
     """
     投资申请统计
