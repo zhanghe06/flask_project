@@ -116,8 +116,8 @@ class SelectAreaCodeWidget(object):
             'name': field.id,
             'class': 'selectpicker show-tick',
             'data-live-search': 'true',
-            'title': 'Choose one of the following...',
-            'data-header': 'Select a condiment',
+            'title': kwargs.pop('title', 'Choose one of the following...'),
+            'data-header': kwargs.pop('data-header', 'Select a condiment'),
         }
         html = ['<select %s>' % html_params(**params)]
         for _, area_data in field.choices:

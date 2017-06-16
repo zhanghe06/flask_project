@@ -48,12 +48,13 @@ def auth():
     team_tree = get_team_tree(current_user.id)
 
     form = UserAuthForm(request.form)
+    condition = {
+        'user_id': current_user.id,
+        'type_auth': TYPE_AUTH_ACCOUNT,
+    }
+    user_auth_info = get_user_auth_row(**condition)
+
     if request.method == 'GET':
-        condition = {
-            'user_id': current_user.id,
-            'type_auth': TYPE_AUTH_ACCOUNT,
-        }
-        user_auth_info = get_user_auth_row(**condition)
         if user_auth_info:
             form.id.data = user_auth_info.id
             form.type_auth.data = user_auth_info.type_auth
@@ -85,10 +86,13 @@ def auth():
             if form.auth_secret.data:
                 user_auth_data['auth_secret'] = md5(form.auth_secret.data)
             result = edit_user_auth(form.id.data, user_auth_data)
-            if result == 1:
+            if result:
+                form.create_time.data = user_auth_info.create_time
                 flash(u'修改成功', 'success')
-            if result == 0:
-                flash(u'修改失败', 'warning')
+        else:
+            form.create_time.data = user_auth_info.create_time
+            form.update_time.data = user_auth_info.update_time
+            flash(u'修改失败', 'warning')
         # flash(form.errors, 'warning')  # 调试打开
 
     # flash(u'Hello, %s' % current_user.id, 'info')  # 测试打开
@@ -106,8 +110,8 @@ def bank():
     team_tree = get_team_tree(current_user.id)
 
     form = UserBankForm(request.form)
+    bank_info = get_user_bank_row_by_id(current_user.id)
     if request.method == 'GET':
-        bank_info = get_user_bank_row_by_id(current_user.id)
         if bank_info:
             form.bank_name.data = bank_info.bank_name
             form.bank_address.data = bank_info.bank_address
@@ -118,7 +122,6 @@ def bank():
     if request.method == 'POST':
         if form.validate_on_submit():
             current_time = datetime.utcnow()
-            bank_info = get_user_bank_row_by_id(current_user.id)
             bank_data = {
                 'bank_name': form.bank_name.data,
                 'bank_address': form.bank_address.data,
@@ -131,10 +134,15 @@ def bank():
             else:
                 bank_data['create_time'] = current_time
                 result = add_user_bank(bank_data)
+
             if result:
+                # 处理表单时间为空
+                form.create_time.data = bank_info.create_time
                 flash(u'修改成功', 'success')
-            if not result:
-                flash(u'修改失败', 'warning')
+        else:
+            form.create_time.data = bank_info.create_time
+            form.update_time.data = bank_info.update_time
+            flash(u'修改失败', 'warning')
         # flash(form.errors, 'warning')  # 调试打开
 
     # flash(u'Hello, %s' % current_user.id, 'info')  # 测试打开
@@ -151,8 +159,8 @@ def profile():
     team_tree = get_team_tree(current_user.id)
 
     form = UserProfileForm(request.form)
+    user_info = get_user_profile_row_by_id(current_user.id)
     if request.method == 'GET':
-        user_info = get_user_profile_row_by_id(current_user.id)
         if user_info:
             form.user_pid.data = user_info.user_pid
             form.nickname.data = user_info.nickname
@@ -171,7 +179,7 @@ def profile():
             # 手机号码国际化
             area_id = form.area_id.data
             area_code = area_code_map.get(area_id, '86')
-            user_info = {
+            user_data = {
                 'email': form.email.data,
                 'area_id': area_id,
                 'area_code': area_code,
@@ -180,11 +188,16 @@ def profile():
                 'id_card': form.id_card.data,
                 'update_time': current_time,
             }
-            result = edit_user_profile(current_user.id, user_info)
-            if result == 1:
+            result = edit_user_profile(current_user.id, user_data)
+
+            if result:
+                # 处理表单时间为空
+                form.create_time.data = user_info.create_time
                 flash(u'修改成功', 'success')
-            if result == 0:
-                flash(u'修改失败', 'warning')
+        else:
+            form.create_time.data = user_info.create_time
+            form.update_time.data = user_info.update_time
+            flash(u'修改失败', 'warning')
         # flash(form.errors, 'warning')  # 调试打开
 
     # flash(u'Hello, %s' % current_user.id, 'info')  # 测试打开

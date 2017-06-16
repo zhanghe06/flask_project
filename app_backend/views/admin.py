@@ -48,22 +48,23 @@ def profile():
     # return render_template('admin/profile.html', title='admin_profile')
 
     form = AdminProfileForm(request.form)
+    admin_info = get_admin_row_by_id(admin_id)
     if request.method == 'GET':
-        form.id.data = current_user.id
-        form.username.data = current_user.username
+        form.id.data = admin_id
+        form.username.data = admin_info.username
         form.password.data = ''
-        form.area_id.data = current_user.area_id
-        form.phone.data = current_user.phone
-        form.role_id.data = current_user.role_id
-        form.create_time.data = current_user.create_time
-        form.update_time.data = current_user.update_time
+        form.area_id.data = admin_info.area_id
+        form.phone.data = admin_info.phone
+        form.role_id.data = admin_info.role_id
+        form.create_time.data = admin_info.create_time
+        form.update_time.data = admin_info.update_time
     if request.method == 'POST':
         if form.validate_on_submit():
             current_time = datetime.utcnow()
             # 手机号码国际化
             area_id = form.area_id.data
             area_code = area_code_map.get(area_id, '86')
-            admin_info = {
+            admin_data = {
                 'username': form.username.data,
                 'area_id': area_id,
                 'area_code': area_code,
@@ -72,22 +73,17 @@ def profile():
                 'update_time': current_time,
             }
             if form.password.data:
-                admin_info['password'] = md5(form.password.data)
+                admin_data['password'] = md5(form.password.data)
 
-            result = edit_admin(admin_id, admin_info)
-            if result == 1:
+            result = edit_admin(admin_id, admin_data)
+            if result:
                 flash(u'修改成功', 'success')
                 return redirect(url_for('admin.lists'))
-            else:
-                flash(u'修改失败', 'warning')
-                # flash(form.errors, 'warning')  # 调试打开
         else:
-            # 表单校验失败，创建时间、更新时间 由于表单没有传值，需要重新填充
-            admin_info = get_admin_row_by_id(admin_id)
-            if admin_info:
-                form.create_time.data = admin_info.create_time
-                form.update_time.data = admin_info.update_time
-
+            form.create_time.data = admin_info.create_time
+            form.update_time.data = admin_info.update_time
+            flash(u'修改失败', 'warning')
+    # flash(form.errors, 'warning')  # 调试打开
     return render_template('admin/profile.html', title='admin_profile', form=form)
 
 
@@ -147,8 +143,8 @@ def edit(admin_id):
     编辑管理成员
     """
     form = AdminEditForm(request.form)
+    admin_info = get_admin_row_by_id(admin_id)
     if request.method == 'GET':
-        admin_info = get_admin_row_by_id(admin_id)
         if admin_info:
             form.id.data = admin_info.id
             form.username.data = admin_info.username
@@ -164,24 +160,25 @@ def edit(admin_id):
             # 手机号码国际化
             area_id = form.area_id.data
             area_code = area_code_map.get(area_id, '86')
-            admin_info = {
+            admin_data = {
                 'username': form.username.data,
                 'area_id': area_id,
                 'area_code': area_code,
                 'phone': form.phone.data,
                 'role_id': form.role_id.data,
-                'create_time': current_time,
                 'update_time': current_time,
             }
             if form.password.data:
-                admin_info['password'] = md5(form.password.data)
+                admin_data['password'] = md5(form.password.data)
 
-            result = edit_admin(admin_id, admin_info)
-            if result == 1:
+            result = edit_admin(admin_id, admin_data)
+            if result:
                 flash(u'修改成功', 'success')
                 return redirect(url_for('admin.lists'))
-            else:
-                flash(u'修改失败', 'warning')
+        else:
+            form.create_time.data = admin_info.create_time
+            form.update_time.data = admin_info.update_time
+            flash(u'修改失败', 'warning')
         # flash(form.errors, 'warning')  # 调试打开
 
     return render_template('admin/edit.html', title='admin_edit', form=form)

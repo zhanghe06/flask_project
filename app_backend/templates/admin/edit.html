@@ -34,7 +34,7 @@
         <div class="form-group{% if form.area_id.errors %} has-error{% endif %}">
             {{ form.area_id.label(class="col-sm-2 control-label") }}
             <div class="col-sm-10">
-                {{ form.area_id() }}
+                {{ form.area_id(data_header="选择手机区号") }}
                 {% for error in form.area_id.errors %}
                     <span class="help-block">{{ error }}</span>
                 {% endfor %}

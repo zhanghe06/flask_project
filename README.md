@@ -1234,6 +1234,12 @@ json.dumps({'result': False, 'msg': u'错误消息', 'location': 'http://www.bai
 
 ```
 
+## sqlalchemy.exc.OperationalError
+OperationalError: (_mysql_exceptions.OperationalError) (2006, 'MySQL server has gone away')
+
+
+## gunicorn [CRITICAL] WORKER TIMEOUT
+
 
 ## Todo：
 
