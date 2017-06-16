@@ -102,6 +102,9 @@
                 <td>{{ user.status_lock | status_lock }}</td>
                 <td>{{ moment(user.create_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
                 <td>
+                    <a href="{{ url_for('active.add', user_id=user.id, next=request.path) }}" rel="tooltip" title="送码">
+                        <span class="glyphicon glyphicon-qrcode"></span>
+                    </a>
                     <a href="{{ url_for('user.profile', user_id=user.id, next=request.path) }}" rel="tooltip" title="编辑"><span class="glyphicon glyphicon-pencil"></span></a>
                     {% if user.status_lock == STATUS_LOCK_OK | int %}
                     <a href="javascript:void(0);" onclick="user_unlock({{ user.id }});" rel="tooltip" title="解锁"><span class="fa fa-unlock-alt"></span></a>
@@ -117,6 +120,9 @@
         {# 翻页 #}
         {% from "macros.html" import render_pagination %}
         {{ render_pagination(pagination, 'user.lists') }}
+
+        <!-- 赠送激活码 -->
+        {% include('user/_give_active.html') %}
     </div>
     </div>
 {% endblock %}

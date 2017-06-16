@@ -31,6 +31,17 @@
                 </ul>
                 <!-- /.nav-second-level -->
             </li>
+            <li class="active">
+                <a id="menu-active" href="#"><i class="fa fa-users fa-fw"></i> 激活管理<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li>
+                        <a href="{{ url_for('active.lists') }}">激活列表</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('active.add') }}">赠送激活码</a>
+                    </li>
+                </ul>
+            </li>
 
             <li>
                 <a id="menu-order" href="#"><i class="fa fa-edit fa-fw"></i> 订单管理<span class="fa arrow"></span></a>

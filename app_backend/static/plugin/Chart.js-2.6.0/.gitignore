@@ -1,7 +1,7 @@
 /_book
 /coverage
 /custom
-/dist
+#/dist
 /docs/index.md
 /gh-pages
 /node_modules

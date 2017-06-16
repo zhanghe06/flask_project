@@ -13,16 +13,15 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField, HiddenField
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
 from flask_login import current_user
-from app_frontend.models import UserProfile
+from app_backend.models import UserProfile
 from app_backend.forms import SelectBS, CheckBoxBS
 from app_common.maps import status_lock_list
 from app_common.maps import status_active_list
 from app_common.maps import area_code_list
 from app_backend.api.user_auth import get_user_auth_row
-from app_backend.forms import SelectAreaCode
 
-from app_frontend.api.user_profile import get_user_profile_row
-from app_frontend.forms import SelectAreaCode, CheckBoxBS
+from app_backend.api.user_profile import get_user_profile_row
+from app_backend.forms import SelectAreaCode, CheckBoxBS
 
 
 def reg_email_repeat(form, field):

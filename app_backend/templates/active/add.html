@@ -1,0 +1,64 @@
+<!-- extend from base layout -->
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="/">首页</a></li>
+        <li class="active">激活中心</li>
+        <li class="active">赠送激活</li>
+    </ol>
+    <form class="form-horizontal" method="post" action="">
+        {{ form.csrf_token }}
+        <div class="form-group{% if form.user_id.errors %} has-error{% endif %}">
+            {{ form.user_id.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.user_id(class="form-control", placeholder="填写赠送用户ID") }}
+                {% for error in form.user_id.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.amount.errors %} has-error{% endif %}">
+            {{ form.amount.label(class="col-sm-2 control-label") }}
+            <div class="col-sm-10">
+                {{ form.amount(class="form-control", placeholder="填写赠送数量", type="number", min="1") }}
+                {% for error in form.amount.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+                <span class="help-block">赠送数量必须为整数 [当前剩余激活码数量：{{ form.user_id.data | user_active }}]</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-success btn-load" data-loading-text="赠送中">赠送</button>
+                <button type="reset" class="btn btn-default">重新填写</button>
+                <button class="btn btn-default" onclick="history.back();">返回</button>
+            </div>
+        </div>
+    </form>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='plugin/clipboard.js-1.6.1/dist/clipboard.min.js') }}"></script>
+
+<script>
+    //推广链接复制
+    var clipboard = new Clipboard('.btn');
+
+    clipboard.on('success', function(e) {
+        // console.info('Action:', e.action);
+        // console.info('Text:', e.text);
+        // console.info('Trigger:', e.trigger);
+        e.clearSelection();
+        alert('复制成功，粘贴使用推广链接');
+    });
+
+    clipboard.on('error', function(e) {
+        // console.error('Action:', e.action);
+        // console.error('Trigger:', e.trigger);
+        alert('操作失败，重新复制推广链接');
+    });
+</script>
+{% endblock %}

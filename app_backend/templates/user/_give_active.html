@@ -1,0 +1,37 @@
+<div class="modal fade" id="give_active" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">赠送激活码</h4>
+            </div>
+            <div class="modal-body">
+                {# 表单 #}
+                <form class="form-horizontal" method="post" action="">
+                    {{ form.csrf_token }}
+{#                    {{ form.user_id() }}#}
+{#                    <p></p>#}
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="nickname">用户名称</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" disabled="disabled" id="nickname" name="nickname" placeholder="用户名称" type="text" value="Admin">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="amount">赠送数量</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" id="amount" min="1" name="amount" placeholder="填写赠送数量" type="number" value="1">
+                            <span class="help-block">赠送数量必须为整数 [当前剩余激活码数量：5]</span>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" >赠送</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -188,6 +188,8 @@ def filter_user_active(user_id):
     :param user_id:
     :return:
     """
+    if not user_id:
+        return 0
     row = get_active_row_by_id(user_id)
     return row.amount if row else 0
 
