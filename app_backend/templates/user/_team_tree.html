@@ -1,13 +1,16 @@
-<section id="section_account_info">
-    <div class="panel panel-default">
-    <div class="panel-heading">
-        <strong class="panel-title">我的团队
-        <span class="glyphicon glyphicon-king pull-right"></span>
-        </strong>
-    </div>
-    <div class="panel-body">
-        {% from "macros.html" import render_team_tree %}
-        {{ render_team_tree(team_tree) }}
-    </div>
-    </div>
-</section>
+<li class="list-unstyled">
+{% for (user_id, nickname, type_level_code), value in team_tree.items() recursive %}
+    {% if loop.first %}
+        <ul>
+    {% endif %}
+        <li class="list-unstyled">
+            <a href="javascript:void(0);">{{ nickname }} [{{ user_id }}] [{{ type_level_code | type_level }}]</a>
+        </li>
+    {% if value %}
+        {{ loop(value.items()) }}
+    {% endif %}
+    {% if loop.last %}
+        </ul>
+    {% endif %}
+{% endfor %}
+</li>

@@ -191,28 +191,3 @@
         </div>
     </nav>
 {% endmacro %}
-
-{% macro render_team_tree(team_tree) %}
-<!-- 一级 -->
-<ul>
-{% for i in team_tree %}
-    <li class="list-unstyled">
-        <a href="javascript:void(0);">{{ i[1] }} [{{ i[0] }}] [{{ i[2] | type_level }}]</a>
-        <!-- 二级 -->
-        <ul>
-        {% for o in team_tree[i] %}
-            <li class="list-unstyled">
-                <a href="javascript:void(0);">{{ o[1] }} [{{ o[0] }}] [{{ o[2] | type_level }}]</a>
-                <!-- 三级 -->
-                <ul>
-                {% for p in team_tree[i][o] %}
-                    <li class="list-unstyled"><a href="javascript:void(0);">{{ p[1] }} [{{ p[0] }}] [{{ p[2] | type_level }}]</a></li>
-                {% endfor %}
-                </ul>
-            </li>
-        {% endfor %}
-        </ul>
-    </li>
-{% endfor %}
-</ul>
-{% endmacro %}
