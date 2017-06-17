@@ -179,7 +179,7 @@ def logout():
     identity_changed.send(app, identity=AnonymousIdentity())
 
     flash(u'成功退出登录', 'info')
-    return redirect(url_for('index'))
+    return redirect(url_for('login'))
 
 
 @app.route('/ajax/get_sms_code/', methods=['GET', 'POST'])

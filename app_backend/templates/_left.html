@@ -31,7 +31,7 @@
                 </ul>
                 <!-- /.nav-second-level -->
             </li>
-            <li class="active">
+            <li{% if 'active' in request.path %} class="active"{% endif %}>
                 <a id="menu-active" href="#"><i class="fa fa-users fa-fw"></i> 激活管理<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
@@ -79,7 +79,7 @@
                 </ul>
                 <!-- /.nav-second-level -->
             </li>
-            <li>
+            <li{% if 'settings' in request.path %} class="active"{% endif %}>
                 <a id="menu-settings" href="#"><i class="fa fa-sitemap fa-fw"></i> 系统配置<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
