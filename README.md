@@ -1241,6 +1241,64 @@ OperationalError: (_mysql_exceptions.OperationalError) (2006, 'MySQL server has 
 ## gunicorn [CRITICAL] WORKER TIMEOUT
 
 
+## jinja 模板递归
+
+关键词 recursive
+
+```
+{% for item in [8,[[10,11,34],2],[3,4,5,[6,7,8]]] recursive %}
+    {% if loop.first %}
+        <br/>{{ '----'*loop.depth }}开始{{ loop.depth }}<br/>
+    {% endif %}
+    {{ '----'*loop.depth }}Depth: {{ loop.depth }}
+    {% if item[0] %}
+        {{ loop(item) }}
+    {% else %}
+        Number: {{ item }} ;<br/>
+    {% endif %}
+    {% if loop.last %}
+        {{ '----'*loop.depth }}结束{{ loop.depth }}<br/>
+    {% endif %}
+{% endfor %}
+```
+
+递归循环结果：
+```
+----开始1
+----Depth: 1 Number: 8 ;
+----Depth: 1
+--------开始2
+--------Depth: 2
+------------开始3
+------------Depth: 3 Number: 10 ;
+------------Depth: 3 Number: 11 ;
+------------Depth: 3 Number: 34 ;
+------------结束3
+--------Depth: 2 Number: 2 ;
+--------结束2
+----Depth: 1
+--------开始2
+--------Depth: 2 Number: 3 ;
+--------Depth: 2 Number: 4 ;
+--------Depth: 2 Number: 5 ;
+--------Depth: 2
+------------开始3
+------------Depth: 3 Number: 6 ;
+------------Depth: 3 Number: 7 ;
+------------Depth: 3 Number: 8 ;
+------------结束3
+--------结束2
+----结束1
+```
+
+
+## 银行卡验证接口
+
+http://www.apistore.cn/
+
+http://v.gotoway.com/api/v4/bankCard?key=0341749f1adc9e4f47f6a936e7ed9b46&bankcard=123456
+
+
 ## Todo：
 
 - 第三方登陆

@@ -1,0 +1,13 @@
+<section id="section_account_info">
+    <div class="panel panel-default">
+    <div class="panel-heading">
+        <strong class="panel-title">我的团队
+        <span class="glyphicon glyphicon-king pull-right"></span>
+        </strong>
+    </div>
+    <div class="panel-body">
+        {% from "macros.html" import render_team_tree %}
+        {{ render_team_tree(team_tree) }}
+    </div>
+    </div>
+</section>

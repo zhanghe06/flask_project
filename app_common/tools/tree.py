@@ -20,3 +20,10 @@ def tree():
     """
     return defaultdict(tree)
 
+
+if __name__ == '__main__':
+    tr = tree()
+    print tr
+    tr['fdsf']['erer'] = 2
+    print tr
+

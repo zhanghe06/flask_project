@@ -99,7 +99,7 @@ def add():
         if form.validate_on_submit():
             # 赠送激活数量
             try:
-                result = give_active(user_id, form.amount.data)
+                result = give_active(form.user_id.data, form.amount.data)
                 if result:
                     flash(u'赠送激活数量操作成功', 'success')
                 return redirect(url_for('.lists'))

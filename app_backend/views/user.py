@@ -29,7 +29,7 @@ from app_backend import app
 from app_backend.api.user import edit_user, user_reg_stats, user_active_stats
 from app_backend.api.user_auth import get_user_auth_row, edit_user_auth
 from app_backend.api.user_bank import get_user_bank_row_by_id, add_user_bank, edit_user_bank
-from app_backend.api.user_profile import get_user_profile_row_by_id, edit_user_profile
+from app_backend.api.user_profile import get_user_profile_row_by_id, edit_user_profile, get_team_tree_recursion
 from app_backend.forms.user import UserProfileForm, UserAuthForm, UserBankForm, UserSearchForm
 from app_backend.models import User
 from app_backend.models import UserProfile
@@ -189,7 +189,97 @@ def add():
 @login_required
 @permission_user.require(http_exception=403)
 def relationship():
-    return render_template('user/relationship.html', title='user_relationship')
+    form = UserSearchForm(request.form)
+
+    user_id = request.args.get('user_id', '', type=int)
+    user_name = request.args.get('user_name', '', type=str)
+
+    form.user_id.data = user_id
+    form.user_name.data = user_name
+
+    # 获取用户团队树形结构
+    team_tree = get_team_tree_recursion(user_id or 0)
+
+    users = [
+        {'id': 8},
+        {'id': 66, 'child': [
+            {'id': 22, 'child': [
+                {'id': 10},
+                {'id': 11},
+                {'id': 34}
+            ]},
+            {'id': 2}
+        ]},
+        {'id': 67, 'child': [
+            {'id': 3},
+            {'id': 4},
+            {'id': 5},
+            {'id': 68, 'child': [
+                {'id': 6},
+                {'id': 7},
+                {'id': 8}
+            ]}
+        ]}
+    ]
+    tree = {
+"name":"中国",
+"children":
+[
+    {
+      "name":"浙江" ,
+      "children":
+      [
+            {"name":"杭州" },
+            {"name":"宁波" },
+            {"name":"温州" },
+            {"name":"绍兴" }
+      ]
+    },
+
+    {
+        "name":"广西" ,
+        "children":
+        [
+            {
+            "name":"桂林",
+            "children":
+            [
+                {"name":"秀峰区"},
+                {"name":"叠彩区"},
+                {"name":"象山区"},
+                {"name":"七星区"}
+            ]
+            },
+            {"name":"南宁"},
+            {"name":"柳州"},
+            {"name":"防城港"}
+        ]
+    },
+
+    {
+        "name":"黑龙江",
+        "children":
+        [
+            {"name":"哈尔滨"},
+            {"name":"齐齐哈尔"},
+            {"name":"牡丹江"},
+            {"name":"大庆"}
+        ]
+    },
+
+    {
+        "name":"新疆" ,
+        "children":
+        [
+            {"name":"乌鲁木齐"},
+            {"name":"克拉玛依"},
+            {"name":"吐鲁番"},
+            {"name":"哈密"}
+        ]
+    }
+]
+}
+    return render_template('user/relationship.html', title='user_relationship', form=form, users=users, tree=tree, team_tree=team_tree)
 
 
 @bp_user.route('/auth/<int:user_id>', methods=['GET', 'POST'])

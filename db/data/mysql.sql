@@ -34,6 +34,23 @@ INSERT INTO `user_auth` VALUES (6, 3, 1, 'test@gmail.com', 'e10adc3949ba59abbe56
 INSERT INTO `user_auth` VALUES (7, 1, 2, '8613800001111', 'e10adc3949ba59abbe56e057f20f883e', '1', '2017-01-11 11:01:05', '2017-01-11 11:01:05');
 INSERT INTO `user_auth` VALUES (8, 2, 2, '8613800002222', 'e10adc3949ba59abbe56e057f20f883e', '1', '2017-01-12 12:25:34', '2017-01-12 12:25:34');
 INSERT INTO `user_auth` VALUES (9, 3, 2, '8613800003333', 'e10adc3949ba59abbe56e057f20f883e', '1', '2017-01-12 01:43:42', '2017-01-12 01:43:42');
+INSERT INTO `user_auth` VALUES (10, 4, 0, 'Git', 'e10adc3949ba59abbe56e057f20f883e', '1', '2017-01-12 01:43:42', '2017-01-12 01:43:42');
+INSERT INTO `user_auth` VALUES (11, 5, 0, 'Hub', 'e10adc3949ba59abbe56e057f20f883e', '1', '2017-01-12 01:43:42', '2017-01-12 01:43:42');
+INSERT INTO `user_auth` VALUES (12, 6, 0, 'Lab', 'e10adc3949ba59abbe56e057f20f883e', '1', '2017-01-12 01:43:42', '2017-01-12 01:43:42');
+INSERT INTO `user_auth` VALUES (13, 7, 0, 'Tony', 'e10adc3949ba59abbe56e057f20f883e', '1', '2017-01-12 01:43:42', '2017-01-12 01:43:42');
+INSERT INTO `user_auth` VALUES (14, 8, 0, 'Sunny', 'e10adc3949ba59abbe56e057f20f883e', '1', '2017-01-12 01:43:42', '2017-01-12 01:43:42');
+INSERT INTO `user_auth` VALUES (15, 9, 0, 'Left', 'e10adc3949ba59abbe56e057f20f883e', '1', '2017-01-12 01:43:42', '2017-01-12 01:43:42');
+INSERT INTO `user_auth` VALUES (16, 10, 0, 'Right', 'e10adc3949ba59abbe56e057f20f883e', '1', '2017-01-12 01:43:42', '2017-01-12 01:43:42');
+INSERT INTO `user_auth` VALUES (17, 11, 0, 'Height', 'e10adc3949ba59abbe56e057f20f883e', '1', '2017-01-12 01:43:42', '2017-01-12 01:43:42');
+INSERT INTO `user_auth` VALUES (18, 12, 0, 'With', 'e10adc3949ba59abbe56e057f20f883e', '1', '2017-01-12 01:43:42', '2017-01-12 01:43:42');
+INSERT INTO `user_auth` VALUES (19, 13, 0, 'Phone', 'e10adc3949ba59abbe56e057f20f883e', '1', '2017-01-12 01:43:42', '2017-01-12 01:43:42');
+INSERT INTO `user_auth` VALUES (20, 14, 0, 'Email', 'e10adc3949ba59abbe56e057f20f883e', '1', '2017-01-12 01:43:42', '2017-01-12 01:43:42');
+INSERT INTO `user_auth` VALUES (21, 15, 0, 'Desk', 'e10adc3949ba59abbe56e057f20f883e', '1', '2017-01-12 01:43:42', '2017-01-12 01:43:42');
+INSERT INTO `user_auth` VALUES (22, 16, 0, 'Car', 'e10adc3949ba59abbe56e057f20f883e', '1', '2017-01-12 01:43:42', '2017-01-12 01:43:42');
+INSERT INTO `user_auth` VALUES (23, 17, 0, 'Mart', 'e10adc3949ba59abbe56e057f20f883e', '1', '2017-01-12 01:43:42', '2017-01-12 01:43:42');
+INSERT INTO `user_auth` VALUES (24, 18, 0, 'Light', 'e10adc3949ba59abbe56e057f20f883e', '1', '2017-01-12 01:43:42', '2017-01-12 01:43:42');
+INSERT INTO `user_auth` VALUES (25, 19, 0, 'Window', 'e10adc3949ba59abbe56e057f20f883e', '1', '2017-01-12 01:43:42', '2017-01-12 01:43:42');
+INSERT INTO `user_auth` VALUES (26, 20, 0, 'Floor', 'e10adc3949ba59abbe56e057f20f883e', '1', '2017-01-12 01:43:42', '2017-01-12 01:43:42');
 
 -- 插入用户基本信息
 TRUNCATE TABLE `user_profile`;

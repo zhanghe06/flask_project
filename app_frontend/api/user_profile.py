@@ -13,7 +13,7 @@ import json
 from app_frontend.models import UserProfile
 from app_frontend.tools.db import get_row, get_rows, get_lists, get_row_by_id, add, edit, delete
 
-from app_frontend.tools.tree import tree
+from app_common.tools.tree import tree
 
 
 def get_user_profile_row_by_id(user_id):
