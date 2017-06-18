@@ -17,6 +17,7 @@ from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, d
 from app_frontend.lib.container import Container
 
 from app_common.maps.status_lock import *
+from app_frontend.database import db
 
 
 def get_user_row_by_id(user_id):
@@ -117,14 +118,18 @@ def get_user_team_rows(page=1, per_page=10, **kwargs):
         condition_user.append(User.status_lock == kwargs['status_lock'])
     if 'status_delete' in kwargs:
         condition_user.append(User.status_delete == kwargs['status_delete'])
-
-    pagination = UserProfile.query. \
-        filter(*condition_user_profile). \
-        outerjoin(User, User.id == UserProfile.user_id). \
-        filter(*condition_user). \
-        add_entity(User). \
-        paginate(page, per_page, False)
-    return pagination
+    try:
+        pagination = UserProfile.query. \
+            filter(*condition_user_profile). \
+            outerjoin(User, User.id == UserProfile.user_id). \
+            filter(*condition_user). \
+            add_entity(User). \
+            paginate(page, per_page, False)
+        db.session.commit()
+        return pagination
+    except Exception as e:
+        db.session.rollback()
+        raise e
 
 
 def lock(user_id):

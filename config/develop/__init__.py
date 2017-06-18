@@ -83,6 +83,8 @@ SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI_MYSQL
 # SQLALCHEMY_COMMIT_ON_TEARDOWN = True  # 打开自动提交 官方已经移除(http://flask-sqlalchemy.pocoo.org/2.1/changelog/#version-2-0)
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_POOL_SIZE = 5  # 默认 pool_size=5
+SQLALCHEMY_POOL_TIMEOUT = 10  # 默认 10秒
+SQLALCHEMY_POOL_RECYCLE = 500  # 配置要小于 数据库配置 wait_timeout
 SQLALCHEMY_ECHO = True
 
 

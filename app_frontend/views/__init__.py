@@ -17,6 +17,7 @@ from flask_login import current_user
 from itsdangerous import URLSafeSerializer, BadSignature
 
 from app_frontend import app, login_manager
+from app_frontend.tools.db import get_row_by_id
 
 # cache = SimpleCache()  # 默认最大支持500个key, 超时时间5分钟, 参数可配置
 
@@ -29,15 +30,16 @@ def load_user(user_id):
     :return:
     """
     from app_frontend.login import LoginUser
-    return LoginUser.query.get(int(user_id))
+    # return LoginUser.query.get(int(user_id))
+    return get_row_by_id(LoginUser, int(user_id))
 
 
-@app.before_request
-def before_request():
-    """
-    当前用户信息
-    """
-    g.user = current_user
+# @app.before_request
+# def before_request():
+#     """
+#     当前用户信息
+#     """
+#     g.user = current_user
 
 
 @app.route('/favicon.ico')
@@ -56,6 +58,8 @@ def index():
     """
     网站首页
     """
+    import json
+    # return str(current_user.id)
     # return "Hello, World!"
     # 判断是否推广链接
     i = request.args.get('i', '')

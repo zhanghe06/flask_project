@@ -91,7 +91,7 @@ def new(page=1):
     from app_frontend.api.blog import get_blog_list_counter
     blog_counter_list = get_blog_list_counter(id_list)
     # 状态设置
-    login_user_id = g.user.get_id()
+    login_user_id = current_user.get_id()
     from app_frontend.api.blog import get_blog_list_container_status
     blog_container_status_list = get_blog_list_container_status(id_list, login_user_id)
     return render_template(
@@ -192,7 +192,7 @@ def delete():
     博客删除
     """
     if request.method == 'GET':
-        login_user_id = g.user.get_id()
+        login_user_id = current_user.get_id()
         # 权限判断，只能删除自己的 blog todo
         if login_user_id is None:
             return jsonify(result=False)
@@ -213,7 +213,7 @@ def stat():
     :return:
     """
     if request.method == 'GET':
-        login_user_id = g.user.get_id()
+        login_user_id = current_user.get_id()
         if login_user_id is None:
             return jsonify(result=False)
         blog_id = request.args.get('blog_id', 0, type=int)

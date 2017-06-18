@@ -22,10 +22,11 @@ from app_frontend.models import User, UserProfile, ActiveItem
 from app_frontend.api.active_item import get_active_item_rows
 from app_common.maps.type_active import *
 from app_frontend.forms.active import ActiveAddForm
-
-PER_PAGE_FRONTEND = app.config['PER_PAGE_FRONTEND']
+from app_frontend.database import db
 
 from flask import Blueprint
+
+PER_PAGE_FRONTEND = app.config['PER_PAGE_FRONTEND']
 
 
 bp_active = Blueprint('active', __name__, url_prefix='/active')
@@ -57,18 +58,23 @@ def lists(page=1):
         condition = {
             'user_id': user_id
         }
+    try:
+        pagination = ActiveItem.query. \
+            filter_by(**condition). \
+            outerjoin(user_profile_put, ActiveItem.user_id == user_profile_put.user_id). \
+            add_entity(user_profile_put). \
+            outerjoin(user_profile_get, ActiveItem.sc_id == user_profile_get.user_id). \
+            add_entity(user_profile_get). \
+            order_by(ActiveItem.id.desc()). \
+            paginate(page, PER_PAGE_FRONTEND, False)
 
-    pagination = ActiveItem.query. \
-        filter_by(**condition). \
-        outerjoin(user_profile_put, ActiveItem.user_id == user_profile_put.user_id). \
-        add_entity(user_profile_put). \
-        outerjoin(user_profile_get, ActiveItem.sc_id == user_profile_get.user_id). \
-        add_entity(user_profile_get). \
-        order_by(ActiveItem.id.desc()). \
-        paginate(page, PER_PAGE_FRONTEND, False)
-
-    # pagination = get_active_item_rows(page, PER_PAGE_FRONTEND, **condition)
-    return render_template('active/list.html', title='active_list', pagination=pagination)
+        # pagination = get_active_item_rows(page, PER_PAGE_FRONTEND, **condition)
+        db.session.commit()
+        return render_template('active/list.html', title='active_list', pagination=pagination)
+    except Exception as e:
+        db.session.rollback()
+        flash(e.message, category='warning')
+        return redirect(url_for('index'))
 
 
 @bp_active.route('/add/', methods=['GET', 'POST'])

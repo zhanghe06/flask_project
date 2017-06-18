@@ -38,6 +38,7 @@ from app_common.maps.status_audit import *
 from app_common.tools import json_default
 from app_common.tools.date_time import time_local_to_utc
 from app_backend.permissions import permission_order
+from app_backend.database import db
 
 
 PER_PAGE_BACKEND = app.config['PER_PAGE_BACKEND']
@@ -95,13 +96,19 @@ def lists(page=1):
         search_condition_apply_get.append(ApplyGet.create_time <= time_local_to_utc(end_time))
 
     # pagination = get_apply_get_rows(page)
-    pagination = ApplyGet.query. \
-        filter(*search_condition_apply_get). \
-        outerjoin(UserProfile, ApplyGet.user_id == UserProfile.user_id). \
-        add_entity(UserProfile). \
-        order_by(ApplyGet.id.desc()). \
-        paginate(page, PER_PAGE_BACKEND, False)
-    return render_template('apply_get/list.html', title='apply_get_list', pagination=pagination, form=form)
+    try:
+        pagination = ApplyGet.query. \
+            filter(*search_condition_apply_get). \
+            outerjoin(UserProfile, ApplyGet.user_id == UserProfile.user_id). \
+            add_entity(UserProfile). \
+            order_by(ApplyGet.id.desc()). \
+            paginate(page, PER_PAGE_BACKEND, False)
+        db.session.commit()
+        return render_template('apply_get/list.html', title='apply_get_list', pagination=pagination, form=form)
+    except Exception as e:
+        db.session.rollback()
+        flash(e.message, category='warning')
+        return redirect(url_for('index'))
 
 
 @bp_apply_get.route('/info/<int:apply_get_id>/')
@@ -166,23 +173,28 @@ def info(apply_get_id, page=1):
         search_condition_apply_put.append(ApplyPut.create_time <= end_time)
 
     # pagination = get_apply_get_rows(page)
-    pagination = ApplyPut.query. \
-        filter(*search_condition_apply_put). \
-        outerjoin(UserProfile, ApplyPut.user_id == UserProfile.user_id). \
-        add_entity(UserProfile). \
-        order_by(ApplyPut.id.desc()). \
-        paginate(page, PER_PAGE_BACKEND, False)
-
-    return render_template(
-        'apply_get/info.html',
-        title='apply_get_info',
-        apply_get_info=apply_get_info,
-        apply_put_list=apply_put_list,
-        pagination=pagination,
-        form=form,
-        STATUS_ORDER_HANDING=STATUS_ORDER_HANDING,
-        STATUS_ORDER_COMPLETED=STATUS_ORDER_COMPLETED,
-    )
+    try:
+        pagination = ApplyPut.query. \
+            filter(*search_condition_apply_put). \
+            outerjoin(UserProfile, ApplyPut.user_id == UserProfile.user_id). \
+            add_entity(UserProfile). \
+            order_by(ApplyPut.id.desc()). \
+            paginate(page, PER_PAGE_BACKEND, False)
+        db.session.commit()
+        return render_template(
+            'apply_get/info.html',
+            title='apply_get_info',
+            apply_get_info=apply_get_info,
+            apply_put_list=apply_put_list,
+            pagination=pagination,
+            form=form,
+            STATUS_ORDER_HANDING=STATUS_ORDER_HANDING,
+            STATUS_ORDER_COMPLETED=STATUS_ORDER_COMPLETED,
+        )
+    except Exception as e:
+        db.session.rollback()
+        flash(e.message, category='warning')
+        return redirect(url_for('index'))
 
 
 @bp_apply_get.route('/ajax/match/', methods=['GET', 'POST'])

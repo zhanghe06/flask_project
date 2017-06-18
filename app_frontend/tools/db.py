@@ -23,8 +23,13 @@ def get_row_by_id(model_name, pk_id):
     :param pk_id:
     :return: None/object
     """
-    row = db.session.query(model_name).get(pk_id)
-    return row
+    try:
+        row = db.session.query(model_name).get(pk_id)
+        db.session.commit()
+        return row
+    except Exception as e:
+        db.session.rollback()
+        raise e
 
 
 def get_rows_by_ids(model_name, pk_ids):
@@ -34,9 +39,14 @@ def get_rows_by_ids(model_name, pk_ids):
     :param pk_ids:
     :return: list
     """
-    model_pk = inspect(model_name).primary_key[0]
-    rows = db.session.query(model_name).filter(model_pk.in_(pk_ids)).all()
-    return rows
+    try:
+        model_pk = inspect(model_name).primary_key[0]
+        rows = db.session.query(model_name).filter(model_pk.in_(pk_ids)).all()
+        db.session.commit()
+        return rows
+    except Exception as e:
+        db.session.rollback()
+        raise e
 
 
 def get_limit_rows_by_last_id(model_name, last_pk_id, limit_num, *args, **kwargs):
@@ -52,9 +62,14 @@ def get_limit_rows_by_last_id(model_name, last_pk_id, limit_num, *args, **kwargs
     :param kwargs:
     :return: list
     """
-    model_pk = inspect(model_name).primary_key[0]
-    rows = db.session.query(model_name).filter(model_pk > last_pk_id, *args).filter_by(**kwargs).limit(limit_num).all()
-    return rows
+    try:
+        model_pk = inspect(model_name).primary_key[0]
+        rows = db.session.query(model_name).filter(model_pk > last_pk_id, *args).filter_by(**kwargs).limit(limit_num).all()
+        db.session.commit()
+        return rows
+    except Exception as e:
+        db.session.rollback()
+        raise e
 
 
 def get_row(model_name, *args, **kwargs):
@@ -73,8 +88,13 @@ def get_row(model_name, *args, **kwargs):
     :param kwargs:
     :return: None/object
     """
-    row = db.session.query(model_name).filter(*args).filter_by(**kwargs).first()
-    return row
+    try:
+        row = db.session.query(model_name).filter(*args).filter_by(**kwargs).first()
+        db.session.commit()
+        return row
+    except Exception as e:
+        db.session.rollback()
+        raise e
 
 
 def get_lists(model_name, *args, **kwargs):
@@ -93,8 +113,13 @@ def get_lists(model_name, *args, **kwargs):
     :param kwargs:
     :return: None/list
     """
-    lists = db.session.query(model_name).filter(*args).filter_by(**kwargs).all()
-    return lists
+    try:
+        lists = db.session.query(model_name).filter(*args).filter_by(**kwargs).all()
+        db.session.commit()
+        return lists
+    except Exception as e:
+        db.session.rollback()
+        raise e
 
 
 def count(model_name, *args, **kwargs):
@@ -113,8 +138,13 @@ def count(model_name, *args, **kwargs):
     :param kwargs:
     :return: 0/Number（int）
     """
-    result_count = db.session.query(model_name).filter(*args).filter_by(**kwargs).count()
-    return result_count
+    try:
+        result_count = db.session.query(model_name).filter(*args).filter_by(**kwargs).count()
+        db.session.commit()
+        return result_count
+    except Exception as e:
+        db.session.rollback()
+        raise e
 
 
 def add(model_name, data):
@@ -189,12 +219,17 @@ def get_rows(model_name, page=1, per_page=10, *args, **kwargs):
     :param kwargs:
     :return: None/object
     """
-    rows = model_name.query. \
-        filter(*args). \
-        filter_by(**kwargs). \
-        order_by(inspect(model_name).primary_key[0].desc()). \
-        paginate(page, per_page, False)
-    return rows
+    try:
+        rows = model_name.query. \
+            filter(*args). \
+            filter_by(**kwargs). \
+            order_by(inspect(model_name).primary_key[0].desc()). \
+            paginate(page, per_page, False)
+        db.session.commit()
+        return rows
+    except Exception as e:
+        db.session.rollback()
+        raise e
 
 
 def insert_rows(model_name, data_list):
@@ -383,8 +418,21 @@ def test_label():
         print row.id, row.nickname_new, row.create_time
 
 
+def test_join():
+    from app_frontend.models import User, UserProfile
+    # rows = db.session.query(User, UserProfile).outerjoin(UserProfile, User.id == UserProfile.user_id).order_by(User.id.desc()).all()
+    # for row in rows:
+    #     print row[0].__dict__, row[1].__dict__
+    # paginate = User.query.join(UserProfile, User.id == UserProfile.user_id).add_columns(User.id, UserProfile.nickname).order_by(User.id.desc()).paginate(1, 10, False)
+    paginate = User.query.join(UserProfile, User.id == UserProfile.user_id).add_entity(UserProfile).order_by(User.id.desc()).paginate(1, 10, False)
+    print paginate.items
+    for (a, b) in paginate.items:
+        print a.id, b.user_id
+
+
 if __name__ == '__main__':
     # test_user()
     # test_blog()
     # test_transaction()
-    test_label()
+    # test_label()
+    test_join()

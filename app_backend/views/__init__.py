@@ -18,7 +18,6 @@ from flask import current_app, Response
 from sqlalchemy.exc import OperationalError
 from pika.exceptions import ConnectionClosed
 from flask import send_from_directory
-from flask_login import current_user
 from flask_principal import identity_changed, Identity, AnonymousIdentity
 from flask_principal import identity_loaded, RoleNeed, UserNeed
 
@@ -26,7 +25,8 @@ from flask import g, request, render_template, jsonify
 from flask import session, redirect, url_for, flash
 from flask_login import login_user
 from flask_login import logout_user
-from flask_login import current_user, login_required
+from flask_login import current_user
+from flask_login import login_required
 
 from app_backend.api.admin_role import get_admin_role_row_by_id
 from app_backend.lib.rabbit_mq import RabbitPriorityQueue
@@ -64,12 +64,12 @@ def load_user(user_id):
     # return LoginUser.query.get(int(user_id))
 
 
-@app.before_request
-def before_request():
-    """
-    当前用户信息
-    """
-    g.user = current_user
+# @app.before_request
+# def before_request():
+#     """
+#     当前用户信息
+#     """
+#     g.user = current_user
 
 
 @identity_loaded.connect_via(app)
@@ -120,7 +120,7 @@ def login():
     """
     # print current_user.__dict__
     # return json.dumps(current_user.__dict__)
-    if g.user is not None and g.user.is_authenticated:
+    if current_user and current_user.is_authenticated:
         return redirect(url_for('index'))
     from app_backend.forms.login import LoginForm
     form = LoginForm()
@@ -267,4 +267,17 @@ def test_other_permission():
     return Response('Only if you are other')
 
 
+@app.route('/performance/')
+# @login_required
+def performance():
+    """
+    性能测试
+    """
+    from app_backend.models import UserProfile
+    from app_backend.database import db
+    from random import randint
+    user_id = randint(1, 20)
+    row = UserProfile.query.filter(UserProfile.user_id == user_id).first()
+    db.session.commit()
+    return row.nickname
 

@@ -33,7 +33,7 @@
                         {% for error in form.type_withdraw.errors %}
                             <span class="help-block">{{ error }}</span>
                         {% endfor %}
-                        <span class="help-block">当前余额，钱包余额:{{ g.user.id | user_wallet }}，数字货币:{{ g.user.id | user_bit_coin }}</span>
+                        <span class="help-block">当前余额，钱包余额:{{ current_user.id | user_wallet }}，数字货币:{{ current_user.id | user_bit_coin }}</span>
                     </div>
                 </div>
                 <div class="form-group{% if form.money_apply.errors %} has-error{% endif %}">

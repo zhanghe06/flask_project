@@ -32,6 +32,7 @@ from app_common.tools.date_time import time_local_to_utc
 from config import PER_PAGE_BACKEND
 
 from app_backend.permissions import permission_order
+from app_backend.database import db
 
 bp_order = Blueprint('order', __name__, url_prefix='/order')
 
@@ -99,16 +100,21 @@ def lists(page=1):
     user_profile_put = aliased(UserProfile)
     user_profile_get = aliased(UserProfile)
 
-    pagination = Order.query. \
-        filter(*search_condition_order). \
-        outerjoin(user_profile_put, Order.apply_put_uid == user_profile_put.user_id). \
-        add_entity(user_profile_put). \
-        outerjoin(user_profile_get, Order.apply_get_uid == user_profile_get.user_id). \
-        add_entity(user_profile_get). \
-        order_by(Order.id.desc()). \
-        paginate(page, PER_PAGE_BACKEND, False)
-
-    return render_template('order/list.html', title='order_list', pagination=pagination, form=form)
+    try:
+        pagination = Order.query. \
+            filter(*search_condition_order). \
+            outerjoin(user_profile_put, Order.apply_put_uid == user_profile_put.user_id). \
+            add_entity(user_profile_put). \
+            outerjoin(user_profile_get, Order.apply_get_uid == user_profile_get.user_id). \
+            add_entity(user_profile_get). \
+            order_by(Order.id.desc()). \
+            paginate(page, PER_PAGE_BACKEND, False)
+        db.session.commit()
+        return render_template('order/list.html', title='order_list', pagination=pagination, form=form)
+    except Exception as e:
+        db.session.rollback()
+        flash(e.message, category='warning')
+        return redirect(url_for('index'))
 
 
 @bp_order.route('/add/', methods=['GET', 'POST'])

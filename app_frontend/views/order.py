@@ -36,6 +36,7 @@ from app_common.maps.status_rec import *
 from app_common.maps.status_delete import *
 from app_common.maps.status_audit import *
 from app_common.maps.type_payment import *
+from app_frontend.database import db
 
 from flask import Blueprint
 
@@ -75,14 +76,19 @@ def lists_put(page=1):
     if status_pay in STATUS_PAY_DICT:
         search_condition_order.append(Order.status_pay == status_pay)
 
-    pagination = Order.query. \
-        filter(*search_condition_order). \
-        outerjoin(UserProfile, Order.apply_get_uid == UserProfile.user_id). \
-        add_entity(UserProfile). \
-        order_by(Order.id.desc()). \
-        paginate(page, PER_PAGE_FRONTEND, False)
-
-    return render_template('order/put_list.html', title='order_put_list', pagination=pagination)
+    try:
+        pagination = Order.query. \
+            filter(*search_condition_order). \
+            outerjoin(UserProfile, Order.apply_get_uid == UserProfile.user_id). \
+            add_entity(UserProfile). \
+            order_by(Order.id.desc()). \
+            paginate(page, PER_PAGE_FRONTEND, False)
+        db.session.commit()
+        return render_template('order/put_list.html', title='order_put_list', pagination=pagination)
+    except Exception as e:
+        db.session.rollback()
+        flash(e.message, category='warning')
+        return redirect(url_for('index'))
 
 
 @bp_order.route('/get/list/')
@@ -106,14 +112,19 @@ def lists_get(page=1):
     if status_rec in STATUS_REC_DICT:
         search_condition_order.append(Order.status_rec == status_rec)
 
-    pagination = Order.query. \
-        filter(*search_condition_order). \
-        outerjoin(UserProfile, Order.apply_put_uid == UserProfile.user_id). \
-        add_entity(UserProfile). \
-        order_by(Order.id.desc()). \
-        paginate(page, PER_PAGE_FRONTEND, False)
-
-    return render_template('order/get_list.html', title='order_get_list', pagination=pagination)
+    try:
+        pagination = Order.query. \
+            filter(*search_condition_order). \
+            outerjoin(UserProfile, Order.apply_put_uid == UserProfile.user_id). \
+            add_entity(UserProfile). \
+            order_by(Order.id.desc()). \
+            paginate(page, PER_PAGE_FRONTEND, False)
+        db.session.commit()
+        return render_template('order/get_list.html', title='order_get_list', pagination=pagination)
+    except Exception as e:
+        db.session.rollback()
+        flash(e.message, category='warning')
+        return redirect(url_for('index'))
 
 
 @bp_order.route('/put/info/<int:order_id>/', methods=['GET', 'POST'])

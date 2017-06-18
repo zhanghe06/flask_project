@@ -115,15 +115,20 @@ def get_user_detail_rows(page=1, per_page=10, *args, **kwargs):
     :param kwargs:
     :return:
     """
-    rows = User.query. \
-        outerjoin(UserProfile, User.id == UserProfile.user_id). \
-        outerjoin(UserBank, User.id == UserBank.user_id). \
-        add_entity(UserProfile). \
-        add_entity(UserBank). \
-        filter(*args). \
-        filter_by(**kwargs). \
-        paginate(page, PER_PAGE_BACKEND, False)
-    return rows
+    try:
+        rows = User.query. \
+            outerjoin(UserProfile, User.id == UserProfile.user_id). \
+            outerjoin(UserBank, User.id == UserBank.user_id). \
+            add_entity(UserProfile). \
+            add_entity(UserBank). \
+            filter(*args). \
+            filter_by(**kwargs). \
+            paginate(page, PER_PAGE_BACKEND, False)
+        db.session.commit()
+        return rows
+    except Exception as e:
+        db.session.rollback()
+        raise e
 
 
 def lock(user_id):
@@ -162,48 +167,55 @@ def user_reg_stats(time_based='hour'):
     用户注册统计
     :return:
     """
-    # 按小时统计
-    if time_based == 'hour':
-        start_time, end_time = get_current_day_time_ends()
-        hours = get_hours()
-        result = dict(zip(hours, [0] * len(hours)))
-        rows = db.session \
-            .query(func.hour(User.create_time).label('hour'), func.count(User.id)) \
-            .filter(User.create_time >= time_local_to_utc(start_time), User.create_time <= time_local_to_utc(end_time)) \
-            .group_by('hour') \
-            .limit(len(hours)) \
-            .all()
-        result.update(dict(rows))
-        return [(hour, result[hour]) for hour in hours]
-    # 按日期统计
-    if time_based == 'date':
-        start_time, end_time = get_current_month_time_ends()
-        today = datetime.today()
-        days = get_days(year=today.year, month=today.month)
-        days_full = get_days(year=today.year, month=today.month, full=True)
-        result = dict(zip(days_full, [0] * len(days_full)))
-        rows = db.session \
-            .query(func.date(User.create_time).label('date'), func.count(User.id)) \
-            .filter(User.create_time >= time_local_to_utc(start_time), User.create_time <= time_local_to_utc(end_time)) \
-            .group_by('date') \
-            .limit(len(days_full)) \
-            .all()
-        result.update(dict(rows))
-        return [(days[i], result[day]) for i, day in enumerate(days_full)]
-    # 按月份统计
-    if time_based == 'month':
-        start_time, end_time = get_current_year_time_ends()
-        months = get_months(False)
-        months_zerofill = get_months()
-        result = dict(zip(months, [0] * len(months)))
-        rows = db.session \
-            .query(func.month(User.create_time).label('month'), func.count(User.id)) \
-            .filter(User.create_time >= time_local_to_utc(start_time), User.create_time <= time_local_to_utc(end_time)) \
-            .group_by('month') \
-            .limit(len(months)) \
-            .all()
-        result.update(dict(rows))
-        return [(months_zerofill[i], result[month]) for i, month in enumerate(months)]
+    try:
+        # 按小时统计
+        if time_based == 'hour':
+            start_time, end_time = get_current_day_time_ends()
+            hours = get_hours()
+            result = dict(zip(hours, [0] * len(hours)))
+            rows = db.session \
+                .query(func.hour(User.create_time).label('hour'), func.count(User.id)) \
+                .filter(User.create_time >= time_local_to_utc(start_time), User.create_time <= time_local_to_utc(end_time)) \
+                .group_by('hour') \
+                .limit(len(hours)) \
+                .all()
+            db.session.commit()
+            result.update(dict(rows))
+            return [(hour, result[hour]) for hour in hours]
+        # 按日期统计
+        if time_based == 'date':
+            start_time, end_time = get_current_month_time_ends()
+            today = datetime.today()
+            days = get_days(year=today.year, month=today.month)
+            days_full = get_days(year=today.year, month=today.month, full=True)
+            result = dict(zip(days_full, [0] * len(days_full)))
+            rows = db.session \
+                .query(func.date(User.create_time).label('date'), func.count(User.id)) \
+                .filter(User.create_time >= time_local_to_utc(start_time), User.create_time <= time_local_to_utc(end_time)) \
+                .group_by('date') \
+                .limit(len(days_full)) \
+                .all()
+            db.session.commit()
+            result.update(dict(rows))
+            return [(days[i], result[day]) for i, day in enumerate(days_full)]
+        # 按月份统计
+        if time_based == 'month':
+            start_time, end_time = get_current_year_time_ends()
+            months = get_months(False)
+            months_zerofill = get_months()
+            result = dict(zip(months, [0] * len(months)))
+            rows = db.session \
+                .query(func.month(User.create_time).label('month'), func.count(User.id)) \
+                .filter(User.create_time >= time_local_to_utc(start_time), User.create_time <= time_local_to_utc(end_time)) \
+                .group_by('month') \
+                .limit(len(months)) \
+                .all()
+            db.session.commit()
+            result.update(dict(rows))
+            return [(months_zerofill[i], result[month]) for i, month in enumerate(months)]
+    except Exception as e:
+        db.session.rollback()
+        raise e
 
 
 def user_active_stats(time_based='hour'):
@@ -211,45 +223,52 @@ def user_active_stats(time_based='hour'):
     用户激活统计
     :return:
     """
-    # 按小时统计
-    if time_based == 'hour':
-        start_time, end_time = get_current_day_time_ends()
-        hours = get_hours()
-        result = dict(zip(hours, [0] * len(hours)))
-        rows = db.session \
-            .query(func.hour(User.create_time).label('hour'), func.count(User.id)) \
-            .filter(User.create_time >= time_local_to_utc(start_time), User.create_time <= time_local_to_utc(end_time), User.status_active == STATUS_ACTIVE_OK) \
-            .group_by('hour') \
-            .limit(len(hours)) \
-            .all()
-        result.update(dict(rows))
-        return [(hour, result[hour]) for hour in hours]
-    # 按日期统计
-    if time_based == 'date':
-        start_time, end_time = get_current_month_time_ends()
-        today = datetime.today()
-        days = get_days(year=today.year, month=today.month)
-        days_full = get_days(year=today.year, month=today.month, full=True)
-        result = dict(zip(days_full, [0] * len(days_full)))
-        rows = db.session \
-            .query(func.date(User.create_time).label('date'), func.count(User.id)) \
-            .filter(User.create_time >= time_local_to_utc(start_time), User.create_time <= time_local_to_utc(end_time), User.status_active == STATUS_ACTIVE_OK) \
-            .group_by('date') \
-            .limit(len(days_full)) \
-            .all()
-        result.update(dict(rows))
-        return [(days[i], result[day]) for i, day in enumerate(days_full)]
-    # 按月份统计
-    if time_based == 'month':
-        start_time, end_time = get_current_year_time_ends()
-        months = get_months(False)
-        months_zerofill = get_months()
-        result = dict(zip(months, [0] * len(months)))
-        rows = db.session \
-            .query(func.month(User.create_time).label('month'), func.count(User.id)) \
-            .filter(User.create_time >= time_local_to_utc(start_time), User.create_time <= time_local_to_utc(end_time), User.status_active == STATUS_ACTIVE_OK) \
-            .group_by('month') \
-            .limit(len(months)) \
-            .all()
-        result.update(dict(rows))
-        return [(months_zerofill[i], result[month]) for i, month in enumerate(months)]
+    try:
+        # 按小时统计
+        if time_based == 'hour':
+            start_time, end_time = get_current_day_time_ends()
+            hours = get_hours()
+            result = dict(zip(hours, [0] * len(hours)))
+            rows = db.session \
+                .query(func.hour(User.create_time).label('hour'), func.count(User.id)) \
+                .filter(User.create_time >= time_local_to_utc(start_time), User.create_time <= time_local_to_utc(end_time), User.status_active == STATUS_ACTIVE_OK) \
+                .group_by('hour') \
+                .limit(len(hours)) \
+                .all()
+            db.session.commit()
+            result.update(dict(rows))
+            return [(hour, result[hour]) for hour in hours]
+        # 按日期统计
+        if time_based == 'date':
+            start_time, end_time = get_current_month_time_ends()
+            today = datetime.today()
+            days = get_days(year=today.year, month=today.month)
+            days_full = get_days(year=today.year, month=today.month, full=True)
+            result = dict(zip(days_full, [0] * len(days_full)))
+            rows = db.session \
+                .query(func.date(User.create_time).label('date'), func.count(User.id)) \
+                .filter(User.create_time >= time_local_to_utc(start_time), User.create_time <= time_local_to_utc(end_time), User.status_active == STATUS_ACTIVE_OK) \
+                .group_by('date') \
+                .limit(len(days_full)) \
+                .all()
+            db.session.commit()
+            result.update(dict(rows))
+            return [(days[i], result[day]) for i, day in enumerate(days_full)]
+        # 按月份统计
+        if time_based == 'month':
+            start_time, end_time = get_current_year_time_ends()
+            months = get_months(False)
+            months_zerofill = get_months()
+            result = dict(zip(months, [0] * len(months)))
+            rows = db.session \
+                .query(func.month(User.create_time).label('month'), func.count(User.id)) \
+                .filter(User.create_time >= time_local_to_utc(start_time), User.create_time <= time_local_to_utc(end_time), User.status_active == STATUS_ACTIVE_OK) \
+                .group_by('month') \
+                .limit(len(months)) \
+                .all()
+            db.session.commit()
+            result.update(dict(rows))
+            return [(months_zerofill[i], result[month]) for i, month in enumerate(months)]
+    except Exception as e:
+        db.session.rollback()
+        raise e

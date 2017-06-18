@@ -11,7 +11,7 @@
             <label for="invite_link">复制链接</label>
             <div class="input-group">
                 <!-- Target -->
-                <input class="form-control input-copy" rel="tooltip" title="推广链接地址" id="invite_link" value="{{ url_for('index', _external=True, i=g.user.id | user_invite_link) }}">
+                <input class="form-control input-copy" rel="tooltip" title="推广链接地址" id="invite_link" value="{{ url_for('index', _external=True, i=current_user.id | user_invite_link) }}">
                 <!-- Trigger -->
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="button" rel="tooltip" title="点击复制" data-clipboard-action="copy" data-clipboard-target="#invite_link">

@@ -22,6 +22,7 @@ from app_backend.models import User, UserProfile, ActiveItem
 from app_backend.api.active_item import get_active_item_rows
 from app_common.maps.type_active import *
 from app_backend.forms.active import ActiveAddForm
+from app_backend.database import db
 
 PER_PAGE_BACKEND = app.config['PER_PAGE_BACKEND']
 
@@ -65,17 +66,21 @@ def lists(page=1):
             ActiveItem.type == TYPE_ACTIVE_GIVE,
             ActiveItem.user_id == 0
         ]
-
-    pagination = ActiveItem.query. \
-        outerjoin(user_profile_put, ActiveItem.user_id == user_profile_put.user_id). \
-        add_entity(user_profile_put). \
-        outerjoin(user_profile_get, ActiveItem.sc_id == user_profile_get.user_id). \
-        add_entity(user_profile_get). \
-        filter(*condition). \
-        order_by(ActiveItem.id.desc()). \
-        paginate(page, PER_PAGE_BACKEND, False)
-
-    return render_template('active/list.html', title='active_list', pagination=pagination)
+    try:
+        pagination = ActiveItem.query. \
+            outerjoin(user_profile_put, ActiveItem.user_id == user_profile_put.user_id). \
+            add_entity(user_profile_put). \
+            outerjoin(user_profile_get, ActiveItem.sc_id == user_profile_get.user_id). \
+            add_entity(user_profile_get). \
+            filter(*condition). \
+            order_by(ActiveItem.id.desc()). \
+            paginate(page, PER_PAGE_BACKEND, False)
+        db.session.commit()
+        return render_template('active/list.html', title='active_list', pagination=pagination)
+    except Exception as e:
+        db.session.rollback()
+        flash(e.message, category='warning')
+        return redirect(url_for('index'))
 
 
 @bp_active.route('/add/', methods=['GET', 'POST'])

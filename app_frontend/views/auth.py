@@ -16,6 +16,7 @@ from flask import g, request, render_template, jsonify
 from flask import session, redirect, url_for, flash
 from flask_login import login_user
 from flask_login import logout_user
+from flask_login import current_user
 from itsdangerous import TimestampSigner, SignatureExpired, BadTimeSignature
 
 from app_common.maps import area_code_map
@@ -27,6 +28,7 @@ from app_frontend.api.user import edit_user
 from app_frontend.api.user import get_user_row_by_id
 from app_frontend.api.user_auth import get_user_auth_row
 from app_frontend.forms.login import LoginPhoneForm
+from app_frontend.forms.login import LoginForm
 
 
 SWITCH_LOGIN_ACCOUNT = app.config['SWITCH_LOGIN_ACCOUNT']
@@ -43,12 +45,11 @@ def index():
     """
     账号登录认证
     """
-    if g.user is not None and g.user.is_authenticated:
+    if current_user and current_user.is_authenticated:
         return redirect(url_for('index'))
     if not SWITCH_LOGIN_ACCOUNT:
         flash(u'账号登录功能关闭，暂不支持账号登录', 'warning')
         return redirect(url_for('index'))
-    from app_frontend.forms.login import LoginForm
     form = LoginForm()
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -88,7 +89,7 @@ def phone():
     """
     手机登录认证
     """
-    if g.user is not None and g.user.is_authenticated:
+    if current_user and current_user.is_authenticated:
         return redirect(url_for('index'))
     if not SWITCH_LOGIN_PHONE:
         flash(u'手机登录功能关闭，暂不支持手机登录', 'warning')
@@ -135,7 +136,7 @@ def email():
     """
     邮箱登录认证
     """
-    if g.user is not None and g.user.is_authenticated:
+    if current_user and current_user.is_authenticated:
         return redirect(url_for('index'))
     if not SWITCH_LOGIN_EMAIL:
         flash(u'邮箱登录功能关闭，暂不支持邮箱登录', 'warning')

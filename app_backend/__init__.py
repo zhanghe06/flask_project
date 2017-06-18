@@ -14,7 +14,7 @@ from flask import Flask
 from flask_login import LoginManager
 from flask_moment import Moment
 from flask_oauthlib.client import OAuth
-from flask_principal import Principal, Permission, RoleNeed
+from flask_principal import Principal
 
 from app_backend.lib.qiniu_store import QiNiuClient
 from app_backend.lib.redis_session import RedisSessionInterface

@@ -1238,6 +1238,103 @@ json.dumps({'result': False, 'msg': u'错误消息', 'location': 'http://www.bai
 OperationalError: (_mysql_exceptions.OperationalError) (2006, 'MySQL server has gone away')
 
 
+## sqlalchemy.exc.InvalidRequestError
+StatementError: (sqlalchemy.exc.InvalidRequestError) Can't reconnect until invalid transaction is rolled back
+
+检查配置
+```
+MariaDB [flask_project]> show global variables like "%timeout%";
++-----------------------------+----------+
+| Variable_name               | Value    |
++-----------------------------+----------+
+| connect_timeout             | 5        |
+| deadlock_timeout_long       | 50000000 |
+| deadlock_timeout_short      | 10000    |
+| delayed_insert_timeout      | 300      |
+| innodb_flush_log_at_timeout | 1        |
+| innodb_lock_wait_timeout    | 50       |
+| innodb_rollback_on_timeout  | OFF      |
+| interactive_timeout         | 28800    |
+| lock_wait_timeout           | 31536000 |
+| net_read_timeout            | 30       |
+| net_write_timeout           | 60       |
+| slave_net_timeout           | 3600     |
+| thread_pool_idle_timeout    | 60       |
+| wait_timeout                | 600      |
++-----------------------------+----------+
+14 rows in set (0.00 sec)
+```
+
+查看连接情况
+```
+MariaDB [flask_project]> show processlist;
++-----+------+------------------+---------------+---------+------+-------+------------------+----------+
+| Id  | User | Host             | db            | Command | Time | State | Info             | Progress |
++-----+------+------------------+---------------+---------+------+-------+------------------+----------+
+| 176 | root | 172.17.0.5:46672 | flask_project | Query   |    0 | init  | show processlist |    0.000 |
+| 180 | root | 172.17.0.1:39592 | flask_project | Sleep   |  284 |       | NULL             |    0.000 |
++-----+------+------------------+---------------+---------+------+-------+------------------+----------+
+2 rows in set (0.00 sec)
+```
+
+查看当前打开的连接的数量
+```
+MariaDB [flask_project]> show status like '%Threads_connected%';
++-------------------+-------+
+| Variable_name     | Value |
++-------------------+-------+
+| Threads_connected | 2     |
++-------------------+-------+
+1 row in set (0.01 sec)
+```
+
+修改连接超时时间（测试）
+```
+MariaDB [flask_project]> set global wait_timeout=6;
+```
+
+```
+MariaDB [flask_project]> show global variables like 'wait_timeout';
++---------------+-------+
+| Variable_name | Value |
++---------------+-------+
+| wait_timeout  | 600   |
++---------------+-------+
+1 row in set (0.00 sec)
+MariaDB [flask_project]> show variables like 'wait_timeout';
++---------------+-------+
+| Variable_name | Value |
++---------------+-------+
+| wait_timeout  | 28800 |
++---------------+-------+
+1 row in set (0.00 sec)
+MariaDB [flask_project]> show global status like 'uptime';
++---------------+--------+
+| Variable_name | Value  |
++---------------+--------+
+| Uptime        | 204519 |
++---------------+--------+
+1 row in set (0.00 sec)
+
+MariaDB [flask_project]> show global variables like 'max_allowed_packet';
++--------------------+----------+
+| Variable_name      | Value    |
++--------------------+----------+
+| max_allowed_packet | 16777216 |
++--------------------+----------+
+1 row in set (0.00 sec)
+```
+
+
+错误重现：
+当有事务没有提交或者没有回滚时，sqlalchemy 的连接回收时间（SQLALCHEMY_POOL_RECYCLE）大于数据库关闭等待连接时间（global wait_timeout）；
+一旦数据库连接超时自动断开，此时 sqlalchemy 尝试连接数据库，会出现 OperationalError: (_mysql_exceptions.OperationalError) (2006, 'MySQL server has gone away')
+
+处理方案：
+1. sqlalchemy 的超时时间 小于 数据库的超时时间
+2. 代码操作数据库，立即提交事务，错误回滚
+
+
 ## gunicorn [CRITICAL] WORKER TIMEOUT
 
 
@@ -1291,12 +1388,26 @@ OperationalError: (_mysql_exceptions.OperationalError) (2006, 'MySQL server has 
 ----结束1
 ```
 
+## 在 jinja2 macro 使用 current_user
+
+需要带使用上下文参数（with context）
+```
+{% from "macros/comments.html" import comment_form with context %}
+```
+
 
 ## 银行卡验证接口
 
 http://www.apistore.cn/
 
 http://v.gotoway.com/api/v4/bankCard?key=0341749f1adc9e4f47f6a936e7ed9b46&bankcard=123456
+
+
+## 参数优化
+
+连接池大小 == web进程数 == CPU核心数
+
+SQLALCHEMY_POOL_RECYCLE < wait_timeout
 
 
 ## Todo：

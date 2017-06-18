@@ -7,6 +7,8 @@
 @file: user.py
 @time: 2017/3/17 下午11:47
 """
+
+
 import json
 from datetime import datetime
 
@@ -45,6 +47,7 @@ from app_common.tools.ip import get_real_ip
 
 from app_backend.permissions import permission_user
 
+from app_backend.database import db
 
 SWITCH_EXPORT = get_conf('SWITCH_EXPORT')
 PER_PAGE_BACKEND = app.config['PER_PAGE_BACKEND']
@@ -102,16 +105,54 @@ def lists(page=1):
             flash(u'导出功能关闭，暂不支持导出', 'warning')
             return redirect(url_for('user.lists'))
         data_list = []
-        # query_sets = User.query. \
-        #     filter(*search_condition_user). \
-        #     outerjoin(UserProfile, User.id == UserProfile.user_id). \
-        #     filter(*search_condition_user_profile). \
-        #     outerjoin(UserBank, User.id == UserBank.user_id). \
-        #     filter(*search_condition_user_bank). \
-        #     add_entity(UserProfile). \
-        #     add_entity(UserBank). \
-        #     all()
-        query_sets = User.query. \
+        try:
+            query_sets = User.query. \
+                filter(*search_condition_user). \
+                outerjoin(user_profile_c, User.id == user_profile_c.user_id). \
+                filter(*search_condition_user_profile). \
+                outerjoin(user_profile_p, user_profile_c.user_pid == user_profile_p.user_id). \
+                outerjoin(Wallet, User.id == Wallet.user_id). \
+                outerjoin(BitCoin, User.id == BitCoin.user_id). \
+                outerjoin(Score, User.id == Score.user_id). \
+                outerjoin(Bonus, User.id == Bonus.user_id). \
+                add_entity(user_profile_c). \
+                add_entity(user_profile_p). \
+                add_entity(Wallet). \
+                add_entity(BitCoin). \
+                add_entity(Score). \
+                add_entity(Bonus). \
+                all()
+            db.session.commit()
+            column_names = [u'用户编号', u'用户名称', u'等级', u'手机号码', u'推荐人', u'钱包余额', u'数字货币', u'积分', u'奖金', u'激活状态', u'锁定状态', u'创建时间']
+            data_list.append(column_names)
+            for (user, user_profile_c, user_profile_p, wallet, bit_coin, score, bonus) in query_sets:
+                row = [
+                    user.id if user else '',
+                    user_profile_c.nickname if user_profile_c else '',
+                    user_profile_c.type_level if user_profile_c else 0,
+                    user_profile_c.phone if user_profile_c else '',
+                    user_profile_p.nickname if user_profile_p else '',
+                    wallet.amount_current if wallet else 0,
+                    bit_coin.amount if bit_coin else 0,
+                    score.amount if score else 0,
+                    bonus.amount if bonus else 0,
+                    user.status_active if user else 0,
+                    user.status_lock if user else 0,
+                    user.create_time if user else ''
+                ]
+                data_list.append(row)
+            return excel.make_response_from_array(
+                data_list,
+                "csv",
+                file_name="用户列表_%s" % datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            )
+        except Exception as e:
+            db.session.rollback()
+            flash(e.message, category='warning')
+            return redirect(url_for('index'))
+    # 处理查询
+    try:
+        pagination = User.query. \
             filter(*search_condition_user). \
             outerjoin(user_profile_c, User.id == user_profile_c.user_id). \
             filter(*search_condition_user_profile). \
@@ -126,56 +167,20 @@ def lists(page=1):
             add_entity(BitCoin). \
             add_entity(Score). \
             add_entity(Bonus). \
-            all()
-        column_names = [u'用户编号', u'用户名称', u'等级', u'手机号码', u'推荐人', u'钱包余额', u'数字货币', u'积分', u'奖金', u'激活状态', u'锁定状态', u'创建时间']
-        data_list.append(column_names)
-        for (user, user_profile_c, user_profile_p, wallet, bit_coin, score, bonus) in query_sets:
-            row = [
-                user.id if user else '',
-                user_profile_c.nickname if user_profile_c else '',
-                user_profile_c.type_level if user_profile_c else 0,
-                user_profile_c.phone if user_profile_c else '',
-                user_profile_p.nickname if user_profile_p else '',
-                wallet.amount_current if wallet else 0,
-                bit_coin.amount if bit_coin else 0,
-                score.amount if score else 0,
-                bonus.amount if bonus else 0,
-                user.status_active if user else 0,
-                user.status_lock if user else 0,
-                user.create_time if user else ''
-            ]
-            data_list.append(row)
-        return excel.make_response_from_array(
-            data_list,
-            "csv",
-            file_name="用户列表_%s" % datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            paginate(page, PER_PAGE_BACKEND, False)
+        db.session.commit()
+        return render_template(
+            'user/list.html',
+            title='user_list',
+            pagination=pagination,
+            form=form,
+            STATUS_LOCK_OK=STATUS_LOCK_OK,
+            STATUS_DEL_OK=STATUS_DEL_OK,
         )
-    # 处理查询
-    pagination = User.query. \
-        filter(*search_condition_user). \
-        outerjoin(user_profile_c, User.id == user_profile_c.user_id). \
-        filter(*search_condition_user_profile). \
-        outerjoin(user_profile_p, user_profile_c.user_pid == user_profile_p.user_id). \
-        outerjoin(Wallet, User.id == Wallet.user_id). \
-        outerjoin(BitCoin, User.id == BitCoin.user_id). \
-        outerjoin(Score, User.id == Score.user_id). \
-        outerjoin(Bonus, User.id == Bonus.user_id). \
-        add_entity(user_profile_c). \
-        add_entity(user_profile_p). \
-        add_entity(Wallet). \
-        add_entity(BitCoin). \
-        add_entity(Score). \
-        add_entity(Bonus). \
-        paginate(page, PER_PAGE_BACKEND, False)
-
-    return render_template(
-        'user/list.html',
-        title='user_list',
-        pagination=pagination,
-        form=form,
-        STATUS_LOCK_OK=STATUS_LOCK_OK,
-        STATUS_DEL_OK=STATUS_DEL_OK,
-    )
+    except Exception as e:
+        db.session.rollback()
+        flash(e.message, category='warning')
+        return redirect(url_for('index'))
 
 
 @bp_user.route('/add/')
