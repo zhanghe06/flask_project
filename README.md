@@ -1403,11 +1403,68 @@ http://www.apistore.cn/
 http://v.gotoway.com/api/v4/bankCard?key=0341749f1adc9e4f47f6a936e7ed9b46&bankcard=123456
 
 
+```
+{
+"error_code": 0,
+"reason": "Succes",
+"result": {
+    "abbreviation": "ABC",
+    "bankimage": "http://auth.apis.la/bank/3_ABC.png",
+    "bankname": "农业银行",
+    "banknum": "1030000",
+    "bankurl": "http://www.abchina.com/",
+    "cardlength": "19",
+    "cardname": "金穗通宝卡(银联卡)",
+    "cardprefixlength": "6",
+    "cardprefixnum": "622848",
+    "cardtype": "银联借记卡",
+    "enbankname": "Agricultural Bank of China",
+    "isLuhn": true,
+    "iscreditcard": 1,
+    "servicephone": "95599"
+},
+"ordersign": "20170621091044215952509756"
+}
+```
+
+认证类型：
+- 实名认证 （姓名、身份证号码）
+- 银行卡三要素认证 （银行卡姓名/卡号/身份证）
+- 银行卡四要素认证 （银行卡姓名/卡号/身份证/手机号）
+
+
 ## 参数优化
 
 连接池大小 == web进程数 == CPU核心数
 
 SQLALCHEMY_POOL_RECYCLE < wait_timeout
+
+
+```
+MariaDB [flask_project]> show global variables like 'max_connections';
++-----------------+-------+
+| Variable_name   | Value |
++-----------------+-------+
+| max_connections | 100   |
++-----------------+-------+
+1 row in set (0.00 sec)
+MariaDB [flask_project]> set global max_connections=1000;
+```
+set global max_connections=1000;
+
+
+## 流式处理的几种方式
+
+- HTML5 Server-Sent Events
+- Flask-SSE
+
+http://dormousehole.readthedocs.io/en/latest/patterns/streaming.html
+
+http://flask.pocoo.org/snippets/118/
+
+http://www.python-requests.org/en/master/user/advanced/#streaming-requests
+
+http://flask-sse.readthedocs.io/en/latest/quickstart.html
 
 
 ## Todo：
