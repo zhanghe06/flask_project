@@ -281,3 +281,34 @@ def performance():
     db.session.commit()
     return row.nickname
 
+
+@app.route('/stream/')
+def stream():
+    """
+    流式响应
+    http://0.0.0.0:8010/stream/
+    :return:
+    """
+    import time
+
+    def gen():
+        for c in 'Hello world!':
+            yield c
+            time.sleep(0.5)
+    return Response(gen())
+
+
+@app.route('/stream_with_context/')
+def stream_with_context():
+    """
+    http://0.0.0.0:8010/stream_with_context/?name=Administrator
+    :return:
+    """
+    import time
+    from flask import stream_with_context, request, Response
+
+    def generate():
+        for i in 'Hello %s!' % (request.args.get('name', '')):
+            time.sleep(0.5)
+            yield i
+    return Response(stream_with_context(generate()))

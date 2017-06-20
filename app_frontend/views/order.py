@@ -21,8 +21,9 @@ from flask import url_for
 from flask_login import current_user, login_required
 import flask_excel as excel
 
+from app_common.maps.status_active import STATUS_ACTIVE_NO
 from app_frontend import app
-from app_frontend.api.user_profile import get_p_uid_list
+from app_frontend.api.user_profile import get_p_uid_list, user_profile_is_complete
 from app_frontend.models import User, UserProfile, Order
 from app_frontend.api.order import get_order_rows, get_order_row, get_order_row_by_id, edit_order
 from app_frontend.api.user_bank import get_user_bank_row_by_id
@@ -62,13 +63,25 @@ def lists_put(page=1):
     """
     投资订单列表
     """
-    uid = current_user.id
+    user_id = current_user.id
+
+    # 判断基本信息和银行信息是否完整
+    if not user_profile_is_complete(user_id):
+        flash(u'请先完善基本信息', 'warning')
+        return redirect(url_for('user.profile'))
+    if not user_profile_is_complete(user_id):
+        flash(u'请先完善银行信息', 'warning')
+        return redirect(url_for('user.bank'))
+        # 判断是否激活
+    if current_user.status_active == int(STATUS_ACTIVE_NO):
+        flash(u'请先激活当前账号', 'warning')
+        return redirect(url_for('user.profile'))
 
     # 支付状态
     status_pay = request.args.get('status_pay', 0, type=int)
 
     search_condition_order = [
-        Order.apply_put_uid == uid,
+        Order.apply_put_uid == user_id,
         Order.status_rec == STATUS_REC_HOLDING,  # 默认未处理
         Order.status_delete == STATUS_DEL_NO,  # 默认未删除
     ]
@@ -98,13 +111,25 @@ def lists_get(page=1):
     """
     提现订单列表
     """
-    uid = current_user.id
+    user_id = current_user.id
+
+    # 判断基本信息和银行信息是否完整
+    if not user_profile_is_complete(user_id):
+        flash(u'请先完善基本信息', 'warning')
+        return redirect(url_for('user.profile'))
+    if not user_profile_is_complete(user_id):
+        flash(u'请先完善银行信息', 'warning')
+        return redirect(url_for('user.bank'))
+        # 判断是否激活
+    if current_user.status_active == int(STATUS_ACTIVE_NO):
+        flash(u'请先激活当前账号', 'warning')
+        return redirect(url_for('user.profile'))
 
     # 收款状态
     status_rec = request.args.get('status_rec', 0, type=int)
 
     search_condition_order = [
-        Order.apply_get_uid == uid,
+        Order.apply_get_uid == user_id,
         Order.status_rec == STATUS_REC_HOLDING,  # 默认未处理
         Order.status_delete == STATUS_DEL_NO,  # 默认未删除
     ]

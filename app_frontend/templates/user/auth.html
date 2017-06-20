@@ -25,7 +25,7 @@
                 <div class="form-group{% if form.auth_key.errors %} has-error{% endif %}">
                     {{ form.auth_key.label(class="col-sm-2 control-label") }}
                     <div class="col-sm-10">
-                        {{ form.auth_key(class="form-control", placeholder="登录账号") }}
+                        {{ form.auth_key(class="form-control", placeholder="登录账号[2-20位]", disabled="disabled") }}
                         {% for error in form.auth_key.errors %}
                             <span class="help-block">{{ error }}</span>
                         {% endfor %}
@@ -34,7 +34,7 @@
                 <div class="form-group{% if form.auth_secret.errors %} has-error{% endif %}">
                     {{ form.auth_secret.label(class="col-sm-2 control-label") }}
                     <div class="col-sm-10">
-                        {{ form.auth_secret(class="form-control", placeholder="登录密码") }}
+                        {{ form.auth_secret(class="form-control", placeholder="登录密码[6-20位]，若无需更改，请留空", maxlength="20") }}
                         {% for error in form.auth_secret.errors %}
                             <span class="help-block">{{ error }}</span>
                         {% endfor %}

@@ -11,7 +11,7 @@
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField, HiddenField
-from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
+from wtforms.validators import DataRequired, InputRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
 from flask_login import current_user
 from app_frontend.models import UserProfile
 from app_common.maps import area_code_list
@@ -91,6 +91,19 @@ class IdCardRepeatValidate(object):
             raise ValidationError(self.message or u'身份证号重复')
 
 
+class PasswordFormatValidate(object):
+    """
+    密码格式校验
+    """
+    def __init__(self, message=None):
+        self.message = message
+
+    def __call__(self, form, field):
+        password_len = len(field.data)
+        if password_len > 0 and (password_len < 6 or password_len > 20):
+            raise ValidationError(self.message or u'密码长度不符')
+
+
 class UserProfileForm(FlaskForm):
     """
     用户基本信息表单
@@ -102,7 +115,11 @@ class UserProfileForm(FlaskForm):
     area_code_choices = []
     for m, n in enumerate(area_code_list):
         area_code_choices.append((m, n))
-    area_id = SelectAreaCode(u'手机区号', default='0', choices=area_code_choices, validators=[DataRequired()])
+    area_id = SelectAreaCode(u'手机区号',
+                             default='0',
+                             choices=area_code_choices,
+                             validators=[InputRequired(u'请选择手机区号')]
+                             )
     area_code = StringField('Area Code')
     phone = StringField(u'手机号码', validators=[
         DataRequired(u'手机号码不能为空'),
@@ -126,7 +143,9 @@ class UserAuthForm(FlaskForm):
     id = HiddenField('Id', validators=[DataRequired()])
     type_auth = StringField(u'账号类型')
     auth_key = StringField(u'登录账号')
-    auth_secret = StringField(u'登录密码')
+    auth_secret = PasswordField(u'登录密码', validators=[
+        PasswordFormatValidate()
+    ])
     status_verified = CheckBoxBS(u'认证状态')
     create_time = DateTimeField(u'创建时间')
     update_time = DateTimeField(u'更新时间')
