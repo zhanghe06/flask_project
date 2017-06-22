@@ -394,6 +394,12 @@ NoneOf          验证输入不是一组可能值中的一个
 注意事项：
 NumberRange 校验只对数值类型（IntegerField，FloadField，DecimalField）生效；字符串类型（StringField）不生效
 
+DataRequired, InputRequired 的区别
+
+- DataRequired 检查类型转换后的值，是否为真（即 if field.data）
+- InputRequired 检查原始输入的值，是否为真
+
+
 ### Message Flashing
 
 闪现消息 定义4种类型 success info warning danger
