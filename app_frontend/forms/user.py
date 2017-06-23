@@ -9,6 +9,8 @@
 """
 
 
+from flask import session
+import re
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField, HiddenField
 from wtforms.validators import DataRequired, InputRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
@@ -18,19 +20,25 @@ from app_common.maps import area_code_list
 from app_frontend.api.user_auth import get_user_auth_row
 from app_frontend.api.user_profile import get_user_profile_row
 from app_frontend.forms import SelectAreaCode, CheckBoxBS
+from app_frontend import app
 
 
-def reg_email_repeat(form, field):
+class EmailRepeatValidate(object):
     """
     邮箱重复校验
     """
-    condition = {
-        'type_auth': 'email',
-        'auth_key': field.data
-    }
-    row = get_user_auth_row(**condition)
-    if row:
-        raise ValidationError(u'注册邮箱重复')
+    def __init__(self, message=None):
+        self.message = message
+
+    def __call__(self, form, field):
+        condition = [
+            UserProfile.email == field.data,
+            UserProfile.user_id != current_user.get_id()
+        ]
+        row = get_user_profile_row(*condition)
+
+        if row:
+            raise ValidationError(self.message or u'电子邮箱重复')
 
 
 class PhoneFormatValidate(object):
@@ -104,6 +112,27 @@ class PasswordFormatValidate(object):
             raise ValidationError(self.message or u'密码长度不符')
 
 
+class SmsCodeValidate(object):
+    """
+    短信验证码校验
+    """
+    def __init__(self, message=None):
+        self.message = message
+
+        self._reg = re.compile(ur'^\d{6}$')
+
+    def __call__(self, form, field):
+        data = field.data
+        if not self._reg.match(data):
+            raise ValidationError(self.message or u"短信验证码格式错误")
+
+        code_key = '%s:%s' % ('sms_code', 'edit')
+        # print session.get(code_key), type(session.get(code_key)), data, type(data)
+        # if session.get(code_key) != data:
+        if not app.config.get('TEST') and session.get(code_key) != data:
+            raise ValidationError(self.message or u"短信验证码校验错误")
+
+
 class UserProfileForm(FlaskForm):
     """
     用户基本信息表单
@@ -111,7 +140,11 @@ class UserProfileForm(FlaskForm):
     user_pid = StringField(u'推荐人')
     nickname = StringField(u'用户名称')
     avatar_url = StringField(u'用户头像')
-    email = StringField(u'电子邮箱')
+    email = StringField(u'电子邮箱', validators=[
+        DataRequired(u'邮箱不能为空'),
+        Email(u'邮箱格式不对'),
+        EmailRepeatValidate()
+    ])
     area_code_choices = []
     for m, n in enumerate(area_code_list):
         area_code_choices.append((m, n))
@@ -126,7 +159,16 @@ class UserProfileForm(FlaskForm):
         PhoneFormatValidate(),
         PhoneRepeatValidate()
     ])
+    sms = StringField(u'短信验证码', validators=[
+        DataRequired(u'短信验证码不能为空'),
+        Length(min=6, max=6, message=u'短信验证码长度不符'),
+        SmsCodeValidate()
+    ])
     birthday = DateField(u'出生日期')
+    real_name = StringField(u'真实姓名', validators=[
+        DataRequired(u'真实姓名不能为空'),
+        Length(min=2, max=20, message=u'真实姓名长度不符')
+    ])
     id_card = StringField(u'身份证号', validators=[
         DataRequired(u'身份证号不能为空'),
         Length(min=18, max=18, message=u'身份证号长度不符'),
@@ -157,7 +199,7 @@ class UserBankForm(FlaskForm):
     """
     account_name = StringField(u'账户姓名', validators=[
         DataRequired(u'账户姓名不能为空'),
-        Length(min=2, max=4, message=u'账户姓名长度不符'),
+        Length(min=2, max=20, message=u'账户姓名长度不符'),
     ])
     bank_name = StringField(u'银行名称', validators=[DataRequired(u'银行名称不能为空')])
     bank_address = StringField(u'支行名称', validators=[DataRequired(u'支行名称不能为空')])

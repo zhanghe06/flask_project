@@ -13,6 +13,7 @@
 SMS_CODE_REG = u'【网站签名】%s，是您注册的验证码'
 SMS_CODE_LOGIN = u'【网站签名】%s，是您登录的验证码'
 SMS_CODE_RESET = u'【网站签名】%s，是您重置密码的验证码'
+SMS_CODE_EDIT = u'【网站签名】%s，是您修改资料的验证码'
 
 # 订单通知
 NOTICE_ORDER_CREATE = u'【网站签名】您的订单已经创建成功'

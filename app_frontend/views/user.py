@@ -14,6 +14,7 @@ import traceback
 
 from flask import abort
 from flask import render_template, request, flash, redirect, url_for
+from flask import session
 from flask_login import current_user, login_required
 
 from app_frontend.lib.rabbit_mq import RabbitDelayQueue, RabbitPriorityQueue
@@ -21,7 +22,7 @@ from app_frontend.lib.rabbit_mq import RabbitDelayQueue, RabbitPriorityQueue
 from app_common.maps import area_code_map
 from app_common.maps.status_delete import *
 from app_common.maps.status_active import *
-from app_common.tools import md5
+from app_common.tools import md5, get_randint
 from app_frontend import app
 from app_frontend.forms.user import UserProfileForm, UserAuthForm, UserBankForm
 from app_frontend.api.user_profile import get_user_profile_row_by_id, edit_user_profile, get_team_tree
@@ -34,6 +35,8 @@ from datetime import datetime
 from flask import Blueprint
 
 PER_PAGE_FRONTEND = app.config['PER_PAGE_FRONTEND']
+SMS_CODE_EDIT = app.config['SMS_CODE_EDIT']
+EXCHANGE_NAME = app.config['EXCHANGE_NAME']
 
 bp_user = Blueprint('user', __name__, url_prefix='/user')
 
@@ -174,6 +177,7 @@ def profile():
             form.phone.data = user_info.phone
             form.email.data = user_info.email
             form.birthday.data = user_info.birthday
+            form.real_name.data = user_info.real_name
             form.id_card.data = user_info.id_card
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -418,3 +422,31 @@ def ajax_self_active():
             print traceback.print_exc()
             return json.dumps({'error': e.message})
     abort(404)
+
+
+@bp_user.route('/ajax/get_sms_code/', methods=['GET', 'POST'])
+@login_required
+def ajax_get_sms_code():
+    """
+    获取短信验证码
+    :return:
+    """
+    # 获取短信验证码
+    area_id = request.args.get('area_id', '', type=str)
+    area_code = area_code_map.get(area_id, '86')
+    mobile = request.args.get('phone', '', type=str)
+    mobile_iso = '%s%s' % (area_code, mobile)
+
+    sms_code = str(get_randint())
+    code_key = '%s:%s' % ('sms_code', 'edit')
+    session[code_key] = sms_code
+
+    sms_content = SMS_CODE_EDIT % sms_code
+    # sms_client = SmsChuangLanIsoApi(UN, PW)
+    # result = sms_client.send_international(mobile_iso, sms_content)
+
+    # 推送短信优先级队列
+    q = RabbitPriorityQueue(exchange=EXCHANGE_NAME, queue_name='send_sms_p')
+    q.put({'mobile': mobile_iso, 'sms_content': sms_content}, 20)
+
+    return json.dumps({'result': True})

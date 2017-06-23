@@ -15,6 +15,7 @@ from wtforms import StringField, PasswordField, BooleanField, DateField, DateTim
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress, Regexp, AnyOf
 from app_frontend.forms import SelectAreaCode
 
+from app_frontend import app
 from app_frontend.api.user_auth import get_user_auth_row
 
 
@@ -57,6 +58,29 @@ class ChineseNameValidate(object):
             raise ValidationError(self.message or u"请输入正确的中文姓名")
 
 
+class CaptchaValidate(object):
+    """
+    图形验证码校验
+    """
+    def __init__(self, message=None):
+        self.message = message
+
+        self._reg = re.compile(ur'^\w{4}$')
+
+    def __call__(self, form, field):
+        data = field.data
+        if not self._reg.match(data):
+            raise ValidationError(self.message or u"图形验证码格式错误")
+
+        code_key = '%s:%s' % ('code_str', 'reg')
+        code_str = session.get(code_key)
+        if not code_str:
+            raise ValidationError(self.message or u"图形验证码过期失效")
+        # print session.get(code_key), type(session.get(code_key)), data, type(data)
+        if session.get(code_key).upper() != data.upper():
+            raise ValidationError(self.message or u"图形验证码校验错误")
+
+
 class SmsCodeValidate(object):
     """
     短信验证码校验
@@ -73,7 +97,7 @@ class SmsCodeValidate(object):
 
         code_key = '%s:%s' % ('sms_code', 'reg')
         # print session.get(code_key), type(session.get(code_key)), data, type(data)
-        if session.get(code_key) != data:
+        if not app.config.get('TEST') and session.get(code_key) != data:
             raise ValidationError(self.message or u"短信验证码校验错误")
 
 
@@ -170,6 +194,11 @@ class RegForm(FlaskForm):
     confirm = PasswordField(u'确认密码', validators=[
         DataRequired(message=u'密码不能为空'),
         Length(min=6, max=20, message=u'密码长度不符'),
+    ])
+    captcha = StringField(u'图形验证码', validators=[
+        DataRequired(u'图形验证码不能为空'),
+        Length(min=4, max=4, message=u'图形验证码长度不符'),
+        CaptchaValidate()
     ])
     accept_agreement = BooleanField('I accept the agreement', validators=[
         DataRequired(message=u'请阅读并同意注册协议')

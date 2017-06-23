@@ -11,9 +11,10 @@
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField, HiddenField
-from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
+from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress, \
+    InputRequired
 from flask_login import current_user
-from app_backend.models import UserProfile
+from app_backend.models import UserProfile, UserAuth
 from app_backend.forms import SelectBS, CheckBoxBS
 from app_common.maps import status_lock_list
 from app_common.maps import status_active_list
@@ -22,6 +23,7 @@ from app_backend.api.user_auth import get_user_auth_row
 
 from app_backend.api.user_profile import get_user_profile_row
 from app_backend.forms import SelectAreaCode, CheckBoxBS
+from app_common.maps.type_auth import TYPE_AUTH_ACCOUNT
 
 
 def reg_email_repeat(form, field):
@@ -95,12 +97,43 @@ class IdCardRepeatValidate(object):
             raise ValidationError(self.message or u'身份证号重复')
 
 
+class RegAccountRepeatValidate(object):
+    """
+    登录账号重复校验
+    """
+    def __init__(self, message=None):
+        self.message = message
+
+    def __call__(self, form, field):
+        condition = [
+            UserAuth.type_auth == TYPE_AUTH_ACCOUNT,
+            UserAuth.auth_key == field.data,
+            UserAuth.user_id != form.user_id.data
+        ]
+        row = get_user_auth_row(*condition)
+        if row:
+            raise ValidationError(self.message or u'登录账号重复')
+
+
+class PasswordFormatValidate(object):
+    """
+    密码格式校验
+    """
+    def __init__(self, message=None):
+        self.message = message
+
+    def __call__(self, form, field):
+        password_len = len(field.data)
+        if password_len > 0 and (password_len < 6 or password_len > 20):
+            raise ValidationError(self.message or u'密码长度不符')
+
+
 class UserProfileForm(FlaskForm):
     """
     用户基本信息表单
     """
     user_id = HiddenField('User Id', validators=[DataRequired()])
-    user_pid = StringField(u'推荐人ID', validators=[DataRequired()])
+    user_pid = StringField(u'推荐人ID', validators=[InputRequired()])
     nickname = StringField(u'用户名称')
     avatar_url = StringField(u'用户头像')
     email = StringField(u'电子邮箱')
@@ -115,6 +148,10 @@ class UserProfileForm(FlaskForm):
         PhoneRepeatValidate()
     ])
     birthday = DateField(u'出生日期')
+    real_name = StringField(u'真实姓名', validators=[
+        DataRequired(u'真实姓名不能为空'),
+        Length(min=2, max=20, message=u'真实姓名长度不符')
+    ])
     id_card = StringField(u'身份证号', validators=[
         DataRequired(u'身份证号不能为空'),
         Length(min=18, max=18, message=u'身份证号长度不符'),
@@ -131,8 +168,14 @@ class UserAuthForm(FlaskForm):
     id = HiddenField('Id', validators=[DataRequired()])
     user_id = HiddenField('User Id', validators=[DataRequired()])
     type_auth = StringField(u'账号类型')
-    auth_key = StringField(u'登录账号')
-    auth_secret = StringField(u'登录密码')
+    auth_key = StringField(u'登录账号', validators=[
+        DataRequired(u'登录账号不能为空'),
+        Length(min=2, max=20, message=u'登录账号长度不符'),
+        RegAccountRepeatValidate()
+    ])
+    auth_secret = PasswordField(u'登录密码', validators=[
+        PasswordFormatValidate()
+    ])
     status_verified = CheckBoxBS(u'认证状态')
     create_time = DateTimeField(u'创建时间')
     update_time = DateTimeField(u'更新时间')
@@ -143,10 +186,13 @@ class UserBankForm(FlaskForm):
     用户基本银行信息表单
     """
     user_id = HiddenField(u'用户ID', validators=[DataRequired()])
-    account_name = StringField(u'账户姓名')
-    bank_name = StringField(u'银行名称')
-    bank_address = StringField(u'支行名称')
-    bank_account = StringField(u'银行卡号')
+    account_name = StringField(u'账户姓名', validators=[
+        DataRequired(u'账户姓名不能为空'),
+        Length(min=2, max=20, message=u'账户姓名长度不符'),
+    ])
+    bank_name = StringField(u'银行名称', validators=[DataRequired(u'银行名称不能为空')])
+    bank_address = StringField(u'支行名称', validators=[DataRequired(u'支行名称不能为空')])
+    bank_account = StringField(u'银行卡号', validators=[DataRequired(u'银行卡号不能为空')])
     status_verified = CheckBoxBS(u'认证状态')
     status_delete = StringField(u'删除状态')
     create_time = DateTimeField(u'创建时间')

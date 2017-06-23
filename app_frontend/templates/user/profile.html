@@ -67,11 +67,36 @@
                         {% endfor %}
                     </div>
                 </div>
+                <div class="form-group{% if form.sms.errors %} has-error{% endif %}">
+                    {{ form.sms.label(class="col-sm-2 control-label") }}
+                    <div class="col-sm-10">
+                        <div class="input-group">
+                            {{ form.sms(class="form-control", placeholder="短信验证码", maxlength=6) }}
+                            <span class="input-group-btn">
+                                <button id="get_sms_btn" class="btn btn-default" type="button">
+                                    <span class="glyphicon glyphicon-envelope"></span> <i>发送短信</i>
+                                </button>
+                            </span>
+                        </div>
+                        {% for error in form.sms.errors %}
+                            <span class="help-block">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
                 <div class="form-group{% if form.birthday.errors %} has-error{% endif %}">
                     {{ form.birthday.label(class="col-sm-2 control-label") }}
                     <div class="col-sm-10">
                         {{ form.birthday(class="form-control", placeholder="Birthday", type="date") }}
                         {% for error in form.birthday.errors %}
+                            <span class="help-block">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="form-group{% if form.real_name.errors %} has-error{% endif %}">
+                    {{ form.real_name.label(class="col-sm-2 control-label") }}
+                    <div class="col-sm-10">
+                        {{ form.real_name(class="form-control", placeholder="真实姓名") }}
+                        {% for error in form.real_name.errors %}
                             <span class="help-block">{{ error }}</span>
                         {% endfor %}
                     </div>
@@ -187,5 +212,50 @@ function self_active() {
     });
     return false;
 }
+</script>
+
+<script>
+    // 倒计时
+    var countdown=60;
+    function set_time(val) {
+        if (countdown == 0) {
+            val.removeAttr("disabled");
+            val.find("i").first().html("发送短信");
+            countdown = 60;
+            return;
+        } else {
+            val.attr("disabled", true);
+            val.find("i").first().html("重新发送(" + countdown + ")");
+            countdown--;
+        }
+        setTimeout(function () {
+            set_time(val)
+        }, 1000)
+    }
+    // 点击发送手机验证码到手机 - ajax
+    $('#get_sms_btn').click(function () {
+        var cur_obj = $(this);
+        var phone = $('#phone');
+        // 校验手机号码，图形验证码
+        if(!phone.val()){
+            phone.focus();
+            return;
+        }
+        $.getJSON('{{ url_for('user.ajax_get_sms_code') }}',
+            {
+                area_id: area_id.val(),
+                phone: phone.val()
+            }, function (data) {
+                var result = data.result;  // true/false
+                if(result==false){
+                    //console.log(result);
+                    return false;
+                }else {
+                    $('#sms').focus();
+                    set_time(cur_obj);
+                }
+            }
+        );
+    });
 </script>
 {% endblock %}

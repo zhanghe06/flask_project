@@ -9,11 +9,11 @@
         {{ form.csrf_token }}
         {# 标签导航 #}
 
-        <ul class="nav nav-tabs">  {# 填充整个导航条：nav-justified #}
-            <li role="presentation" class="active"><a href="{{ url_for('reg.index') }}">账号注册</a></li>
-            <li role="presentation"><a href="{{ url_for('reg.phone') }}">手机注册</a></li>
-            <li role="presentation"><a href="{{ url_for('reg.email') }}">邮箱注册</a></li>
-        </ul>
+{#        <ul class="nav nav-tabs">  {# 填充整个导航条：nav-justified #}
+{#            <li role="presentation" class="active"><a href="{{ url_for('reg.index') }}">账号注册</a></li>#}
+{#            <li role="presentation"><a href="{{ url_for('reg.phone') }}">手机注册</a></li>#}
+{#            <li role="presentation"><a href="{{ url_for('reg.email') }}">邮箱注册</a></li>#}
+{#        </ul>#}
         <div class="form-group">{{ form.user_pid }}</div>
         <div class="form-group">
             {{ form.user_pid.label(class="col-sm-2 control-label") }}
@@ -47,6 +47,18 @@
                 {% for error in form.confirm.errors %}
                     <span class="help-block">{{ error }}</span>
                 {% endfor %}
+            </div>
+        </div>
+        <div class="form-group{% if form.captcha.errors %} has-error{% endif %}">
+            {{ form.captcha.label(class="col-sm-2 col-xs-12 control-label") }}
+            <div class="col-sm-8 col-xs-8">
+                {{ form.captcha(class="form-control", placeholder="图形验证码", maxlength=4) }}
+                {% for error in form.captcha.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="col-sm-2 col-xs-2">
+                <img src="{{ url_for('captcha.get_code', code_type='reg') }}" rel="tooltip" title="看不清？换一张" id="captcha_img" onclick="refresh_code();">
             </div>
         </div>
         <div class="form-group{% if form.accept_agreement.errors %} has-error{% endif %}">
@@ -86,5 +98,11 @@
         // console.log(newValue);
         // console.log(oldValue);
     });
+
+    // 刷新验证码
+    function refresh_code() {
+        var now = new Date();
+        $('#captcha_img')[0].setAttribute("src", "{{ url_for('captcha.get_code', code_type='reg') }}" + "?t=" + now.getTime());
+    }
 </script>
 {% endblock %}

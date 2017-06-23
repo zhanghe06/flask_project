@@ -207,7 +207,7 @@ def email():
             add_user_profile(user_profile_data)
 
             if user_id:
-                flash(u'%s, Thanks for registering' % form.email.data, 'success')
+                flash(u'%s, 恭喜您注册成功' % form.email.data, 'success')
                 # todo 发送邮箱校验邮件
                 # email_validate_content = {
                 #     'mail_from': 'System Support<support@zhendi.me>',
@@ -224,7 +224,7 @@ def email():
                 #     flash(send_email_result.get('message'), 'success')
                 # https://www.***.com/email/signup/uuid
             else:
-                flash(u'%s, Sorry, register error' % form.email.data, 'warning')
+                flash(u'%s, 很遗憾注册失败' % form.email.data, 'warning')
             return redirect(url_for('auth.index'))
         # 闪现消息 success info warning danger
         # flash(form.errors, 'warning')  # 调试打开
@@ -271,10 +271,10 @@ def email_check():
         from app_frontend.api.user_auth import update_user_auth_rows
         result = update_user_auth_rows({'verified': 1}, **{'type_auth': TYPE_AUTH_EMAIL, 'auth_key': email})
         if result == 1:
-            flash(u'%s, Your mailbox has been verified' % email, 'success')
+            flash(u'%s, 邮箱成功激活' % email, 'success')
             return redirect(url_for('auth.index'))
         else:
-            flash(u'%s, Sorry, Your mailbox validation failed' % email, 'warning')
+            flash(u'%s, 邮箱激活失败' % email, 'warning')
     except SignatureExpired as e:
         # 处理签名超时
         flash(e.message, 'warning')

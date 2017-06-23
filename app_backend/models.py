@@ -435,6 +435,7 @@ class UserProfile(Base):
     area_code = Column(String(4), nullable=False, server_default=text("''"))
     phone = Column(String(20), nullable=False, server_default=text("''"))
     birthday = Column(Date, nullable=False, server_default=text("'1900-01-01'"))
+    real_name = Column(String(20), nullable=False, server_default=text("''"))
     id_card = Column(String(32), nullable=False, server_default=text("''"))
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))

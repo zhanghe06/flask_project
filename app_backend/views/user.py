@@ -229,16 +229,18 @@ def auth(user_id):
         'type_auth': TYPE_AUTH_ACCOUNT,
     }
     user_auth_info = get_user_auth_row(**condition)
-    if request.method == 'GET':
-        if user_auth_info:
+
+    if user_auth_info:
+        form.id.data = user_auth_info.id
+        form.type_auth.data = user_auth_info.type_auth
+        form.create_time.data = user_auth_info.create_time
+        form.update_time.data = user_auth_info.update_time
+        if request.method == 'GET':
             form.id.data = user_auth_info.id
             form.user_id.data = user_id
-            form.type_auth.data = user_auth_info.type_auth
             form.auth_key.data = user_auth_info.auth_key
             form.auth_secret.data = ''
             form.status_verified.data = user_auth_info.status_verified
-            form.create_time.data = user_auth_info.create_time
-            form.update_time.data = user_auth_info.update_time
     if request.method == 'POST':
         if form.validate_on_submit():
             # 权限校验
@@ -263,11 +265,11 @@ def auth(user_id):
                 user_auth_data['auth_secret'] = md5(form.auth_secret.data)
             result = edit_user_auth(form.id.data, user_auth_data)
             if result:
-                form.create_time.data = user_auth_info.create_time
                 flash(u'修改成功', 'success')
+                return redirect(url_for('.auth', user_id=user_id))
+            else:
+                flash(u'信息不变', 'info')
         else:
-            form.create_time.data = user_auth_info.create_time
-            form.update_time.data = user_auth_info.update_time
             flash(u'修改失败', 'warning')
         # flash(form.errors, 'warning')  # 调试打开
 
@@ -285,15 +287,17 @@ def bank(user_id):
     """
     form = UserBankForm(request.form)
     bank_info = get_user_bank_row_by_id(user_id)
-    if request.method == 'GET':
-        form.user_id.data = user_id
-        if bank_info:
+
+    if bank_info:
+        form.status_verified.data = bank_info.status_verified
+        form.create_time.data = bank_info.create_time
+        form.update_time.data = bank_info.update_time
+        if request.method == 'GET':
+            form.user_id.data = user_id
             form.bank_name.data = bank_info.bank_name
             form.bank_address.data = bank_info.bank_address
             form.bank_account.data = bank_info.bank_account
             form.status_verified.data = bank_info.status_verified
-            form.create_time.data = bank_info.create_time
-            form.update_time.data = bank_info.update_time
     if request.method == 'POST':
         if form.validate_on_submit():
             current_time = datetime.utcnow()
@@ -310,12 +314,10 @@ def bank(user_id):
                 bank_data['create_time'] = current_time
                 result = add_user_bank(bank_data)
             if result:
-                # 处理表单时间为空
-                form.create_time.data = bank_info.create_time
                 flash(u'修改成功', 'success')
+            else:
+                flash(u'信息不变', 'info')
         else:
-            form.create_time.data = bank_info.create_time
-            form.update_time.data = bank_info.update_time
             flash(u'修改失败', 'warning')
         # flash(form.errors, 'warning')  # 调试打开
 
@@ -332,20 +334,21 @@ def profile(user_id):
     """
     form = UserProfileForm(request.form)
     user_info = get_user_profile_row_by_id(user_id)
-    if request.method == 'GET':
-        form.user_id.data = user_id
-        if user_info:
-            form.user_pid.data = user_info.user_pid
-            form.nickname.data = user_info.nickname
-            form.avatar_url.data = user_info.avatar_url
-            form.email.data = user_info.email
+    if user_info:
+        form.user_pid.data = user_info.user_pid
+        form.nickname.data = user_info.nickname
+        form.avatar_url.data = user_info.avatar_url
+        form.create_time.data = user_info.create_time
+        form.update_time.data = user_info.update_time
+        if request.method == 'GET':
+            form.user_id.data = user_id
             form.area_id.data = user_info.area_id
             form.area_code.data = user_info.area_code
             form.phone.data = user_info.phone
+            form.email.data = user_info.email
             form.birthday.data = user_info.birthday
+            form.real_name.data = user_info.real_name
             form.id_card.data = user_info.id_card
-            form.create_time.data = user_info.create_time
-            form.update_time.data = user_info.update_time
     if request.method == 'POST':
         if form.validate_on_submit():
             current_time = datetime.utcnow()
@@ -362,12 +365,11 @@ def profile(user_id):
             }
             result = edit_user_profile(user_id, user_data)
             if result:
-                # 处理表单时间为空
-                form.create_time.data = user_info.create_time
                 flash(u'修改成功', 'success')
+                return redirect(url_for('.profile', user_id=user_id))
+            else:
+                flash(u'信息不变', 'info')
         else:
-            form.create_time.data = user_info.create_time
-            form.update_time.data = user_info.update_time
             flash(u'修改失败', 'warning')
     # flash(form.errors, 'warning')  # 调试打开
 
