@@ -209,7 +209,7 @@ class Message(Base):
     id = Column(Integer, primary_key=True)
     send_user_id = Column(Integer, nullable=False, index=True)
     receive_user_id = Column(Integer, nullable=False, index=True)
-    content_send = Column(String(512), nullable=False, server_default=text("''"))
+    content = Column(String(512), nullable=False, server_default=text("''"))
     status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
     delete_time = Column(DateTime)
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))

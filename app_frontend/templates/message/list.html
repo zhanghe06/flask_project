@@ -1,13 +1,31 @@
+<!-- extend from base layout -->
 {% extends "layout.html" %}
 
-{% block content %}
-<div class="container-fluid">
-    <ol class="breadcrumb">
-        <li><a href="/">后台管理</a></li>
-        <li><a href="javascript:void(0);" onclick="$('#menu-message').trigger('click');">留言管理</a></li>
-        <li class="active">留言列表</li>
-    </ol>
+{% block extra_css %}
 
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+    <!-- header -->
+    <nav class="sub-header row container-fluid">
+        <ol class="breadcrumb">
+            <li><a href="/">首页</a></li>
+            <li class="active">消息中心</li>
+            <li class="active">留言记录</li>
+        </ol>
+        <div class="btn-group pull-right" role="group" aria-label="...">
+        {% if request.query_string == 'msg_type=send' %}
+            <a type="button" class="btn btn-default" href="{{ url_for('message.lists') }}">接收</a>
+            <a type="button" class="btn btn-default active">发送</a>
+        {% else %}
+            <a type="button" class="btn btn-default active">接收</a>
+            <a type="button" class="btn btn-default" href="{{ url_for('message.lists', msg_type='send') }}">发送</a>
+        {% endif %}
+        </div>
+    </nav>
+
+    <hr/>
     <!-- content -->
     <div class="table-responsive">
         {# <table class="table table-striped"> #}
@@ -19,7 +37,6 @@
                 <th>接收用户</th>
                 <th>消息</th>
                 <th>时间</th>
-                <th>操作</th>
             </tr>
             </thead>
             <tbody>
@@ -30,9 +47,6 @@
                 <td>{{ user_profile_get.nickname }} [{{ user_profile_get.user_id }}]</td>
                 <td>{{ msg.content }}</td>
                 <td>{{ moment(msg.create_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
-                <td>
-                    <a href="javascript:void(0);" onclick="msg_delete({{ msg.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
-                </td>
             </tr>
             {% endfor %}
             </tbody>
@@ -41,32 +55,9 @@
         {% from "macros.html" import render_pagination %}
         {{ render_pagination(pagination, 'message.lists') }}
     </div>
-
-
-</div>
-
+    </div>
 {% endblock %}
 
 {% block extra_js %}
-<script>
-    // 用户删除
-    function msg_delete(msg_id){
-        if(confirm("删除数据不能恢复，是否确认删除?"))
-        {
-            // console.log(user_id);
-            $.getJSON('{{ url_for('message.ajax_delete') }}',
-            {
-                msg_id: msg_id
-            }, function (result) {
-                if(result.hasOwnProperty('error')){
-                    alert(result.error);
-                }else {
-                    alert(result.success);
-                    window.location.reload();
-                }
-            });
-            return false;
-        }
-    }
-</script>
+
 {% endblock %}

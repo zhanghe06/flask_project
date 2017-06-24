@@ -103,3 +103,27 @@ $(function() {
 $(".alert").fadeTo(2000, 500).slideUp(500, function(){
     $(".alert").slideUp(500);
 });
+
+
+/**
+ * 用户自己激活
+ * @returns {boolean}
+ */
+function self_active() {
+    //console.log($(form).serialize());
+    $.ajax({
+        url: "{{ url_for('user.ajax_self_active') }}",
+        type: 'GET',
+        dataType: 'json',
+        success: function (result) {
+            console.log(result);
+            if(result.hasOwnProperty('error')){
+                alert(result.error);
+            }else {
+                alert(result.success);
+                document.location.reload();
+            }
+        }
+    });
+    return false;
+}

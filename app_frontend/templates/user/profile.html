@@ -192,27 +192,6 @@
         // console.log(oldValue);
     });
 </script>
-<script>
-// 用户自己激活
-function self_active() {
-    //console.log($(form).serialize());
-    $.ajax({
-        url: "{{ url_for('user.ajax_self_active') }}",
-        type: 'GET',
-        dataType: 'json',
-        success: function (result) {
-            console.log(result);
-            if(result.hasOwnProperty('error')){
-                alert(result.error);
-            }else {
-                alert(result.success);
-                document.location.reload();
-            }
-        }
-    });
-    return false;
-}
-</script>
 
 <script>
     // 倒计时

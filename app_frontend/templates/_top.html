@@ -116,21 +116,16 @@
                 </form>
                 {% endif %}
                 <ul class="nav navbar-nav navbar-right">
-                {% if 1==2 and current_user and current_user.is_authenticated %}
+                {% if current_user and current_user.is_authenticated %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                            <span class="glyphicon glyphicon-envelope"></span> 留言反馈
+                            <span class="glyphicon glyphicon-envelope"></span> 消息中心
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="{{ url_for('message.lists_send') }}">
-                                    <span class="glyphicon glyphicon-folder-open"></span> 留言发送
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url_for('message.lists_receive') }}">
-                                    <span class="glyphicon glyphicon-folder-close"></span> 留言接收
+                                <a href="{{ url_for('message.lists') }}">
+                                    <span class="glyphicon glyphicon-folder-open"></span> 留言记录
                                 </a>
                             </li>
                             <li role="separator" class="divider"></li>
