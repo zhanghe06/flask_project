@@ -9,16 +9,23 @@
 """
 
 
+from datetime import datetime
+
+from decimal import Decimal
 from flask_login import current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField, DecimalField, IntegerField
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
+
+from app_frontend.api.apply_get import get_current_month_get_amount, get_current_day_get_amount, \
+    get_get_processing_amount
 from app_frontend.api.user_auth import get_user_auth_row
 from app_frontend.api.wallet import get_wallet_row_by_id
 from app_frontend.api.bit_coin import get_bit_coin_row_by_id
 from app_frontend.forms import SelectBS, RadioInlineBS
 from app_common.maps import type_apply_list, type_pay_list, type_withdraw_list
 from app_common.maps.type_withdraw import *
+from app_frontend.tools.config_manage import get_conf
 
 
 class ApplyGetMoneyValidate(object):
@@ -29,9 +36,45 @@ class ApplyGetMoneyValidate(object):
         self.message = message
 
     def __call__(self, form, field):
-        # 金额必须为100的倍数
-        if (field.data/100)*100 != field.data:
-            raise ValidationError(u'金额必须为100的倍数')
+        # 提现时间配置
+        APPLY_GET_TIME_START = get_conf('APPLY_GET_TIME_START')  # 每天提现申请开始时间
+        APPLY_GET_TIME_END = get_conf('APPLY_GET_TIME_END')  # 每天提现申请结束时间
+        current_time = datetime.now().strftime('%H:%M:%S')
+        if current_time < APPLY_GET_TIME_START or current_time > APPLY_GET_TIME_END:
+            raise ValidationError(u'为了您的资金安全，请在%s~%s时间段提现' % (APPLY_GET_TIME_START, APPLY_GET_TIME_END))
+
+        # 当天次数限制（一天只能提现一次）
+        if get_current_day_get_amount(user_id=current_user.id) > 0:
+            raise ValidationError(u'超出当天提现次数限制')
+
+        # 单次提现金额范围
+        APPLY_GET_MIN_EACH = Decimal(get_conf('APPLY_GET_MIN_EACH'))  # 最小值
+        APPLY_GET_MAX_EACH = Decimal(get_conf('APPLY_GET_MAX_EACH'))  # 最大值
+        APPLY_GET_STEP = Decimal(get_conf('APPLY_GET_STEP'))  # 提现金额步长（基数）
+
+        if field.data < APPLY_GET_MIN_EACH:
+            raise ValidationError(u'提现金额最小为%s' % APPLY_GET_MIN_EACH)
+        if field.data > APPLY_GET_MAX_EACH:
+            raise ValidationError(u'提现金额最大为%s' % APPLY_GET_MAX_EACH)
+        if (field.data / APPLY_GET_STEP) * APPLY_GET_STEP != field.data:
+            raise ValidationError(u'金额必须为%s的倍数' % APPLY_GET_STEP)
+
+        # 单个用户提现限制
+        get_processing_amount = get_get_processing_amount(user_id=current_user.id)
+        APPLY_GET_USER_MAX_AMOUNT = Decimal(get_conf('APPLY_GET_USER_MAX_AMOUNT'))  # 单个用户提现最大交易中金额
+        if field.data + get_processing_amount > APPLY_GET_USER_MAX_AMOUNT:
+            raise ValidationError(u'超出提现待处理金额限制')
+
+        # 每日提现限制
+        current_day_get_amount = get_current_day_get_amount()
+        if current_day_get_amount > Decimal(get_conf('APPLY_GET_MAX_AMOUNT_DAILY')):
+            raise ValidationError(u'超出当天提现最大金额限制')
+
+        # 每月提现限制
+        current_month_get_amount = get_current_month_get_amount()
+        if current_month_get_amount > Decimal(get_conf('APPLY_GET_MAX_AMOUNT_MONTHLY')):
+            raise ValidationError(u'超出当月提现最大金额限制')
+        
         # 钱包余额不够
         if form.type_withdraw.data == TYPE_WITHDRAW_WALLET:
             wallet_info = get_wallet_row_by_id(current_user.id)

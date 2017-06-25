@@ -265,10 +265,10 @@ def ajax_stats():
     :return:
     """
     time_based = request.args.get('time_based', 'hour')
-    result_apply_get = apply_put_stats(time_based)
+    result_apply_put = apply_put_stats(time_based)
 
     line_chart_data = {
-        'labels': [label for label, _ in result_apply_get],
+        'labels': [label for label, _ in result_apply_put],
         'datasets': [
             {
                 'label': u'投资申请',
@@ -277,7 +277,7 @@ def ajax_stats():
                 'pointBackgroundColor': 'rgba(220,220,220,1)',
                 'pointBorderColor': '#fff',
                 'pointBorderWidth': 2,
-                'data': [data for _, data in result_apply_get]
+                'data': [data for _, data in result_apply_put]
             }
         ]
     }

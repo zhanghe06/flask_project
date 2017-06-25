@@ -92,9 +92,11 @@ def reply(complaint_id):
     """
     complaint_info = get_complaint_row_by_id(complaint_id)
     form = ComplaintReplyForm(request.form)
-    form.send_user_id.data = complaint_info.send_user_id
-    form.receive_user_id.data = complaint_info.receive_user_id
-    form.content.data = complaint_info.content
+    if complaint_info:
+        if request.method == 'GET':
+            form.send_user_id.data = complaint_info.send_user_id
+            form.receive_user_id.data = complaint_info.receive_user_id
+            form.content.data = complaint_info.content
     if request.method == 'POST':
         if form.validate_on_submit():
             current_time = datetime.utcnow()

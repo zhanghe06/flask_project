@@ -101,6 +101,7 @@
                 <th>提现ID</th>
                 <th>投资用户</th>
                 <th>提现用户</th>
+                <th>订单金额</th>
                 <th>认证状态</th>
                 <th>支付状态</th>
                 <th>确认状态</th>
@@ -116,11 +117,13 @@
                 <td>{{ order.apply_get_id }}</td>
                 <td>{{ user_profile_put.nickname }} [{{ order.apply_put_uid }}]</td>
                 <td>{{ user_profile_get.nickname }} [{{ order.apply_get_uid }}]</td>
+                <td>{{ order.money }}</td>
                 <td>{{ order.status_audit | status_audit }}</td>
                 <td>{{ order.status_pay | status_pay }}</td>
                 <td>{{ order.status_rec | status_rec }}</td>
                 <td>{{ moment(order.create_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
                 <td>
+                    <a href="javascript:void(0);" onclick="order_audit({{ order.id }});" rel="tooltip" title="审核"><span class="glyphicon glyphicon-check"></span></a>
                     <a href="javascript:void(0);" onclick="order_delete({{ order.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
                 </td>
             </tr>
@@ -170,18 +173,39 @@
         // console.log(oldValue);
     });
 
+    // 订单审核
+    function order_audit(order_id){
+        if(confirm("是否确认审核通过?"))
+        {
+            // console.log(order_id);
+            $.getJSON('{{ url_for('order.ajax_audit') }}',
+            {
+                order_id: order_id
+            }, function (result) {
+                if(result.hasOwnProperty('error')){
+                    alert(result.error);
+                }else {
+                    alert(result.success);
+                    window.location.reload();
+                }
+            });
+            return false;
+        }
+    }
 
+    // 订单删除
     function order_delete(order_id){
         if(confirm("删除数据不能恢复，是否确认删除?"))
         {
-            // console.log(user_id);
-            $.getJSON('{{ url_for('order.delete') }}',
+            // console.log(order_id);
+            $.getJSON('{{ url_for('order.ajax_delete') }}',
             {
                 order_id: order_id
-            }, function (data) {
-                var result = data.result;  // true/false
-                // console.log(result==true);
-                if(result==true){
+            }, function (result) {
+                if(result.hasOwnProperty('error')){
+                    alert(result.error);
+                }else {
+                    alert(result.success);
                     window.location.reload();
                 }
             });

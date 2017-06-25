@@ -9,8 +9,13 @@
 """
 
 
+from app_common.tools.date_time import get_current_day_time_ends, get_current_month_time_ends
 from app_frontend.models import ApplyPut
 from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete, count
+from app_common.maps.status_delete import *
+from app_frontend.database import db
+from sqlalchemy.sql import func
+from app_common.maps.status_order import *
 from app_common.maps.status_delete import *
 
 
@@ -93,3 +98,60 @@ def is_put(user_id):
         'status_delete': STATUS_DEL_NO
     }
     return bool(count(ApplyPut, **condition))
+
+
+def get_current_day_put_amount(user_id=None):
+    """
+    获取当天投资总额
+    :return:
+    """
+    start_time, end_time = get_current_day_time_ends()
+    condition = [
+        ApplyPut.create_time >= start_time,
+        ApplyPut.create_time <= end_time
+    ]
+    if user_id:
+        condition.append(ApplyPut.user_id == user_id)
+    res = db.session \
+        .query(func.sum(ApplyPut.money_apply).label('amount')) \
+        .filter(*condition) \
+        .first()
+    return res.amount or 0
+
+
+def get_current_month_put_amount(user_id=None):
+    """
+    获取当月投资总额
+    :return:
+    """
+    start_time, end_time = get_current_month_time_ends()
+    condition = [
+        ApplyPut.create_time >= start_time,
+        ApplyPut.create_time <= end_time
+    ]
+    if user_id:
+        condition.append(ApplyPut.user_id == user_id)
+    res = db.session \
+        .query(func.sum(ApplyPut.money_apply).label('amount')) \
+        .filter(*condition) \
+        .first()
+    return res.amount or 0
+
+
+def get_put_processing_amount(user_id):
+    """
+    获取用户投资申请未匹配总金额
+    :param user_id:
+    :return:
+    """
+    condition = [
+        ApplyPut.user_id == user_id,
+        ApplyPut.status_order <= int(STATUS_ORDER_COMPLETED),
+        ApplyPut.status_delete == int(STATUS_DEL_NO)
+    ]
+    res = db.session \
+        .query(func.sum(ApplyPut.money_apply).label('money_apply_amount'),
+               func.sum(ApplyPut.money_order).label('money_order_amount')) \
+        .filter(*condition) \
+        .first()
+    return (res.money_apply_amount or 0) - (res.money_order_amount or 0)

@@ -10,6 +10,8 @@
 
 
 import json
+
+from flask import abort
 from sqlalchemy.orm import aliased
 from datetime import datetime
 from flask import redirect
@@ -21,12 +23,15 @@ import flask_excel as excel
 from app_backend import app
 from app_backend.forms.admin import AdminProfileForm
 from app_backend.models import User, UserProfile, Order
-from app_backend.api.order import get_order_rows, get_order_row, order_stats
+from app_backend.api.order import get_order_rows, get_order_row, order_stats, edit_order, get_order_row_by_id
+from app_backend.api.apply_put import edit_apply_put, get_apply_put_row_by_id
+from app_backend.api.apply_get import edit_apply_get, get_apply_get_row_by_id
 from app_backend.forms.order import OrderSearchForm
+from app_common.maps.status_order import STATUS_ORDER_HANDING, STATUS_ORDER_PROCESSING
 
 from flask import Blueprint
 
-from app_common.maps.status_delete import STATUS_DEL_NO
+from app_common.maps.status_delete import STATUS_DEL_NO, STATUS_DEL_OK
 from app_common.tools import json_default
 from app_common.tools.date_time import time_local_to_utc
 from config import PER_PAGE_BACKEND
@@ -175,3 +180,78 @@ def ajax_stats():
         ]
     }
     return json.dumps(line_chart_data, default=json_default)
+
+
+@bp_order.route('/ajax/audit/', methods=['GET', 'POST'])
+@login_required
+@permission_order.require(http_exception=403)
+def ajax_audit():
+    """
+    订单审核
+    :return:
+    """
+    if 1:
+        return json.dumps({'success': u'审核成功'})
+    else:
+        return json.dumps({'error': u'审核失败'})
+
+
+@bp_order.route('/ajax/del/', methods=['GET', 'POST'])
+@login_required
+@permission_order.require(http_exception=403)
+def ajax_delete():
+    """
+    删除订单
+    :return:
+    """
+    if request.method == 'GET' and request.is_xhr:
+        order_id = request.args.get('order_id', 0, type=int)
+        if not order_id:
+            return json.dumps({'error': u'参数错误，删除失败'})
+        order_info = get_order_row_by_id(order_id)
+        if not order_info:
+            return json.dumps({'error': u'订单不存在，删除失败'})
+        if order_info.status_delete == int(STATUS_DEL_OK):
+            return json.dumps({'error': u'订单已删除，不能重复删除'})
+        current_time = datetime.utcnow()
+        # 修改订单删除状态
+        order_data = {
+            'status_delete': STATUS_DEL_OK,
+            'delete_time': current_time,
+            'update_time': current_time
+        }
+        result = edit_order(order_id, order_data)
+
+        # 还原提现申请订单金额
+        apply_get_info = get_apply_get_row_by_id(order_info.apply_get_id)
+
+        last_money = apply_get_info.money_order - order_info.money
+        status_order = STATUS_ORDER_PROCESSING if last_money > 0 else STATUS_ORDER_HANDING
+
+        apply_get_data = {
+            'money_order': last_money,
+            'status_order': status_order,
+            'update_time': current_time
+        }
+
+        edit_apply_get(order_info.apply_get_id, apply_get_data)
+
+        # 还原投资申请订单金额
+        apply_put_info = get_apply_put_row_by_id(order_info.apply_put_id)
+
+        last_money = apply_put_info.money_order - order_info.money
+        status_order = STATUS_ORDER_PROCESSING if last_money > 0 else STATUS_ORDER_HANDING
+
+        apply_put_data = {
+            'money_order': last_money,
+            'status_order': status_order,
+            'update_time': current_time
+        }
+
+        edit_apply_put(order_info.apply_put_id, apply_put_data)
+
+        if result:
+            return json.dumps({'success': u'删除成功'})
+        else:
+            return json.dumps({'error': u'删除失败'})
+    abort(404)

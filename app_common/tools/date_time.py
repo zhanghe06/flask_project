@@ -48,29 +48,32 @@ def get_current_year_time_ends():
     return start_time, end_time
 
 
-def get_hours():
+def get_hours(zerofill=True):
     """
     列出1天所有24小时
     :return:
     """
-    return ['%02d' % i for i in range(24)]
+    if zerofill:
+        return ['%02d' % i for i in range(24)]
+    else:
+        return range(24)
 
 
-def get_days(year=1970, month=1, full=False):
+def get_days(year=1970, month=1, zerofill=True):
     """
     列出当月的所有日期
     :param year:
     :param month:
-    :param full:
+    :param zerofill:
     :return:
     """
     year = int(year)
     month = int(month)
     _, days = calendar.monthrange(year, month)
-    if full:
-        return ['%04d-%02d-%02d' % (year, month, i) for i in range(1, days+1)]
-    else:
+    if zerofill:
         return ['%02d' % i for i in range(1, days+1)]
+    else:
+        return range(1, days+1)
 
 
 def get_weeks():

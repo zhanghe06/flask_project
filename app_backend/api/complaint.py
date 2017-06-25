@@ -9,17 +9,17 @@
 """
 
 
-from app_frontend.models import Complaint
-from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
+from app_backend.models import Complaint
+from app_backend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
 
 
-def get_complaint_row_by_id(order_id):
+def get_complaint_row_by_id(complaint_id):
     """
     通过 id 获取投诉信息
-    :param order_id:
+    :param complaint_id:
     :return: None/object
     """
-    return get_row_by_id(Complaint, order_id)
+    return get_row_by_id(Complaint, complaint_id)
 
 
 def get_complaint_row(*args, **kwargs):
@@ -32,32 +32,32 @@ def get_complaint_row(*args, **kwargs):
     return get_row(Complaint, *args, **kwargs)
 
 
-def add_complaint(order_data):
+def add_complaint(complaint_data):
     """
     添加投诉信息
-    :param order_data:
-    :return: None/Value of order.id
+    :param complaint_data:
+    :return: None/Value of complaint.id
     """
-    return add(Complaint, order_data)
+    return add(Complaint, complaint_data)
 
 
-def edit_complaint(order_id, order_data):
+def edit_complaint(complaint_id, complaint_data):
     """
     修改投诉信息
-    :param order_id:
-    :param order_data:
+    :param complaint_id:
+    :param complaint_data:
     :return: Number of affected rows (Example: 0/1)
     """
-    return edit(Complaint, order_id, order_data)
+    return edit(Complaint, complaint_id, complaint_data)
 
 
-def delete_complaint(order_id):
+def delete_complaint(complaint_id):
     """
     删除投诉信息
-    :param order_id:
+    :param complaint_id:
     :return: Number of affected rows (Example: 0/1)
     """
-    return delete(Complaint, order_id)
+    return delete(Complaint, complaint_id)
 
 
 def get_complaint_rows(page=1, per_page=10, *args, **kwargs):

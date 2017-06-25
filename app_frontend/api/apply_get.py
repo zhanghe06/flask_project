@@ -12,7 +12,12 @@
 from datetime import datetime
 import traceback
 
+from sqlalchemy import func
+
 from app_common.maps.status_audit import STATUS_AUDIT_SUCCESS
+from app_common.maps.status_delete import STATUS_DEL_NO
+from app_common.maps.status_order import STATUS_ORDER_COMPLETED
+from app_common.tools.date_time import get_current_day_time_ends, get_current_month_time_ends
 from app_frontend.database import db
 from app_common.maps.type_withdraw import *
 from app_common.maps.type_pay import *
@@ -93,7 +98,7 @@ def get_apply_get_rows(page=1, per_page=10, *args, **kwargs):
 
 def user_apply_get(user_id, type_pay, type_withdraw, money_apply):
     """
-    用户提现申请 - 事物
+    用户提现申请 - 事务
     :param user_id:
     :param type_pay:
     :param type_withdraw:
@@ -184,3 +189,60 @@ def user_apply_get(user_id, type_pay, type_withdraw, money_apply):
         print traceback.print_exc()
         db.session.rollback()  # 回滚事务
         raise e
+
+
+def get_current_day_get_amount(user_id=None):
+    """
+    获取当天提现总额
+    :return:
+    """
+    start_time, end_time = get_current_day_time_ends()
+    condition = [
+        ApplyGet.create_time >= start_time,
+        ApplyGet.create_time <= end_time
+    ]
+    if user_id:
+        condition.append(ApplyGet.user_id == user_id)
+    res = db.session \
+        .query(func.sum(ApplyGet.money_apply).label('amount')) \
+        .filter(*condition) \
+        .first()
+    return res.amount or 0
+
+
+def get_current_month_get_amount(user_id=None):
+    """
+    获取当月提现总额
+    :return:
+    """
+    start_time, end_time = get_current_month_time_ends()
+    condition = [
+        ApplyGet.create_time >= start_time,
+        ApplyGet.create_time <= end_time
+    ]
+    if user_id:
+        condition.append(ApplyGet.user_id == user_id)
+    res = db.session \
+        .query(func.sum(ApplyGet.money_apply).label('amount')) \
+        .filter(*condition) \
+        .first()
+    return res.amount or 0
+
+
+def get_get_processing_amount(user_id):
+    """
+    获取用户提现申请未匹配总金额
+    :param user_id:
+    :return:
+    """
+    condition = [
+        ApplyGet.user_id == user_id,
+        ApplyGet.status_order <= int(STATUS_ORDER_COMPLETED),
+        ApplyGet.status_delete == int(STATUS_DEL_NO)
+    ]
+    res = db.session \
+        .query(func.sum(ApplyGet.money_apply).label('money_apply_amount'),
+               func.sum(ApplyGet.money_order).label('money_order_amount')) \
+        .filter(*condition) \
+        .first()
+    return (res.money_apply_amount or 0) - (res.money_order_amount or 0)

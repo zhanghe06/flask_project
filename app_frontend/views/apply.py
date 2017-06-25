@@ -10,13 +10,15 @@
 
 
 from datetime import datetime
+
+from decimal import Decimal
 from flask import redirect
 from flask import render_template, request, flash, g
 from flask import url_for
 from flask_login import current_user, login_required
 
 from app_frontend import app
-from app_frontend.models import User
+from app_frontend.models import User, ApplyGet, ApplyPut
 from app_frontend.api.apply_get import get_apply_get_rows, get_apply_get_row, add_apply_get, user_apply_get
 from app_frontend.api.apply_put import get_apply_put_rows, get_apply_put_row, add_apply_put
 from app_frontend.api.user_bank import user_bank_is_complete
@@ -29,6 +31,9 @@ from app_common.maps.status_active import *
 from app_frontend.forms.apply_get import ApplyGetAddForm
 from app_frontend.forms.apply_put import ApplyPutAddForm
 from flask import Blueprint
+
+from app_frontend.tools.config_manage import get_conf
+from config import PER_PAGE_FRONTEND
 
 
 bp_apply = Blueprint('apply', __name__, url_prefix='/apply')
@@ -55,17 +60,18 @@ def lists_put(page=1):
         flash(u'请先激活当前账号', 'warning')
         return redirect(url_for('user.profile'))
 
-    condition = {
-        'user_id': user_id,
-        'status_order': 0,
-        'status_delete': 0
-    }
+    condition = [
+        ApplyPut.user_id == user_id,
+        ApplyPut.status_delete == int(STATUS_DEL_NO)
+    ]
     # 订单状态
     status_order = request.args.get('status_order', 0, type=int)
-    if status_order in STATUS_ORDER_DICT:
-        condition['status_order'] = status_order
+    if status_order == int(STATUS_ORDER_COMPLETED):
+        condition.append(ApplyPut.status_order == int(STATUS_ORDER_COMPLETED))
+    else:
+        condition.append(ApplyPut.status_order < int(STATUS_ORDER_COMPLETED))
 
-    pagination = get_apply_put_rows(page, **condition)
+    pagination = get_apply_put_rows(page, PER_PAGE_FRONTEND, *condition)
     return render_template('apply/put_list.html', title='apply_put_list', pagination=pagination)
 
 
@@ -90,17 +96,18 @@ def lists_get(page=1):
         flash(u'请先激活当前账号', 'warning')
         return redirect(url_for('user.profile'))
 
-    condition = {
-        'user_id': user_id,
-        'status_order': 0,
-        'status_delete': 0
-    }
+    condition = [
+        ApplyGet.user_id == user_id,
+        ApplyGet.status_delete == int(STATUS_DEL_NO)
+    ]
     # 订单状态
     status_order = request.args.get('status_order', 0, type=int)
-    if status_order in STATUS_ORDER_DICT:
-        condition['status_order'] = status_order
+    if status_order == int(STATUS_ORDER_COMPLETED):
+        condition.append(ApplyGet.status_order == int(STATUS_ORDER_COMPLETED))
+    else:
+        condition.append(ApplyGet.status_order < int(STATUS_ORDER_COMPLETED))
 
-    pagination = get_apply_get_rows(page, **condition)
+    pagination = get_apply_get_rows(page, PER_PAGE_FRONTEND, *condition)
     return render_template('apply/get_list.html', title='apply_get_list', pagination=pagination)
 
 
@@ -125,6 +132,11 @@ def add_put():
         flash(u'请先激活当前账号', 'warning')
         return redirect(url_for('user.profile'))
 
+    # 单次投资金额范围
+    APPLY_PUT_MIN_EACH = Decimal(get_conf('APPLY_PUT_MIN_EACH'))  # 最小值
+    APPLY_PUT_MAX_EACH = Decimal(get_conf('APPLY_PUT_MAX_EACH'))  # 最大值
+    APPLY_PUT_STEP = Decimal(get_conf('APPLY_PUT_STEP'))  # 投资金额步长（基数）
+
     form = ApplyPutAddForm(request.form)
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -146,7 +158,14 @@ def add_put():
             else:
                 flash(u'申请失败', 'warning')
             return redirect(url_for('apply.lists_put'))
-    return render_template('apply/put_add.html', title='apply_put_add', form=form)
+    return render_template(
+        'apply/put_add.html',
+        title='apply_put_add',
+        form=form,
+        APPLY_PUT_MIN_EACH=str(APPLY_PUT_MIN_EACH),
+        APPLY_PUT_MAX_EACH=str(APPLY_PUT_MAX_EACH),
+        APPLY_PUT_STEP=str(APPLY_PUT_STEP)
+    )
 
 
 @bp_apply.route('/get/add/', methods=['GET', 'POST'])
@@ -170,6 +189,11 @@ def add_get():
         flash(u'请先激活当前账号', 'warning')
         return redirect(url_for('user.profile'))
 
+    # 单次提现金额范围
+    APPLY_GET_MIN_EACH = Decimal(get_conf('APPLY_GET_MIN_EACH'))  # 最小值
+    APPLY_GET_MAX_EACH = Decimal(get_conf('APPLY_GET_MAX_EACH'))  # 最大值
+    APPLY_GET_STEP = Decimal(get_conf('APPLY_GET_STEP'))  # 投资金额步长（基数）
+
     form = ApplyGetAddForm(request.form)
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -183,7 +207,14 @@ def add_get():
                     return redirect(url_for('apply.lists_get'))
             except Exception as e:
                 flash(u'申请失败, 原因：%s' % e.message, 'warning')
-    return render_template('apply/get_add.html', title='apply_get_add', form=form)
+    return render_template(
+        'apply/get_add.html',
+        title='apply_get_add',
+        form=form,
+        APPLY_GET_MIN_EACH=str(APPLY_GET_MIN_EACH),
+        APPLY_GET_MAX_EACH=str(APPLY_GET_MAX_EACH),
+        APPLY_GET_STEP=str(APPLY_GET_STEP)
+    )
 
 
 @bp_apply.route('/put/del/', methods=['GET', 'POST'])

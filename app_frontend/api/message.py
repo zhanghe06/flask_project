@@ -13,13 +13,13 @@ from app_frontend.models import Message
 from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
 
 
-def get_message_row_by_id(order_id):
+def get_message_row_by_id(message_id):
     """
     通过 id 获取留言信息
-    :param order_id:
+    :param message_id:
     :return: None/object
     """
-    return get_row_by_id(Message, order_id)
+    return get_row_by_id(Message, message_id)
 
 
 def get_message_row(*args, **kwargs):
@@ -32,32 +32,32 @@ def get_message_row(*args, **kwargs):
     return get_row(Message, *args, **kwargs)
 
 
-def add_message(order_data):
+def add_message(message_data):
     """
     添加留言信息
-    :param order_data:
+    :param message_data:
     :return: None/Value of order.id
     """
-    return add(Message, order_data)
+    return add(Message, message_data)
 
 
-def edit_message(order_id, order_data):
+def edit_message(message_id, message_data):
     """
     修改留言信息
-    :param order_id:
-    :param order_data:
+    :param message_id:
+    :param message_data:
     :return: Number of affected rows (Example: 0/1)
     """
-    return edit(Message, order_id, order_data)
+    return edit(Message, message_id, message_data)
 
 
-def delete_message(order_id):
+def delete_message(message_id):
     """
     删除留言信息
-    :param order_id:
+    :param message_id:
     :return: Number of affected rows (Example: 0/1)
     """
-    return delete(Message, order_id)
+    return delete(Message, message_id)
 
 
 def get_message_rows(page=1, per_page=10, *args, **kwargs):

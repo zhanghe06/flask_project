@@ -10,14 +10,16 @@
 
 
 from datetime import datetime
-from app_frontend import app
+from config import ALLOWED_EXTENSIONS
+from config import MIN_CONTENT_LENGTH
+from config import MAX_CONTENT_LENGTH
 
 
 def allowed_file(filename):
     """
     校验文件类型
     """
-    return '.' in filename and filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
+    return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
 def get_extend_type(filename):
@@ -66,9 +68,9 @@ def validate(file_obj):
     if not allowed_file(file_obj.filename):
         raise Exception(u'文件类型暂不支持')
     file_size = get_file_size(file_obj)
-    if file_size < app.config['MIN_CONTENT_LENGTH']:
+    if file_size < MIN_CONTENT_LENGTH:
         raise Exception(u'文件太小，未到最低要求')
-    elif file_size > app.config['MAX_CONTENT_LENGTH']:
+    elif file_size > MAX_CONTENT_LENGTH:
         raise Exception(u'文件太大，超过最大限制')
     else:
         return True

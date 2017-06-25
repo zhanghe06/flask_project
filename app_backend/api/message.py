@@ -36,7 +36,7 @@ def add_message(message_data):
     """
     添加留言信息
     :param message_data:
-    :return: None/Value of active.id
+    :return: None/Value of message.id
     """
     return add(Message, message_data)
 
