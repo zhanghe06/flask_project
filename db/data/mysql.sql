@@ -183,3 +183,7 @@ INSERT INTO `active_item` VALUES (5, 1, 2, 1, 4, '', 1, 0, '2017-01-12 12:25:34'
 -- 插入留言消息
 TRUNCATE TABLE `message`;
 INSERT INTO `message` VALUES (1, 1, 2, '测试消息', 0, null, '2017-06-24 13:23:27', '2017-06-24 13:23:27');
+
+-- 插入投诉消息
+TRUNCATE TABLE `complaint`;
+INSERT INTO `complaint` VALUES (1, 1, 2, 0, '测试消息', '', 0, null, 0, null, '2017-06-24 13:23:27', '2017-06-24 13:23:27');

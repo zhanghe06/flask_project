@@ -2,14 +2,93 @@
 
 {% block content %}
 <div class="container-fluid">
-    <ol class="breadcrumb">
-        <li><a href="/">后台管理</a></li>
-        <li><a href="javascript:void(0);" onclick="$('#menu-message').trigger('click');">留言管理</a></li>
-        <li class="active">投诉列表</li>
-    </ol>
-    <h2 class="sub-header">Complaint List!</h2>
+    <nav class="sub-header row container-fluid">
+        <ol class="breadcrumb">
+            <li><a href="/">后台管理</a></li>
+            <li><a href="javascript:void(0);" onclick="$('#menu-message').trigger('click');">留言管理</a></li>
+            <li class="active">投诉列表</li>
+        </ol>
+        <div class="btn-group pull-right" role="group" aria-label="...">
+        {% if request.query_string == 'status_reply=1' %}
+            <a type="button" class="btn btn-default" href="{{ url_for('complaint.lists') }}">未处理</a>
+            <a type="button" class="btn btn-default active">已处理</a>
+        {% else %}
+            <a type="button" class="btn btn-default active">未处理</a>
+            <a type="button" class="btn btn-default" href="{{ url_for('complaint.lists', status_reply=1) }}">已处理</a>
+        {% endif %}
+        </div>
+    </nav>
 
+{#    <h2 class="sub-header">Complaint List!</h2>#}
+    <!-- content -->
+    <div class="table-responsive">
+        {# <table class="table table-striped"> #}
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>投诉明细ID</th>
+                <th>投诉用户</th>
+                <th>被投诉用户</th>
+                <th>投诉内容</th>
+                <th>投诉时间</th>
+                {% if request.query_string == 'status_reply=1' %}
+                <th>回复内容</th>
+                <th>回复时间</th>
+                {% else %}
+                <th>操作</th>
+                {% endif %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for complaint, user_profile_put, user_profile_get in pagination.items %}
+            <tr class="text-muted">
+                <td>{{ complaint.id }}</td>
+                <td>{{ user_profile_put.nickname | default('系统消息') }} [{{ user_profile_put.user_id }}]</td>
+                <td>{{ user_profile_get.nickname }} [{{ user_profile_get.user_id }}]</td>
+                <td>{{ complaint.content }}</td>
+                <td>{{ moment(complaint.create_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
+                {% if request.query_string == 'status_reply=1' %}
+                <td>{{ complaint.content_reply }}</td>
+                <td>{{ moment(complaint.reply_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
+                {% else %}
+                <td>
+                    <a href="javascript:void(0);" onclick="complaint_delete({{ complaint.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
+                    <a href="{{ url_for('complaint.reply', complaint_id=complaint.id) }}" rel="tooltip" title="回复"><span class="glyphicon glyphicon-comment"></span></a>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {# 翻页 #}
+        {% from "macros.html" import render_pagination %}
+        {{ render_pagination(pagination, 'complaint.lists') }}
+    </div>
 
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // 投诉删除
+    function complaint_delete(msg_id){
+        if(confirm("删除数据不能恢复，是否确认删除?"))
+        {
+            // console.log(user_id);
+            $.getJSON('{{ url_for('complaint.ajax_delete') }}',
+            {
+                msg_id: msg_id
+            }, function (result) {
+                if(result.hasOwnProperty('error')){
+                    alert(result.error);
+                }else {
+                    alert(result.success);
+                    window.location.reload();
+                }
+            });
+            return false;
+        }
+    }
+</script>
 {% endblock %}

@@ -488,9 +488,10 @@ CREATE TABLE `message` (
 DROP TABLE IF EXISTS `complaint`;
 CREATE TABLE `complaint` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `send_user_id` INT NOT NULL COMMENT '前台投诉用户Id',
+  `send_user_id` INT NOT NULL COMMENT '前台投诉人用户Id',
+  `receive_user_id` INT NOT NULL COMMENT '前台被投诉用户Id',
   `reply_admin_id` INT NOT NULL DEFAULT '0' COMMENT '后台回复用户Id',
-  `content_send` VARCHAR(512) NOT NULL DEFAULT '' COMMENT '留言内容',
+  `content` VARCHAR(512) NOT NULL DEFAULT '' COMMENT '留言内容',
   `content_reply` VARCHAR(512) NOT NULL DEFAULT '' COMMENT '回复内容',
   `status_reply` TINYINT NOT NULL DEFAULT '0' COMMENT '回复状态（0未回复，1已回复）',
   `reply_time` TIMESTAMP NULL COMMENT '回复时间',
@@ -500,6 +501,7 @@ CREATE TABLE `complaint` (
   `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `ind_send_user_id` (`send_user_id`),
+  KEY `ind_receive_user_id` (`receive_user_id`),
   KEY `ind_reply_admin_id` (`reply_admin_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='投诉';
 

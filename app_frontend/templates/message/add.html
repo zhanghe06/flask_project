@@ -6,7 +6,7 @@
     <ol class="breadcrumb">
         <li><a href="/">首页</a></li>
         <li class="active">消息中心</li>
-        <li class="active">我要投诉</li>
+        <li class="active">添加留言</li>
     </ol>
     <div class="row">
         <div class="table-responsive col-lg-8 col-md-12">
@@ -22,7 +22,7 @@
                 <div class="form-group{% if form.content.errors %} has-error{% endif %}">
                     {{ form.content.label(class="col-sm-2 control-label") }}
                     <div class="col-sm-10">
-                        {{ form.content(class="form-control", placeholder="投诉内容", rows="6") }}
+                        {{ form.content(class="form-control", placeholder="留言内容", rows="6") }}
                         {% for error in form.content.errors %}
                             <span class="help-block">{{ error }}</span>
                         {% endfor %}
@@ -30,7 +30,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-success btn-load" data-loading-text="投诉中">投诉</button>
+                        <button type="submit" class="btn btn-success btn-load" data-loading-text="留言中">留言</button>
                         <button type="reset" class="btn btn-default">重新填写</button>
                         <button class="btn btn-default" onclick="history.back();">返回</button>
                     </div>

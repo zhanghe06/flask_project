@@ -64,6 +64,7 @@
                 <td>{{ moment(order.create_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
                 <td>
                     <a class="btn-sm btn-default" href="{{ url_for('order.info_get', order_id=order.id) }}" rel="tooltip" title="订单详情"><span class="glyphicon glyphicon-list-alt"></span> 订单详情</a>
+                    <a class="btn-sm btn-default" href="{{ url_for('message.add', user_id=order.apply_put_uid) }}" rel="tooltip" title="留言"><span class="glyphicon glyphicon-list-alt"></span> 留言</a>
 {#                    <a href="javascript:void(0);" onclick="order_delete({{ order.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>#}
                 </td>
             </tr>

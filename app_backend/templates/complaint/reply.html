@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <nav class="sub-header row container-fluid">
+        <ol class="breadcrumb">
+            <li><a href="/">后台管理</a></li>
+            <li><a href="javascript:void(0);" onclick="$('#menu-message').trigger('click');">留言管理</a></li>
+            <li class="active">投诉处理</li>
+        </ol>
+    </nav>
+
+{#    <h2 class="sub-header">Complaint List!</h2>#}
+    <!-- content -->
+    <div class="table-responsive col-lg-12 col-md-12">
+        <form class="form-horizontal" method="post" action="">
+            {{ form.csrf_token }}
+            <div class="form-group{% if form.send_user_id.errors %} has-error{% endif %}">
+                {{ form.send_user_id.label(class="col-sm-2 control-label") }}
+                <div class="col-sm-10">
+                    <div class="form-control">{{ form.send_user_id.data | nickname }}</div>
+                </div>
+            </div>
+            <div class="form-group{% if form.receive_user_id.errors %} has-error{% endif %}">
+                {{ form.receive_user_id.label(class="col-sm-2 control-label") }}
+                <div class="col-sm-10">
+                    <div class="form-control">{{ form.receive_user_id.data | nickname }}</div>
+                </div>
+            </div>
+
+            <div class="form-group{% if form.content.errors %} has-error{% endif %}">
+                {{ form.content.label(class="col-sm-2 control-label") }}
+                <div class="col-sm-10">
+                    {{ form.content(class="form-control", placeholder="投诉内容", rows="6") }}
+                    {% for error in form.content.errors %}
+                        <span class="help-block">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group{% if form.content_reply.errors %} has-error{% endif %}">
+                {{ form.content_reply.label(class="col-sm-2 control-label") }}
+                <div class="col-sm-10">
+                    {{ form.content_reply(class="form-control", placeholder="回复内容", rows="6") }}
+                    {% for error in form.content_reply.errors %}
+                        <span class="help-block">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-success btn-load" data-loading-text="回复中">回复</button>
+                    <button type="reset" class="btn btn-default">重新填写</button>
+                    <button class="btn btn-default" onclick="history.back();">返回</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+
+{% endblock %}

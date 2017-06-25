@@ -178,8 +178,9 @@ class Complaint(Base):
 
     id = Column(Integer, primary_key=True)
     send_user_id = Column(Integer, nullable=False, index=True)
+    receive_user_id = Column(Integer, nullable=False, index=True)
     reply_admin_id = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
-    content_send = Column(String(512), nullable=False, server_default=text("''"))
+    content = Column(String(512), nullable=False, server_default=text("''"))
     content_reply = Column(String(512), nullable=False, server_default=text("''"))
     status_reply = Column(Integer, nullable=False, server_default=text("'0'"))
     reply_time = Column(DateTime)
@@ -421,8 +422,8 @@ class UserBank(Base):
 class UserProfile(Base):
     __tablename__ = 'user_profile'
     __table_args__ = (
-        Index('ind_phone', 'area_id', 'phone'),
-        Index('ind_id_card', 'area_id', 'id_card')
+        Index('ind_id_card', 'area_id', 'id_card'),
+        Index('ind_phone', 'area_id', 'phone')
     )
 
     user_id = Column(Integer, primary_key=True)

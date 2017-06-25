@@ -19,8 +19,10 @@ from sqlalchemy.orm import aliased
 
 from app_frontend import app
 from app_frontend.models import User, UserProfile, Message
-from app_frontend.api.message import get_message_rows, get_message_row
+from app_frontend.api.message import get_message_rows, get_message_row, add_message
 from app_common.maps.status_reply import STATUS_REPLY_DICT
+
+from app_frontend.forms.message import MessageAddForm
 
 from flask import Blueprint
 
@@ -80,7 +82,27 @@ def add():
     创建留言
     :return:
     """
-    pass
+    form = MessageAddForm(request.form)
+    user_id = request.args.get('user_id')
+    form.user_id.data = user_id
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            current_time = datetime.utcnow()
+            msg_data = {
+                'send_user_id': current_user.id,
+                'receive_user_id': form.user_id.data,
+                'content': form.content.data,
+                'create_time': current_time,
+                'update_time': current_time,
+            }
+            result = add_message(msg_data)
+            if result:
+                flash(u'留言成功', 'success')
+                return redirect(url_for('.lists', msg_type='send'))
+            else:
+                flash(u'留言失败', 'warning')
+        flash(u'留言失败', 'warning')
+    return render_template('message/add.html', title='message_add', form=form)
 
 
 @bp_message.route('/del/', methods=['GET', 'POST'])

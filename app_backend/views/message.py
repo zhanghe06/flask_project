@@ -71,7 +71,7 @@ def lists(page=1):
 @permission_msg.require(http_exception=403)
 def ajax_delete():
     """
-    删除用户
+    删除留言
     :return:
     """
     if request.method == 'GET' and request.is_xhr:
