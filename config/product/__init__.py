@@ -29,7 +29,7 @@ FRONTEND_URL = 'http://120.77.59.26:8000'
 
 DEBUG = False
 
-PROJECT_NAME = u'九重天'
+PROJECT_NAME = u'公测版'
 
 ICP_CODE = u'粤ICP备16047585号'
 

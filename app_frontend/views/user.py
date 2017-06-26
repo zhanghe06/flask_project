@@ -122,6 +122,7 @@ def bank():
         form.create_time.data = bank_info.create_time
         form.update_time.data = bank_info.update_time
         if request.method == 'GET':
+            form.account_name.data = bank_info.account_name
             form.bank_name.data = bank_info.bank_name
             form.bank_address.data = bank_info.bank_address
             form.bank_account.data = bank_info.bank_account
@@ -129,6 +130,8 @@ def bank():
         if form.validate_on_submit():
             current_time = datetime.utcnow()
             bank_data = {
+                'user_id': current_user.id,
+                'account_name': form.account_name.data,
                 'bank_name': form.bank_name.data,
                 'bank_address': form.bank_address.data,
                 'bank_account': form.bank_account.data,

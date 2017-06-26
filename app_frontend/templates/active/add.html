@@ -57,6 +57,30 @@
 
 {% block extra_js %}
 <script src="{{ url_for('static', filename='plugin/clipboard.js-1.6.1/dist/clipboard.min.js') }}"></script>
+<script>
+    /**
+     * 用户自己激活
+     * @returns {boolean}
+     */
+    function self_active() {
+        //console.log($(form).serialize());
+        $.ajax({
+            url: "{{ url_for('user.ajax_self_active') }}",
+            type: 'GET',
+            dataType: 'json',
+            success: function (result) {
+                console.log(result);
+                if(result.hasOwnProperty('error')){
+                    alert(result.error);
+                }else {
+                    alert(result.success);
+                    document.location.reload();
+                }
+            }
+        });
+        return false;
+    }
+</script>
 
 <script>
     //推广链接复制

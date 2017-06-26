@@ -26,7 +26,7 @@ from app_frontend import app
 from app_frontend.api.user_profile import get_p_uid_list, user_profile_is_complete
 from app_frontend.models import User, UserProfile, Order
 from app_frontend.api.order import get_order_rows, get_order_row, get_order_row_by_id, edit_order
-from app_frontend.api.user_bank import get_user_bank_row_by_id
+from app_frontend.api.user_bank import get_user_bank_row_by_id, user_bank_is_complete
 from app_frontend.api.order_bill import get_order_bill_lists, add_order_bill, get_order_bill_count
 from app_frontend.api.wallet_item import add_wallet_item
 from app_frontend.api.wallet import get_wallet_row_by_id, add_wallet, edit_wallet
@@ -69,7 +69,7 @@ def lists_put(page=1):
     if not user_profile_is_complete(user_id):
         flash(u'请先完善基本信息', 'warning')
         return redirect(url_for('user.profile'))
-    if not user_profile_is_complete(user_id):
+    if not user_bank_is_complete(user_id):
         flash(u'请先完善银行信息', 'warning')
         return redirect(url_for('user.bank'))
         # 判断是否激活
@@ -117,7 +117,7 @@ def lists_get(page=1):
     if not user_profile_is_complete(user_id):
         flash(u'请先完善基本信息', 'warning')
         return redirect(url_for('user.profile'))
-    if not user_profile_is_complete(user_id):
+    if not user_bank_is_complete(user_id):
         flash(u'请先完善银行信息', 'warning')
         return redirect(url_for('user.bank'))
         # 判断是否激活
