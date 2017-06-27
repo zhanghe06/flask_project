@@ -393,9 +393,9 @@ def ajax_pay():
                 'update_time': current_time,
             }
             result = edit_order(order_id, order_data)
-            if result == 1:
+            if result:
                 return json.dumps({'success': u'操作成功'})
-            if result == 0:
+            else:
                 return json.dumps({'error': u'操作失败'})
         except Exception as e:
             print traceback.print_exc()
@@ -451,6 +451,7 @@ def ajax_rec():
                 interest = order_info.money * Decimal(INTEREST_PAY_AHEAD)
                 # 添加奖励明细
                 wallet_item_data = {
+                    'user_id': user_id,
                     'type': TYPE_PAYMENT_INCOME,
                     'sc_id': order_id,
                     'money': interest,
@@ -489,6 +490,7 @@ def ajax_rec():
                 interest = order_info.money * INTEREST_PAY_DELAY
                 # 添加惩罚明细
                 wallet_item_data = {
+                    'user_id': user_id,
                     'type': TYPE_PAYMENT_EXPENSE,
                     'sc_id': order_id,
                     'money': interest,
@@ -514,7 +516,6 @@ def ajax_rec():
                 # 更新钱包余额
                 else:
                     wallet_data = {
-                        'user_id': user_id,
                         'amount_current': wallet_info.amount_current + interest,
                         'update_time': current_time,
                     }
@@ -539,7 +540,7 @@ def ajax_rec():
                 add_bonus_item(bonus_item_data)
 
                 bonus_info = get_bonus_row_by_id(uid)
-                # 新增钱包记录，更新钱包余额
+                # 新增奖金记录，更新奖金余额
                 if not bonus_info:
                     bonus_data = {
                         'user_id': uid,
@@ -548,10 +549,9 @@ def ajax_rec():
                         'update_time': current_time,
                     }
                     add_bonus(bonus_data)
-                # 更新钱包余额
+                # 更新奖金余额
                 else:
                     bonus_data = {
-                        'user_id': uid,
                         'amount': bonus,
                         'update_time': current_time,
                     }
