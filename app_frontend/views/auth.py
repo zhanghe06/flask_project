@@ -68,15 +68,7 @@ def index():
                 return render_template('auth/index.html', title='login', form=form)
             # session['logged_in'] = True
 
-            # 用户通过验证后，记录登入IP
-            login_info = {
-                'login_ip': get_real_ip(),
-                'login_time': datetime.utcnow()
-            }
-            edit_user(user_auth_info.user_id, login_info)
-
             # 用 login_user 函数来登入他们
-
             login_user(get_user_row_by_id(user_auth_info.user_id), remember=form.remember.data)
             flash(u'%s, 恭喜，您已成功登录' % form.account.data, 'success')
             return redirect(request.args.get('next') or url_for('index'))
@@ -116,13 +108,6 @@ def phone():
                 return render_template('auth/phone.html', title='login', form=form)
             # session['logged_in'] = True
 
-            # 用户通过验证后，记录登入IP
-            login_info = {
-                'login_ip': get_real_ip(),
-                'login_time': datetime.utcnow()
-            }
-            edit_user(user_auth_info.user_id, login_info)
-
             # 用 login_user 函数来登入他们
             login_user(get_user_row_by_id(user_auth_info.user_id), remember=form.remember.data)
             flash(u'%s, 恭喜，您已成功登录' % form.phone.data, 'success')
@@ -160,14 +145,7 @@ def email():
                 return render_template('auth/email.html', title='login', form=form)
             # session['logged_in'] = True
 
-            # 用户通过验证后，记录登入IP
-            login_info = {
-                'login_ip': get_real_ip(),
-                'login_time': datetime.utcnow()
-            }
-            edit_user(user_auth_info.user_id, login_info)
             # 用 login_user 函数来登入他们
-
             login_user(get_user_row_by_id(user_auth_info.user_id), remember=form.remember.data)
             flash(u'%s, 恭喜，您已成功登录' % form.email.data, 'success')
             return redirect(request.args.get('next') or url_for('index'))

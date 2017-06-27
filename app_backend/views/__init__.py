@@ -27,6 +27,7 @@ from flask_login import login_user
 from flask_login import logout_user
 from flask_login import current_user
 from flask_login import login_required
+from flask_login import user_loaded_from_cookie
 
 from app_backend.api.admin_role import get_admin_role_row_by_id
 from app_backend.lib.rabbit_mq import RabbitPriorityQueue
@@ -89,6 +90,17 @@ def on_identity_loaded(sender, identity):
         for module in modules:
             role_need = RoleNeed(module)
             identity.provides.add(role_need)
+
+
+@user_loaded_from_cookie.connect_via(app)
+def on_user_loaded_from_cookie(sender, user):
+    """
+    记住密码后，通过cookie加载用户，需要重新赋予权限，否则权限会丢失
+    :param sender:
+    :param user:
+    :return:
+    """
+    identity_changed.send(app, identity=Identity(user.id, user.role_id))
 
 
 @app.route('/favicon.ico')

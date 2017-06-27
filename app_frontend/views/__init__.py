@@ -10,13 +10,16 @@
 
 
 import os
+from datetime import datetime
 
 from flask import render_template, request, redirect
 from flask import send_from_directory, g, flash, url_for, session
-from flask_login import current_user
+from flask_login import current_user, user_logged_in, user_loaded_from_cookie
 from itsdangerous import URLSafeSerializer, BadSignature
 
+from app_common.tools.ip import get_real_ip
 from app_frontend import app, login_manager
+from app_frontend.api.user import edit_user
 from app_frontend.tools.db import get_row_by_id
 
 # cache = SimpleCache()  # 默认最大支持500个key, 超时时间5分钟, 参数可配置
@@ -40,6 +43,25 @@ def load_user(user_id):
 #     当前用户信息
 #     """
 #     g.user = current_user
+#     return '系统维护中'
+
+
+@user_logged_in.connect_via(app)
+@user_loaded_from_cookie.connect_via(app)
+def _track_login_s(sender, user, **extra):
+    """
+    通过信号处理登录日志
+    :param sender:
+    :param user:
+    :param extra:
+    :return:
+    """
+    # 用户通过验证后，记录登入IP
+    login_info = {
+        'login_ip': get_real_ip(),
+        'login_time': datetime.utcnow()
+    }
+    edit_user(user.id, login_info)
 
 
 @app.route('/favicon.ico')
