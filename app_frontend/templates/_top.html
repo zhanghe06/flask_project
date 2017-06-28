@@ -14,10 +14,10 @@
                 <ul class="nav navbar-nav">
                     <li{% if request.path == url_for('index') %} class="active"{% endif %}><a href="{{ url_for('index') }}"><span
                             class="glyphicon glyphicon-home"></span> 首页</a></li>
-                    <li{% if request.path == url_for('about') %} class="active"{% endif %}><a href="{{ url_for('about') }}"><span
-                            class="glyphicon glyphicon-list"></span> 关于我们</a></li>
-                    <li{% if request.path == url_for('contact') %} class="active"{% endif %}><a href="{{ url_for('contact') }}"><span
-                            class="glyphicon glyphicon-envelope"></span> 联系我们</a></li>
+{#                    <li{% if request.path == url_for('about') %} class="active"{% endif %}><a href="{{ url_for('about') }}"><span#}
+{#                            class="glyphicon glyphicon-list"></span> 关于我们</a></li>#}
+{#                    <li{% if request.path == url_for('contact') %} class="active"{% endif %}><a href="{{ url_for('contact') }}"><span#}
+{#                            class="glyphicon glyphicon-envelope"></span> 联系我们</a></li>#}
                 {% if current_user and current_user.is_authenticated %}
                     <li class="dropdown{% if 'put' in request.path %} active{% endif %}">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"

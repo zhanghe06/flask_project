@@ -21,6 +21,9 @@ from app_frontend.api.user_profile import get_user_profile_row_by_id
 from app_frontend.api.wallet import get_wallet_row_by_id
 from app_frontend.api.bit_coin import get_bit_coin_row_by_id
 from app_frontend.api.score import get_score_row_by_id
+from app_frontend.api.score_charity import get_score_charity_row_by_id
+from app_frontend.api.score_digital import get_score_digital_row_by_id
+from app_frontend.api.score_expense import get_score_expense_row_by_id
 from app_frontend.api.bonus import get_bonus_row_by_id
 from app_frontend.api.active import get_active_row_by_id
 from app_common.maps.type_level import TYPE_LEVEL_DICT
@@ -28,6 +31,7 @@ from app_common.maps.type_apply import TYPE_APPLY_DICT
 from app_common.maps.type_auth import TYPE_AUTH_DICT
 from app_common.maps.type_active import TYPE_ACTIVE_DICT
 from app_common.maps.type_score import TYPE_SCORE_DICT
+from app_common.maps.type_payment import TYPE_PAYMENT_DICT
 from app_common.maps.status_audit import STATUS_AUDIT_DICT
 from app_common.maps.status_apply import STATUS_APPLY_DICT
 from app_common.maps.status_order import STATUS_ORDER_DICT
@@ -266,6 +270,16 @@ def filter_type_score(type_score_id):
     return TYPE_SCORE_DICT.get(type_score_id, u'')
 
 
+@app.template_filter('type_payment')
+def filter_type_payment(type_payment_id):
+    """
+    收支类型
+    :param type_payment_id:
+    :return:
+    """
+    return TYPE_PAYMENT_DICT.get(type_payment_id, u'')
+
+
 @app.template_filter('status_apply')
 def filter_status_apply(status_apply_id):
     """
@@ -345,3 +359,35 @@ def filter_status_lock(status_lock_id):
     """
     return STATUS_LOCK_DICT.get(status_lock_id, u'')
 
+
+@app.template_filter('score_charity')
+def filter_score_charity(user_id):
+    """
+    慈善积分
+    :param user_id:
+    :return:
+    """
+    row = get_score_charity_row_by_id(user_id)
+    return row.amount if row else 0
+
+
+@app.template_filter('score_digital')
+def filter_score_digital(user_id):
+    """
+    数字积分
+    :param user_id:
+    :return:
+    """
+    row = get_score_digital_row_by_id(user_id)
+    return row.amount if row else 0
+
+
+@app.template_filter('score_expense')
+def filter_score_expense(user_id):
+    """
+    消费积分
+    :param user_id:
+    :return:
+    """
+    row = get_score_expense_row_by_id(user_id)
+    return row.amount if row else 0

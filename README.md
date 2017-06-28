@@ -1473,6 +1473,103 @@ http://www.python-requests.org/en/master/user/advanced/#streaming-requests
 http://flask-sse.readthedocs.io/en/latest/quickstart.html
 
 
+## 分库分表
+
+- 分库
+
+http://flask-sqlalchemy.pocoo.org/2.1/binds/
+```
+SQLALCHEMY_DATABASE_URI = 'postgres://localhost/main'
+SQLALCHEMY_BINDS = {
+    'users':        'mysqldb://localhost/users',
+    'appmeta':      'sqlite:////path/to/appmeta.db'
+}
+```
+
+```
+class User(db.Model):
+    __bind_key__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True)
+```
+
+使用 SQLALCHEMY_BINDS（） 和 **\_\_bind_key__**
+
+- 分表
+
+网友方案，先拿来
+```
+class GoodsDesc(object):
+
+    _mapper = {}
+
+    @staticmethod
+    def model(goods_id):
+        table_index = goods_id%100
+        class_name = 'GoodsDesc_%d' % table_index
+
+        ModelClass = GoodsDesc._mapper.get(class_name, None)
+        if ModelClass is None:
+            ModelClass = type(class_name, (db.Model,), {
+                '__module__' : __name__,
+                '__name__' : class_name,
+                '__tablename__' : 'goods_desc_%d' % table_index,
+
+                'goods_id' : db.Column(db.Integer, primary_key=True),
+                'goods_desc' : db.Column(db.Text, default=None),
+            })
+            GoodsDesc._mapper[class_name] = ModelClass
+
+        cls = ModelClass()
+        cls.goods_id = goods_id
+        return cls
+
+# 外部代码调用如例如下：
+# -----------------------
+
+# 新增插入
+gdm = GoodsDesc.model(goods_id)
+gdm.goods_desc = 'desc'
+db.session.add(gd)
+
+# 查询
+gdm = GoodsDesc.model(goods_id)
+gd = gdm.query.filter_by(goods_id=goods_id).first()
+```
+
+待改进
+```
+_mapper = {}
+
+
+def shard(self, pk_id):
+    """
+    分表
+    :param self:
+    :param pk_id:
+    :return:
+    """
+    table_index = pk_id % 16
+    class_name = '%s_%02d' % (self.name, table_index)
+
+    model_class = _mapper.get(class_name, None)
+    if model_class is None:
+        model_class = type(class_name, (Base,), {
+            '__module__': __name__,
+            '__name__': class_name,
+            '__tablename__': '%s_%d' % (self.__table__.name, table_index),
+
+            'goods_id': db.Column(db.Integer, primary_key=True),
+            'goods_desc': db.Column(db.Text, default=None),
+        })
+        _mapper[class_name] = model_class
+
+    cls = model_class()
+    cls.id = pk_id
+    return cls
+```
+
+
 ## Todo：
 
 - 第三方登陆

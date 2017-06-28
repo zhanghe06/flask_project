@@ -106,12 +106,6 @@ def user_apply_get(user_id, type_pay, type_withdraw, money_apply):
     :return:
     """
     try:
-        # todo 提现条件检查（次数限制）
-        if 0:
-            raise Exception(u'超过当天提现限制次数')
-        if 0:
-            raise Exception(u'超过当月提现限制次数')
-        #
         current_time = datetime.utcnow()
         # 新增用户提现申请记录
         apply_get_data = {
@@ -136,7 +130,7 @@ def user_apply_get(user_id, type_pay, type_withdraw, money_apply):
             wallet_item_info = {
                 'user_id': user_id,
                 'type': TYPE_PAYMENT_EXPENSE,
-                'money': money_apply,
+                'amount': money_apply,
                 'sc_id': apply_get_id,
                 # 'note': u'',
                 'status_audit': STATUS_AUDIT_SUCCESS,

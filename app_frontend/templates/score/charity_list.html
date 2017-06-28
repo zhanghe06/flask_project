@@ -12,7 +12,7 @@
         <ol class="breadcrumb">
             <li><a href="/">首页</a></li>
             <li class="active">积分中心</li>
-            <li class="active">慈善积分</li>
+            <li class="active">慈善积分 <span class="badge">{{ current_user.id | score_charity }}</span></li>
         </ol>
         <div class="btn-group pull-right" role="group" aria-label="...">
         {% if not request.query_string %}

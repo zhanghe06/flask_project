@@ -41,17 +41,19 @@ from app_frontend.database import db
 
 from flask import Blueprint
 
+from app_frontend.tools.config_manage import get_conf
+
 PER_PAGE_FRONTEND = app.config['PER_PAGE_FRONTEND']
 
-INTEREST_PUT = app.config['INTEREST_PUT']               # 投资利息（日息）
-INTEREST_PAY_AHEAD = app.config['INTEREST_PAY_AHEAD']   # 提前支付奖金比例
-INTEREST_PAY_DELAY = app.config['INTEREST_PAY_DELAY']   # 延迟支付罚金比例
+INTEREST_PUT = get_conf('INTEREST_PUT')               # 投资利息（日息）
+INTEREST_PAY_AHEAD = get_conf('INTEREST_PAY_AHEAD')   # 提前支付奖金比例
+INTEREST_PAY_DELAY = get_conf('INTEREST_PAY_DELAY')   # 延迟支付罚金比例
 
-DIFF_TIME_PAY_AHEAD = app.config['DIFF_TIME_PAY_AHEAD']   # 提前支付奖金时间差
-DIFF_TIME_PAY_DELAY = app.config['DIFF_TIME_PAY_DELAY']   # 延迟支付罚金时间差
+DIFF_TIME_PAY_AHEAD = get_conf('DIFF_TIME_PAY_AHEAD')   # 提前支付奖金时间差
+DIFF_TIME_PAY_DELAY = get_conf('DIFF_TIME_PAY_DELAY')   # 延迟支付罚金时间差
 
-BONUS_DIRECT = app.config['BONUS_DIRECT']     # 直接推荐奖励
-BONUS_LEVEL = app.config['BONUS_LEVEL']     # 奖金等级
+BONUS_DIRECT = get_conf('BONUS_DIRECT')     # 直接推荐奖励
+BONUS_LEVEL = get_conf('BONUS_LEVEL')     # 奖金等级
 
 bp_order = Blueprint('order', __name__, url_prefix='/order')
 
@@ -454,7 +456,7 @@ def ajax_rec():
                     'user_id': user_id,
                     'type': TYPE_PAYMENT_INCOME,
                     'sc_id': order_id,
-                    'money': interest,
+                    'amount': interest,
                     'status_audit': STATUS_AUDIT_SUCCESS,
                     'audit_time': current_time,
                     'create_time': current_time,
@@ -493,7 +495,7 @@ def ajax_rec():
                     'user_id': user_id,
                     'type': TYPE_PAYMENT_EXPENSE,
                     'sc_id': order_id,
-                    'money': interest,
+                    'amount': interest,
                     'status_audit': STATUS_AUDIT_SUCCESS,
                     'audit_time': current_time,
                     'create_time': current_time,

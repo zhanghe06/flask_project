@@ -12,7 +12,7 @@
         <ol class="breadcrumb">
             <li><a href="/">首页</a></li>
             <li class="active">激活中心</li>
-            <li class="active">激活记录</li>
+            <li class="active">激活记录 <span class="badge">{{ current_user.id | user_active }}</span></li>
         </ol>
         <div class="btn-group pull-right" role="group" aria-label="...">
             {% if request.query_string == 'active_status=1' %}

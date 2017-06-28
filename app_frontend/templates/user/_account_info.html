@@ -15,11 +15,11 @@
         </thead>
         <tbody>
             <tr>
-                <td><a href="#">钱包余额</a></td>
+                <td><a href="{{ url_for('wallet.lists') }}">钱包余额</a></td>
                 <td>{{ current_user.id | user_wallet }}</td>
             </tr>
             <tr>
-                <td><a href="#">数字货币</a></td>
+                <td><a href="{{ url_for('bit_coin.lists') }}">数字货币</a></td>
                 <td>{{ current_user.id | user_bit_coin }}</td>
             </tr>
             <tr>
@@ -31,7 +31,7 @@
                 <td>{{ current_user.id | user_bonus }}</td>
             </tr>
             <tr>
-                <td><a href="#">激活码量</a></td>
+                <td><a href="{{ url_for('active.lists') }}">激活码量</a></td>
                 <td>{{ current_user.id | user_active }}</td>
             </tr>
         </tbody>

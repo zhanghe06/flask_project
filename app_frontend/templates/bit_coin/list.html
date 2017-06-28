@@ -1,0 +1,110 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="/">首页</a></li>
+        <li class="active">账户信息</li>
+        <li class="active">数字货币</li>
+    </ol>
+
+    <div class="row">
+        <div class="table-responsive col-lg-8 col-md-12">
+            {# <table class="table table-striped"> #}
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>序号</th>
+{#                    <th>数字货币编号</th>#}
+{#                    <th>用户编号</th>#}
+                    <th>收支类型</th>
+                    <th>金额</th>
+                    <th>备注</th>
+                    <th>审核状态</th>
+                    <th>时间</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for wallet in pagination.items %}
+                <tr class="text-muted">
+                    <td>{{ loop.index }}</td>
+{#                    <td>{{ wallet.id }}</td>#}
+{#                    <td>{{ wallet.user_id }}</td>#}
+                    <td>{{ wallet.type | type_payment }}</td>
+                    <td>{{ wallet.amount }}</td>
+                    <td>{{ wallet.note }}</td>
+                    <td>{{ wallet.status_audit | status_audit }}</td>
+                    <td>{{ moment(wallet.create_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {# 翻页 #}
+            {% from "macros.html" import render_pagination %}
+            {{ render_pagination(pagination, 'wallet.lists') }}
+        </div>
+        <!-- 用户概要 -->
+        <div class="col-lg-4 col-md-12">
+            <!-- 状态信息 -->
+            {% include('user/_status.html') %}
+            <!-- 推广链接 -->
+            {% include('user/_invite_link.html') %}
+            <!-- 账户信息 -->
+            {% include('user/_account_info.html') %}
+            <!-- 我的团队 -->
+            {% include('user/_team_tree.html') %}
+        </div>
+    </div>
+
+
+    </div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='plugin/clipboard.js-1.6.1/dist/clipboard.min.js') }}"></script>
+
+<script>
+    /**
+     * 用户自己激活
+     * @returns {boolean}
+     */
+    function self_active() {
+        //console.log($(form).serialize());
+        $.ajax({
+            url: "{{ url_for('user.ajax_self_active') }}",
+            type: 'GET',
+            dataType: 'json',
+            success: function (result) {
+                console.log(result);
+                if(result.hasOwnProperty('error')){
+                    alert(result.error);
+                }else {
+                    alert(result.success);
+                    document.location.reload();
+                }
+            }
+        });
+        return false;
+    }
+</script>
+
+<script>
+    //推广链接复制
+    var clipboard = new Clipboard('.btn');
+
+    clipboard.on('success', function(e) {
+        // console.info('Action:', e.action);
+        // console.info('Text:', e.text);
+        // console.info('Trigger:', e.trigger);
+        e.clearSelection();
+        alert('复制成功，粘贴使用推广链接');
+    });
+
+    clipboard.on('error', function(e) {
+        // console.error('Action:', e.action);
+        // console.error('Trigger:', e.trigger);
+        alert('操作失败，重新复制推广链接');
+    });
+</script>
+{% endblock %}

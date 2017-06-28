@@ -18,6 +18,8 @@ from flask_login import current_user, login_required
 from app_frontend import app
 from app_frontend.models import User
 from app_frontend.api.wallet import get_wallet_rows
+from app_frontend.api.wallet_item import get_wallet_item_rows
+from config import PER_PAGE_FRONTEND
 
 from flask import Blueprint
 
@@ -32,8 +34,7 @@ def lists(page=1):
     """
     钱包列表
     """
-
-    pagination = get_wallet_rows(page)
+    pagination = get_wallet_item_rows(page, PER_PAGE_FRONTEND, **{'user_id': current_user.id})
     return render_template('wallet/list.html', title='wallet_list', pagination=pagination)
 
 
