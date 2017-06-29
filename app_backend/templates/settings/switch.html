@@ -7,7 +7,9 @@
         <li><a href="javascript:void(0);" onclick="$('#menu-settings').trigger('click');">系统配置</a></li>
         <li class="active">开关配置</li>
     </ol>
-
+    <div class="btn-group pull-right" role="group" aria-label="...">
+        <a type="button" class="btn btn-warning" href="javascript:void(0);" onclick="ajax_clean()">还原所有配置</a>
+    </div>
     {# 表单 #}
     <form class="form-horizontal" method="post" action="">
         {{ form.csrf_token }}
@@ -115,4 +117,27 @@
 
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // 清除所有配置
+    function ajax_clean(){
+        if(confirm("是否确认还原所有配置?"))
+        {
+            // console.log(order_id);
+            $.getJSON('{{ url_for('settings.ajax_clean') }}',
+            {
+            }, function (result) {
+                if(result.hasOwnProperty('error')){
+                    alert(result.error);
+                }else {
+                    alert(result.success);
+                    window.location.reload();
+                }
+            });
+            return false;
+        }
+    }
+</script>
 {% endblock %}

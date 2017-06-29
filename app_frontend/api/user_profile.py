@@ -11,7 +11,7 @@
 
 import json
 from app_frontend.models import UserProfile
-from app_frontend.tools.db import get_row, get_rows, get_lists, get_row_by_id, add, edit, delete
+from app_frontend.tools.db import get_row, get_rows, get_lists, get_row_by_id, add, edit, delete, count
 
 from app_common.tools.tree import tree
 
@@ -132,7 +132,7 @@ def get_p_uid_list(user_id):
 
 def get_child_users(user_id):
     """
-    获取子节点
+    获取一级子节点所有元素
     :param user_id:
     :return:
     """
@@ -141,6 +141,19 @@ def get_child_users(user_id):
     }
     rows = get_lists(UserProfile, **condition)
     return [(row.user_id, row.nickname, row.type_level) for row in rows]
+
+
+def get_child_count(user_id):
+    """
+    获取一级子节点元素数量
+    :param user_id:
+    :return:
+    """
+    condition = {
+        'user_pid': user_id
+    }
+    child_count = count(UserProfile, **condition)
+    return child_count
 
 
 def get_team_tree(user_id):

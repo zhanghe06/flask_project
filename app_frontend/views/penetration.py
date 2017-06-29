@@ -23,7 +23,7 @@ bp_penetration = Blueprint('penetration', __name__, url_prefix='/penetration')
 @bp_penetration.route('/index/')
 def index():
     """
-    渗透测试，生成环境需要关掉蓝图
+    渗透测试，生产环境需要关掉蓝图
     """
     name = request.values.get('name', 'world')
     # 不安全的两种方式

@@ -183,6 +183,24 @@ def edit(model_name, pk_id, data):
         raise e
 
 
+def merge(model_name, data):
+    """
+    覆盖信息(没有新增，存在更新)
+    数据中必须带主键字段
+    :param model_name:
+    :param data:
+    :return: Value of PK
+    """
+    model_obj = model_name(**data)
+    try:
+        r = db.session.merge(model_obj)
+        db.session.commit()
+        return inspect(r).identity[0]
+    except Exception as e:
+        db.session.rollback()
+        raise e
+
+
 def delete(model_name, pk_id):
     """
     删除信息

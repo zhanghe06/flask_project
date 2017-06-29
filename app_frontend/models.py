@@ -419,6 +419,15 @@ class UserBank(Base):
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
 
+class UserConfig(Base):
+    __tablename__ = 'user_config'
+
+    user_id = Column(Integer, primary_key=True)
+    team_bonus = Column(String(100), server_default=text("''"))
+    create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
+    update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+
+
 class UserProfile(Base):
     __tablename__ = 'user_profile'
     __table_args__ = (

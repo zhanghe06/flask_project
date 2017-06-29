@@ -50,7 +50,11 @@ def index():
     from app_frontend.forms.reg import RegForm
     form = RegForm()
     # 推荐人赋值
-    form.user_pid.data = session.get('user_pid', 0)
+    user_pid = session.get('user_pid', 0)
+    if not app.config.get('TEST') and not user_pid:
+        flash(u'没有推荐人，不能注册', 'warning')
+        return redirect('index')
+    form.user_pid.data = user_pid
     if request.method == 'POST':
         if form.validate_on_submit():
             current_time = datetime.utcnow()

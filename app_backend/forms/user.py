@@ -10,10 +10,12 @@
 
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField, HiddenField
+from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField, HiddenField, IntegerField
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress, \
     InputRequired
 from flask_login import current_user
+
+from app_backend.api.user import get_user_row_by_id
 from app_backend.models import UserProfile, UserAuth
 from app_backend.forms import SelectBS, CheckBoxBS
 from app_common.maps import status_lock_list
@@ -23,6 +25,7 @@ from app_backend.api.user_auth import get_user_auth_row
 
 from app_backend.api.user_profile import get_user_profile_row
 from app_backend.forms import SelectAreaCode, CheckBoxBS
+from app_common.maps.status_delete import STATUS_DEL_OK
 from app_common.maps.type_auth import TYPE_AUTH_ACCOUNT
 
 
@@ -224,3 +227,31 @@ class UserSearchForm(FlaskForm):
     end_time = StringField('End Time')
     status_active = SelectBS('Status Active', default='', choices=status_active_list)
     status_lock = SelectBS('Status Lock', default='', choices=status_lock_list)
+
+
+class UserRightValidate(object):
+    """
+    用户权限校验
+    """
+    def __init__(self, message=None):
+        self.message = message
+
+    def __call__(self, form, field):
+        # 用户异常处理
+        user_info = get_user_row_by_id(field.data)
+
+        if not user_info:
+            raise ValidationError(u'异常操作，此用户不存在')
+        if user_info.status_delete == int(STATUS_DEL_OK):
+            raise ValidationError(u'异常操作，此用户已删除')
+
+
+class UserConfigForm(FlaskForm):
+    """
+    用户配置表单
+    """
+    user_id = StringField(u'用户ID', validators=[
+        DataRequired(message=u'用户ID不能为空'),
+        UserRightValidate()
+    ])
+    team_bonus = StringField(u'团队奖金配置')

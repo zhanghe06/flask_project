@@ -106,6 +106,7 @@
                         <span class="glyphicon glyphicon-qrcode"></span>
                     </a>
                     <a href="{{ url_for('user.profile', user_id=user.id, next=request.path) }}" rel="tooltip" title="编辑"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="{{ url_for('user.config', user_id=user.id, next=request.path) }}" rel="tooltip" title="配置"><span class="glyphicon glyphicon-cog"></span></a>
                     {% if user.status_lock == STATUS_LOCK_OK | int %}
                     <a href="javascript:void(0);" onclick="user_unlock({{ user.id }});" rel="tooltip" title="解锁"><span class="fa fa-unlock-alt"></span></a>
                     {% else %}

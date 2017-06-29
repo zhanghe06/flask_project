@@ -5,33 +5,34 @@
     <div class="container">
     <ol class="breadcrumb">
         <li><a href="/">首页</a></li>
-        <li class="active">激活中心</li>
-        <li class="active">赠送激活</li>
+        <li><a href="javascript:void(0);" onclick="$('#menu-user').trigger('click');">会员管理</a></li>
+        <li class="active">用户配置</li>
     </ol>
     <form class="form-horizontal" method="post" action="">
         {{ form.csrf_token }}
         <div class="form-group{% if form.user_id.errors %} has-error{% endif %}">
             {{ form.user_id.label(class="col-sm-2 control-label") }}
             <div class="col-sm-10">
-                {{ form.user_id(class="form-control", placeholder="填写赠送用户ID") }}
+                <div class="form-control">{{ form.user_id.data | nickname }}</div>
                 {% for error in form.user_id.errors %}
                     <span class="help-block">{{ error }}</span>
                 {% endfor %}
             </div>
         </div>
-        <div class="form-group{% if form.amount.errors %} has-error{% endif %}">
-            {{ form.amount.label(class="col-sm-2 control-label") }}
+        <div class="form-group{% if form.team_bonus.errors %} has-error{% endif %}">
+            {{ form.team_bonus.label(class="col-sm-2 control-label") }}
             <div class="col-sm-10">
-                {{ form.amount(class="form-control", placeholder="填写赠送数量", type="number", min="1") }}
-                {% for error in form.amount.errors %}
+                {{ form.team_bonus(class="form-control", placeholder="填写奖金配置") }}
+                {% for error in form.team_bonus.errors %}
                     <span class="help-block">{{ error }}</span>
                 {% endfor %}
-                <span class="help-block">赠送数量必须为整数 [当前剩余激活码数量：{{ form.user_id.data | user_active }}]</span>
+                <span class="help-block">小数表示，半角逗号分隔；如为空，则按全局配置执行</span>
+                <span class="help-block">例如：0.05,0.05,0.03（一级,二级,三级） 暂时最多支持3级</span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-success btn-load" data-loading-text="赠送中">赠送</button>
+                <button type="submit" class="btn btn-success btn-load" data-loading-text="配置中">配置</button>
                 <button type="reset" class="btn btn-default">重新填写</button>
                 <button class="btn btn-default" onclick="history.back();">返回</button>
             </div>

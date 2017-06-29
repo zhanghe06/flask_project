@@ -42,18 +42,23 @@ from app_frontend.database import db
 from flask import Blueprint
 
 from app_frontend.tools.config_manage import get_conf
+from decimal import Decimal
 
 PER_PAGE_FRONTEND = app.config['PER_PAGE_FRONTEND']
 
-INTEREST_PUT = get_conf('INTEREST_PUT')               # 投资利息（日息）
-INTEREST_PAY_AHEAD = get_conf('INTEREST_PAY_AHEAD')   # 提前支付奖金比例
-INTEREST_PAY_DELAY = get_conf('INTEREST_PAY_DELAY')   # 延迟支付罚金比例
+INTEREST_PUT = Decimal(get_conf('INTEREST_PUT'))               # 投资利息（日息）
+INTEREST_PAY_AHEAD = Decimal(get_conf('INTEREST_PAY_AHEAD'))   # 提前支付奖金比例
+INTEREST_PAY_DELAY = Decimal(get_conf('INTEREST_PAY_DELAY'))   # 延迟支付罚金比例
 
-DIFF_TIME_PAY_AHEAD = get_conf('DIFF_TIME_PAY_AHEAD')   # 提前支付奖金时间差
-DIFF_TIME_PAY_DELAY = get_conf('DIFF_TIME_PAY_DELAY')   # 延迟支付罚金时间差
+DIFF_TIME_PAY_AHEAD = int(get_conf('DIFF_TIME_PAY_AHEAD'))   # 提前支付奖金时间差
+DIFF_TIME_PAY_DELAY = int(get_conf('DIFF_TIME_PAY_DELAY'))   # 延迟支付罚金时间差
 
-BONUS_DIRECT = get_conf('BONUS_DIRECT')     # 直接推荐奖励
-BONUS_LEVEL = get_conf('BONUS_LEVEL')     # 奖金等级
+BONUS_DIRECT = Decimal(get_conf('BONUS_DIRECT'))     # 直接推荐奖励
+
+BONUS_LEVEL_FIRST = Decimal(get_conf('BONUS_LEVEL_FIRST'))     # 一级推荐奖励
+BONUS_LEVEL_SECOND = Decimal(get_conf('BONUS_LEVEL_SECOND'))     # 二级推荐奖励
+BONUS_LEVEL_THIRD = Decimal(get_conf('BONUS_LEVEL_THIRD'))     # 三级推荐奖励
+BONUS_LEVEL = [BONUS_LEVEL_FIRST, BONUS_LEVEL_SECOND, BONUS_LEVEL_THIRD]     # 奖金等级
 
 bp_order = Blueprint('order', __name__, url_prefix='/order')
 
@@ -445,10 +450,10 @@ def ajax_rec():
             current_time = datetime.utcnow()
             diff_time = (current_time - order_time).seconds
             # 判断是否满足奖励规则
-            print diff_time, DIFF_TIME_PAY_AHEAD
-            print type(diff_time), type(DIFF_TIME_PAY_AHEAD)
-
-            print '-'*300
+            # print diff_time, DIFF_TIME_PAY_AHEAD
+            # print type(diff_time), type(DIFF_TIME_PAY_AHEAD)
+            #
+            # print '-'*300
             if diff_time < DIFF_TIME_PAY_AHEAD:
                 interest = order_info.money * Decimal(INTEREST_PAY_AHEAD)
                 # 添加奖励明细
@@ -605,3 +610,6 @@ def stats():
     :return:
     """
     pass
+
+
+print get_conf('DIFF_TIME_PAY_DELAY'), type(get_conf('DIFF_TIME_PAY_DELAY'))

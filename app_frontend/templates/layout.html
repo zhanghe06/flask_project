@@ -21,7 +21,7 @@
     <link href="{{ url_for('static', filename='css/slideout.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/bootstrap-select.min.css') }}" rel="stylesheet">
     <!-- Custom -->
-    <link href="{{ url_for('static', filename='css/custom.css', v='1.4.93') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/custom.css', v='1.4.94') }}" rel="stylesheet">
     {% block extra_css %}{% endblock %}
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -50,20 +50,7 @@
     </div>
     {% block content %}{% endblock %}
     <!-- Fixed Footer -->
-    <nav class="text-center panel-footer">
-{#    <div class="container">#}
-    {{ "项目名称" | project_name }} &copy; 2017 All Rights Reserved.<br/>{{ "沪ICP备12024750号" | icp_code }}
-{#    </div>#}
-    </nav>
-    <!-- Top Link -->
-    <span id="top-link-block" class="hidden">
-        <a href="" class="well-sm" id="top-link">
-            <i class="glyphicon glyphicon-plane center-block"></i>
-        </a>
-        <a href="" class="well-sm" id="top-link">
-            <i class="glyphicon glyphicon-qrcode center-block"></i>
-        </a>
-    </span>
+    {% include '_footer.html' %}
 {#    </div>#}
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

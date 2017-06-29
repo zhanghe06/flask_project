@@ -22,6 +22,7 @@ from flask_login import current_user, login_required
 from itsdangerous import TimestampSigner
 from sqlalchemy.orm import aliased
 
+from app_backend.api.user_config import merge_user_config
 from app_backend.tools.config_manage import get_conf
 from app_common.maps import area_code_map
 from app_common.maps.type_auth import *
@@ -32,7 +33,8 @@ from app_backend.api.user import edit_user, user_reg_stats, user_active_stats
 from app_backend.api.user_auth import get_user_auth_row, edit_user_auth
 from app_backend.api.user_bank import get_user_bank_row_by_id, add_user_bank, edit_user_bank
 from app_backend.api.user_profile import get_user_profile_row_by_id, edit_user_profile, get_team_tree_recursion, get_user_profile_row
-from app_backend.forms.user import UserProfileForm, UserAuthForm, UserBankForm, UserSearchForm
+from app_backend.api.user_config import get_user_config_row_by_id
+from app_backend.forms.user import UserProfileForm, UserAuthForm, UserBankForm, UserSearchForm, UserConfigForm
 from app_backend.models import User
 from app_backend.models import UserProfile
 from app_backend.models import UserBank
@@ -564,3 +566,45 @@ def admin_login(user_id):
     s = TimestampSigner(app.config.get('ADMIN_TO_USER_LOGIN_SIGN_KEY'))
     user_id_sign = s.sign(str(user_id))
     return redirect('%s/auth/admin_login/?uid_sign=%s' % (app.config.get('FRONTEND_URL', ''), user_id_sign))
+
+
+@bp_user.route('/config/', methods=['GET', 'POST'])
+@login_required
+def config():
+    """
+    用户配置
+    :return:
+    """
+    user_id = request.args.get('user_id', 0, type=int)
+
+    form = UserConfigForm(request.form)
+
+    # 初始化表单的值
+    if user_id:
+        form.user_id.data = user_id
+    else:
+        flash(u'用户参数错误', 'warning')
+        return redirect('.lists')
+    if request.method == 'GET':
+        user_config = get_user_config_row_by_id(user_id)
+        form.team_bonus.data = user_config.team_bonus if user_config else ''
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            # 用户配置
+            current_time = datetime.utcnow()
+            data = {
+                'user_id': user_id,
+                'team_bonus': form.team_bonus.data,
+                'create_time': current_time,
+                'update_time': current_time
+            }
+            res = merge_user_config(data)
+            if res:
+                flash(u'配置成功', 'success')
+            else:
+                flash(u'配置失败', 'warning')
+        else:
+            flash(u'配置失败', 'warning')
+        # 闪现消息 success info warning danger
+        # flash(form.errors, 'warning')  # 调试打开
+    return render_template('user/config.html', title='user_config', form=form)

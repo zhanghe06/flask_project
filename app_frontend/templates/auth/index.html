@@ -54,7 +54,7 @@
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-default btn-load" data-loading-text="登录中" autocomplete="off">登录</button> <a href="#">忘记密码?</a>
+                <button type="submit" class="btn btn-default btn-load" data-loading-text="登录中" autocomplete="off">登录</button> <a href="#" data-toggle="modal" data-target="#forget_password">忘记密码?</a>
             </div>
         </div>
     </form>
@@ -64,6 +64,8 @@
     {% endif %}
 
     </div>
+    <!-- 忘记密码 -->
+    {% include('auth/_forget_password.html') %}
 {% endblock %}
 
 {% block extra_js %}
