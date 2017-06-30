@@ -24,7 +24,8 @@ def get_conf(conf_name):
     """
     conf_key = 'conf:%s' % conf_name
     conf_value = redis_client.get(conf_key)
-    return str(conf_value) or str(app.config.get(conf_name))
+    res = conf_value or app.config.get(conf_name)
+    return str(res)
 
 
 def set_conf(conf_name, conf_value):
