@@ -23,6 +23,7 @@ from app_common.maps.status_rec import *
 from app_common.maps.status_audit import *
 from app_common.maps.status_delete import *
 from app_frontend import app
+
 EXCHANGE_NAME = app.config['EXCHANGE_NAME']
 LOCK_PAY_NOT_REC_TTL = app.config['LOCK_PAY_NOT_REC_TTL']
 
@@ -63,10 +64,21 @@ def run():
 def test_put():
     """
     测试数据推入队列
+    触发条件：订单成功支付
     :return:
     """
-    q = RabbitDelayQueue(exchange=EXCHANGE_NAME, queue_name='lock_pay_not_rec', ttl=LOCK_PAY_NOT_REC_TTL)
-    q.put({'user_id': 0, 'order_id': 0, 'pay_time': time.strftime('%Y-%m-%d %H:%M:%S')})
+    q = RabbitDelayQueue(
+        exchange=EXCHANGE_NAME,
+        queue_name='lock_pay_not_rec',
+        ttl=LOCK_PAY_NOT_REC_TTL
+    )
+    msg = {
+        'user_id': 0,
+        'order_id': 0,
+        'pay_time': time.strftime('%Y-%m-%d %H:%M:%S')
+    }
+    q.put(msg)
+    q.close_conn()
 
 
 if __name__ == '__main__':

@@ -32,6 +32,7 @@ from app_frontend.api.wallet_item import add_wallet_item
 from app_frontend.api.wallet import get_wallet_row_by_id, add_wallet, edit_wallet
 from app_frontend.api.bonus_item import add_bonus_item
 from app_frontend.api.bonus import get_bonus_row_by_id, add_bonus, edit_bonus
+from app_frontend.api.user_config import get_user_config_row_by_id
 from app_common.maps.status_pay import *
 from app_common.maps.status_rec import *
 from app_common.maps.status_delete import *
@@ -47,11 +48,18 @@ from decimal import Decimal
 PER_PAGE_FRONTEND = app.config['PER_PAGE_FRONTEND']
 
 INTEREST_PUT = Decimal(get_conf('INTEREST_PUT'))               # 投资利息（日息）
+
 INTEREST_PAY_AHEAD = Decimal(get_conf('INTEREST_PAY_AHEAD'))   # 提前支付奖金比例
 INTEREST_PAY_DELAY = Decimal(get_conf('INTEREST_PAY_DELAY'))   # 延迟支付罚金比例
 
 DIFF_TIME_PAY_AHEAD = int(get_conf('DIFF_TIME_PAY_AHEAD'))   # 提前支付奖金时间差
 DIFF_TIME_PAY_DELAY = int(get_conf('DIFF_TIME_PAY_DELAY'))   # 延迟支付罚金时间差
+
+INTEREST_REC_AHEAD = Decimal(get_conf('INTEREST_REC_AHEAD'))   # 提前确认奖金比例
+INTEREST_REC_DELAY = Decimal(get_conf('INTEREST_REC_DELAY'))   # 延迟确认罚金比例
+
+DIFF_TIME_REC_AHEAD = int(get_conf('DIFF_TIME_REC_AHEAD'))   # 提前支付奖金时间差
+DIFF_TIME_REC_DELAY = int(get_conf('DIFF_TIME_REC_DELAY'))   # 延迟支付罚金时间差
 
 BONUS_DIRECT = Decimal(get_conf('BONUS_DIRECT'))     # 直接推荐奖励
 
@@ -365,6 +373,8 @@ def ajax_pay():
         order_id = form.get('order_id', 0, type=int)
         status_pay = form.get('status_pay', 0, type=int)
 
+        user_id = current_user.id
+
         try:
             # 参数校验
             if not order_id:
@@ -391,6 +401,83 @@ def ajax_pay():
                 raise Exception(u'异常操作，此订单已删除')
             if order_info.status_pay == status_pay:
                 raise Exception(u'异常操作，此订单已支付')
+
+            # 订单创建时间 与订单支付时间比较
+            order_time = order_info.create_time
+            current_time = datetime.utcnow()
+            diff_time = (current_time - order_time).seconds
+            # 判断是否满足奖励规则
+            if diff_time < DIFF_TIME_PAY_AHEAD:
+                interest = order_info.money * Decimal(INTEREST_PAY_AHEAD)
+                # 添加奖励明细
+                wallet_item_data = {
+                    'user_id': user_id,
+                    'type': TYPE_PAYMENT_INCOME,
+                    'sc_id': order_id,
+                    'amount': interest,
+                    'status_audit': STATUS_AUDIT_SUCCESS,
+                    'audit_time': current_time,
+                    'create_time': current_time,
+                    'update_time': current_time
+                }
+                add_wallet_item(wallet_item_data)
+
+                wallet_info = get_wallet_row_by_id(user_id)
+                # 新增钱包记录，更新钱包余额
+                if not wallet_info:
+                    wallet_data = {
+                        'user_id': user_id,
+                        'amount_initial': 0,
+                        'amount_current': interest,
+                        'amount_lock': 0,
+                        'create_time': current_time,
+                        'update_time': current_time,
+                    }
+                    add_wallet(wallet_data)
+                # 更新钱包余额
+                else:
+                    wallet_data = {
+                        'user_id': user_id,
+                        'amount_current': wallet_info.amount_current + interest,
+                        'update_time': current_time,
+                    }
+                    edit_wallet(user_id, wallet_data)
+
+            # 判断是否满足惩罚规则
+            if diff_time > DIFF_TIME_PAY_DELAY:
+                interest = order_info.money * INTEREST_PAY_DELAY
+                # 添加惩罚明细
+                wallet_item_data = {
+                    'user_id': user_id,
+                    'type': TYPE_PAYMENT_EXPENSE,
+                    'sc_id': order_id,
+                    'amount': interest,
+                    'status_audit': STATUS_AUDIT_SUCCESS,
+                    'audit_time': current_time,
+                    'create_time': current_time,
+                    'update_time': current_time
+                }
+                add_wallet_item(wallet_item_data)
+
+                wallet_info = get_wallet_row_by_id(user_id)
+                # 新增钱包记录，更新钱包余额
+                if not wallet_info:
+                    wallet_data = {
+                        'user_id': user_id,
+                        'amount_initial': 0,
+                        'amount_current': interest,
+                        'amount_lock': 0,
+                        'create_time': current_time,
+                        'update_time': current_time,
+                    }
+                    add_wallet(wallet_data)
+                # 更新钱包余额
+                else:
+                    wallet_data = {
+                        'amount_current': wallet_info.amount_current + interest,
+                        'update_time': current_time,
+                    }
+                    edit_wallet(user_id, wallet_data)
 
             # 更新支付状态
             current_time = datetime.utcnow()
@@ -445,15 +532,11 @@ def ajax_rec():
                 raise Exception(u'异常操作，此订单已完成')
 
             # TODO 事务 用户订单确认
-
-            order_time = order_info.create_time
+            # 订单支付时间 与订单确认时间比较
+            order_pay_time = order_info.pay_time
             current_time = datetime.utcnow()
-            diff_time = (current_time - order_time).seconds
+            diff_time = (current_time - order_pay_time).seconds
             # 判断是否满足奖励规则
-            # print diff_time, DIFF_TIME_PAY_AHEAD
-            # print type(diff_time), type(DIFF_TIME_PAY_AHEAD)
-            #
-            # print '-'*300
             if diff_time < DIFF_TIME_PAY_AHEAD:
                 interest = order_info.money * Decimal(INTEREST_PAY_AHEAD)
                 # 添加奖励明细
@@ -491,8 +574,6 @@ def ajax_rec():
                     edit_wallet(user_id, wallet_data)
 
             # 判断是否满足惩罚规则
-            print diff_time, DIFF_TIME_PAY_DELAY, type(diff_time), type(DIFF_TIME_PAY_DELAY)
-
             if diff_time > DIFF_TIME_PAY_DELAY:
                 interest = order_info.money * INTEREST_PAY_DELAY
                 # 添加惩罚明细
@@ -527,42 +608,6 @@ def ajax_rec():
                         'update_time': current_time,
                     }
                     edit_wallet(user_id, wallet_data)
-
-            # 投资方计算上级推广利息（三级）
-            p_uid_list = get_p_uid_list(user_id)
-            for uid, bonus_rate in zip(p_uid_list, BONUS_LEVEL):
-
-                bonus = order_info.money * Decimal(bonus_rate)
-                # 添加奖金明细
-                bonus_item_data = {
-                    'user_id': uid,
-                    'type': TYPE_PAYMENT_INCOME,
-                    'sc_id': order_id,
-                    'amount': bonus,
-                    'status_audit': STATUS_AUDIT_SUCCESS,
-                    'audit_time': current_time,
-                    'create_time': current_time,
-                    'update_time': current_time
-                }
-                add_bonus_item(bonus_item_data)
-
-                bonus_info = get_bonus_row_by_id(uid)
-                # 新增奖金记录，更新奖金余额
-                if not bonus_info:
-                    bonus_data = {
-                        'user_id': uid,
-                        'amount': bonus,
-                        'create_time': current_time,
-                        'update_time': current_time,
-                    }
-                    add_bonus(bonus_data)
-                # 更新奖金余额
-                else:
-                    bonus_data = {
-                        'amount': bonus,
-                        'update_time': current_time,
-                    }
-                    edit_bonus(uid, bonus_data)
 
             # 更新确认状态
             order_data = {

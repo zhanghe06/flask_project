@@ -155,6 +155,11 @@
                                     <span class="glyphicon glyphicon-king"></span> 我的团队
                                 </a>
                             </li>
+                            <li{% if request.path == url_for('scheduling.lists') %} class="active"{% endif %}>
+                                <a href="{{ url_for('scheduling.lists') }}">
+                                    <span class="glyphicon glyphicon-list-alt"></span> 排单明细
+                                </a>
+                            </li>
 {#                            <li><a href="{{ url_for('user.setting') }}"><span class="glyphicon glyphicon-cog"></span>#}
 {#                                Setting</a></li>#}
                             <li role="separator" class="divider"></li>

@@ -102,17 +102,30 @@
                 <td>{{ user.status_lock | status_lock }}</td>
                 <td>{{ moment(user.create_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
                 <td>
-                    <a href="{{ url_for('active.add', user_id=user.id, next=request.path) }}" rel="tooltip" title="送码">
+                    <a href="{{ url_for('active.add', user_id=user.id, next=request.path) }}" rel="tooltip" title="激活码">
                         <span class="glyphicon glyphicon-qrcode"></span>
                     </a>
-                    <a href="{{ url_for('user.profile', user_id=user.id, next=request.path) }}" rel="tooltip" title="编辑"><span class="glyphicon glyphicon-pencil"></span></a>
-                    <a href="{{ url_for('user.config', user_id=user.id, next=request.path) }}" rel="tooltip" title="配置"><span class="glyphicon glyphicon-cog"></span></a>
+                    <a href="{{ url_for('scheduling.add', user_id=user.id, next=request.path) }}" rel="tooltip" title="排单币">
+                        <span class="glyphicon glyphicon-euro"></span>
+                    </a>
+                    <a href="{{ url_for('user.profile', user_id=user.id, next=request.path) }}" rel="tooltip" title="编辑">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                    <a href="{{ url_for('user.config', user_id=user.id, next=request.path) }}" rel="tooltip" title="配置">
+                        <span class="glyphicon glyphicon-cog"></span>
+                    </a>
                     {% if user.status_lock == STATUS_LOCK_OK | int %}
-                    <a href="javascript:void(0);" onclick="user_unlock({{ user.id }});" rel="tooltip" title="解锁"><span class="fa fa-unlock-alt"></span></a>
+                    <a href="javascript:void(0);" onclick="user_unlock({{ user.id }});" rel="tooltip" title="解锁">
+                        <span class="fa fa-unlock-alt"></span>
+                    </a>
                     {% else %}
-                    <a href="javascript:void(0);" onclick="user_lock({{ user.id }});" rel="tooltip" title="锁定"><span class="glyphicon glyphicon-lock"></span></a>
+                    <a href="javascript:void(0);" onclick="user_lock({{ user.id }});" rel="tooltip" title="锁定">
+                        <span class="glyphicon glyphicon-lock"></span>
+                    </a>
                     {% endif %}
-                    <a href="javascript:void(0);" onclick="user_delete({{ user.id }});" rel="tooltip" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
+                    <a href="javascript:void(0);" onclick="user_delete({{ user.id }});" rel="tooltip" title="删除">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </a>
                 </td>
             </tr>
             {% endfor %}

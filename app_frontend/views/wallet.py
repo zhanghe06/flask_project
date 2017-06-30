@@ -16,6 +16,7 @@ from flask import url_for
 from flask_login import current_user, login_required
 
 from app_frontend import app
+from app_frontend.api.user_profile import get_team_tree
 from app_frontend.models import User
 from app_frontend.api.wallet import get_wallet_rows
 from app_frontend.api.wallet_item import get_wallet_item_rows
@@ -34,8 +35,10 @@ def lists(page=1):
     """
     钱包列表
     """
+    # 获取团队成员三级树形结构
+    team_tree = get_team_tree(current_user.id)
     pagination = get_wallet_item_rows(page, PER_PAGE_FRONTEND, **{'user_id': current_user.id})
-    return render_template('wallet/list.html', title='wallet_list', pagination=pagination)
+    return render_template('wallet/list.html', title='wallet_list', pagination=pagination, team_tree=team_tree)
 
 
 @bp_wallet.route('/add/', methods=['GET', 'POST'])

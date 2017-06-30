@@ -267,6 +267,32 @@ class OrderFlow(Base):
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
 
+class Scheduling(Base):
+    __tablename__ = 'scheduling'
+
+    user_id = Column(Integer, primary_key=True)
+    amount = Column(Numeric(10, 2), nullable=False, server_default=text("'0.00'"))
+    create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
+    update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+
+
+class SchedulingItem(Base):
+    __tablename__ = 'scheduling_item'
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, nullable=False, index=True)
+    type = Column(Integer, nullable=False, server_default=text("'0'"))
+    amount = Column(Numeric(8, 0), nullable=False, server_default=text("'0'"))
+    sc_id = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
+    note = Column(String(256), nullable=False, server_default=text("''"))
+    status_audit = Column(Integer, nullable=False, server_default=text("'0'"))
+    status_delete = Column(Integer, nullable=False, server_default=text("'0'"))
+    audit_time = Column(DateTime)
+    delete_time = Column(DateTime)
+    create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
+    update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+
+
 class Score(Base):
     __tablename__ = 'score'
 

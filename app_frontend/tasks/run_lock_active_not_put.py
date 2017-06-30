@@ -53,6 +53,7 @@ def run():
 def test_put():
     """
     测试数据推入队列
+    触发条件：用户成功激活
     :return:
     """
     q = RabbitDelayQueue(

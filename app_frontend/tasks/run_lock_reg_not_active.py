@@ -63,6 +63,7 @@ def run():
 def test_put():
     """
     测试数据推入队列
+    触发条件：用户成功注册
     :return:
     """
     q = RabbitDelayQueue(
@@ -70,7 +71,12 @@ def test_put():
         queue_name='lock_reg_not_active',
         ttl=LOCK_REG_NOT_ACTIVE_TTL
     )
-    q.put({'user_id': 0, 'reg_time': time.strftime('%Y-%m-%d %H:%M:%S')})
+    msg = {
+        'user_id': 0,
+        'reg_time': time.strftime('%Y-%m-%d %H:%M:%S')
+    }
+    q.put(msg)
+    q.close_conn()
 
 
 if __name__ == '__main__':

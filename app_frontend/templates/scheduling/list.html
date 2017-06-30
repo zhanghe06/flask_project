@@ -1,0 +1,69 @@
+<!-- extend from base layout -->
+{% extends "layout.html" %}
+
+{% block extra_css %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+    <!-- header -->
+    <nav class="sub-header row container-fluid">
+        <ol class="breadcrumb">
+            <li><a href="/">首页</a></li>
+            <li class="active">排单列表 <span class="badge">{{ current_user.id | scheduling_amount }}</span></li>
+        </ol>
+        <div class="btn-group pull-right" role="group" aria-label="...">
+            {% if not request.query_string %}
+            <a type="button" class="btn btn-default active">全部</a>
+            <a type="button" class="btn btn-default" href="{{ url_for('scheduling.lists', scheduling_list=1) }}">用户排单</a>
+            <a type="button" class="btn btn-default" href="{{ url_for('scheduling.lists', scheduling_list=2) }}">系统发送</a>
+            {% elif request.query_string=="scheduling_list=1" %}
+            <a type="button" class="btn btn-default" href="{{ url_for('scheduling.lists') }}">全部</a>
+            <a type="button" class="btn btn-default active">用户排单</a>
+            <a type="button" class="btn btn-default" href="{{ url_for('scheduling.lists', scheduling_list=2) }}">系统发送</a>
+            {% elif request.query_string=="scheduling_list=2" %}
+            <a type="button" class="btn btn-default" href="{{ url_for('scheduling.lists') }}">全部</a>
+            <a type="button" class="btn btn-default" href="{{ url_for('scheduling.lists', scheduling_list=1) }}">用户排单</a>
+            <a type="button" class="btn btn-default active">系统发送</a>
+            {% endif %}
+        </div>
+    </nav>
+
+
+    <hr/>
+    <!-- content -->
+    <div class="table-responsive">
+        {# <table class="table table-striped"> #}
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>排单明细ID</th>
+                <th>用户</th>
+                <th>类型</th>
+                <th>数量</th>
+                <th>时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for scheduling, user_profile_put, user_profile_get in pagination.items %}
+            <tr class="text-muted">
+                <td>{{ scheduling.id }}</td>
+                <td>{{ user_profile_get.nickname }} [{{ scheduling.sc_id }}]</td>
+                <td>{{ scheduling.type | type_scheduling }}</td>
+                <td>{{ scheduling.amount }}</td>
+                <td>{{ moment(scheduling.create_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {# 翻页 #}
+        {% from "macros.html" import render_pagination %}
+        {{ render_pagination(pagination, 'scheduling.lists') }}
+    </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+
+{% endblock %}

@@ -18,6 +18,7 @@ from sqlalchemy.orm import aliased
 
 from app_frontend import app
 from app_frontend.api.active import give_active
+from app_frontend.api.user_profile import get_team_tree
 from app_frontend.models import User, UserProfile, ActiveItem
 from app_frontend.api.active_item import get_active_item_rows
 from app_common.maps.type_active import *
@@ -84,6 +85,9 @@ def add():
     添加激活记录
     :return:
     """
+    # 获取团队成员三级树形结构
+    team_tree = get_team_tree(current_user.id)
+
     user_id = request.args.get('user_id', '', type=int)
 
     form = ActiveAddForm(request.form)
@@ -106,7 +110,7 @@ def add():
                 flash(e.message or u'赠送激活数量操作失败', 'warning')
         # 闪现消息 success info warning danger
         # flash(form.errors, 'warning')  # 调试打开
-    return render_template('active/add.html', title='active_add', form=form)
+    return render_template('active/add.html', title='active_add', form=form, team_tree=team_tree)
 
 
 @bp_active.route('/del/', methods=['GET', 'POST'])

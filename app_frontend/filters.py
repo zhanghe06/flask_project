@@ -16,8 +16,10 @@ from datetime import timedelta
 from app_common.maps.status_active import STATUS_ACTIVE_DICT
 from app_common.maps.status_lock import STATUS_LOCK_DICT
 from app_common.maps.type_order import TYPE_ORDER_DICT
+from app_common.maps.type_scheduling import TYPE_SCHEDULING_DICT
+from app_common.tools.tree import tree
 from app_frontend import app
-from app_frontend.api.user_profile import get_user_profile_row_by_id
+from app_frontend.api.user_profile import get_user_profile_row_by_id, get_child_users
 from app_frontend.api.wallet import get_wallet_row_by_id
 from app_frontend.api.bit_coin import get_bit_coin_row_by_id
 from app_frontend.api.score import get_score_row_by_id
@@ -26,6 +28,7 @@ from app_frontend.api.score_digital import get_score_digital_row_by_id
 from app_frontend.api.score_expense import get_score_expense_row_by_id
 from app_frontend.api.bonus import get_bonus_row_by_id
 from app_frontend.api.active import get_active_row_by_id
+from app_frontend.api.scheduling import get_scheduling_row_by_id
 from app_common.maps.type_level import TYPE_LEVEL_DICT
 from app_common.maps.type_apply import TYPE_APPLY_DICT
 from app_common.maps.type_auth import TYPE_AUTH_DICT
@@ -280,6 +283,16 @@ def filter_type_payment(type_payment_id):
     return TYPE_PAYMENT_DICT.get(type_payment_id, u'')
 
 
+@app.template_filter('type_scheduling')
+def filter_type_scheduling(type_scheduling_id):
+    """
+    排单类型
+    :param type_scheduling_id:
+    :return:
+    """
+    return TYPE_SCHEDULING_DICT.get(type_scheduling_id, u'')
+
+
 @app.template_filter('status_apply')
 def filter_status_apply(status_apply_id):
     """
@@ -391,3 +404,35 @@ def filter_score_expense(user_id):
     """
     row = get_score_expense_row_by_id(user_id)
     return row.amount if row else 0
+
+
+@app.template_filter('scheduling_amount')
+def filter_scheduling_amount(user_id):
+    """
+    排单剩余次数
+    :param user_id:
+    :return:
+    """
+    row = get_scheduling_row_by_id(user_id)
+    return row.amount if row else 0
+
+
+@app.template_filter('team_tree')
+def filter_team_tree(user_id):
+    """
+    获取用户团队3层树形结构
+    :param user_id:
+    :return:
+    """
+    team = tree()
+    child_users = get_child_users(user_id)
+    for user1 in child_users:
+        team[user1] = {}
+        child_users2 = get_child_users(user1[0])
+        for user2 in child_users2:
+            team[user1][user2] = {}
+            child_users3 = get_child_users(user2[0])
+            for user3 in child_users3:
+                team[user1][user2][user3] = {}
+    # print json.dumps(team, indent=4)
+    return team

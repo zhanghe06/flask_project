@@ -12,10 +12,12 @@
 import time
 
 from app_backend.api.active import get_active_row_by_id
+from app_backend.api.scheduling import get_scheduling_row_by_id
 from app_common.maps.role_admin import ROLE_ADMIN_DICT
 from app_common.maps.type_active import TYPE_ACTIVE_DICT
 from app_common.maps.type_apply import TYPE_APPLY_DICT
 from app_common.maps.type_auth import TYPE_AUTH_DICT
+from app_common.maps.type_scheduling import TYPE_SCHEDULING_DICT
 from app_common.maps.status_audit import STATUS_AUDIT_DICT
 from app_common.maps.status_apply import STATUS_APPLY_DICT
 from app_common.maps.status_order import STATUS_ORDER_DICT
@@ -150,6 +152,16 @@ def filter_type_active(type_active_id):
     return TYPE_ACTIVE_DICT.get(type_active_id, u'')
 
 
+@app.template_filter('type_scheduling')
+def filter_type_scheduling(type_scheduling_id):
+    """
+    排单类型
+    :param type_scheduling_id:
+    :return:
+    """
+    return TYPE_SCHEDULING_DICT.get(type_scheduling_id, u'')
+
+
 @app.template_filter('status_apply')
 def filter_status_apply(status_apply_id):
     """
@@ -238,3 +250,16 @@ def filter_status_lock(status_lock_id):
     :return:
     """
     return STATUS_LOCK_DICT.get(status_lock_id, u'')
+
+
+@app.template_filter('scheduling_amount')
+def filter_scheduling_amount(user_id):
+    """
+    排单剩余次数
+    :param user_id:
+    :return:
+    """
+    if not user_id:
+        return 0
+    row = get_scheduling_row_by_id(user_id)
+    return row.amount if row else 0

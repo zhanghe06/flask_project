@@ -15,7 +15,7 @@
                 <thead>
                 <tr>
                     <th>钱包明细编号</th>
-                    <th>用户编号</th>
+{#                    <th>用户编号</th>#}
                     <th>收支类型</th>
                     <th>金额</th>
                     <th>备注</th>
@@ -27,7 +27,7 @@
                 {% for wallet in pagination.items %}
                 <tr class="text-muted">
                     <td>{{ wallet.id }}</td>
-                    <td>{{ wallet.user_id }}</td>
+{#                    <td>{{ wallet.user_id }}</td>#}
                     <td>{{ wallet.type | type_payment }}</td>
                     <td>{{ wallet.amount }}</td>
                     <td>{{ wallet.note }}</td>

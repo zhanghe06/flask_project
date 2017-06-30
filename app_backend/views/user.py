@@ -11,6 +11,7 @@
 
 import json
 from datetime import datetime
+import traceback
 
 import flask_excel as excel
 from flask import Blueprint
@@ -181,6 +182,7 @@ def lists(page=1):
         )
     except Exception as e:
         db.session.rollback()
+        print traceback.print_exc()
         flash(e.message, category='warning')
         return redirect(url_for('index'))
 

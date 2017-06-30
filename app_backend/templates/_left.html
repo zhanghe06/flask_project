@@ -42,6 +42,17 @@
                     </li>
                 </ul>
             </li>
+            <li{% if 'scheduling' in request.path %} class="active"{% endif %}>
+                <a id="menu-scheduling" href="#"><i class="fa fa-money fa-fw"></i> 排单管理<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li>
+                        <a href="{{ url_for('scheduling.lists') }}">排单币表</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('scheduling.add') }}">发送排单币</a>
+                    </li>
+                </ul>
+            </li>
 
             <li>
                 <a id="menu-order" href="#"><i class="fa fa-edit fa-fw"></i> 订单管理<span class="fa arrow"></span></a>

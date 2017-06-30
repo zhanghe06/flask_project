@@ -4,7 +4,7 @@
 """
 @author: zhanghe
 @software: PyCharm
-@file: type_payment.py
+@file: type_active.py
 @time: 2017/5/13 下午2:15
 """
 

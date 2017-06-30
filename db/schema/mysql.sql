@@ -530,3 +530,32 @@ CREATE TABLE `credit` (
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户声望（信用）';
 
+
+DROP TABLE IF EXISTS `scheduling`;
+CREATE TABLE `scheduling` (
+  `user_id` INT NOT NULL COMMENT '用户Id',
+  `amount` DECIMAL(10, 2) NOT NULL DEFAULT '0' COMMENT '排单总分',
+  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='排单总表';
+
+
+DROP TABLE IF EXISTS `scheduling_item`;
+CREATE TABLE `scheduling_item` (
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT '积分明细id',
+  `user_id` INT NOT NULL COMMENT '用户Id',
+  `type` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '排单类型（1：排单、2：赠送）',
+  `amount` DECIMAL(8, 0) NOT NULL DEFAULT '0' COMMENT '排单分值',
+  `sc_id` INT NOT NULL DEFAULT '0' COMMENT '关联id',
+  `note` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '备注',
+  `status_audit` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '审核状态:0:待审核，1:审核通过，2:审核失败',
+  `status_delete` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '删除状态:0:未删除，1:已删除',
+  `audit_time` TIMESTAMP NULL COMMENT '审核时间（通过、失败）',
+  `delete_time` TIMESTAMP NULL COMMENT '删除时间',
+  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `ind_user_id` (`user_id`),
+  KEY `ind_sc_id` (`sc_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='排单明细表';

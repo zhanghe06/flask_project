@@ -17,7 +17,7 @@ from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email
 from flask_login import current_user
 from app_frontend.api.apply_put import get_current_day_put_amount, get_current_month_put_amount, \
     get_put_processing_amount
-from app_frontend.api.user_auth import get_user_auth_row
+from app_frontend.api.scheduling import get_scheduling_row_by_id
 from app_frontend.forms import SelectBS, RadioInlineBS
 from app_common.maps import type_apply_list, type_pay_list
 from app_frontend.tools.config_manage import get_conf
@@ -70,6 +70,11 @@ class ApplyPutMoneyValidate(object):
         current_month_put_amount = get_current_month_put_amount()
         if current_month_put_amount > Decimal(get_conf('APPLY_PUT_MAX_AMOUNT_MONTHLY')):
             raise ValidationError(u'超出当月投资最大金额限制')
+
+        # 检查排单币是否足够
+        scheduling_row = get_scheduling_row_by_id(current_user.id)
+        if not scheduling_row or scheduling_row.amount <= 0:
+            raise ValidationError(u'排单币不足，请及时充值')
 
 
 class ApplyPutAddForm(FlaskForm):

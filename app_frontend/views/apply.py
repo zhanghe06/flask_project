@@ -18,22 +18,29 @@ from flask import url_for
 from flask_login import current_user, login_required
 
 from app_frontend import app
+from app_frontend.lib.rabbit_mq import RabbitDelayQueue
 from app_frontend.models import User, ApplyGet, ApplyPut
 from app_frontend.api.apply_get import get_apply_get_rows, get_apply_get_row, add_apply_get, user_apply_get
 from app_frontend.api.apply_put import get_apply_put_rows, get_apply_put_row, add_apply_put
 from app_frontend.api.user_bank import user_bank_is_complete
-from app_frontend.api.user_profile import user_profile_is_complete
+from app_frontend.api.user_profile import user_profile_is_complete, get_team_tree
+from app_frontend.api.scheduling import get_scheduling_row_by_id, edit_scheduling
+from app_frontend.api.scheduling_item import add_scheduling_item
 from app_common.maps.status_order import *
 from app_common.maps.type_apply import *
 from app_common.maps.status_apply import *
 from app_common.maps.status_delete import *
 from app_common.maps.status_active import *
+from app_common.maps.status_audit import *
 from app_frontend.forms.apply_get import ApplyGetAddForm
 from app_frontend.forms.apply_put import ApplyPutAddForm
 from flask import Blueprint
 
 from app_frontend.tools.config_manage import get_conf
-from config import PER_PAGE_FRONTEND
+
+EXCHANGE_NAME = app.config['EXCHANGE_NAME']
+PER_PAGE_FRONTEND = app.config['PER_PAGE_FRONTEND']
+APPLY_PUT_INTEREST_ON_PRINCIPAL_TTL = app.config['APPLY_PUT_INTEREST_ON_PRINCIPAL_TTL']
 
 
 bp_apply = Blueprint('apply', __name__, url_prefix='/apply')
@@ -132,6 +139,9 @@ def add_put():
         flash(u'请先激活当前账号', 'warning')
         return redirect(url_for('user.profile'))
 
+    # 获取团队成员三级树形结构
+    team_tree = get_team_tree(current_user.id)
+
     # 单次投资金额范围
     APPLY_PUT_MIN_EACH = Decimal(get_conf('APPLY_PUT_MIN_EACH'))  # 最小值
     APPLY_PUT_MAX_EACH = Decimal(get_conf('APPLY_PUT_MAX_EACH'))  # 最大值
@@ -141,6 +151,8 @@ def add_put():
     if request.method == 'POST':
         if form.validate_on_submit():
             current_time = datetime.utcnow()
+
+            # 新增投资申请明细
             apply_put_info = {
                 'user_id': user_id,
                 'type_apply': TYPE_APPLY_USER,
@@ -152,8 +164,48 @@ def add_put():
                 'create_time': current_time,
                 'update_time': current_time,
             }
-            result = add_apply_put(apply_put_info)
-            if result:
+            apply_put_id = add_apply_put(apply_put_info)
+
+            # 扣除排单币总表数量
+            scheduling_info = get_scheduling_row_by_id(user_id)
+
+            amount = scheduling_info.amount if scheduling_info else 0
+
+            scheduling_data = {
+                'amount': amount - 1,
+                'create_time': current_time,
+                'update_time': current_time
+            }
+            edit_scheduling(user_id, scheduling_data)
+
+            # 新增排单币明细
+            scheduling_item_data = {
+                'user_id': user_id,
+                'type': user_id,
+                'amount': 1,
+                'sc_id': user_id,
+                'note': u'投资申请编号：%s' % apply_put_id,
+                'status_audit': STATUS_AUDIT_SUCCESS,
+                'audit_time': current_time,
+                'create_time': current_time,
+                'update_time': current_time
+            }
+            add_scheduling_item(scheduling_item_data)
+
+            if apply_put_id:
+                # 加入投资申请本息回收队列
+                q = RabbitDelayQueue(
+                    exchange=EXCHANGE_NAME,
+                    queue_name='apply_put_interest_on_principal',
+                    ttl=APPLY_PUT_INTEREST_ON_PRINCIPAL_TTL
+                )
+                msg = {
+                    'user_id': user_id,
+                    'apply_put_id': apply_put_id,
+                    'apply_time': current_time.strftime('%Y-%m-%d %H:%M:%S')
+                }
+                q.put(msg)
+                q.close_conn()
                 flash(u'申请成功', 'success')
             else:
                 flash(u'申请失败', 'warning')
@@ -164,7 +216,8 @@ def add_put():
         form=form,
         APPLY_PUT_MIN_EACH=str(APPLY_PUT_MIN_EACH),
         APPLY_PUT_MAX_EACH=str(APPLY_PUT_MAX_EACH),
-        APPLY_PUT_STEP=str(APPLY_PUT_STEP)
+        APPLY_PUT_STEP=str(APPLY_PUT_STEP),
+        team_tree=team_tree
     )
 
 
@@ -188,6 +241,9 @@ def add_get():
     if current_user.status_active == int(STATUS_ACTIVE_NO):
         flash(u'请先激活当前账号', 'warning')
         return redirect(url_for('user.profile'))
+
+    # 获取团队成员三级树形结构
+    team_tree = get_team_tree(current_user.id)
 
     # 单次提现金额范围
     APPLY_GET_MIN_EACH = Decimal(get_conf('APPLY_GET_MIN_EACH'))  # 最小值
@@ -213,7 +269,8 @@ def add_get():
         form=form,
         APPLY_GET_MIN_EACH=str(APPLY_GET_MIN_EACH),
         APPLY_GET_MAX_EACH=str(APPLY_GET_MAX_EACH),
-        APPLY_GET_STEP=str(APPLY_GET_STEP)
+        APPLY_GET_STEP=str(APPLY_GET_STEP),
+        team_tree=team_tree
     )
 
 
