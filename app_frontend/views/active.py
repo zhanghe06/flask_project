@@ -19,6 +19,7 @@ from sqlalchemy.orm import aliased
 from app_frontend import app
 from app_frontend.api.active import give_active
 from app_frontend.api.user_profile import get_team_tree
+from app_frontend.api.user_profile import get_user_id_by_name
 from app_frontend.models import User, UserProfile, ActiveItem
 from app_frontend.api.active_item import get_active_item_rows
 from app_common.maps.type_active import *
@@ -88,13 +89,13 @@ def add():
     # 获取团队成员三级树形结构
     team_tree = get_team_tree(current_user.id)
 
-    user_id = request.args.get('user_id', '', type=int)
+    user_name = request.args.get('user_name', '')
 
     form = ActiveAddForm(request.form)
 
     # 初始化表单的值
-    if user_id:
-        form.user_id.data = user_id
+    if user_name:
+        form.user_name.data = user_name
     if not form.amount.data:
         form.amount.data = 1
 
@@ -102,6 +103,7 @@ def add():
         if form.validate_on_submit():
             # 赠送激活数量
             try:
+                user_id = get_user_id_by_name(form.user_name.data)
                 result = give_active(current_user.id, user_id, form.amount.data)
                 if result:
                     flash(u'赠送激活数量操作成功', 'success')

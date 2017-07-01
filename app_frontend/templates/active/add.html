@@ -12,11 +12,11 @@
         <div class="table-responsive col-lg-8 col-md-12">
             <form class="form-horizontal" method="post" action="">
                 {{ form.csrf_token }}
-                <div class="form-group{% if form.user_id.errors %} has-error{% endif %}">
-                    {{ form.user_id.label(class="col-sm-2 control-label") }}
+                <div class="form-group{% if form.user_name.errors %} has-error{% endif %}">
+                    {{ form.user_name.label(class="col-sm-2 control-label") }}
                     <div class="col-sm-10">
-                        {{ form.user_id(class="form-control", placeholder="填写赠送用户ID") }}
-                        {% for error in form.user_id.errors %}
+                        {{ form.user_name(class="form-control", placeholder="填写赠送用户名称") }}
+                        {% for error in form.user_name.errors %}
                             <span class="help-block">{{ error }}</span>
                         {% endfor %}
                     </div>

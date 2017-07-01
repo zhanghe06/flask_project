@@ -63,7 +63,7 @@
                     </a>
                     {% else %}
 {#                    <a type="button" class="btn-sm btn-success" href="javascript:void(0);" onclick="add_active({{ user.id }});">#}
-                    <a type="button" class="btn-sm btn-success" href="{{ url_for('active.add', user_id=user.id) }}">
+                    <a type="button" class="btn-sm btn-success" href="{{ url_for('active.add', user_name=user_profile.nickname) }}">
                         <span class="glyphicon glyphicon-star-empty"></span> 赠送激活
                     </a>
                     {% endif %}

@@ -174,3 +174,13 @@ def get_team_tree(user_id):
                 team[user1][user2][user3] = {}
     # print json.dumps(team, indent=4)
     return team
+
+
+def get_user_id_by_name(user_name):
+    """
+    根据用户名获取id
+    :param user_name:
+    :return:
+    """
+    user_info = get_row(UserProfile, UserProfile.nickname == user_name)
+    return user_info.user_id if user_info else 0
