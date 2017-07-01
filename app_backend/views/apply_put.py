@@ -235,15 +235,35 @@ def add():
     return render_template('apply_put/add.html', title='apply_put_add')
 
 
-@bp_apply_put.route('/del/', methods=['GET', 'POST'])
+@bp_apply_put.route('/ajax/del/', methods=['GET', 'POST'])
 @login_required
 @permission_order.require(http_exception=403)
-def delete():
+def ajax_delete():
     """
     删除投资申请
     :return:
     """
-    pass
+    if request.method == 'GET' and request.is_xhr:
+        apply_put_id = request.args.get('apply_put_id', 0, type=int)
+        if not apply_put_id:
+            return json.dumps({'error': u'删除失败'})
+
+        apply_put_info = get_apply_put_row_by_id(apply_put_id)
+        # 判断投资申请是否开始匹配
+        if apply_put_info.status_order != int(STATUS_ORDER_HANDING):
+            return json.dumps({'error': u'投资处理中，不能删除'})
+        current_time = datetime.utcnow()
+        apply_put_data = {
+            'status_delete': STATUS_DEL_OK,
+            'delete_time': current_time,
+            'update_time': current_time
+        }
+        result = edit_apply_put(apply_put_id, apply_put_data)
+        if result:
+            return json.dumps({'success': u'删除成功'})
+        else:
+            return json.dumps({'error': u'删除失败'})
+    abort(404)
 
 
 @bp_apply_put.route('/stats/', methods=['GET', 'POST'])

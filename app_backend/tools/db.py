@@ -201,6 +201,30 @@ def merge(model_name, data):
         raise e
 
 
+def increase(model_name, pk_id, field, num=1):
+    """
+    字段自增
+    :param model_name:
+    :param pk_id:
+    :param field:
+    :param num:
+    :return: Number of affected rows (Example: 0/1)
+    """
+    model_pk = inspect(model_name).primary_key[0]
+    try:
+        model_obj = db.session.query(model_name).filter(model_pk == pk_id)
+        value = getattr(model_name, field) + num
+        data = {
+            field: value
+        }
+        result = model_obj.update(data)
+        db.session.commit()
+        return result
+    except Exception as e:
+        db.session.rollback()
+        raise e
+
+
 def delete(model_name, pk_id):
     """
     删除信息

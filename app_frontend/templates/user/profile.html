@@ -167,13 +167,13 @@
      * @returns {boolean}
      */
     function self_active() {
-        //console.log($(form).serialize());
+        // console.log($(form).serialize());
         $.ajax({
             url: "{{ url_for('user.ajax_self_active') }}",
             type: 'GET',
             dataType: 'json',
             success: function (result) {
-                console.log(result);
+                // console.log(result);
                 if(result.hasOwnProperty('error')){
                     alert(result.error);
                 }else {
@@ -210,7 +210,7 @@
     area_id.selectpicker('val', '{{ form.area_id.data }}');
     // 处理选项修改
     area_id.on('changed.bs.select', function (event, clickedIndex, newValue, oldValue) {
-        console.log($('#area_id').val());
+        // console.log($('#area_id').val());
         // console.log(event);
         // console.log(clickedIndex);
         // console.log(newValue);

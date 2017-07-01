@@ -74,8 +74,9 @@
                 <th>推荐人</th>
                 <th>钱包余额</th>
                 <th>数字货币</th>
-                <th>积分</th>
+{#                <th>积分</th>#}
                 <th>奖金</th>
+                <th>排单币</th>
                 <th>激活状态</th>
                 <th>锁定状态</th>
                 <th>创建时间</th>
@@ -83,7 +84,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for (user, user_profile_c, user_profile_p, wallet, bit_coin, score, bonus) in pagination.items %}
+            {% for (user, user_profile_c, user_profile_p, wallet, bit_coin, score, bonus, scheduling) in pagination.items %}
             <tr class="text-muted">
                 <td>{{ user.id }}</td>
                 <td><a href="{{ url_for('user.admin_login', user_id=user.id) }}" rel="tooltip" title="登录" target="_blank">{{ user_profile_c.nickname }}</a></td>
@@ -96,8 +97,9 @@
                 {% endif %}
                 <td>{{ wallet.amount_current | default('0') }}</td>
                 <td>{{ bit_coin.amount | default('0') }}</td>
-                <td>{{ score.amount | default('0') }}</td>
+{#                <td>{{ score.amount | default('0') }}</td>#}
                 <td>{{ bonus.amount | default('0') }}</td>
+                <td>{{ scheduling.amount | default('0') }}</td>
                 <td>{{ user.status_active | status_active }}</td>
                 <td>{{ user.status_lock | status_lock }}</td>
                 <td>{{ moment(user.create_time).format('YYYY-MM-DD HH:mm:ss') }}</td>
@@ -146,7 +148,7 @@
     status_active.selectpicker('val', '{{ form.status_active.data }}');
     // 处理选项修改
     status_active.on('changed.bs.select', function (event, clickedIndex, newValue, oldValue) {
-        console.log($('#status_active').val());
+        // console.log($('#status_active').val());
         // console.log(event);
         // console.log(clickedIndex);
         // console.log(newValue);
@@ -157,7 +159,7 @@
     status_lock.selectpicker('val', '{{ form.status_lock.data }}');
     // 处理选项修改
     status_lock.on('changed.bs.select', function (event, clickedIndex, newValue, oldValue) {
-        console.log($('#status_lock').val());
+        // console.log($('#status_lock').val());
         // console.log(event);
         // console.log(clickedIndex);
         // console.log(newValue);

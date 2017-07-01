@@ -45,13 +45,13 @@
         function blog_delete(blog_id){
             if(confirm("Are you sure?"))
             {
-                console.log(blog_id);
+                // console.log(blog_id);
                 $.getJSON('{{ url_for('blog.delete') }}',
                 {
                     blog_id: blog_id
                 }, function (data) {
                     var result = data.result;  // true/false
-                    console.log(result==true);
+                    // console.log(result==true);
                     if(result==true){
                         window.location.reload();
                     }

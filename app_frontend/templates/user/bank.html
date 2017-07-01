@@ -121,13 +121,13 @@
      * @returns {boolean}
      */
     function self_active() {
-        //console.log($(form).serialize());
+        // console.log($(form).serialize());
         $.ajax({
             url: "{{ url_for('user.ajax_self_active') }}",
             type: 'GET',
             dataType: 'json',
             success: function (result) {
-                console.log(result);
+                // console.log(result);
                 if(result.hasOwnProperty('error')){
                     alert(result.error);
                 }else {

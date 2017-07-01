@@ -335,14 +335,14 @@
     });
     // 收款状态确认
     function order_rec(order_id, status_rec) {
-        //console.log($(form).serialize());
+        // console.log($(form).serialize());
         $.ajax({
             url: "{{ url_for('order.ajax_rec') }}",
             type: 'POST',
             data: {order_id: order_id, status_rec: status_rec},
             dataType: 'json',
             success: function (result) {
-                console.log(result);
+                // console.log(result);
                 if(result.hasOwnProperty('error')){
                     alert(result.error);
                 }else {

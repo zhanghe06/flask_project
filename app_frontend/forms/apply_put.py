@@ -73,7 +73,8 @@ class ApplyPutMoneyValidate(object):
 
         # 检查排单币是否足够
         scheduling_row = get_scheduling_row_by_id(current_user.id)
-        if not scheduling_row or scheduling_row.amount <= 0:
+        if not scheduling_row or scheduling_row.amount <= 0 or scheduling_row.amount < (field.data/100):
+            print '='*20, scheduling_row.amount, (field.data/100)
             raise ValidationError(u'排单币不足，请及时充值')
 
 

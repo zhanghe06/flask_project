@@ -123,7 +123,7 @@
     type_apply.selectpicker('val', '{{ form.type_apply.data }}');
     // 处理选项修改
     type_apply.on('changed.bs.select', function (event, clickedIndex, newValue, oldValue) {
-        console.log($('#type_apply').val());
+        // console.log($('#type_apply').val());
         // console.log(event);
         // console.log(clickedIndex);
         // console.log(newValue);
@@ -134,7 +134,7 @@
     status_order.selectpicker('val', '{{ form.status_order.data }}');
     // 处理选项修改
     status_order.on('changed.bs.select', function (event, clickedIndex, newValue, oldValue) {
-        console.log($('#status_order').val());
+        // console.log($('#status_order').val());
         // console.log(event);
         // console.log(clickedIndex);
         // console.log(newValue);
@@ -145,24 +145,26 @@
     status_delete.selectpicker('val', '{{ form.status_delete.data }}');
     // 处理选项修改
     status_delete.on('changed.bs.select', function (event, clickedIndex, newValue, oldValue) {
-        console.log($('#status_delete').val());
+        // console.log($('#status_delete').val());
         // console.log(event);
         // console.log(clickedIndex);
         // console.log(newValue);
         // console.log(oldValue);
     });
 
+    // 投资删除
     function apply_put_delete(apply_put_id){
         if(confirm("删除数据不能恢复，是否确认删除?"))
         {
-            // console.log(user_id);
-            $.getJSON('{{ url_for('apply_put.delete') }}',
+            // console.log(apply_put_id);
+            $.getJSON('{{ url_for('apply_put.ajax_delete') }}',
             {
                 apply_put_id: apply_put_id
-            }, function (data) {
-                var result = data.result;  // true/false
-                // console.log(result==true);
-                if(result==true){
+            }, function (result) {
+                if(result.hasOwnProperty('error')){
+                    alert(result.error);
+                }else {
+                    alert(result.success);
                     window.location.reload();
                 }
             });

@@ -36,7 +36,7 @@ from app_backend.api.user_bank import get_user_bank_row_by_id, add_user_bank, ed
 from app_backend.api.user_profile import get_user_profile_row_by_id, edit_user_profile, get_team_tree_recursion, get_user_profile_row
 from app_backend.api.user_config import get_user_config_row_by_id
 from app_backend.forms.user import UserProfileForm, UserAuthForm, UserBankForm, UserSearchForm, UserConfigForm
-from app_backend.models import User
+from app_backend.models import User, Scheduling
 from app_backend.models import UserProfile
 from app_backend.models import UserBank
 from app_backend.models import Wallet
@@ -118,12 +118,14 @@ def lists(page=1):
                 outerjoin(BitCoin, User.id == BitCoin.user_id). \
                 outerjoin(Score, User.id == Score.user_id). \
                 outerjoin(Bonus, User.id == Bonus.user_id). \
+                outerjoin(Scheduling, User.id == Scheduling.user_id). \
                 add_entity(user_profile_c). \
                 add_entity(user_profile_p). \
                 add_entity(Wallet). \
                 add_entity(BitCoin). \
                 add_entity(Score). \
                 add_entity(Bonus). \
+                add_entity(Scheduling). \
                 all()
             db.session.commit()
             column_names = [u'用户编号', u'用户名称', u'等级', u'手机号码', u'推荐人', u'钱包余额', u'数字货币', u'积分', u'奖金', u'激活状态', u'锁定状态', u'创建时间']
@@ -164,12 +166,14 @@ def lists(page=1):
             outerjoin(BitCoin, User.id == BitCoin.user_id). \
             outerjoin(Score, User.id == Score.user_id). \
             outerjoin(Bonus, User.id == Bonus.user_id). \
+            outerjoin(Scheduling, User.id == Scheduling.user_id). \
             add_entity(user_profile_c). \
             add_entity(user_profile_p). \
             add_entity(Wallet). \
             add_entity(BitCoin). \
             add_entity(Score). \
             add_entity(Bonus). \
+            add_entity(Scheduling). \
             paginate(page, PER_PAGE_BACKEND, False)
         db.session.commit()
         return render_template(

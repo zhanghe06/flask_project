@@ -393,14 +393,14 @@
     });
     // 支付状态确认
     function order_pay(order_id, status_pay) {
-        //console.log($(form).serialize());
+        // console.log($(form).serialize());
         $.ajax({
             url: "{{ url_for('order.ajax_pay') }}",
             type: 'POST',
             data: {order_id: order_id, status_pay: status_pay},
             dataType: 'json',
             success: function (result) {
-                console.log(result);
+                // console.log(result);
                 if(result.hasOwnProperty('error')){
                     alert(result.error);
                 }else {

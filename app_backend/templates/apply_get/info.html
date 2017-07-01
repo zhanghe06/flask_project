@@ -234,7 +234,7 @@
     type_apply.selectpicker('val', '{{ form.type_apply.data }}');
     // 处理选项修改
     type_apply.on('changed.bs.select', function (event, clickedIndex, newValue, oldValue) {
-        console.log($('#status_lock').val());
+        // console.log($('#status_lock').val());
         // console.log(event);
         // console.log(clickedIndex);
         // console.log(newValue);
@@ -266,7 +266,7 @@
             data: $(form).serialize(),
             dataType: 'json',
             success: function (result) {
-                console.log(result);
+                // console.log(result);
                 if(result.hasOwnProperty('error')){
                     alert(result.error);
                 }else {

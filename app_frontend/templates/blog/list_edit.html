@@ -83,14 +83,14 @@
 {% block extra_js %}
     <script type="text/javascript">
         function edit_blog(form) {
-            //console.log($(form).serialize());
+            // console.log($(form).serialize());
             $.ajax({
                 url: "{{ url_for('blog.ajax_list_edit') }}",
                 type: 'POST',
                 data: $(form).serialize(),
                 dataType: 'json',
                 success: function (result) {
-                    console.log(result);
+                    // console.log(result);
                     if(result.hasOwnProperty('error')){
                         alert(result.error);
                     }
@@ -103,13 +103,13 @@
         }
         function blog_delete(blog_id) {
             if (confirm("Are you sure?")) {
-                console.log(blog_id);
+                // console.log(blog_id);
                 $.getJSON('{{ url_for('blog.delete') }}',
                         {
                             blog_id: blog_id
                         }, function (data) {
                             var result = data.result;  // true/false
-                            console.log(result == true);
+                            // console.log(result == true);
                             if (result == true) {
                                 window.location.reload();
                             }

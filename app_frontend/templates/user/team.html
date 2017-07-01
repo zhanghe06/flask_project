@@ -93,7 +93,7 @@ function user_active(user_id) {
             data: {user_id: user_id},
             dataType: 'json',
             success: function (result) {
-                console.log(result);
+                // console.log(result);
                 if(result.hasOwnProperty('error')){
                     alert(result.error);
                 }else {
@@ -117,7 +117,7 @@ function add_active(user_id) {
             data: {user_id: user_id},
             dataType: 'json',
             success: function (result) {
-                console.log(result);
+                // console.log(result);
                 if(result.hasOwnProperty('error')){
                     alert(result.error);
                 }else {

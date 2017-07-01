@@ -12,7 +12,7 @@
 import redis
 import json
 import time
-from app_backend import app
+from app_frontend import app
 redis_client = redis.Redis(**app.config['REDIS'])
 
 
@@ -24,7 +24,8 @@ def get_conf(conf_name):
     """
     conf_key = 'conf:%s' % conf_name
     conf_value = redis_client.get(conf_key)
-    return conf_value or app.config.get(conf_name)
+    res = conf_value or app.config.get(conf_name)
+    return str(res)
 
 
 def set_conf(conf_name, conf_value):

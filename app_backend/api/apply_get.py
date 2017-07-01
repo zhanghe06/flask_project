@@ -150,7 +150,7 @@ def apply_get_match(apply_get_id, apply_put_ids, accept_split=0):
             money_match = apply_put_item.money_apply - apply_put_item.money_order
             current_time = datetime.utcnow()
 
-            order_info = {
+            order_data = {
                 'apply_put_id': apply_put_item.id,
                 'apply_get_id': apply_get_id,
                 'apply_put_uid': apply_put_item.user_id,
@@ -161,7 +161,7 @@ def apply_get_match(apply_get_id, apply_put_ids, accept_split=0):
                 'create_time': current_time,
                 'update_time': current_time,
             }
-            db.session.add(Order(**order_info))
+            db.session.add(Order(**order_data))
 
             # 更新投资申请状态
             apply_put_update_info = {
@@ -176,14 +176,14 @@ def apply_get_match(apply_get_id, apply_put_ids, accept_split=0):
 
         # 更新提现订单金额和申请状态
         current_time = datetime.utcnow()
-        apply_get_update_info = {
-            'money_order': money_order,
+        apply_get_update_data = {
+            'money_order': ApplyGet.money_order + money_order,
             'status_order': STATUS_ORDER_COMPLETED if money_order == money_need_match else STATUS_ORDER_PROCESSING,
             'update_time': current_time,
         }
         # result = edit_apply_get(apply_get_id, apply_get_update_info)
         apply_get_obj = db.session.query(ApplyGet).filter(ApplyGet.id == apply_get_id)
-        result = apply_get_obj.update(apply_get_update_info)
+        result = apply_get_obj.update(apply_get_update_data)
 
         db.session.commit()
         return result

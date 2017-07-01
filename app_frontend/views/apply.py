@@ -7,11 +7,12 @@
 @file: apply.py
 @time: 2017/4/27 上午9:34
 """
-
-
+import json
 from datetime import datetime
 
 from decimal import Decimal
+
+from flask import abort
 from flask import redirect
 from flask import render_template, request, flash, g
 from flask import url_for
@@ -20,8 +21,8 @@ from flask_login import current_user, login_required
 from app_frontend import app
 from app_frontend.lib.rabbit_mq import RabbitDelayQueue
 from app_frontend.models import User, ApplyGet, ApplyPut
-from app_frontend.api.apply_get import get_apply_get_rows, get_apply_get_row, add_apply_get, user_apply_get
-from app_frontend.api.apply_put import get_apply_put_rows, get_apply_put_row, add_apply_put
+from app_frontend.api.apply_get import get_apply_get_rows, get_apply_get_row_by_id, add_apply_get, edit_apply_get, user_apply_get
+from app_frontend.api.apply_put import get_apply_put_rows, get_apply_put_row_by_id, add_apply_put, edit_apply_put
 from app_frontend.api.user_bank import user_bank_is_complete
 from app_frontend.api.user_profile import user_profile_is_complete, get_team_tree
 from app_frontend.api.scheduling import get_scheduling_row_by_id, edit_scheduling
@@ -274,24 +275,70 @@ def add_get():
     )
 
 
-@bp_apply.route('/put/del/', methods=['GET', 'POST'])
+@bp_apply.route('/ajax/put/del/', methods=['GET', 'POST'])
 @login_required
-def delete_put():
+def ajax_delete_put():
     """
     删除投资申请
     :return:
     """
-    pass
+    if request.method == 'GET' and request.is_xhr:
+        apply_put_id = request.args.get('apply_put_id', 0, type=int)
+        if not apply_put_id:
+            return json.dumps({'error': u'删除失败'})
+
+        apply_put_info = get_apply_put_row_by_id(apply_put_id)
+        # 判断权限
+        if apply_put_info.user_id != current_user.id:
+            return json.dumps({'error': u'没有权限，删除失败'})
+        # 判断投资申请是否开始匹配
+        if apply_put_info.status_order != int(STATUS_ORDER_HANDING):
+            return json.dumps({'error': u'投资处理中，不能删除'})
+        current_time = datetime.utcnow()
+        apply_put_data = {
+            'status_delete': STATUS_DEL_OK,
+            'delete_time': current_time,
+            'update_time': current_time
+        }
+        result = edit_apply_put(apply_put_id, apply_put_data)
+        if result:
+            return json.dumps({'success': u'删除成功'})
+        else:
+            return json.dumps({'error': u'删除失败'})
+    abort(404)
 
 
-@bp_apply.route('/get/del/', methods=['GET', 'POST'])
+@bp_apply.route('/ajax/get/del/', methods=['GET', 'POST'])
 @login_required
-def delete_get():
+def ajax_delete_get():
     """
     删除提现申请
     :return:
     """
-    pass
+    if request.method == 'GET' and request.is_xhr:
+        apply_get_id = request.args.get('apply_get_id', 0, type=int)
+        if not apply_get_id:
+            return json.dumps({'error': u'删除失败'})
+
+        apply_get_info = get_apply_get_row_by_id(apply_get_id)
+        # 判断权限
+        if apply_get_info.user_id != current_user.id:
+            return json.dumps({'error': u'没有权限，删除失败'})
+        # 判断提现申请是否开始匹配
+        if apply_get_info.status_order != int(STATUS_ORDER_HANDING):
+            return json.dumps({'error': u'提现处理中，不能删除'})
+        current_time = datetime.utcnow()
+        apply_get_data = {
+            'status_delete': STATUS_DEL_OK,
+            'delete_time': current_time,
+            'update_time': current_time
+        }
+        result = edit_apply_get(apply_get_id, apply_get_data)
+        if result:
+            return json.dumps({'success': u'删除成功'})
+        else:
+            return json.dumps({'error': u'删除失败'})
+    abort(404)
 
 
 @bp_apply.route('/put/stats/', methods=['GET', 'POST'])

@@ -233,15 +233,35 @@ def add():
     return render_template('apply_get/add.html', title='apply_get_add')
 
 
-@bp_apply_get.route('/del/', methods=['GET', 'POST'])
+@bp_apply_get.route('/ajax/del/', methods=['GET', 'POST'])
 @login_required
 @permission_order.require(http_exception=403)
-def delete():
+def ajax_delete():
     """
     删除提现申请
     :return:
     """
-    pass
+    if request.method == 'GET' and request.is_xhr:
+        apply_get_id = request.args.get('apply_get_id', 0, type=int)
+        if not apply_get_id:
+            return json.dumps({'error': u'删除失败'})
+
+        apply_get_info = get_apply_get_row_by_id(apply_get_id)
+        # 判断提现申请是否开始匹配
+        if apply_get_info.status_order != int(STATUS_ORDER_HANDING):
+            return json.dumps({'error': u'提现处理中，不能删除'})
+        current_time = datetime.utcnow()
+        apply_get_data = {
+            'status_delete': STATUS_DEL_OK,
+            'delete_time': current_time,
+            'update_time': current_time
+        }
+        result = edit_apply_get(apply_get_id, apply_get_data)
+        if result:
+            return json.dumps({'success': u'删除成功'})
+        else:
+            return json.dumps({'error': u'删除失败'})
+    abort(404)
 
 
 # @bp_apply_get.route('/stats/', methods=['GET', 'POST'])
