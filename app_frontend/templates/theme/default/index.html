@@ -1,0 +1,258 @@
+{% extends "theme/default/layout.html" %}
+
+{% block content %}
+            <!-- START SLIDER -->
+            <section class="clearfix">
+                <div  id="mega-slider" class="carousel slide" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                        <li data-target="#mega-slider" data-slide-to="0" class="active"></li>
+                        <li data-target="#mega-slider" data-slide-to="1"></li>
+                        <li data-target="#mega-slider" data-slide-to="2"></li>
+                    </ol>
+                    <div class="carousel-inner" role="listbox">
+                        <div class="item active beactive">
+                            <img src="{{ url_for('static', filename='theme/default/img/banner/slide-1.jpg') }}" alt="...">
+                            <div class="carousel-caption">
+                                <h2></h2>
+                                <p></p>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <img src="{{ url_for('static', filename='theme/default/img/banner/slide-2.jpg') }}" alt="...">
+                            <div class="carousel-caption">
+                                <h2></h2>
+                                <p></p>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <img src="{{ url_for('static', filename='theme/default/img/banner/slide-3.jpg') }}" alt="...">
+                            <div class="carousel-caption">
+                                <h2></h2>
+                                <p></p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Controls -->
+                    <a class="left carousel-control" href="#mega-slider" role="button" data-slide="prev">
+                    </a>
+                    <a class="right carousel-control" href="#mega-slider" role="button" data-slide="next">
+                    </a>
+                </div>
+            </section>
+            <!-- END SLIDER -->
+
+
+            <!-- START ABOUT US -->
+            <section class="home-main-contant-style bg-white">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 welcome-img">
+                            <img class="img-responsive" src="{{ url_for('static', filename='theme/default/img/imac1.png') }}" alt="">
+                        </div>
+
+                        <div class="col-md-6" id="about">
+                            <div class="mb30"></div>
+                            <h5>关于我们</h5>
+                            <!--h2 class="mb15"><strong>CLASSIFY</strong></h2-->
+                            <p>湖北濠源生物科技有限公司：是一家高科技生物制品企业，主要生产无苦味大豆寡肽；</p><br>
+                            <p class="mb15">国内唯一一家真正生产完全小分子量段的厂家，获得国家发明专利201110047296.9；质量管理体系认证：GB/T19001-2008 ISO9001：2008标准</p>
+							<p class="mb15">2011到2014年，通过小试、中试、工业化生产，现产大豆寡肽粉剂300吨，公司占地60亩，总建筑面积约10000平方米，现有工人120人，资产总额2亿七千万元。</p>
+                            <a class="btn btn-product" href="#">了解更多</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- END ABOUT US -->
+
+
+            <!--START SERVICE-->
+            <section class="home-main-contant-style bg-gray">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div class="service-item">
+                                <div class="icon">
+                                    <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                                </div>
+                                <div class="service-desc">
+                                    <h5>来源安全</h5>
+                                    <p>非转基因大豆为原料，从大豆分离蛋白中提取</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div class="service-item">
+                                <div class="icon">
+                                    <i class="fa fa-gift" aria-hidden="true"></i>
+                                </div>
+                                <div class="service-desc">
+                                    <h5>机理安全</h5>
+                                    <p>提供原料合成各种抗氧化剂、激素、酶等</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div class="service-item">
+                                <div class="icon">
+                                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                </div>
+                                <div class="service-desc">
+                                    <h5>工业安全</h5>
+                                    <p>采用生物酶解法来提取大豆寡肽</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!--END SERVICE-->
+
+
+            <!--START WHY CHOOSE US-->
+            <section class="home-main-contant-style">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 why-choose-img">
+                            <img class="img-responsive" src="{{ url_for('static', filename='theme/default/img/imac2.png') }}" alt="">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="headline-left mb30" id="culture">
+                                <h2 class="headline-brd">企业文化</h2>
+                                <p>专业的技术，丰富的成功经验，卓越的创作思维，为您创作出一流的品牌互联网形象！</p>
+								<p>全球顶尖技术优势(中国是拥有这项技术的五个国家之一，国内唯有湖北濠源生物科技有限公司),团队带头人：吴谋成教授（国家授予的农业科学家、食品化学家，享有国务院的“政府特殊津贴专家”）</p>
+                            </div>
+                            <ul class="lists-item mb30">
+                                <li><i class="fa fa-check"></i>愿景：打造一个受人尊重、令人向往的生产型企业，人人实现梦想的平台！</li>
+                                <li><i class="fa fa-check"></i> 柏思将以诚实守信的操守、共同发展的理念，长远的眼光建立公司的品牌</li>
+                                <li><i class="fa fa-check"></i> 宗旨：让寡肽服务千家万户！</li>
+                                <li><i class="fa fa-check"></i> 柏思将以诚实守信的操守、共同发展的理念，长远的眼光建立公司的品牌</li>
+                                <li><i class="fa fa-check"></i>文化：相互帮助，合作共赢！</li>
+                                <li><i class="fa fa-check"></i> 柏思将以诚实守信的操守、共同发展的理念，长远的眼光建立公司的品牌</li>
+                            </ul>
+                            <a class="btn btn-product" href="#">了解更多</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!--END WHY CHOOSE US-->
+
+
+            <!--START COUNTER-->
+            <section>
+                <div class="counter-block">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="counter-item text-center">
+                                    <i class="fa fa-users fa-3x" aria-hidden="true"></i>
+                                    <h1 class="secondary-color count">267</h1>
+                                    <h4>款新产品</h4>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="counter-item text-center">
+                                    <i class="fa fa-leaf fa-3x" aria-hidden="true"></i>
+                                    <h1 class="secondary-color count">800</h1>
+                                    <h4>技术团队</h4>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="counter-item text-center">
+                                    <i class="fa fa-trophy fa-3x" aria-hidden="true"></i>
+                                    <h1 class="secondary-color count">2930</h1>
+                                    <h4>家全球客户</h4>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="counter-item text-center">
+                                    <i class="fa fa-coffee fa-3x" aria-hidden="true"></i>
+                                    <h1 class="secondary-color count">1100</h1>
+                                    <h4>次商业合作</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!--END COUNTER-->
+
+
+            <!--START SERVICE-->
+            <section class="home-main-contant-style bg-white">
+                <div class="cd-home-title" id="product">
+                    <h2>产品功能</h2>
+                    <p>寡肽是人体的能量</p>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div class="service-item mb30">
+                                <div class="icon">
+                                    <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                                </div>
+                                <div class="service-desc">
+                                    <h5>细胞的食物</h5>
+                                    <p>为细胞提供营养</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div class="service-item mb30">
+                                <div class="icon">
+                                    <i class="fa fa-gift" aria-hidden="true"></i>
+                                </div>
+                                <div class="service-desc">
+                                    <h5>细胞的保护伞</h5>
+                                    <p>抑制细胞变性</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div class="service-item mb30">
+                                <div class="icon">
+                                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                </div>
+                                <div class="service-desc">
+                                    <h5>细胞的催化剂</h5>
+                                    <p>能够激活细胞活性</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div class="service-item">
+                                <div class="icon">
+                                    <i class="fa fa-diamond" aria-hidden="true"></i>
+                                </div>
+                                <div class="service-desc">
+                                    <h5>细胞的医生</h5>
+                                    <p>能够修复受损的细胞</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div class="service-item">
+                                <div class="icon">
+                                    <i class="fa fa-line-chart" aria-hidden="true"></i>
+                                </div>
+                                <div class="service-desc">
+                                    <h5>细胞的搬运工</h5>
+                                    <p>能够携带其他营养物质到细胞</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div class="service-item">
+                                <div class="icon">
+                                    <i class="fa fa-location-arrow" aria-hidden="true"></i>
+                                </div>
+                                <div class="service-desc">
+                                    <h5>细胞的清洁工</h5>
+                                    <p>排出细胞中的有害物质</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!--END SERVICE-->
+{% endblock %}

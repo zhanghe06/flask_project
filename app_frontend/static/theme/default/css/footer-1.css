@@ -1,0 +1,71 @@
+
+/*------------------------------------------------*/
+/*--------------[FOOTER STYLE]-----------*/
+/*------------------------------------------------*/
+
+.footer {
+    background-color: #fff;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 0;
+    position: relative;
+    padding: 60px 0 0;
+}
+
+.footer .widget-title {
+    border-color: #333333;
+}
+
+.footer .copyright {
+    border-top: 1px solid #eeeeee;
+    padding: 20px 0;
+    margin-top: 60px;
+}
+.footer * {
+    color: inherit;
+}
+.footer a:hover,
+.footer a:focus {
+    text-decoration: none;
+    color: #a0ce4e;
+}
+
+.footer .list-inline {
+    margin-left: -15px;
+}
+
+.footer .list-inline > li {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.footer .list-inline > li a {
+    text-decoration: none;
+}
+.social-icons {
+    list-style: outside none none;
+    margin: 0;
+    padding: 0;
+}
+.social-icons > li {
+    display: inline-block;
+}
+.social-icons > li > a i {
+    color: #fff;
+}
+.social-icons > li a:hover i{
+    color: #fff;
+}
+.social-icons > li > a {
+    background: #787878 none repeat scroll 0 0;
+    display: block;
+    height: 32px;
+    line-height: 32px;
+    margin: 15px 8px 0 0;
+    text-align: center;
+    width: 32px;
+    border-radius: 50%;
+}
+.social-icons > li > a:hover{
+  background: #a0ce4e;
+}

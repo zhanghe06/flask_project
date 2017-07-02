@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+    <head>
+        <title>Home</title>
+        <!-- META -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="Craftdzine">
+
+        <!-- FAVICON -->
+        <link rel="shortcut icon" href="favicon.ico">
+
+        <!-- BOOTSTRAP -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='theme/default/css/bootstrap.min.css') }}">
+        <!-- FONT AWESOME -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='theme/default/css/font-awesome.min.css') }}">
+        <!--  STYLE -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='theme/default/css/style.css') }}">
+        <!-- HEADER 1 -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='theme/default/css/header-1.css') }}">
+        <!-- FOOTER 1 -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='theme/default/css/footer-1.css') }}">
+        <!-- ANIMATE -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='theme/default/css/animate.css') }}">
+        <!-- MAGNIFIC POPUP -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='theme/default/css/magnific-popup.css') }}">
+        <!-- FLEXSLIDER -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='theme/default/plugins/FlexSlider/jquery.flexslider.css') }}">
+        <!--  OWL CAROUSEL -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='theme/default/plugins/owl-carousel/owl.carousel.css') }}">
+        <!-- OWL CAROUSEL THEME -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='theme/default/plugins/owl-carousel/owl.theme.css') }}">
+        <!-- CUBE PORTFOLIO -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='theme/default/css/cubeportfolio.min.css') }}">
+
+        <!-- WEB FONTS -->
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
+        <link href="http://fonts.googleapis.com/css?family=Raleway:500,800" rel="stylesheet" property="stylesheet" type="text/css" media="all" />
+    </head>
+    <body>
+
+
+
+        <!-- Site Wraper -->
+        <div class="wrapper">
+
+            <!-- Start Header-->
+            {% include 'theme/default/_header.html' %}
+            <!-- End Header -->
+
+            {% block content %}{% endblock %}
+
+        </div>
+
+	    {% include 'theme/default/_footer.html' %}
+
+
+
+        <!-- JQUERY LIBS -->
+        <script src="{{ url_for('static', filename='theme/default/js/jquery.min.js') }}"></script>
+		<!--INDEX-->
+        <script src="{{ url_for('static', filename='theme/default/js/index.js') }}"></script>
+        <!-- BOOTSTRAP -->
+        <script src="{{ url_for('static', filename='theme/default/js/bootstrap.min.js') }}"></script>
+        <!-- OWL CAROUSEL -->
+        <script src="{{ url_for('static', filename='theme/default/plugins/owl-carousel/owl.carousel.min.js') }}"></script>
+        <!-- COUNTER UP -->
+        <script src="{{ url_for('static', filename='theme/default/js/jquery.counterup.min.js') }}"></script>
+        <!-- WAYPOINTS -->
+        <script src="{{ url_for('static', filename='theme/default/js/waypoints.min.js') }}"></script>
+        <!-- FLEXSLIDER -->
+        <script src="{{ url_for('static', filename='theme/default/plugins/FlexSlider/jquery.flexslider-min.js') }}"></script>
+        <!-- MAGNIFIC POPUP-->
+        <script src="{{ url_for('static', filename='theme/default/js/jquery.magnific-popup.min.js') }}"></script>
+        <!-- MAGNIFIC POPUP  -->
+        <script src="{{ url_for('static', filename='theme/default/js/magnific-popup.min.js') }}"></script>
+        <!-- CUBE PORTFOLIO -->
+        <script src="{{ url_for('static', filename='theme/default/js/jquery.cubeportfolio.min.js') }}"></script>
+        <!-- CUBE PORTFOLIO -->
+        <script src="{{ url_for('static', filename='theme/default/js/cubeportfolio/portfolio-masonry-4col.js') }}"></script>
+        <!-- CUBE TESTIMONIALS -->
+        <script src="{{ url_for('static', filename='theme/default/js/cubeportfolio/testimonials.js') }}"></script>
+        <!-- CUBE TEAM -->
+        <script src="{{ url_for('static', filename='theme/default/js/cubeportfolio/team.js') }}"></script>
+        <!-- CUBE BLOG -->
+        <script src="{{ url_for('static', filename='theme/default/js/cubeportfolio/blog-grid-3col.js') }}"></script>
+        <!-- CUSTOM-->
+        <script src="{{ url_for('static', filename='theme/default/js/custom.js') }}"></script>
+
+
+        <!--[if lt IE 9]>
+        <script src="respond.js"></script>
+        <script src="html5shiv.js"></script>
+        <![endif]-->
+
+    </body>
+</html>
+
