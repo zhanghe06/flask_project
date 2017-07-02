@@ -92,12 +92,11 @@ def lists_put(page=1):
         flash(u'请先激活当前账号', 'warning')
         return redirect(url_for('user.profile'))
 
-    # 支付状态
+    # 支付状态（默认未处理）
     status_pay = request.args.get('status_pay', 0, type=int)
 
     search_condition_order = [
         Order.apply_put_uid == user_id,
-        Order.status_rec == STATUS_REC_HOLDING,  # 默认未处理
         Order.status_delete == STATUS_DEL_NO,  # 默认未删除
     ]
 
@@ -140,12 +139,11 @@ def lists_get(page=1):
         flash(u'请先激活当前账号', 'warning')
         return redirect(url_for('user.profile'))
 
-    # 收款状态
+    # 收款状态（默认未处理）
     status_rec = request.args.get('status_rec', 0, type=int)
 
     search_condition_order = [
         Order.apply_get_uid == user_id,
-        Order.status_rec == STATUS_REC_HOLDING,  # 默认未处理
         Order.status_delete == STATUS_DEL_NO,  # 默认未删除
     ]
 

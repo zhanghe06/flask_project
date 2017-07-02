@@ -240,23 +240,7 @@
         // console.log(newValue);
         // console.log(oldValue);
     });
-    function apply_get_delete(apply_get_id){
-        if(confirm("删除数据不能恢复，是否确认删除?"))
-        {
-            // console.log(user_id);
-            $.getJSON('{{ url_for('apply_get.delete') }}',
-            {
-                apply_get_id: apply_get_id
-            }, function (data) {
-                var result = data.result;  // true/false
-                // console.log(result==true);
-                if(result==true){
-                    window.location.reload();
-                }
-            });
-            return false;
-        }
-    }
+
     // 投资匹配
     function apply_put_match(form) {
         //console.log($(form).serialize());

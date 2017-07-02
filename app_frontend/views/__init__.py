@@ -84,22 +84,23 @@ def index():
     # return str(current_user.id)
     # return "Hello, World!"
     # 判断是否推广链接
-    i = request.args.get('i', '')
-    if i:
-        try:
-            s = URLSafeSerializer(app.config.get('USER_INVITE_LINK_SIGN_KEY', ''))
-            link_param = s.loads(i)
-            # 如果未登录，或登录用户打开的不是自己的推广链接
-            if not current_user.get_id() or current_user.get_id() != link_param.get('user_id'):
-                # 跳转注册页面
-                session['user_pid'] = link_param.get('user_id')
-                return redirect(url_for('reg.index'))
-        except BadSignature as e:
-            # flash(u'Invite Link Failed, %s' % e.message, 'warning')
-            flash(u'邀请注册链接错误，请重新索取链接', 'warning')
-        except Exception as e:
-            flash(e.message, 'warning')
-    return render_template('index.html', title='home')
+    # i = request.args.get('i', '')
+    # if i:
+    #     try:
+    #         s = URLSafeSerializer(app.config.get('USER_INVITE_LINK_SIGN_KEY', ''))
+    #         link_param = s.loads(i)
+    #         # 如果未登录，或登录用户打开的不是自己的推广链接
+    #         if not current_user.get_id() or current_user.get_id() != link_param.get('user_id'):
+    #             # 跳转注册页面
+    #             session['user_pid'] = link_param.get('user_id')
+    #             return redirect(url_for('reg.index'))
+    #     except BadSignature as e:
+    #         # flash(u'Invite Link Failed, %s' % e.message, 'warning')
+    #         flash(u'邀请注册链接错误，请重新索取链接', 'warning')
+    #     except Exception as e:
+    #         flash(e.message, 'warning')
+    # return render_template('index.html', title='home')
+    return render_template('theme/default/index.html', title='home')
 
 
 @app.route('/about/')
