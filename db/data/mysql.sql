@@ -81,6 +81,7 @@ INSERT INTO `user_bank` VALUES (1, 'Admin', '建行', '上海分行', '123456789
 INSERT INTO `user_bank` VALUES (2, 'Guest', '农行', '上海分行', '1234567891', 0, 0, '2017-01-11 11:01:05', '2017-01-11 11:01:05');
 INSERT INTO `user_bank` VALUES (5, 'Hub', '农行', '上海分行', '1234567892', 0, 0, '2017-01-11 11:01:05', '2017-01-11 11:01:05');
 INSERT INTO `user_bank` VALUES (15, 'Desk', '农行', '上海分行', '1234567892', 0, 0, '2017-01-11 11:01:05', '2017-01-11 11:01:05');
+INSERT INTO `user_bank` VALUES (19, 'Window', '农行', '上海分行', '1234567892', 0, 0, '2017-01-11 11:01:05', '2017-01-11 11:01:05');
 
 -- 插入管理员基本信息
 TRUNCATE TABLE `admin`;
@@ -112,6 +113,7 @@ INSERT INTO `apply_put` VALUES (6, 2, 0, 0, 3200.00, 0.00, 1, 0, 0, null, '2017-
 INSERT INTO `apply_put` VALUES (7, 3, 0, 0, 400.00, 400.00, 1, 2, 0, null, '2017-05-06 08:44:13', '2017-05-06 08:47:07');
 INSERT INTO `apply_put` VALUES (8, 3, 0, 0, 600.00, 0.00, 1, 0, 0, null, '2017-05-06 08:44:17', '2017-05-06 08:44:17');
 INSERT INTO `apply_put` VALUES (9, 3, 0, 0, 800.00, 800.00, 1, 2, 0, null, '2017-05-06 08:44:21', '2017-05-06 08:47:07');
+INSERT INTO `apply_put` VALUES (10, 15, 0, 0, 2000.00, 2000.00, 1, 2, 0, null, '2017-05-06 08:44:21', '2017-05-06 08:47:07');
 
 -- 插入提现申请记录
 TRUNCATE TABLE `apply_get`;
@@ -124,6 +126,7 @@ INSERT INTO `apply_get` VALUES (6, 2, 0, 0, 0, 3200.00, 3200.00, 1, 2, 0, null, 
 INSERT INTO `apply_get` VALUES (7, 3, 0, 0, 0, 400.00, 0.00, 1, 0, 0, null, '2017-05-06 08:44:25', '2017-05-06 08:44:25');
 INSERT INTO `apply_get` VALUES (8, 3, 0, 0, 0, 600.00, 0.00, 1, 0, 0, null, '2017-05-06 08:44:28', '2017-05-06 08:44:28');
 INSERT INTO `apply_get` VALUES (9, 3, 0, 0, 0, 800.00, 0.00, 1, 0, 0, null, '2017-05-06 08:44:32', '2017-05-06 08:44:32');
+INSERT INTO `apply_get` VALUES (10, 19, 0, 0, 0, 2000.00, 2000.00, 1, 2, 0, null, '2017-05-06 08:44:32', '2017-05-06 08:44:32');
 
 
 -- 插入订单记录
@@ -131,6 +134,7 @@ TRUNCATE TABLE `order`;
 INSERT INTO `order` VALUES (1, 2, 6, 1, 2, 0, 2000.00, 1, 0, 0, 0, 0, '2017-05-06 08:47:07', null, null, null, '2017-05-06 08:47:07', '2017-05-06 08:47:07');
 INSERT INTO `order` VALUES (2, 7, 6, 3, 2, 0, 400.00, 1, 0, 0, 0, 0, '2017-05-06 08:47:07', null, null, null, '2017-05-06 08:47:07', '2017-05-06 08:47:07');
 INSERT INTO `order` VALUES (3, 9, 6, 3, 2, 0, 800.00, 1, 0, 0, 0, 0, '2017-05-06 08:47:07', null, null, null, '2017-05-06 08:47:07', '2017-05-06 08:47:07');
+INSERT INTO `order` VALUES (4, 10, 10, 15, 19, 0, 2000.00, 1, 0, 1, 1, 0, '2017-05-06 08:47:07', null, null, null, '2017-05-06 08:47:07', '2017-05-06 08:47:07');
 
 -- 插入订单凭证
 TRUNCATE TABLE `order_bill`;
@@ -177,6 +181,18 @@ TRUNCATE TABLE `score_charity`;
 TRUNCATE TABLE `score_charity_item`;
 INSERT INTO `score_charity_item` VALUES (1, 1, 1, '10.00', 0, '测试获得积分', 1, 0, '2017-01-12 12:25:34', NULL, '2017-01-12 12:25:34', '2017-01-12 12:25:34');
 INSERT INTO `score_charity_item` VALUES (2, 1, 2, '5.00', 0, '测试消费积分', 1, 0, '2017-01-12 12:25:34', NULL, '2017-01-12 12:25:34', '2017-01-12 12:25:34');
+
+-- 插入数字积分总表
+TRUNCATE TABLE `score_digital`;
+
+-- 插入数字积分明细
+TRUNCATE TABLE `score_digital_item`;
+
+-- 插入消费积分总表
+TRUNCATE TABLE `score_expense`;
+
+-- 插入消费积分明细
+TRUNCATE TABLE `score_expense_item`;
 
 -- 插入奖金总表
 TRUNCATE TABLE `bonus`;

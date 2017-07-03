@@ -125,7 +125,7 @@ class BitCoin(Base):
     __tablename__ = 'bit_coin'
 
     user_id = Column(Integer, primary_key=True)
-    amount = Column(Numeric(10, 0), nullable=False, server_default=text("'0'"))
+    amount = Column(Numeric(10, 2), nullable=False, server_default=text("'0.00'"))
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
@@ -151,7 +151,7 @@ class Bonus(Base):
     __tablename__ = 'bonus'
 
     user_id = Column(Integer, primary_key=True)
-    amount = Column(Numeric(10, 0), nullable=False, server_default=text("'0'"))
+    amount = Column(Numeric(10, 2), nullable=False, server_default=text("'0.00'"))
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
@@ -162,7 +162,7 @@ class BonusItem(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, nullable=False, index=True)
     type = Column(Integer, nullable=False, server_default=text("'0'"))
-    amount = Column(Numeric(8, 0), nullable=False, server_default=text("'0'"))
+    amount = Column(Numeric(8, 2), nullable=False, server_default=text("'0.00'"))
     sc_id = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
     note = Column(String(256), nullable=False, server_default=text("''"))
     status_audit = Column(Integer, nullable=False, server_default=text("'0'"))
@@ -282,7 +282,7 @@ class SchedulingItem(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, nullable=False, index=True)
     type = Column(Integer, nullable=False, server_default=text("'0'"))
-    amount = Column(Numeric(8, 0), nullable=False, server_default=text("'0'"))
+    amount = Column(Numeric(8, 2), nullable=False, server_default=text("'0.00'"))
     sc_id = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
     note = Column(String(256), nullable=False, server_default=text("''"))
     status_audit = Column(Integer, nullable=False, server_default=text("'0'"))
@@ -297,7 +297,7 @@ class Score(Base):
     __tablename__ = 'score'
 
     user_id = Column(Integer, primary_key=True)
-    amount = Column(Numeric(10, 0), nullable=False, server_default=text("'0'"))
+    amount = Column(Numeric(10, 2), nullable=False, server_default=text("'0.00'"))
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
@@ -306,7 +306,7 @@ class ScoreCharity(Base):
     __tablename__ = 'score_charity'
 
     user_id = Column(Integer, primary_key=True)
-    amount = Column(Numeric(10, 0), nullable=False, server_default=text("'0'"))
+    amount = Column(Numeric(10, 2), nullable=False, server_default=text("'0.00'"))
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
@@ -317,7 +317,7 @@ class ScoreCharityItem(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, nullable=False, index=True)
     type = Column(Integer, nullable=False, server_default=text("'0'"))
-    amount = Column(Numeric(8, 0), nullable=False, server_default=text("'0'"))
+    amount = Column(Numeric(8, 2), nullable=False, server_default=text("'0.00'"))
     sc_id = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
     note = Column(String(256), nullable=False, server_default=text("''"))
     status_audit = Column(Integer, nullable=False, server_default=text("'0'"))
@@ -332,7 +332,7 @@ class ScoreDigital(Base):
     __tablename__ = 'score_digital'
 
     user_id = Column(Integer, primary_key=True)
-    amount = Column(Numeric(10, 0), nullable=False, server_default=text("'0'"))
+    amount = Column(Numeric(10, 2), nullable=False, server_default=text("'0.00'"))
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
@@ -343,7 +343,7 @@ class ScoreDigitalItem(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, nullable=False, index=True)
     type = Column(Integer, nullable=False, server_default=text("'0'"))
-    amount = Column(Numeric(8, 0), nullable=False, server_default=text("'0'"))
+    amount = Column(Numeric(8, 2), nullable=False, server_default=text("'0.00'"))
     sc_id = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
     note = Column(String(256), nullable=False, server_default=text("''"))
     status_audit = Column(Integer, nullable=False, server_default=text("'0'"))
@@ -358,7 +358,7 @@ class ScoreExpense(Base):
     __tablename__ = 'score_expense'
 
     user_id = Column(Integer, primary_key=True)
-    amount = Column(Numeric(10, 0), nullable=False, server_default=text("'0'"))
+    amount = Column(Numeric(10, 2), nullable=False, server_default=text("'0.00'"))
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
 
@@ -369,7 +369,7 @@ class ScoreExpenseItem(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, nullable=False, index=True)
     type = Column(Integer, nullable=False, server_default=text("'0'"))
-    amount = Column(Numeric(8, 0), nullable=False, server_default=text("'0'"))
+    amount = Column(Numeric(8, 2), nullable=False, server_default=text("'0.00'"))
     sc_id = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
     note = Column(String(256), nullable=False, server_default=text("''"))
     status_audit = Column(Integer, nullable=False, server_default=text("'0'"))
@@ -386,7 +386,7 @@ class ScoreItem(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, nullable=False, index=True)
     type = Column(Integer, nullable=False, server_default=text("'0'"))
-    amount = Column(Numeric(8, 0), nullable=False, server_default=text("'0'"))
+    amount = Column(Numeric(8, 2), nullable=False, server_default=text("'0.00'"))
     sc_id = Column(Integer, nullable=False, index=True, server_default=text("'0'"))
     note = Column(String(256), nullable=False, server_default=text("''"))
     status_audit = Column(Integer, nullable=False, server_default=text("'0'"))
@@ -457,8 +457,8 @@ class UserConfig(Base):
 class UserProfile(Base):
     __tablename__ = 'user_profile'
     __table_args__ = (
-        Index('ind_id_card', 'area_id', 'id_card'),
-        Index('ind_phone', 'area_id', 'phone')
+        Index('ind_phone', 'area_id', 'phone'),
+        Index('ind_id_card', 'area_id', 'id_card')
     )
 
     user_id = Column(Integer, primary_key=True)

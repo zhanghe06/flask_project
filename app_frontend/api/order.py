@@ -10,7 +10,7 @@
 
 
 from app_frontend.models import Order
-from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
+from app_frontend.tools.db import get_row, get_rows, get_lists, get_row_by_id, add, edit, delete
 
 
 def get_order_row_by_id(order_id):
@@ -80,3 +80,12 @@ def get_order_rows(page=1, per_page=10, *args, **kwargs):
     rows = get_rows(Order, page, per_page, *args, **kwargs)
     return rows
 
+
+def get_order_lists(*args, **kwargs):
+    """
+    获取订单列表信息
+    :param args:
+    :param kwargs:
+    :return:
+    """
+    return get_lists(Order, *args, **kwargs)

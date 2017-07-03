@@ -167,13 +167,16 @@ def add_put():
             }
             apply_put_id = add_apply_put(apply_put_info)
 
+            # 消耗排单币
+            scheduling_cost = form.money_apply.data / 100
+
             # 扣除排单币总表数量
             scheduling_info = get_scheduling_row_by_id(user_id)
 
             amount = scheduling_info.amount if scheduling_info else 0
 
             scheduling_data = {
-                'amount': amount - 1,
+                'amount': amount - scheduling_cost,
                 'create_time': current_time,
                 'update_time': current_time
             }
@@ -183,7 +186,7 @@ def add_put():
             scheduling_item_data = {
                 'user_id': user_id,
                 'type': user_id,
-                'amount': 1,
+                'amount': scheduling_cost,
                 'sc_id': user_id,
                 'note': u'投资申请编号：%s' % apply_put_id,
                 'status_audit': STATUS_AUDIT_SUCCESS,

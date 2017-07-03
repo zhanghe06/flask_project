@@ -32,7 +32,7 @@ def get_score_digital_item_row(*args, **kwargs):
     return get_row(ScoreDigitalItem, *args, **kwargs)
 
 
-def add_score_digital(score_digital_item_data):
+def add_score_digital_item(score_digital_item_data):
     """
     添加积分信息
     :param score_digital_item_data:
@@ -41,7 +41,7 @@ def add_score_digital(score_digital_item_data):
     return add(ScoreDigitalItem, score_digital_item_data)
 
 
-def edit_score_digital(score_digital_item_id, score_digital_item_data):
+def edit_score_digital_item(score_digital_item_id, score_digital_item_data):
     """
     修改积分信息
     :param score_digital_item_id:
@@ -51,7 +51,7 @@ def edit_score_digital(score_digital_item_id, score_digital_item_data):
     return edit(ScoreDigitalItem, score_digital_item_id, score_digital_item_data)
 
 
-def delete_score_digital(score_digital_item_id):
+def delete_score_digital_item(score_digital_item_id):
     """
     删除积分信息
     :param score_digital_item_id:

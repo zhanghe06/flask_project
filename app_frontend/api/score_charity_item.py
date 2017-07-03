@@ -32,7 +32,7 @@ def get_score_charity_item_row(*args, **kwargs):
     return get_row(ScoreCharityItem, *args, **kwargs)
 
 
-def add_score_charity(score_charity_item_data):
+def add_score_charity_item(score_charity_item_data):
     """
     添加积分信息
     :param score_charity_item_data:
@@ -41,7 +41,7 @@ def add_score_charity(score_charity_item_data):
     return add(ScoreCharityItem, score_charity_item_data)
 
 
-def edit_score_charity(score_charity_item_id, score_charity_item_data):
+def edit_score_charity_item(score_charity_item_id, score_charity_item_data):
     """
     修改积分信息
     :param score_charity_item_id:
@@ -51,7 +51,7 @@ def edit_score_charity(score_charity_item_id, score_charity_item_data):
     return edit(ScoreCharityItem, score_charity_item_id, score_charity_item_data)
 
 
-def delete_score_charity(score_charity_item_id):
+def delete_score_charity_item(score_charity_item_id):
     """
     删除积分信息
     :param score_charity_item_id:

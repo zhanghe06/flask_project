@@ -7,8 +7,10 @@
 @file: score_expense.py
 @time: 2017/6/28 下午2:34
 """
+from datetime import datetime
+from decimal import Decimal
 
-
+from app_frontend.database import db
 from app_frontend.models import ScoreExpense
 from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
 
@@ -79,3 +81,46 @@ def get_score_expense_rows(page=1, per_page=10, *args, **kwargs):
     """
     rows = get_rows(ScoreExpense, page, per_page, *args, **kwargs)
     return rows
+
+
+def increase_score_expense(user_id, num=1):
+    """
+    增加积分
+    :param user_id:
+    :param num:
+    :return: Decimal 0/1
+    :raise: Exception
+    """
+    try:
+        if not isinstance(num, Decimal):
+            num = Decimal(num)
+        current_time = datetime.utcnow()
+        # 更新积分总表
+        score_obj = db.session.query(ScoreExpense).filter(ScoreExpense.user_id == user_id)
+        if score_obj.first():
+            # 总表有记录，更新
+            score_amount = ScoreExpense.amount + num
+            score_expense_data = {
+                'user_id': user_id,
+                'amount': score_amount,
+                'update_time': current_time
+            }
+            result_update = score_obj.update(score_expense_data)
+            result = score_obj.first().amount if result_update else 0
+        else:
+            # 总表无记录，插入
+            score_expense_data = {
+                'user_id': user_id,
+                'amount': num,
+                'create_time': current_time,
+                'update_time': current_time
+            }
+            score_obj = ScoreExpense(**score_expense_data)
+            db.session.add(score_obj)
+            result_add = score_obj.user_id
+            result = num if result_add else 0
+        db.session.commit()
+        return result
+    except Exception as e:
+        db.session.rollback()
+        raise e
