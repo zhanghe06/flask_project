@@ -25,7 +25,7 @@ from app_common.maps.type_payment import *
 from app_common.maps.status_apply import *
 from app_common.maps.type_apply import *
 from app_frontend.models import ApplyGet, Wallet, WalletItem, BitCoin, BitCoinItem
-from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete
+from app_frontend.tools.db import get_row, get_rows, get_row_by_id, add, edit, delete, count
 
 
 def get_apply_get_row_by_id(apply_get_id):
@@ -240,3 +240,18 @@ def get_get_processing_amount(user_id):
         .filter(*condition) \
         .first()
     return (res.money_apply_amount or 0) - (res.money_order_amount or 0)
+
+
+def get_get_processing_count(user_id):
+    """
+    获取用户提现申请未匹配总单数
+    :param user_id:
+    :return:
+    """
+    condition = [
+        ApplyGet.user_id == user_id,
+        ApplyGet.status_order <= int(STATUS_ORDER_COMPLETED),
+        ApplyGet.status_delete == int(STATUS_DEL_NO)
+    ]
+    num = count(ApplyGet, *condition)
+    return num

@@ -201,13 +201,14 @@ def merge(model_name, data):
         raise e
 
 
-def increase(model_name, pk_id, field, num=1):
+def increase(model_name, pk_id, field, num=1, **kwargs):
     """
     字段自增
     :param model_name:
     :param pk_id:
     :param field:
     :param num:
+    :param kwargs:
     :return: Number of affected rows (Example: 0/1)
     """
     model_pk = inspect(model_name).primary_key[0]
@@ -217,6 +218,7 @@ def increase(model_name, pk_id, field, num=1):
         data = {
             field: value
         }
+        data.update(**kwargs)  # 更新扩展字段
         result = model_obj.update(data)
         db.session.commit()
         return result

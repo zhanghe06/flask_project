@@ -155,3 +155,18 @@ def get_put_processing_amount(user_id):
         .filter(*condition) \
         .first()
     return (res.money_apply_amount or 0) - (res.money_order_amount or 0)
+
+
+def get_put_processing_count(user_id):
+    """
+    获取用户投资申请未匹配总单数
+    :param user_id:
+    :return:
+    """
+    condition = [
+        ApplyPut.user_id == user_id,
+        ApplyPut.status_order <= int(STATUS_ORDER_COMPLETED),
+        ApplyPut.status_delete == int(STATUS_DEL_NO)
+    ]
+    num = count(ApplyPut, *condition)
+    return num

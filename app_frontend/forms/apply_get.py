@@ -17,8 +17,9 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField, DecimalField, IntegerField
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
 
+from app_frontend import app
 from app_frontend.api.apply_get import get_current_month_get_amount, get_current_day_get_amount, \
-    get_get_processing_amount
+    get_get_processing_amount, get_get_processing_count
 from app_frontend.api.user_auth import get_user_auth_row
 from app_frontend.api.wallet import get_wallet_row_by_id
 from app_frontend.api.bit_coin import get_bit_coin_row_by_id
@@ -43,9 +44,9 @@ class ApplyGetMoneyValidate(object):
         if current_time < APPLY_GET_TIME_START or current_time > APPLY_GET_TIME_END:
             raise ValidationError(u'为了您的资金安全，请在%s~%s时间段提现' % (APPLY_GET_TIME_START, APPLY_GET_TIME_END))
 
-        # 当天次数限制（一天只能提现一次）
-        if get_current_day_get_amount(user_id=current_user.id) > 0:
-            raise ValidationError(u'超出当天提现次数限制')
+        # # 当天次数限制（一天只能提现一次）
+        # if not app.config.get('TEST') and get_current_day_get_amount(user_id=current_user.id) > 0:
+        #     raise ValidationError(u'超出当天提现次数限制')
 
         # 单次提现金额范围
         APPLY_GET_MIN_EACH = Decimal(get_conf('APPLY_GET_MIN_EACH'))  # 最小值
@@ -60,10 +61,20 @@ class ApplyGetMoneyValidate(object):
             raise ValidationError(u'金额必须为%s的倍数' % APPLY_GET_STEP)
 
         # 单个用户提现限制
+        # 金额限制
         get_processing_amount = get_get_processing_amount(user_id=current_user.id)
-        APPLY_GET_USER_MAX_AMOUNT = Decimal(get_conf('APPLY_GET_USER_MAX_AMOUNT'))  # 单个用户提现最大交易中金额
-        if field.data + get_processing_amount > APPLY_GET_USER_MAX_AMOUNT:
-            raise ValidationError(u'超出提现待处理金额限制')
+        # 单个用户提现最大交易中金额
+        APPLY_GET_USER_MAX_AMOUNT = Decimal(get_conf('APPLY_GET_USER_MAX_AMOUNT'))
+        if field.data + get_processing_amount >= APPLY_GET_USER_MAX_AMOUNT:
+            raise ValidationError(u'超出提现处理中金额限制')
+
+        # 单数限制（处理中的申请单数）
+        # 单个用户提现最大交易中单数(0 表示不限制)
+        APPLY_GET_USER_MAX_COUNT = Decimal(get_conf('APPLY_GET_USER_MAX_COUNT'))
+        if APPLY_GET_USER_MAX_COUNT > 0:
+            get_processing_count = get_get_processing_count(user_id=current_user.id)
+            if get_processing_count >= APPLY_GET_USER_MAX_COUNT:
+                raise ValidationError(u'超出提现处理中数量限制')
 
         # 每日提现限制
         current_day_get_amount = get_current_day_get_amount()

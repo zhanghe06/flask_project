@@ -4,7 +4,7 @@
 """
 @author: zhanghe
 @software: PyCharm
-@file: db_test.py
+@file: db_test_sqlite.py
 @time: 16-3-25 下午11:35
 """
 

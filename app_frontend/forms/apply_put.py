@@ -15,8 +15,10 @@ from wtforms import StringField, PasswordField, BooleanField, DateField, DateTim
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress
 
 from flask_login import current_user
+
+from app_frontend import app
 from app_frontend.api.apply_put import get_current_day_put_amount, get_current_month_put_amount, \
-    get_put_processing_amount
+    get_put_processing_amount, get_put_processing_count
 from app_frontend.api.scheduling import get_scheduling_row_by_id
 from app_frontend.forms import SelectBS, RadioInlineBS
 from app_common.maps import type_apply_list, type_pay_list
@@ -39,9 +41,9 @@ class ApplyPutMoneyValidate(object):
         if current_time < APPLY_PUT_TIME_START or current_time > APPLY_PUT_TIME_END:
             raise ValidationError(u'为了您的资金安全，请在%s~%s时间段投资' % (APPLY_PUT_TIME_START, APPLY_PUT_TIME_END))
 
-        # 当天次数限制（一天只能投资一次）
-        if get_current_day_put_amount(user_id=current_user.id) > 0:
-            raise ValidationError(u'超出当天投资次数限制')
+        # # 当天次数限制（一天只能投资一次）
+        # if not app.config.get('TEST') and get_current_day_put_amount(user_id=current_user.id) > 0:
+        #     raise ValidationError(u'超出当天投资次数限制')
 
         # 单次投资金额范围
         APPLY_PUT_MIN_EACH = Decimal(get_conf('APPLY_PUT_MIN_EACH'))  # 最小值
@@ -56,10 +58,20 @@ class ApplyPutMoneyValidate(object):
             raise ValidationError(u'金额必须为%s的倍数' % APPLY_PUT_STEP)
 
         # 单个用户投资限制
+        # 金额限制
         put_processing_amount = get_put_processing_amount(user_id=current_user.id)
-        APPLY_PUT_USER_MAX_AMOUNT = Decimal(get_conf('APPLY_PUT_USER_MAX_AMOUNT'))  # 单个用户投资最大交易中金额
-        if field.data + put_processing_amount > APPLY_PUT_USER_MAX_AMOUNT:
-            raise ValidationError(u'超出投资待处理金额限制')
+        # 单个用户投资最大交易中金额
+        APPLY_PUT_USER_MAX_AMOUNT = Decimal(get_conf('APPLY_PUT_USER_MAX_AMOUNT'))
+        if field.data + put_processing_amount >= APPLY_PUT_USER_MAX_AMOUNT:
+            raise ValidationError(u'超出投资处理中金额限制')
+
+        # 单数限制（处理中的申请单数）
+        # 单个用户投资最大交易中单数(0 表示不限制)
+        APPLY_PUT_USER_MAX_COUNT = Decimal(get_conf('APPLY_PUT_USER_MAX_COUNT'))
+        if APPLY_PUT_USER_MAX_COUNT > 0:
+            put_processing_count = get_put_processing_count(user_id=current_user.id)
+            if put_processing_count >= APPLY_PUT_USER_MAX_COUNT:
+                raise ValidationError(u'超出投资处理中数量限制')
 
         # 每日投资限制
         current_day_put_amount = get_current_day_put_amount()

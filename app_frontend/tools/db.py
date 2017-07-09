@@ -183,13 +183,14 @@ def edit(model_name, pk_id, data):
         raise e
 
 
-def increase(model_name, pk_id, field, num=1):
+def increase(model_name, pk_id, field, num=1, **kwargs):
     """
     字段自增
     :param model_name:
     :param pk_id:
     :param field:
     :param num:
+    :param kwargs:
     :return: Number of affected rows (Example: 0/1)
     """
     model_pk = inspect(model_name).primary_key[0]
@@ -199,6 +200,7 @@ def increase(model_name, pk_id, field, num=1):
         data = {
             field: value
         }
+        data.update(**kwargs)  # 更新扩展字段
         result = model_obj.update(data)
         db.session.commit()
         return result
@@ -472,9 +474,19 @@ def test_join():
         print a.id, b.user_id
 
 
+def test_increase():
+    from app_frontend.models import ApplyGet, Wallet, WalletItem
+
+    kwargs = {
+        'status_delete': 1
+    }
+    print increase(ApplyGet, 11, 'money_apply', num=2000, **kwargs)
+
+
 if __name__ == '__main__':
     # test_user()
     # test_blog()
     # test_transaction()
     # test_label()
-    test_join()
+    # test_join()
+    test_increase()

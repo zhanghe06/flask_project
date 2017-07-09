@@ -11,7 +11,7 @@
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, DateField, DateTimeField, HiddenField, IntegerField, DecimalField
-from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress, AnyOf
+from wtforms.validators import DataRequired, InputRequired, Length, NumberRange, EqualTo, Email, ValidationError, IPAddress, AnyOf
 
 from app_backend.forms import SelectAreaCode, CheckBoxBS
 
@@ -166,7 +166,7 @@ class ApplyPutForm(FlaskForm):
         NumberRange(min=0, message=u'金额必须为正数')
     ])
     APPLY_PUT_USER_MAX_COUNT = IntegerField(u'单个用户投资最大单数', validators=[
-        DataRequired(u'数量不能为空'),
+        InputRequired(u'数量不能为空'),
         NumberRange(min=0, message=u'数量必须为正数')
     ])
 
@@ -244,7 +244,7 @@ class ApplyGetForm(FlaskForm):
         NumberRange(min=0, message=u'金额必须为正数')
     ])
     APPLY_GET_USER_MAX_COUNT = IntegerField(u'单个用户提现最大单数', validators=[
-        DataRequired(u'数量不能为空'),
+        InputRequired(u'数量不能为空'),
         NumberRange(min=0, message=u'数量必须为正数')
     ])
 
