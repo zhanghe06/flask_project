@@ -26,7 +26,7 @@ from flask import Blueprint
 from app_frontend.database import db
 from app_frontend.models import UserProfile, SchedulingItem
 
-from config import PER_PAGE_FRONTEND
+PER_PAGE_FRONTEND = app.config['PER_PAGE_FRONTEND']
 
 bp_scheduling = Blueprint('scheduling', __name__, url_prefix='/scheduling')
 

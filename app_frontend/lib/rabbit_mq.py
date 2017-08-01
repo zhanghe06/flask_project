@@ -14,7 +14,9 @@ import json
 import traceback
 
 
-from config import RABBIT_MQ
+from config import current_config
+
+RABBIT_MQ = current_config.RABBIT_MQ
 
 _client_conn = {'conn': None}
 

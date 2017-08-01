@@ -9,6 +9,7 @@
 """
 
 from logging.config import dictConfig
+from config import current_config
 
 from flask import Flask
 from flask_login import LoginManager
@@ -23,7 +24,7 @@ from app_frontend.middlewares import HTTPMethodOverrideMiddleware
 
 
 app = Flask(__name__)
-app.config.from_object('config')
+app.config.from_object(current_config)
 app.config['REMEMBER_COOKIE_NAME'] = 'r_u'
 app.session_cookie_name = 's_u'
 app.session_interface = RedisSessionInterface(prefix='s:u:', **app.config['REDIS'])

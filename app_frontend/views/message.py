@@ -27,7 +27,8 @@ from app_frontend.forms.message import MessageAddForm
 from flask import Blueprint
 
 from app_frontend.database import db
-from config import PER_PAGE_FRONTEND
+
+PER_PAGE_FRONTEND = app.config['PER_PAGE_FRONTEND']
 
 bp_message = Blueprint('message', __name__, url_prefix='/message')
 

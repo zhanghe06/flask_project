@@ -10,7 +10,11 @@
 
 
 import requests
-from config import REQUESTS_TIME_OUT
+
+
+from config import current_config
+
+REQUESTS_TIME_OUT = current_config.REQUESTS_TIME_OUT
 
 
 class SmsChuangLanIsoApi(object):

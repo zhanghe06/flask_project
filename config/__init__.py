@@ -4,52 +4,21 @@
 """
 @author: zhanghe
 @software: PyCharm
-@file: __init__.py
-@time: 16-3-10 下午5:10
+@file: __init__.py.py
+@time: 2017/8/1 下午2:59
 """
 
 
-def get_env():
-    """
-    获取运行环境
-    """
-    import os
-    file_name = '/'.join((os.path.dirname(os.path.abspath(__file__)), 'config.env'))
-    with open(file_name) as f:
-        env = f.read()
-        if env:
-            return env.strip()
-        else:
-            return ''
+import os
+from importlib import import_module
 
 
-config_env = get_env()
-
-# module = __import__(config_env)
-#
-# print module.db
+MODE = os.environ.get('MODE') or 'default'
 
 
-if config_env == 'product':
-    from product import *
-elif config_env == 'develop':
-    from develop import *
-else:
-    from develop import *
-
-
-"""
-环境切换
-进入项目目录
-$ echo 'product' > config/config.env
-$ echo 'develop' > config/config.env
-
-使用配置
-from config import *
-
-在Flask中
-app.config.from_object('config')
-即可
-
-注意：config/config.env 这个文件添加至.gitignore，不需要被版本控制追踪管理
-"""
+try:
+    current_config = import_module('config.' + MODE)
+except ImportError:
+    print u'[!] 配置错误，请初始化环境变量'
+    print u'source env_develop.sh  # 开发环境'
+    print u'source env_product.sh  # 生产环境'

@@ -653,6 +653,3 @@ def stats():
     :return:
     """
     pass
-
-
-print get_conf('DIFF_TIME_PAY_DELAY'), type(get_conf('DIFF_TIME_PAY_DELAY'))

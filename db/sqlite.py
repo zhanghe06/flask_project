@@ -11,7 +11,11 @@
 
 import os
 import sys
-from config import BASE_DIR, DB_SQLITE as DB
+from config import current_config
+
+BASE_DIR = current_config['BASE_DIR']
+DB = current_config['DB_SQLITE']
+
 
 DB_SCHEMA_PATH = os.path.join(BASE_DIR, 'db/schema/sqlite.sql')
 DUMP_FILE_PATH = os.path.join(BASE_DIR, 'db/backup/sqlite.sql')

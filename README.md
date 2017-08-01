@@ -400,6 +400,47 @@ DataRequired, InputRequired 的区别
 - InputRequired 检查原始输入的值，是否为真
 
 
+### CSRF
+跨站请求伪造
+
+攻击方式：
+    利用用户身份执行非法请求（在用户浏览器端发起特定请求）
+防御策略：
+    通常使用csrf_token防御
+
+http://flask-wtf.readthedocs.io/en/stable/csrf.html
+
+Any view using FlaskForm to process the request is already getting CSRF protection. 
+也就是使用FlaskForm的表单默认都会受到保护
+
+HTML Forms
+```html
+<form method="post">
+    {{ form.csrf_token }}
+</form>
+```
+
+```html
+<form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+</form>
+```
+
+JavaScript Requests
+```html
+<script type="text/javascript">
+    var csrf_token = "{{ csrf_token() }}";
+
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrf_token);
+            }
+        }
+    });
+</script>
+```
+
 ### Message Flashing
 
 闪现消息 定义4种类型 success info warning danger
@@ -1475,6 +1516,10 @@ http://flask-sse.readthedocs.io/en/latest/quickstart.html
 
 ## 分库分表
 
+垂直分库
+
+水平分表
+
 - 分库
 
 http://flask-sqlalchemy.pocoo.org/2.1/binds/
@@ -1571,6 +1616,11 @@ def shard(self, pk_id):
 
 
 ## 单一架构 VS 微服务架构
+
+
+## 信息修改
+账号修改
+密码修改
 
 
 ## Todo：

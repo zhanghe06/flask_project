@@ -10,8 +10,8 @@
 
 
 import random
+from os.path import abspath
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
-from config import BASE_DIR
 
 
 class Captcha(object):
@@ -32,7 +32,7 @@ class Captcha(object):
                  fg_color=(255, 0, 0),
                  line_color=(255, 0, 0),
                  point_color=(255, 0, 0),
-                 font_type='%s/%s' % (BASE_DIR, 'app_frontend/static/fonts/Ubuntu-B.ttf'),
+                 font_type=abspath('app_frontend/static/fonts/Ubuntu-B.ttf'),
                  font_size=18,
                  length=4,
                  draw_lines=True,

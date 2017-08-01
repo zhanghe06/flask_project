@@ -4,7 +4,7 @@ PROJECT_PATH=`(cd ../;pwd)`
 
 [ -d ${PROJECT_PATH}/logs ] || mkdir ${PROJECT_PATH}/logs
 
-CONFIG_MODE_TEXT=`cat ${PROJECT_PATH}/config/config.env`
+CONFIG_MODE_TEXT=${MODE:-default}
 
 # docker rm $(docker ps -a -q)
 

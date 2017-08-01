@@ -27,7 +27,7 @@ from app_common.maps.status_reply import STATUS_REPLY_DICT
 
 from flask import Blueprint
 
-from config import PER_PAGE_FRONTEND
+PER_PAGE_FRONTEND = app.config['PER_PAGE_FRONTEND']
 
 bp_complaint = Blueprint('complaint', __name__, url_prefix='/complaint')
 

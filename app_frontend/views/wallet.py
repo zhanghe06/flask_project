@@ -20,10 +20,10 @@ from app_frontend.api.user_profile import get_team_tree
 from app_frontend.models import User
 from app_frontend.api.wallet import get_wallet_rows
 from app_frontend.api.wallet_item import get_wallet_item_rows
-from config import PER_PAGE_FRONTEND
 
 from flask import Blueprint
 
+PER_PAGE_FRONTEND = app.config['PER_PAGE_FRONTEND']
 
 bp_wallet = Blueprint('wallet', __name__, url_prefix='/wallet')
 

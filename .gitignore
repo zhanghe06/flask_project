@@ -7,16 +7,19 @@
 .idea/
 *.DS_Store
 
-logs/*.log
 app_frontend/static/uploads/*
 !app_frontend/static/uploads/index.html
 
 # 数据
-docker/mariadb/data/*
 docker/mariadb/backup/*
-docker/mongodb/data/*
-docker/rabbitmq/data/*
-docker/redis/data/*
 
 # 日志
-docker/nginx/log/*
+app_wechat/
+db/backup/
+docker/mariadb/backup/
+docker/mariadb/data/
+docker/mongodb/data/
+docker/nginx/log/
+docker/rabbitmq/data/
+docker/redis/data/
+logs/

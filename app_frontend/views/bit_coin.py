@@ -19,7 +19,8 @@ from app_frontend import app
 from app_frontend.models import User
 from app_frontend.api.bit_coin import get_bit_coin_rows
 from app_frontend.api.bit_coin_item import get_bit_coin_item_rows
-from config import PER_PAGE_FRONTEND
+
+PER_PAGE_FRONTEND = app.config['PER_PAGE_FRONTEND']
 
 from flask import Blueprint
 
