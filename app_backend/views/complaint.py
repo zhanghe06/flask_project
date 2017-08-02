@@ -35,7 +35,8 @@ from flask import Blueprint
 from app_backend.permissions import permission_msg
 from app_common.maps.status_delete import STATUS_DEL_OK
 from app_common.maps.status_reply import STATUS_REPLY_DICT, STATUS_REPLY_SUCCESS
-from config import PER_PAGE_BACKEND
+
+PER_PAGE_BACKEND = app.config['PER_PAGE_BACKEND']
 
 bp_complaint = Blueprint('complaint', __name__, url_prefix='/complaint')
 

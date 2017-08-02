@@ -34,10 +34,11 @@ from flask import Blueprint
 from app_common.maps.status_delete import STATUS_DEL_NO, STATUS_DEL_OK
 from app_common.tools import json_default
 from app_common.tools.date_time import time_local_to_utc
-from config import PER_PAGE_BACKEND
 
 from app_backend.permissions import permission_order
 from app_backend.database import db
+
+PER_PAGE_BACKEND = app.config['PER_PAGE_BACKEND']
 
 bp_order = Blueprint('order', __name__, url_prefix='/order')
 

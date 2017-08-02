@@ -14,7 +14,10 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from app_backend.lib.sms_chuanglan_iso import SmsChuangLanIsoApi
 import time
-from config import SSH_CONFIG, SMS
+from config import current_config
+
+SSH_CONFIG = current_config.SSH_CONFIG
+SMS = current_config.SMS
 
 
 # 隧道配置

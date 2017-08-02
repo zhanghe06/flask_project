@@ -7,6 +7,7 @@
 @file: message.py
 @time: 2017/5/1 上午2:17
 """
+
 import json
 from datetime import datetime
 
@@ -26,10 +27,10 @@ from app_backend.api.message import edit_message
 from flask import Blueprint
 from app_backend.database import db
 from app_common.maps.status_delete import STATUS_DEL_OK
-from config import PER_PAGE_BACKEND
-
 from app_backend.permissions import permission_msg
 
+
+PER_PAGE_BACKEND = app.config['PER_PAGE_BACKEND']
 
 bp_message = Blueprint('message', __name__, url_prefix='/message')
 

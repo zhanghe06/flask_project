@@ -9,6 +9,7 @@
 """
 
 from logging.config import dictConfig
+from config import current_config
 
 from flask import Flask
 from flask_login import LoginManager
@@ -23,7 +24,7 @@ from app_backend.lib.sms_chuanglan_iso import SmsChuangLanIsoApi
 
 
 app = Flask(__name__)
-app.config.from_object('config')
+app.config.from_object(current_config)
 app.config['REMEMBER_COOKIE_NAME'] = 'r_a'
 app.session_cookie_name = 's_a'
 app.session_interface = RedisSessionInterface(prefix='s:a:', **app.config['REDIS'])
