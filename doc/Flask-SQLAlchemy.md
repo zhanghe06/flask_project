@@ -1,7 +1,7 @@
 ## Flask-SQLAlchemy
 
 ### Config
-http://flask-sqlalchemy.pocoo.org/2.1/config/
+http://flask-sqlalchemy.pocoo.org/2.2/config/
 
 ### Changelog
-http://flask-sqlalchemy.pocoo.org/2.1/changelog/
+http://flask-sqlalchemy.pocoo.org/2.2/changelog/
