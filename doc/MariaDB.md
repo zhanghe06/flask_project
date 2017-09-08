@@ -126,3 +126,17 @@ brew services start MariaDB
 or
 mysql.server start
 ```
+
+
+## 事务隔离级别
+
+```sql
+MariaDB [(none)]> SELECT @@tx_isolation, @@global.tx_isolation, @@session.tx_isolation;
++-----------------+-----------------------+------------------------+
+| @@tx_isolation  | @@global.tx_isolation | @@session.tx_isolation |
++-----------------+-----------------------+------------------------+
+| REPEATABLE-READ | REPEATABLE-READ       | REPEATABLE-READ        |
++-----------------+-----------------------+------------------------+
+1 row in set (0.00 sec)
+```
+
