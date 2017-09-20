@@ -54,6 +54,7 @@ $ pip install Flask-Excel
 $ pip install Flask-Moment
 $ pip install Flask-Uploads
 $ pip install Flask-Principal
+$ pip install Flask-Babel
 $ pip install sqlacodegen
 $ pip install gunicorn
 $ pip install schedule
@@ -1373,13 +1374,19 @@ MariaDB [flask_project]> show global variables like 'max_allowed_packet';
 ```
 
 
-错误重现：
+错误重现:
+
 当有事务没有提交或者没有回滚时，sqlalchemy 的连接回收时间（SQLALCHEMY_POOL_RECYCLE）大于数据库关闭等待连接时间（global wait_timeout）；
+
 一旦数据库连接超时自动断开，此时 sqlalchemy 尝试连接数据库，会出现 OperationalError: (_mysql_exceptions.OperationalError) (2006, 'MySQL server has gone away')
 
-处理方案：
+处理方案:
 1. sqlalchemy 的超时时间 小于 数据库的超时时间
 2. 代码操作数据库，立即提交事务，错误回滚
+
+官方说明:
+
+http://flask-sqlalchemy.pocoo.org/2.2/config/#timeouts
 
 
 ## gunicorn [CRITICAL] WORKER TIMEOUT
@@ -1512,6 +1519,37 @@ http://flask.pocoo.org/snippets/118/
 http://www.python-requests.org/en/master/user/advanced/#streaming-requests
 
 http://flask-sse.readthedocs.io/en/latest/quickstart.html
+
+
+## 日志
+
+使用 supervisor 管理进程，终端输出的日志信息，被supervisor截获后，写入stderr_logfile，一直想不通
+
+查看 logging 模块源码
+
+```
+class StreamHandler(Handler):
+    """
+    A handler class which writes logging records, appropriately formatted,
+    to a stream. Note that this class does not close the stream, as
+    sys.stdout or sys.stderr may be used.
+    """
+
+    def __init__(self, stream=None):
+        """
+        Initialize the handler.
+
+        If stream is not specified, sys.stderr is used.
+        """
+        Handler.__init__(self)
+        if stream is None:
+            stream = sys.stderr
+        self.stream = stream
+```
+
+StreamHandler 默认是按照标准错误输出处理
+
+print 则使用的是标准输出
 
 
 ## 分库分表
